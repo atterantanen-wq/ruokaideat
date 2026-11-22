@@ -11,6 +11,10 @@ export default [
       "Kaada vesi pois ja anna perunoiden höyrytä hetki kuivaksi kuumalla levyllä.",
     ],
     tips: ["Uudet perunat kypsyvät nopeammin, noin 12–15 minuutissa. Tillinoksa keitinveteen antaa niille kesäisen maun."],
+    vs: [
+      { id: "perus", n: "Perus" },
+      { id: "uudet", n: "Uudet perunat tillillä", add: ["tilli 0.5 nippu", "voi 1 rkl"], step: { 0: "Harjaa uudet perunat puhtaiksi juoksevan veden alla. Kuorta ei tarvitse poistaa.", 2: "Kun vesi kiehuu, lisää muutama tillinvarsi, pienennä lämpöä ja keitä 12–15 minuuttia." }, ins: [[3, "Nosta perunoiden päälle nokare voita ja silputtua tilliä."]] },
+    ],
     src: [["Martat", "https://www.martat.fi/reseptit/uusien-perunoiden-keittaminen/"]],
   },
   {
@@ -30,6 +34,11 @@ export default [
     tw: [
       { id: "kasvi", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla margariinia.", rm: ["maito", "voi"], add: ["kauramaito 2 dl", "margariini 30 g"] },
     ],
+    vs: [
+      { id: "perus", n: "Perus" },
+      { id: "valkosipuli", n: "Valkosipuli", add: ["valkosipulinkynsi 3 kpl"], step: { 2: "Kuumenna maito kuorittujen ja murskattujen valkosipulinkynsien kanssa. Lisää maito vähitellen muusiin sekoittaen." } },
+      { id: "juures", n: "Juuresmuusi", rm: ["peruna"], add: ["peruna 600 g", "palsternakka 200 g", "juuriselleri 200 g"], step: { 0: "Kuori perunat, palsternakka ja selleri ja paloittele ne tasakokoisiksi. Keitä suolatussa vedessä noin 20 minuuttia, kunnes palat ovat pehmeitä." } },
+    ],
     src: [["Martat", "https://www.martat.fi/reseptit/perunasose/"], ["Valio", "https://www.valio.fi/reseptit/perunamuusi/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/440/Perunamuusi/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-perunamuusi/3Yd8luyx39WZ4ssQthKNs9"]],
   },
   {
@@ -43,6 +52,11 @@ export default [
       "Nosta kattila levyltä ja anna seistä kannen alla 5 minuuttia. Kuohkeuta haarukalla.",
     ],
     tips: ["Täysjyväriisi tarvitsee hieman enemmän vettä ja noin 25 minuutin keittoajan."],
+    vs: [
+      { id: "perus", n: "Perus" },
+      { id: "kookos", n: "Kookosriisi", rm: ["vesi"], add: ["vesi 3 dl", "kookosmaito 3 dl"], step: { 1: "Kiehauta vesi, kookosmaito ja suola kattilassa. Lisää riisi ja sekoita kerran." } },
+      { id: "keltainen", n: "Keltainen riisi", add: ["sipuli 0.5 kpl", "voi 1 rkl", "kurkuma 0.5 tl"], ins: [[0, "Kuullota silputtu sipuli voissa kattilassa, lisää kurkuma ja huuhdeltu riisi ja paahda minuutti sekoittaen."]], step: { 1: "Kaada kattilaan kiehuva vesi ja suola ja sekoita kerran." } },
+    ],
   },
   {
     id: "k-pasta", n: "Pasta", m: "v", t: "li", min: 15, w: 5, sv: 4,
@@ -55,6 +69,9 @@ export default [
       "Ota kupillinen keitinvettä talteen ja kaada pasta siivilään.",
     ],
     tips: ["Tilkka talteen otettua keitinvettä sitoo kastikkeen pastan pintaan."],
+    tw: [
+      { id: "voi", n: "Voi ja parmesaani", d: "Sekoita kuumaan pastaan nokare voita ja raastettua parmesaania, niin se käy sellaisenaan lisukkeeksi.", add: ["voi 2 rkl", "parmesaani 40 g"] },
+    ],
   },
   {
     id: "k-vihersalaatti", n: "Vihersalaatti", m: "v", t: "li", min: 10, w: 10, sv: 4,
@@ -85,6 +102,10 @@ export default [
       "Sekoita majoneesi, jogurtti, sinappi, etikka, sokeri ja suola.",
       "Kääntele kasvikset kastikkeeseen ja anna maustua jääkaapissa ainakin puoli tuntia.",
     ],
+    vs: [
+      { id: "kermainen", n: "Kermainen" },
+      { id: "kirkas", n: "Kirkas", rm: ["majoneesi", "turkkilainen jogurtti"], add: ["oliiviöljy 4 rkl"], step: { 1: "Vispaa öljy, sinappi, etikka, sokeri ja suola kirkkaaksi kastikkeeksi." } },
+    ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/grillattu-raakamakkara-ja-kirkas-coleslaw/1Kzk4hzEEtEmXQwsKXgiwR"]],
   },
   {
@@ -111,6 +132,11 @@ export default [
       "Paahda noin 30 minuuttia ja käännä puolivälissä, kunnes lohkot ovat rapeita ja kullanruskeita.",
     ],
     tips: ["Lohkot rapeutuvat paremmin, kun ne liotetaan ensin kylmässä vedessä parikymmentä minuuttia ja kuivataan huolellisesti ennen öljyä.", "Airfryerissä lohkoperunat valmistuvat noin 20 minuutissa."],
+    vs: [
+      { id: "paprika", n: "Paprika" },
+      { id: "rosmariini", n: "Rosmariini-valkosipuli", rm: ["paprikajauhe"], add: ["rosmariini 1 tl", "valkosipulinkynsi 3 kpl"], step: { 2: "Kääntele lohkot öljyssä, rosmariinissa ja mausteissa ja levitä ne pellille väljästi. Lisää kuorelliset valkosipulinkynnet lohkojen joukkoon." } },
+      { id: "bataatti", n: "Bataatti", rm: ["peruna"], add: ["bataatti 1 kg"], step: { 1: "Pese bataatit ja leikkaa ne kuorineen lohkoiksi.", 3: "Paahda noin 25 minuuttia ja käännä puolivälissä. Bataatti tummuu nopeammin kuin peruna." } },
+    ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/rapeat-lohkoperunat-uunissa/7BBtSToDMmAkfjtkcTzpbM"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/887816/Lohkoperunat/"]],
   },
   {

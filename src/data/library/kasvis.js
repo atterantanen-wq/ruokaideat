@@ -190,7 +190,7 @@ export default [
       "Sekoita joukkoon pinaatti ja jogurtti ja kuumenna kiehauttamatta. Viimeistele korianterilla.",
     ],
     serve: "Tarjoa riisin ja leivän kanssa.",
-    sides: ["k-riisi"],
+    sides: ["k-riisi:keltainen"],
     tw: [
       { id: "vegaani", n: "Vegaaninen", d: "Korvaa jogurtti kookosmaidolla.", rm: ["turkkilainen jogurtti"], add: ["kookosmaito 2 dl"] },
       { id: "bataatti", n: "Bataatilla", d: "Lisää kuutioitu bataatti tomaattien kanssa ja pidennä haudutusta 10 minuutilla.", add: ["bataatti 400 g"] },
@@ -279,7 +279,7 @@ export default [
       "Hauduta, kunnes kasvikset ovat kypsiä, noin 15 minuuttia. Sekoita pinaatti joukkoon ja mausta suolalla ja limellä.",
     ],
     serve: "Tarjoa riisin kanssa.",
-    sides: ["k-riisi"],
+    sides: ["k-riisi:kookos"],
     tw: [
       { id: "kikherne", n: "Kikherneillä", d: "Lisää tölkillinen kikherneitä täyttävyyttä tuomaan.", add: ["kikherneet 1 prk"], m: "y" },
       { id: "tahna", n: "Punaisella currytahnalla", d: "Korvaa jauhetut mausteet 2 rkl:lla punaista currytahnaa.", rm: ["juustokumina", "kurkuma", "curry"], add: ["currytahna 2 rkl"] },

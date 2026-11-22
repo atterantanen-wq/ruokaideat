@@ -400,7 +400,7 @@ export default [
       "Kokoa hampurilaiset: alaosaan majoneesia, salaatti, pihvi, täytteet ja ketsuppia, päälle kansi.",
     ],
     serve: "Tarjoa lohkoperunoiden tai ranskalaisten kanssa.",
-    sides: ["k-lohkoperunat"],
+    sides: ["k-lohkoperunat:rosmariini"],
     tips: ["Naudanlihapihviin kannattaa painaa peukalolla keskelle kuoppa ennen paistamista, niin pihvi ei pullistu paistuessaan."],
     vs: [
       { id: "nauta", n: "Naudanliha", add: ["jauheliha 600 g", "suola 0.75 tl", "mustapippuri 0.5 tl", "cheddar 80 g"], m: "n", step: { 1: "Mausta jauheliha suolalla ja pippurilla ja taputtele neljäksi sämpylää hieman leveämmäksi pihviksi. Nosta juustoviipale pihvin päälle paistamisen loppuvaiheessa." } },
@@ -639,7 +639,7 @@ export default [
       "Sekoita creme fraiche joukkoon ja kuumenna kiehauttamatta. Viimeistele korianterilla.",
     ],
     serve: "Tarjoa riisin kanssa.",
-    sides: ["k-riisi"],
+    sides: ["k-riisi:kookos"],
     tw: [
       { id: "kookos", n: "Kookosmaidolla", d: "Korvaa creme fraiche kookosmaidolla.", rm: ["creme fraiche"], add: ["kookosmaito 2 dl"] },
       { id: "kasvis", n: "Kikherneillä", d: "Korvaa broileri tölkillisellä kikherneitä ja lisää kourallinen pinaattia.", rm: ["broilerinfilee"], add: ["kikherneet 1 prk", "pinaatti 65 g"], m: "y" },
