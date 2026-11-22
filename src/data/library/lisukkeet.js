@@ -54,4 +54,61 @@ export default [
     ],
     tips: ["Tilkka talteen otettua keitinvettä sitoo kastikkeen pastan pintaan."],
   },
+  {
+    id: "k-vihersalaatti", n: "Vihersalaatti", m: "v", t: "li", min: 10, w: 10, sv: 4,
+    d: "Raikas perussalaatti lehtisalaatista, kurkusta ja tomaatista yksinkertaisella öljykastikkeella.",
+    ing: ["salaatti 1 kpl", "kurkku 0.5 kpl", "kirsikkatomaatit 200 g", "punasipuli 0.5 kpl", "oliiviöljy 3 rkl", "sitruuna 0.5 kpl", "sinappi 1 tl", "suola 0.25 tl", "mustapippuri 1 ripaus"],
+    steps: [
+      "Huuhtele ja kuivaa salaatinlehdet ja revi ne kulhoon.",
+      "Viipaloi kurkku ja punasipuli ohuiksi ja puolita tomaatit.",
+      "Vispaa öljy, sitruunan mehu, sinappi, suola ja pippuri kastikkeeksi.",
+      "Kääntele kastike salaatin joukkoon juuri ennen tarjoilua.",
+    ],
+    tips: ["Kuivaa salaatti huolellisesti, niin kastike tarttuu lehtiin."],
+  },
+  {
+    id: "k-coleslaw", n: "Coleslaw", m: "v", t: "li", min: 15, w: 15, sv: 6,
+    d: "Kermainen kaali-porkkanasalaatti, joka sopii grilliruoan ja pulled porkin kanssa.",
+    ing: ["valkokaali 400 g", "porkkana 2 kpl", "punasipuli 0.5 kpl", "majoneesi 1 dl", "turkkilainen jogurtti 1 dl", "sinappi 1 tl", "etikka 1 rkl", "sokeri 1 tl", "suola 0.5 tl"],
+    steps: [
+      "Suikaloi kaali mahdollisimman ohueksi ja raasta porkkanat. Silppua sipuli hienoksi.",
+      "Sekoita majoneesi, jogurtti, sinappi, etikka, sokeri ja suola.",
+      "Kääntele kasvikset kastikkeeseen ja anna maustua jääkaapissa ainakin puoli tuntia.",
+    ],
+  },
+  {
+    id: "k-couscous", n: "Couscous", m: "v", t: "li", min: 10, w: 5, sv: 4,
+    d: "Kymmenessä minuutissa valmis lisuke, joka imee itseensä kastikkeet ja liemet.",
+    ing: ["couscous 3 dl", "vesi 3 dl", "kasvisliemikuutio 0.5 kpl", "oliiviöljy 1 rkl", "persilja 0.5 dl"],
+    steps: [
+      "Kiehauta vesi ja liemikuutio.",
+      "Kaada liemi couscousin päälle, sekoita ja peitä kannella. Anna turvota 5 minuuttia.",
+      "Kuohkeuta haarukalla ja sekoita joukkoon öljy ja persilja.",
+    ],
+    tw: [
+      { id: "kasvis", n: "Kasvikset joukkoon", d: "Sekoita mukaan kuutioitua kurkkua, tomaattia ja paprikaa salaatiksi.", add: ["kurkku 0.5 kpl", "tomaatti 2 kpl", "paprika 1 kpl"] },
+    ],
+  },
+  {
+    id: "k-lohkoperunat", n: "Lohkoperunat", m: "v", t: "li", min: 40, w: 10, sv: 4,
+    d: "Kuorelliset perunalohkot uunissa öljyn ja paprikan kanssa rapeiksi paahdettuna.",
+    ing: ["peruna 1 kg", "rypsiöljy 3 rkl", "paprikajauhe 1 tl", "suola 1 tl", "mustapippuri 0.5 tl"],
+    steps: [
+      "Lämmitä uuni 225 asteeseen.",
+      "Pese perunat huolellisesti ja leikkaa ne kuorineen lohkoiksi. Kuivaa lohkot talouspaperilla.",
+      "Kääntele lohkot öljyssä ja mausteissa ja levitä ne pellille väljästi.",
+      "Paahda noin 30 minuuttia ja käännä puolivälissä, kunnes lohkot ovat rapeita ja kullanruskeita.",
+    ],
+    tips: ["Airfryerissä lohkoperunat valmistuvat noin 20 minuutissa."],
+  },
+  {
+    id: "k-ohraryynit", n: "Ohraryynit", m: "v", t: "li", min: 25, w: 5, sv: 4,
+    d: "Kotimainen täysjyvälisuke riisin tilalle. Ohra on pureskeltavaa ja pähkinäistä.",
+    ing: ["ohrasuurimot 3 dl", "vesi 6 dl", "suola 0.5 tl", "voi 1 rkl"],
+    steps: [
+      "Huuhtele ryynit siivilässä.",
+      "Kiehauta vesi ja suola, lisää ryynit ja keitä kannen alla miedolla lämmöllä noin 20 minuuttia, kunnes neste on imeytynyt.",
+      "Sekoita joukkoon voi ja anna seistä hetki kannen alla.",
+    ],
+  },
 ];
