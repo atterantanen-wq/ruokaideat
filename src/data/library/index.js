@@ -3,8 +3,9 @@
 import lisukkeet from "./lisukkeet.js";
 import arki from "./arki.js";
 import keitot from "./keitot.js";
+import juhla from "./juhla.js";
 import kasvis from "./kasvis.js";
 import aamu from "./aamu.js";
 import leivonta from "./leivonta.js";
 
-export const LIB = [...arki, ...keitot, ...kasvis, ...aamu, ...leivonta, ...lisukkeet];
+export const LIB = [...arki, ...keitot, ...juhla, ...kasvis, ...aamu, ...leivonta, ...lisukkeet];
