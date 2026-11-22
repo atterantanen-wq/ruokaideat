@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B4532A">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<title>Mitä tänään syödään?</title>
+<!-- teema asetetaan ennen tyylejä, ettei sivu välähdä väärällä teemalla -->
+<script>try{var _t=(JSON.parse(localStorage.getItem("ruokaideat-v1"))||{}).th||"auto";document.documentElement.dataset.theme=(_t==="dark"||(_t==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))?"dark":"light";}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<button type="button" class="spill" id="hkPill" inert aria-haspopup="dialog"><span class="si" id="pi"></span><span class="srt">Hae ruokaa tai raaka-ainetta</span></button>
+<main class="wrap">
+  <header class="appbar" id="appbar"><div class="abr"><h1 id="ttl">Mitä tänään syödään?</h1><button type="button" class="hdbtn" id="profBtn" aria-haspopup="dialog" aria-label="Oma sivu ja asetukset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg></button></div><div class="srch"><button type="button" class="srb" id="hkOpen" aria-haspopup="dialog"><span class="si" id="qi"></span><span class="srt">Hae ruokaa tai raaka-ainetta</span></button></div>
+<div class="abx" id="abx"></div>
+</header>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" type="button" data-tab="ideas" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg><span class="lb">Ideat</span></button>
+    <button class="tab" role="tab" type="button" data-tab="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span class="lb">Lisää ruoka</span></button>
+    <button class="tab" role="tab" type="button" data-tab="cart" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L6.8 5M3.5 12l1.2 1.2L6.8 11M3.5 18l1.2 1.2L6.8 17"/></svg><span class="lb">Ostoslista<span class="badge" id="badge"></span></span></button>
+  </nav>
+  <div id="v-ideas">
+
+  <div class="fpanel">
+  <div class="chips main" id="fa" role="group" aria-label="Ateria"></div>
+  <div class="chips main" id="fp" role="group" aria-label="Suosikit ja suositut"></div>
+  <div class="bar">
+    <div class="count" id="count" aria-live="polite"></div>
+    <div class="barr"><button type="button" class="more" id="moreBtn" aria-expanded="false" aria-controls="more" aria-label="Muut suodattimet"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span id="moreTxt" class="mb" hidden></span></button>
+    <label class="sortw"><span class="sr" style="position:absolute;left:-9999px">Järjestys</span><select id="sort" aria-label="Järjestys"><option value="fav">Suosikit ensin</option><option value="cheap">Edullisin ensin</option><option value="views">Katsotuimmat ensin</option><option value="fast">Nopein ensin</option><option value="abc">Aakkosjärjestys</option></select></label></div>
+  </div>
+  <div class="actrow" id="act" hidden></div>
+  <div id="more" hidden>
+    <section class="group"><h2>Pääraaka-aine</h2><div class="chips" id="fm"></div></section>
+    <section class="group"><h2>Millainen ruoka?</h2><div class="chips" id="fs"></div></section>
+    <section class="group"><h2>Valmistusaika</h2><div class="chips" id="fvt"></div></section>
+    <section class="group"><h2>Maailmalta</h2><div class="chips" id="fw"></div></section>
+    <section class="group"><h2>Ruokalaji</h2><div class="chips" id="ft"></div></section>
+    <section class="group"><h2>Juhlapyhät</h2><div class="chips" id="ffe"></div></section>
+  </div>
+  </div>
+
+  <div class="grid" id="list"></div>
+  </div>
+
+  <section id="v-add" hidden>
+    <div id="newBody"></div>
+    <p class="note" style="margin-top:14px">Valmiin ruoan voi kopioida omaksi versioksi ruoan ikkunasta.</p>
+  </section>
+
+  <section id="v-cart" hidden><div id="cartBody"></div></section>
+  <section id="v-reg" hidden><div id="regBody"></div></section>
+  <dialog id="hkdlg" aria-label="Haku">
+    <div class="hkh">
+      <div class="hkbar">
+        <div class="srch"><span class="si" id="hkqi"></span><input id="hkq" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Hae ruokaa tai ainesta" aria-label="Hae ruokaa tai raaka-ainetta"><button type="button" class="qx" id="hkqx" hidden aria-label="Tyhjennä haku"></button></div>
+        <button type="button" class="hkbtn" id="hkflt" aria-expanded="false" aria-controls="hkpanel" aria-label="Suodattimet"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span class="bd" id="hkbd" hidden></span></button>
+        <button type="button" class="hkbtn" id="hkclose" aria-label="Sulje haku"></button>
+      </div>
+      <div class="actrow" id="hkact" hidden></div>
+    </div>
+    <div class="hkbody" id="hkbody">
+      <div class="hkpanel" id="hkpanel" hidden>
+        <h3 class="hkgh">Ateria</h3><div class="chips" id="hkca"></div><div class="chips" id="hkfp" style="margin-top:8px"></div>
+        <h3 class="hkgh">Pääraaka-aine</h3><div class="chips" id="hkcm"></div>
+        <h3 class="hkgh">Millainen ruoka?</h3><div class="chips" id="hkcs"></div>
+        <h3 class="hkgh">Valmistusaika</h3><div class="chips" id="hkcv"></div>
+        <h3 class="hkgh">Maailmalta</h3><div class="chips" id="hkcw"></div>
+        <h3 class="hkgh">Ruokalaji</h3><div class="chips" id="hkct"></div>
+        <h3 class="hkgh">Juhlapyhät</h3><div class="chips" id="hkcf"></div>
+      </div>
+      <div id="hkres"></div>
+    </div>
+  </dialog>
+  <dialog id="dlg"><div class="dl" id="dbody"></div><div class="toast" id="dtoast" role="status" hidden></div></dialog>
+  <dialog id="ldlg"><div class="dl" id="lbody"></div></dialog>
+  <dialog id="kdlg" class="kd" aria-label="Kokkaus"><div id="kbody"></div></dialog>
+  <dialog id="xdlg"><div class="dl" id="xbody"></div></dialog>
+  <dialog id="pdlg" aria-label="Oma sivu ja asetukset"><div class="dl">
+    <button type="button" class="dx" data-pclose aria-label="Sulje">&#10005;</button>
+    <h2 class="pmh">Oma sivu</h2>
+    <div class="pmacc"><span class="pmav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="26" height="26"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg></span><span class="pmtx"><b>Vieras</b><small>Kirjautuminen tulossa myöhemmin</small></span><button type="button" class="cartbtn" disabled aria-disabled="true"><span>Kirjaudu</span></button></div>
+    <button type="button" class="pmrow" data-reg-open=""><span class="pmic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="20" height="20"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11M9 8h6"/></svg></span><span class="pmtx"><b>Ainesosarekisteri</b><small>Ravintoarvot, hinnat, synonyymit ja pakkauskoot</small></span><span class="pmch" aria-hidden="true">›</span></button>
+    <section class="thm pmsec" id="thm" aria-labelledby="thh">
+      <h3 id="thh">Ulkoasu</h3>
+      <p class="pml">Teema</p>
+      <div class="seg" role="group" aria-label="Teema"><button type="button" data-th="auto">Auto</button><button type="button" data-th="light">Vaalea</button><button type="button" data-th="dark">Tumma</button></div>
+      <p class="note">Auto seuraa laitteen asetusta.</p>
+      <p class="pml">Ruokalista</p>
+      <div class="seg" role="group" aria-label="Ruokalistan ulkoasu"><button type="button" data-lay="list">Lista</button><button type="button" data-lay="grid">Ruudukko</button></div>
+      <p class="note">Ruudukossa kuvat ovat isompia ja ruokia näkyy enemmän kerralla.</p>
+    </section>
+    <div id="hiddenBox" hidden><button type="button" class="cartbtn" id="hidTog" aria-expanded="false" aria-controls="hidList"><span>Poistetut ruoat (<span id="hiddenN"></span>)</span></button><div id="hidList" hidden></div></div>
+
+    <section class="pmsec" id="bk" aria-labelledby="bkh">
+      <h3 id="bkh">Varmuuskopio</h3>
+      <p class="note">Tallenna omat ruoat, ostoslistat, suosikit ja hinnat tiedostoksi tai palauta ne tiedostosta. Omat kuvat säilyvät vain tässä sovelluksessa.</p>
+      <div class="bkr"><button type="button" class="cartbtn" id="bkSave"></button><button type="button" class="cartbtn" id="bkLoad"></button></div>
+      <div id="bkBox" hidden></div>
+    </section>
+    <section class="pmsec"><h3>Tietoja</h3><p class="note">Ravintoarvot: Fineli, THL, CC BY 4.0. Hinnat: S-kaupat.fi, ovat suuntaa antavia ja tarkistuspäivä näkyy aineksen tiedoissa.</p></section>
+  </div></dialog>
+  <dialog id="mdlg"><div class="dl" id="mbody"></div></dialog>
+  <dialog id="sdlg" aria-label="Kauppa"><div class="dl" id="sbody"></div></dialog>
+  <dialog id="adlg" aria-label="Lisää ostoslistalle"><div class="dl" id="abody"></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</main>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
