@@ -2089,6 +2089,19 @@ function openAdd(id){
   aS={rid:id,lid:p?p.id:"new",off:new Set(),seen:new Set(),sides:[],ps:[],own:[],all:false,ownOpen:false,msg:""};
   hideToast();renderAdd();$("adlg").showModal();
 }
+/* oman lisukkeen ehdotukset: lisukereseptit, valmiit tuotteet ja raaka-aineet */
+function ownSug(q0){
+  const q=fold(String(q0||"").trim());if(q.length<2)return[];
+  const sc=(name,syn)=>{let b=9;for(const n of [name,...(syn||[])]){const f=fold(n);if(f===q)return 0;if(f.startsWith(q))b=Math.min(b,1);else if(f.split(/[\s-]+/).some(w=>w.startsWith(q)))b=Math.min(b,2);else if(f.includes(q))b=Math.min(b,3);}return b;};
+  const out=[];
+  for(const r of all())if(r.t==="li"||r.t==="sa"){const v=sc(r.name);if(v<9)out.push({t:"r",id:r.id,name:r.name,kind:"Resepti",det:"ainekset listalle",v});}
+  for(const o of OT.values()){const v=sc(o.k,o.syn);if(v<9)out.push({t:"p",id:o.k,name:capF(o.k),kind:"Valmis tuote",det:o.note||DEPS[o.d]||"",v});}
+  const seen=new Set(out.filter(x=>x.t==="p").map(x=>x.id));
+  for(const c of CAT){if(seen.has(c.key))continue;const v=sc(c.key,c.syn);if(v<9){out.push({t:"p",id:c.key,name:capF(c.key),kind:c.d===4||c.d===5||c.d===16?"Valmis tuote":"Raaka-aine",det:DEPS[c.d]||"",v});seen.add(c.key);}}
+  for(const k of Object.keys(state.ing||{})){if(seen.has(k))continue;const v=sc(k);if(v<9)out.push({t:"p",id:k,name:capF(k),kind:"Oma aines",det:DEPS[state.ing[k].d]||"",v});}
+  return out.sort((a,b)=>a.v-b.v||a.name.length-b.name.length).slice(0,8);
+}
+const ownSugHtml=q=>{const L=ownSug(q);return L.length?`<ul class="osug" role="listbox" aria-label="Ehdotukset">${L.map(x=>`<li><button type="button" class="osb" data-a="ownpick" data-t="${x.t}" data-id="${esc(x.id)}" role="option"><span class="osn">${esc(x.name)}<small>${esc(x.det)}</small></span><span class="osk osk-${x.t}${x.kind==="Raaka-aine"?" osk-raw":""}">${esc(x.kind)}</span></button></li>`).join("")}</ul>`:"";};
 function renderAdd(focusSel){
   if(!aS)return;
   const r=byId(aS.rid);if(!r)return;
@@ -2107,13 +2120,16 @@ function renderAdd(focusSel){
     const all0=[...sg.out.c,...sg.out.v,...sg.out.o];
     const recs=all0.filter(x=>x.t==="r").sort((a,b)=>b.sc-a.sc),prods=all0.filter(x=>x.t!=="r").sort((a,b)=>b.sc-a.sc);
     const pickN=(L,m)=>aS.all?L:L.filter((x,i)=>i<m||on(x));
+    /* oman lisukkeen kautta valitut, joita ei ollut ehdotuksissa */
+    for(const id of aS.sides)if(!recs.some(x=>x.id===id)){const x=byId(id);if(x)recs.push({t:"r",id,name:x.name,sc:0});}
+    for(const id of aS.ps)if(!prods.some(x=>x.id===id))prods.push({t:"p",id,name:capF(id),sc:0});
     const shR=pickN(recs,3),shP=pickN(prods,3),total=recs.length+prods.length,shown=shR.length+shP.length;
     const chip=x=>{const p=on(x);return`<button type="button" class="chip${x.t==="r"?" sdr":""}" data-a="${x.t==="r"?"side":"pside"}" data-id="${esc(x.id)}" aria-pressed="${p}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
     const more=total>shown?`<button type="button" class="chip sdm" data-a="more">Muut (${total-shown})</button>`:(aS.all&&total>6?`<button type="button" class="chip sdm" data-a="more">Vähemmän</button>`:"");
     const ownChips=aS.own.map((v,i)=>`<button type="button" class="chip" data-a="ownrm" data-i="${i}" aria-pressed="true" aria-label="Poista: ${esc(v)}">${ico("check")}${esc(v)}</button>`).join("");
     sides=(shR.length?`<h4 class="ag">Lisukkeeksi</h4><p class="sdhint">Reseptin ainekset tulevat listalle</p><div class="chips sdrow">${shR.map(chip).join("")}</div>`:"")+
       `<h4 class="ag">Lisäksi kaupasta</h4><div class="chips sdrow">${shP.map(chip).join("")}${ownChips}${more}<button type="button" class="chip sdm" data-a="ownopen" aria-expanded="${aS.ownOpen}">${ico("plus")}Oma…</button></div>`+
-      (aS.ownOpen?`<div class="xrow"><input id="aown" type="text" maxlength="60" placeholder="esim. raejuusto" autocomplete="off" aria-label="Oma lisuke"><button type="button" class="go" data-a="ownadd" style="min-height:44px;padding:0 18px;font-size:.9375rem">Lisää</button></div>`:"")+
+      (aS.ownOpen?`<div class="xrow"><input id="aown" type="text" maxlength="60" placeholder="esim. raejuusto" autocomplete="off" aria-label="Oma lisuke" value="${esc(aS.oq||"")}"><button type="button" class="go" data-a="ownadd" style="min-height:44px;padding:0 18px;font-size:.9375rem">Lisää</button></div><div id="aownsug">${ownSugHtml(aS.oq||"")}</div>`:"")+
       (aS.msg?`<p class="note err" role="alert">${esc(aS.msg)}</p>`:"")+
       `<button type="button" class="lk2" data-a="nos">Älä ehdota lisukkeita tälle ruoalle</button>`;
   }else if(state.nos.includes(r.id)&&(nd.c||nd.v)){
@@ -2161,8 +2177,17 @@ $("adlg").addEventListener("click",e=>{
   if(a==="more"){aS.all=!aS.all;renderAdd("[data-a=more]");return;}
   if(a==="ownopen"){aS.ownOpen=!aS.ownOpen;aS.msg="";renderAdd(aS.ownOpen?"#aown":"[data-a=ownopen]");return;}
   if(a==="ownrm"){aS.own.splice(+b.dataset.i,1);renderAdd("[data-a=ownopen]");return;}
+  if(a==="ownpick"){
+    const t2=b.dataset.t;
+    if(t2==="r"){if(!aS.sides.includes(id))aS.sides.push(id);}else if(!aS.ps.includes(id))aS.ps.push(id);
+    aS.ownOpen=false;aS.oq="";aS.msg="";renderAdd("[data-a=ownopen]");return;
+  }
   if(a==="ownadd"){
     const inp=$("aown"),v=inp?inp.value.trim():"";
+    /* sama nimi useana tyyppinä (esim. tuore punajuuri ja säilyke): pyydetään valitsemaan */
+    if(v){const L=ownSug(v),ex=L.filter(x=>x.v===0),alt=ex.length?L.filter(x=>x.v<=3&&x.kind!==ex[0].kind):[];
+      if(ex.length===1&&!alt.length){const x=ex[0];if(x.t==="r"){if(!aS.sides.includes(x.id))aS.sides.push(x.id);}else if(!aS.ps.includes(x.id))aS.ps.push(x.id);aS.ownOpen=false;aS.oq="";aS.msg="";renderAdd("[data-a=ownopen]");return;}
+      if(ex.length>1||alt.length){aS.oq=v;aS.msg="Valitse alta, mitä tarkoitat.";renderAdd("#aown");return;}}
     if(!v){if(inp)inp.focus();return;}
     const kk=parseIng(v).key.replace(/\s+/g," ").trim();
     if(!kk||!/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(kk)){aS.msg="Kirjoita tuotteen nimi, enintään 60 merkkiä.";renderAdd("#aown");return;}
@@ -2174,6 +2199,9 @@ $("adlg").addEventListener("click",e=>{
 });
 $("adlg").addEventListener("change",e=>{
   if(e.target.id==="alist"&&aS){aS.lid=e.target.value;aS.off=new Set();aS.seen=new Set();renderAdd("#alist");}
+});
+$("adlg").addEventListener("input",e=>{
+  if(e.target.id==="aown"&&aS){aS.oq=e.target.value;const box=$("aownsug");if(box)box.innerHTML=ownSugHtml(aS.oq);}
 });
 $("adlg").addEventListener("keydown",e=>{
   if(e.key==="Enter"&&e.target.id==="aown"){e.preventDefault();const b=$("abody").querySelector("[data-a=ownadd]");if(b)b.click();}

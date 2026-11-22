@@ -878,3 +878,12 @@ body:not([data-view="ideas"]) .spill{display:none}
 .sdrow .chip.sdr[aria-pressed="true"] .ico{color:inherit}
 #adlg .sdrow .chip{display:inline-flex;align-items:center;gap:6px}
 #adlg .sdrow .chip .ico{width:16px;height:16px}
+#adlg .osug{list-style:none;margin:8px 0 0;padding:0;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+#adlg .osug li{border-bottom:1px solid var(--line)}
+#adlg .osug li:last-child{border-bottom:0}
+#adlg .osb{font:inherit;display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 12px;background:none;border:0;color:var(--ink);text-align:left;cursor:pointer}
+#adlg .osn{flex:1;min-width:0;font-weight:600;line-height:1.25}
+#adlg .osn small{display:block;font-weight:400;font-size:.75rem;color:var(--muted)}
+#adlg .osk{flex:none;font-size:.75rem;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--bg);color:var(--muted)}
+#adlg .osk-r{background:var(--or-bg);color:var(--or-ink)}
+#adlg .osk-p:not(.osk-raw){background:var(--gr-bg);color:var(--gr-ink)}
