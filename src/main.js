@@ -1884,7 +1884,7 @@ let toastT=0;
 function showListToast(l,rid){
   const t=dlg.open?$("dtoast"):$("toast");
   $("toast").hidden=true;$("dtoast").hidden=true;
-  t.innerHTML=`<span>Lisätty listalle <b>${esc(l.name)}</b></span>`;
+  t.innerHTML=`<span>Lisätty ostoslistalle <b>${esc(l.name)}</b></span>`;
   t.hidden=false;
   clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true;},8000);
 }
@@ -2118,8 +2118,8 @@ function renderAdd(focusSel){
   const tl=aTarget(),lists=[...state.lists].reverse();
   const inl=new Set(tl?listItems(tl).filter(e=>!tl.have.includes(e.key)).map(e=>e.key):[]);
   const row=e=>{const off=aS.off.has(e.key),k=esc(e.key);
-    return`<li><button type="button" class="ar${off?" off":""}" data-a="tg" data-k="${k}" aria-pressed="${!off}"><span class="ack">${ico("check")}</span><span class="an">${esc(e.name)}${off?"<small>kaapissa, ei listalle</small>":(inl.has(e.key)?"<small>listalla jo</small>":"")}</span><span class="aq">${esc(qtyText(e))}</span></button></li>`;};
-  const sel=`<label class="adl"><span>Lista</span><select id="alist" aria-label="Ostoslista">${lists.map(l=>`<option value="${esc(l.id)}"${aS.lid===l.id?" selected":""}>${esc(l.name)}</option>`).join("")}<option value="new"${aS.lid==="new"?" selected":""}>Uusi lista</option></select></label>`;
+    return`<li><button type="button" class="ar${off?" off":""}" data-a="tg" data-k="${k}" aria-pressed="${!off}"><span class="ack">${ico("check")}</span><span class="an">${esc(e.name)}${off?"<small>on jo kaapissa</small>":(inl.has(e.key)?"<small>on jo ostoslistalla</small>":"")}</span><span class="aq">${esc(qtyText(e))}</span></button></li>`;};
+  const sel=`<label class="adl"><span>Ostoslista</span><select id="alist" aria-label="Ostoslista">${lists.map(l=>`<option value="${esc(l.id)}"${aS.lid===l.id?" selected":""}>${esc(l.name)}</option>`).join("")}<option value="new"${aS.lid==="new"?" selected":""}>Uusi ostoslista</option></select></label>`;
   const body=groups.map(g=>(g.title?`<h4 class="ag">${esc(g.title)}</h4>`:`<h4 class="ag">Ainekset</h4>`)+(g.items.length?`<ul class="al">${g.items.map(row).join("")}</ul>`:`<p class="note">Ei aineksia.</p>`)).join("");
   let sides="";
   const sg=r.t==="li"?null:sideSug(r),nd=sideNeeds(r);
@@ -2136,7 +2136,7 @@ function renderAdd(focusSel){
     const chip=x=>{const p=on(x);return`<button type="button" class="chip${x.t==="r"?" sdr":""}" data-a="${x.t==="r"?"side":"pside"}" data-id="${esc(x.id)}"${x.ver?` data-ver="${esc(x.ver)}"`:""} aria-pressed="${p}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
     const more=total>shown?`<button type="button" class="chip sdm" data-a="more">Muut (${total-shown})</button>`:(aS.all&&total>6?`<button type="button" class="chip sdm" data-a="more">Vähemmän</button>`:"");
     const ownChips=aS.own.map((v,i)=>`<button type="button" class="chip" data-a="ownrm" data-i="${i}" aria-pressed="true" aria-label="Poista: ${esc(v)}">${ico("check")}${esc(v)}</button>`).join("");
-    sides=(shR.length?`<h4 class="ag">Lisukkeeksi</h4><p class="sdhint">Reseptin ainekset tulevat listalle</p><div class="chips sdrow">${shR.map(chip).join("")}</div>`:"")+
+    sides=(shR.length?`<h4 class="ag">Lisukkeeksi</h4><p class="sdhint">Reseptin ainekset tulevat ostoslistalle</p><div class="chips sdrow">${shR.map(chip).join("")}</div>`:"")+
       `<h4 class="ag">Lisäksi kaupasta</h4><div class="chips sdrow">${shP.map(chip).join("")}${ownChips}${more}<button type="button" class="chip sdm" data-a="ownopen" aria-expanded="${aS.ownOpen}">${ico("plus")}Oma…</button></div>`+
       (aS.ownOpen?`<div class="xrow"><input id="aown" type="text" maxlength="60" placeholder="esim. raejuusto" autocomplete="off" aria-label="Oma lisuke" value="${esc(aS.oq||"")}"><button type="button" class="go" data-a="ownadd" style="min-height:44px;padding:0 18px;font-size:.9375rem">Lisää</button></div><div id="aownsug">${ownSugHtml(aS.oq||"")}</div>`:"")+
       (aS.msg?`<p class="note err" role="alert">${esc(aS.msg)}</p>`:"")+
@@ -2146,7 +2146,7 @@ function renderAdd(focusSel){
   }
   const keys=new Set();groups.forEach(g=>g.items.forEach(e=>{if(!aS.off.has(e.key))keys.add(e.key);}));
   const cnt=keys.size+aS.ps.length+aS.own.length;
-  $("abody").innerHTML=`<button type="button" class="dx" data-a="close" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${esc(r.name)}</h2><p class="note" style="margin:0 0 6px">Napauta aines, joka on jo kaapissa. Vain harmaattomat tulevat listalle.</p>${sel}${body}${sides}<div class="actions"><button type="button" class="go" data-a="ok" style="width:100%">Lisää listalle${cnt?" ("+cnt+")":""}</button></div>`;
+  $("abody").innerHTML=`<button type="button" class="dx" data-a="close" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${esc(r.name)}</h2>${sel}${body}${sides}<div class="actions"><button type="button" class="go" data-a="ok" style="width:100%">Lisää ostoslistalle${cnt?" ("+cnt+")":""}</button></div>`;
   if(focusSel){const b=$("abody").querySelector(focusSel);if(b)b.focus({preventScroll:true});}
 }
 function commitAdd(){
@@ -2389,7 +2389,7 @@ async function copyList(){
       document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();
     }catch(e){}
   }
-  flashToast(ok?"Lista kopioitu. Liitä se WhatsAppiin.":"Kopiointi ei onnistunut tässä näkymässä.");
+  flashToast(ok?"Ostoslista kopioitu. Liitä se WhatsAppiin.":"Kopiointi ei onnistunut tässä näkymässä.");
 }
 $("profBtn").addEventListener("click",()=>{uiEdit();$("pdlg").showModal();});
 $("pdlg").addEventListener("click",e=>{if(e.target===$("pdlg")||e.target.closest("[data-pclose],[data-reg-open]"))$("pdlg").close();});
@@ -2646,7 +2646,7 @@ function openDlg(id,fl){
   if(!dlg.open)dlg.showModal();
   dlg.scrollTop=0;
 }
-dlg.addEventListener("close",()=>{if(state.sort==="views")viewsDirty=true;dropDraftImg();openId=null;dlgList="";delAsk=false;edit=null;pf=null;pmOpen.clear();});
+dlg.addEventListener("close",()=>{if(curTab==="add"&&!ned)setTimeout(renderNewHost,0);if(state.sort==="views")viewsDirty=true;dropDraftImg();openId=null;dlgList="";delAsk=false;edit=null;pf=null;pmOpen.clear();});
 dlg.addEventListener("click",e=>{if(e.target===dlg&&!edit)dlg.close();});
 
 /* ---------- välilehdet ---------- */
@@ -3025,7 +3025,9 @@ function renderNewHost(){
   const h=$("newBody");if(!h)return;
   if(curTab!=="add"){h.innerHTML="";return;}
   if(!ned){
-    h.innerHTML=`<div class="nstep"><h2 class="nh">Uusi ruoka</h2><label class="rf2 w" for="nn"><span>Ruoan nimi</span><input id="nn" type="text" maxlength="120" placeholder="esim. Kanakeitto" autocomplete="off" enterkeyhint="next"></label><div class="addgo"><button type="button" class="go" id="nnGo" disabled>Jatka</button></div></div>`;
+    const own=state.custom.slice().sort((a,b)=>a.name.localeCompare(b.name,"fi"));
+    const ownL=own.length?`<div class="nstep ownl"><h2 class="nh">Omat ruoat (${own.length})</h2><ul class="hl">${own.map(r=>`<li><button type="button" class="nm ownop" data-ownopen="${esc(r.id)}">${esc(r.name)}<small>${esc([T[r.t],M[mainOf(r)]].filter(Boolean).join(" · ")||"Oma ruoka")}</small></button><button type="button" class="cartbtn" data-ownedit="${esc(r.id)}" aria-label="Muokkaa tai poista: ${esc(r.name)}"><span>Muokkaa</span></button></li>`).join("")}</ul></div>`:"";
+    h.innerHTML=`<div class="nstep"><h2 class="nh">Uusi ruoka</h2><label class="rf2 w" for="nn"><span>Ruoan nimi</span><input id="nn" type="text" maxlength="120" placeholder="esim. Kanakeitto" autocomplete="off" enterkeyhint="next"></label><div class="addgo"><button type="button" class="go" id="nnGo" disabled>Jatka</button></div></div>`+ownL;
     return;
   }
   swapNew(()=>renderDlg());
@@ -3044,7 +3046,9 @@ $("newBody").addEventListener("keydown",e=>{
   if(e.target.id==="nn"&&e.key==="Enter"){e.preventDefault();const v=e.target.value.trim();if(v)beginNew(v);}
 });
 $("newBody").addEventListener("click",e=>{
-  if(e.target.closest("#nnGo")){const v=$("nn").value.trim();if(v)beginNew(v);}
+  if(e.target.closest("#nnGo")){const v=$("nn").value.trim();if(v)beginNew(v);return;}
+  const o=e.target.closest("[data-ownopen],[data-ownedit]");
+  if(o){if(o.dataset.ownedit)beginEdit(o.dataset.ownedit);else openDlg(o.dataset.ownopen);}
 });
 $("newBody").addEventListener("change",async e=>{
   if(e.target.id!=="eimg"||!ned)return;
@@ -3658,3 +3662,15 @@ renderIdeas();refreshCart();
 startRemote(3);
 /* kehitystila: testiskriptien apu (ei mukana tuotantoversiossa) */
 if(import.meta.env.DEV)window.__app={R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
+
+/* mobiilinäppäimistö: lisäysikkuna nostetaan näppäimistön yläpuolelle ja kohdistettu kenttä vieritetään näkyviin */
+if(window.visualViewport){
+  const vv=window.visualViewport;
+  const fitA=()=>{const d=$("adlg");if(!d||!d.open)return;
+    const kb=Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop));
+    d.style.marginBottom=kb>60?kb+"px":"";d.style.maxHeight=kb>60?Math.round(vv.height*.94)+"px":"";
+    const a=document.activeElement;if(kb>60&&a&&d.contains(a)&&a.tagName==="INPUT"){const row=a.closest(".xrow")||a;row.scrollIntoView({block:"start"});}};
+  vv.addEventListener("resize",fitA);
+  $("adlg").addEventListener("close",()=>{const d=$("adlg");d.style.marginBottom="";d.style.maxHeight="";});
+}
+$("adlg").addEventListener("focusin",e=>{if(e.target.id==="aown")setTimeout(()=>{const row=e.target.closest(".xrow");if(row&&document.activeElement===e.target)row.scrollIntoView({block:"start",behavior:"smooth"});},350);});

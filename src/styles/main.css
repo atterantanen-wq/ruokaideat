@@ -887,3 +887,8 @@ body:not([data-view="ideas"]) .spill{display:none}
 #adlg .osk{flex:none;font-size:.75rem;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--bg);color:var(--muted)}
 #adlg .osk-r{background:var(--or-bg);color:var(--or-ink)}
 #adlg .osk-p:not(.osk-raw){background:var(--gr-bg);color:var(--gr-ink)}
+.ownl{margin-top:28px}
+.ownl .hl{margin-top:0}
+.hl .ownop{font:inherit;font-weight:600;text-align:left;background:none;border:0;padding:6px 0;color:var(--ink);cursor:pointer}
+#adlg .ar .an small{display:inline-block;width:100%;text-decoration:none}
+#adlg #aownsug{min-height:45vh}
