@@ -301,4 +301,5 @@ bbq-kastike|barbeque-kastike,grillikastike|7||110,17,5.5,,,|170,1,0.5,0.1,40,2.2
 kaurakerma|kaurakermaa,kaurakasvirasvasekoite|13||100,15,5,,,|150,1,14,1.2,6,0.1||||
 grahamjauho|grahamjauhoja,täysjyvävehnäjauho|3||60,9,3,,,|340,12,2.3,0.4,64,0||||
 silli|sillifilee,marinoitu silli,matjessilli|12|f|,,,,,|190,9,11,2.5,13,2||||
-meloni|hunajameloni,cantaloupe,vesimeloni|0||,,,800,,|30,0.6,0.1,0,6.5,0||||`;
+meloni|hunajameloni,cantaloupe,vesimeloni|0||,,,800,,|30,0.6,0.1,0,6.5,0||||
+etikkapunajuuri|punajuurisäilyke,etikkapunajuuret,punajuuret purkissa,viipaloidut punajuuret|4||,,,,300,|50,1,0.1,0,10.5,0.5||||`;

@@ -1535,6 +1535,7 @@ PA("kaurakerma",4.6,"l","Kaurakerma ruoanvalmistukseen");
 PA("grahamjauho",1.7,"kg","Grahamjauho");
 PA("silli",12,"kg","Marinoitu silli");
 PA("meloni",2.5,"kg","Meloni");
+PA("etikkapunajuuri",4.2,"kg","Etikkapunajuuret, purkki");
 P3("persilja",50,"kg","Persilja (arvio, ruukku tai nippu)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
 P3("minttu",60,"kg","Minttu (arvio, ruukku)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
 P3("leivinjauhe",13,"kg","Leivinjauhe 100 g (arvio)",{},"Arvio, perustuu tyypilliseen pakkaushintaan.","kuivatuotteet-ja-leivonta/leivontatarvikkeet");
@@ -2535,7 +2536,7 @@ function srcHtml(r,url){
   let t;
   if(r.custom)t=url?`<b>Oma lisäys</b> · ohje: <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(nm)}</a>`:`<b>Oma lisäys</b>`;
   else if(url)t=`<b>${esc(nm)}</b> · <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(h)}</a>`;
-  else t=`<b>Sovelluksen oma resepti</b> · ei ulkoista lähdettä`;
+  else t=r.t==="li"?`<b>Perusohje</b> · ei ulkoista lähdettä`:`<b>Sovelluksen oma resepti</b> · ei ulkoista lähdettä`;
   if(!r.custom&&state.over[r.id])t+=` · muokattu`;
   return`<p class="srcl"><span>Lähde</span><i>${t}</i></p>`;
 }

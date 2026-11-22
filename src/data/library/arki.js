@@ -13,7 +13,7 @@ export default [
       "Liha on valmista, kun pala hajoaa haarukalla painamalla. Viimeiset puoli tuntia pata voi seistä sammutetussa uunissa. Ota laakerinlehdet pois ja maista suola.",
     ],
     serve: "Tarjoa perunamuusin tai keitettyjen perunoiden, puolukkahillon ja punajuurien kanssa.",
-    sides: ["k-perunamuusi", "k-keitetyt-perunat"], extras: ["puolukkahillo", "punajuuri"],
+    sides: ["k-perunamuusi", "k-keitetyt-perunat"], extras: ["puolukkahillo", "etikkapunajuuri"],
     tips: [
       "Ruskistamaton paisti onnistuu myös, mutta liemestä tulee miedompi.",
       "Paisti on usein seuraavana päivänä parempaa, joten sen voi valmistaa edellisenä iltana.",
@@ -297,7 +297,7 @@ export default [
       "Paista kananmunat erikseen ja nosta ne annosten päälle. Ripottele pinnalle ruohosipulia.",
     ],
     serve: "Tarjoa punajuuren ja suolakurkun kanssa.",
-    extras: ["punajuuri", "suolakurkku"],
+    extras: ["etikkapunajuuri", "suolakurkku"],
     tips: ["Edellisenä päivänä keitetyt perunat ruskistuvat parhaiten, koska ne ovat kuivempia."],
     tw: [
       { id: "liha", n: "Tähdelihalla", d: "Käytä makkaran tilalla edellisen päivän paistia tai kinkkua kuutioina.", rm: ["lenkkimakkara"], add: ["savukinkku 300 g"], m: "p" },
@@ -422,7 +422,7 @@ export default [
       "Paista noin tunti, kunnes perunat ovat pehmeitä ja pinta ruskistunut.",
     ],
     serve: "Tarjoa salaatin ja punajuurten kanssa.",
-    sides: ["k-vihersalaatti"], extras: ["punajuuri"],
+    sides: ["k-vihersalaatti"], extras: ["etikkapunajuuri"],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/244345/Kermainen%20jauhelihaperunalaatikko/"]],
   },
   {
@@ -846,7 +846,7 @@ export default [
       "Ripottele valmiin kiusauksen päälle persilja.",
     ],
     serve: "Tarjoa salaatin tai punajuurten kanssa.",
-    sides: ["k-vihersalaatti"], extras: ["punajuuri"],
+    sides: ["k-vihersalaatti"], extras: ["etikkapunajuuri"],
     tips: ["Joulun jälkeen kiusaukseen voi käyttää kinkun tähteet."],
     tw: [
       { id: "tuore", n: "Tuoreista perunoista", d: "Suikaloi pakasteperunoiden tilalle 1 kg kuorittuja perunoita ja yksi sipuli.", rm: ["peruna-sipulisekoitus"], add: ["peruna 1 kg", "sipuli 1 kpl"] },
@@ -882,7 +882,7 @@ export default [
       "Hauduta kannen alla noin 1½ tuntia. Poista kansi viimeiseksi vartiksi, jotta pinta ruskistuu.",
     ],
     serve: "Tarjoa suolakurkun ja punajuuren kanssa.",
-    extras: ["suolakurkku", "punajuuri"],
+    extras: ["suolakurkku", "etikkapunajuuri"],
     tips: ["Olut antaa padalle syvän maun. Sen voi korvata lisäämällä vettä ja tilkan etikkaa."],
     src: [["Valio", "https://www.valio.fi/reseptit/merimiespihvi/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/merimiespihvi/recipe-3196"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/4032/MERIMIESPIHVI/"]],
   },
@@ -1068,7 +1068,7 @@ export default [
       "Palauta makkarat kastikkeeseen ja hauduta 5 minuuttia.",
     ],
     serve: "Tarjoa keitettyjen perunoiden tai muusin ja punajuuren kanssa.",
-    sides: ["k-keitetyt-perunat", "k-perunamuusi"], extras: ["punajuuri"],
+    sides: ["k-keitetyt-perunat", "k-perunamuusi"], extras: ["etikkapunajuuri"],
     tw: [
       { id: "kerma", n: "Kermainen", d: "Korvaa osa vedestä ruokakermalla.", rm: ["vesi"], add: ["vesi 3 dl", "ruokakerma 2 dl"] },
     ],

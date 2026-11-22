@@ -11,6 +11,7 @@ export default [
       "Kaada vesi pois ja anna perunoiden höyrytä hetki kuivaksi kuumalla levyllä.",
     ],
     tips: ["Uudet perunat kypsyvät nopeammin, noin 12–15 minuutissa. Tillinoksa keitinveteen antaa niille kesäisen maun."],
+    src: [["Martat", "https://www.martat.fi/reseptit/uusien-perunoiden-keittaminen/"]],
   },
   {
     id: "k-perunamuusi", n: "Perunamuusi", m: "v", t: "li", min: 35, w: 15, sv: 4, pop: true,
@@ -29,6 +30,7 @@ export default [
     tw: [
       { id: "kasvi", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla margariinia.", rm: ["maito", "voi"], add: ["kauramaito 2 dl", "margariini 30 g"] },
     ],
+    src: [["Martat", "https://www.martat.fi/reseptit/perunasose/"], ["Valio", "https://www.valio.fi/reseptit/perunamuusi/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/440/Perunamuusi/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-perunamuusi/3Yd8luyx39WZ4ssQthKNs9"]],
   },
   {
     id: "k-riisi", n: "Riisi", m: "v", t: "li", min: 20, w: 5, sv: 4,
@@ -75,6 +77,7 @@ export default [
       "Sekoita majoneesi, jogurtti, sinappi, etikka, sokeri ja suola.",
       "Kääntele kasvikset kastikkeeseen ja anna maustua jääkaapissa ainakin puoli tuntia.",
     ],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/grillattu-raakamakkara-ja-kirkas-coleslaw/1Kzk4hzEEtEmXQwsKXgiwR"]],
   },
   {
     id: "k-couscous", n: "Couscous", m: "v", t: "li", min: 10, w: 5, sv: 4,
@@ -99,7 +102,8 @@ export default [
       "Kääntele lohkot öljyssä ja mausteissa ja levitä ne pellille väljästi.",
       "Paahda noin 30 minuuttia ja käännä puolivälissä, kunnes lohkot ovat rapeita ja kullanruskeita.",
     ],
-    tips: ["Airfryerissä lohkoperunat valmistuvat noin 20 minuutissa."],
+    tips: ["Lohkot rapeutuvat paremmin, kun ne liotetaan ensin kylmässä vedessä parikymmentä minuuttia ja kuivataan huolellisesti ennen öljyä.", "Airfryerissä lohkoperunat valmistuvat noin 20 minuutissa."],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/rapeat-lohkoperunat-uunissa/7BBtSToDMmAkfjtkcTzpbM"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/887816/Lohkoperunat/"]],
   },
   {
     id: "k-ohraryynit", n: "Ohraryynit", m: "v", t: "li", min: 25, w: 5, sv: 4,
