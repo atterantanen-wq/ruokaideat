@@ -872,17 +872,25 @@ function sideNeeds(r){
 }
 const sideKind=r=>ingKinds(r).carb?"c":"v";
 const PSIDE=[{k:"patonki",n:"Patonki",q:"1 kpl"},{k:"ruisleipä",n:"Ruisleipä",q:"1 kpl"},{k:"sämpylät",n:"Sämpylät",q:"1 pkt"}];
+/* lisukkeen versio: pääruoan suosittelema tai lisukkeelle viimeksi valittu */
+function sideVer(x,want){
+  if(!x.vs||x.vs.length<2)return null;
+  return x.vs.find(v=>v.id===want)||selOf(x,state.tv[x.id]).ver;
+}
+function useSideVer(sid,ver){const x=byId(sid);if(ver&&x&&x.vs&&x.vs.some(v=>v.id===ver))setSel(sid,n=>{n.v=ver;});}
 function sideSug(r){
   if(!r||r.t==="li")return null;
   const need=sideNeeds(r),pr=state.pair[r.id]||{},out={c:[],v:[],o:[]};
   /* reseptin omat ehdotukset: omien valintojen jälkeen, ennen yleistä päättelyä */
-  const rs=r.sides||[],rx=(r.extras||[]).map(k=>String(k).toLowerCase());
+  /* sides: "lisuke-id" tai "lisuke-id:versio" (pääruoka suosittelee lisukkeen versiota) */
+  const rsP=(r.sides||[]).map(x=>String(x).split(":")),rs=rsP.map(x=>x[0]),rx=(r.extras||[]).map(k=>String(k).toLowerCase());
   all().filter(x=>x.t==="li").forEach((x,i)=>{
     const kd=sideKind(x),ri=rs.indexOf(x.id);
     if(!(pr[x.id]>0)&&ri<0&&(rs.length||!(need[kd]&&!(r.t==="ke"&&kd==="c"))))return;
     let sc=(pr[x.id]||0)*1000+(state.sk[x.id]||0)*10+Math.max(0,100-i)+(ri>=0?800-ri*10:0);
     if(r.t==="sa")sc+=({"Couscous":450,"Keitetyt perunat":200})[x.name]||0;
-    out[kd].push({t:"r",id:x.id,name:x.name,sc,l:pr[x.id]>0});
+    const vv=ri>=0?rsP[ri][1]:"",vo=sideVer(x,vv);
+    out[kd].push({t:"r",id:x.id,name:x.name+(vo?" ("+vo.n.toLowerCase()+")":""),ver:vo?vo.id:"",sc,l:pr[x.id]>0});
   });
   PSIDE.forEach((p,i)=>{
     const key="p:"+p.k,xi=rx.indexOf(p.k);
@@ -919,7 +927,7 @@ function sdRowHtml(r,cls){
   /* reseptit ensin reseptikuvakkeella, sitten valmiit tuotteet */
   const shown=[...pick(recs,3),...pick(prods,3)];
   const total=all0.length;
-  const chip=x=>{const p=on(x);return`<button type="button" class="chip sdc${x.t==="r"?" sdr":""}" ${x.t==="r"?`data-side="${esc(x.id)}"`:`data-pside="${esc(x.id)}"`} data-dish="${esc(r.id)}" aria-pressed="${p}" title="${x.t==="r"?"Lisukeresepti: ainekset listalle":"Valmis tuote kaupasta"}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
+  const chip=x=>{const p=on(x);return`<button type="button" class="chip sdc${x.t==="r"?" sdr":""}" ${x.t==="r"?`data-side="${esc(x.id)}"${x.ver?` data-sver="${esc(x.ver)}"`:""}`:`data-pside="${esc(x.id)}"`} data-dish="${esc(r.id)}" aria-pressed="${p}" title="${x.t==="r"?"Lisukeresepti: ainekset listalle":"Valmis tuote kaupasta"}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
   const more=total>shown.length?`<button type="button" class="chip sdm" data-sdmore="1">Muut (${total-shown.length})</button>`:(all2&&total>n?`<button type="button" class="chip sdm" data-sdmore="1">Vähemmän</button>`:"");
   const own=`<button type="button" class="chip sdm" data-sdown="1" aria-expanded="${sdOwn}">${ico("plus")}Oma…</button>`;
   const form=sdOwn?`<div class="xrow sdown"><input type="text" maxlength="60" placeholder="esim. raejuusto" autocomplete="off" aria-label="Oma lisuke"><button type="button" class="go" data-sdadd data-dish="${esc(r.id)}">Lisää</button></div><p class="note sdmsg" role="status"></p>`:"";
@@ -945,7 +953,7 @@ function setSd(id){
   if(f)f.scrollIntoView({block:"nearest",behavior:"smooth"});
 }
 const sdOnLink=r=>{const n=sideNeeds(r);return state.nos.includes(r.id)&&(n.c||n.v)?`<p class="cpy" style="margin-top:6px"><button type="button" class="clear" data-sdno="0" data-dish="${esc(r.id)}">Ota lisukeehdotukset käyttöön</button></p>`:"";};
-function toggleSide(sid,did){
+function toggleSide(sid,did,ver){
   const sd=byId(sid),d=byId(did);if(!sd)return;
   const fl=dlgList&&state.lists.find(q=>q.id===dlgList);
   const l=fl||ensureList(),i=l.cart.indexOf(sid);
@@ -953,6 +961,7 @@ function toggleSide(sid,did){
   else{
     l.cart.push(sid);
     setPv(sid,d?pvOf(d):nearP(defServ(sid)));
+    useSideVer(sid,ver);
     if(d){const pm=state.pair[did]||(state.pair[did]={});pm[sid]=Math.min(999,(pm[sid]||0)+1);}
     state.sk[sid]=Math.min(9999,(state.sk[sid]||0)+1);
   }
@@ -2124,7 +2133,7 @@ function renderAdd(focusSel){
     for(const id of aS.sides)if(!recs.some(x=>x.id===id)){const x=byId(id);if(x)recs.push({t:"r",id,name:x.name,sc:0});}
     for(const id of aS.ps)if(!prods.some(x=>x.id===id))prods.push({t:"p",id,name:capF(id),sc:0});
     const shR=pickN(recs,3),shP=pickN(prods,3),total=recs.length+prods.length,shown=shR.length+shP.length;
-    const chip=x=>{const p=on(x);return`<button type="button" class="chip${x.t==="r"?" sdr":""}" data-a="${x.t==="r"?"side":"pside"}" data-id="${esc(x.id)}" aria-pressed="${p}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
+    const chip=x=>{const p=on(x);return`<button type="button" class="chip${x.t==="r"?" sdr":""}" data-a="${x.t==="r"?"side":"pside"}" data-id="${esc(x.id)}"${x.ver?` data-ver="${esc(x.ver)}"`:""} aria-pressed="${p}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
     const more=total>shown?`<button type="button" class="chip sdm" data-a="more">Muut (${total-shown})</button>`:(aS.all&&total>6?`<button type="button" class="chip sdm" data-a="more">Vähemmän</button>`:"");
     const ownChips=aS.own.map((v,i)=>`<button type="button" class="chip" data-a="ownrm" data-i="${i}" aria-pressed="true" aria-label="Poista: ${esc(v)}">${ico("check")}${esc(v)}</button>`).join("");
     sides=(shR.length?`<h4 class="ag">Lisukkeeksi</h4><p class="sdhint">Reseptin ainekset tulevat listalle</p><div class="chips sdrow">${shR.map(chip).join("")}</div>`:"")+
@@ -2152,6 +2161,7 @@ function commitAdd(){
       l.cart.push(sid);
       setPv(sid,pvOf(r));
     }
+    useSideVer(sid,(aS.sv||{})[sid]);
     const pm=state.pair[r.id]||(state.pair[r.id]={});pm[sid]=Math.min(999,(pm[sid]||0)+1);
     state.sk[sid]=Math.min(9999,(state.sk[sid]||0)+1);
   }
@@ -2172,7 +2182,7 @@ $("adlg").addEventListener("click",e=>{
   if(a==="close"){$("adlg").close();return;}
   if(a==="ok"){commitAdd();return;}
   if(a==="tg"){if(aS.off.has(k))aS.off.delete(k);else aS.off.add(k);renderAdd(`[data-a=tg][data-k="${CSS.escape(k)}"]`);return;}
-  if(a==="side"){const i=aS.sides.indexOf(id);if(i>=0)aS.sides.splice(i,1);else aS.sides.push(id);renderAdd(`[data-a=side][data-id="${CSS.escape(id)}"]`);return;}
+  if(a==="side"){const i=aS.sides.indexOf(id);if(i>=0)aS.sides.splice(i,1);else{aS.sides.push(id);if(b.dataset.ver)(aS.sv=aS.sv||{})[id]=b.dataset.ver;}renderAdd(`[data-a=side][data-id="${CSS.escape(id)}"]`);return;}
   if(a==="pside"){const i=aS.ps.indexOf(id);if(i>=0)aS.ps.splice(i,1);else aS.ps.push(id);renderAdd(`[data-a=pside][data-id="${CSS.escape(id)}"]`);return;}
   if(a==="more"){aS.all=!aS.all;renderAdd("[data-a=more]");return;}
   if(a==="ownopen"){aS.ownOpen=!aS.ownOpen;aS.msg="";renderAdd(aS.ownOpen?"#aown":"[data-a=ownopen]");return;}
@@ -2583,9 +2593,9 @@ function verHtml(r){
   return`<div class="vrow" role="group" aria-label="Versio"><span class="vlb">Versio</span><div class="chips">${r.vs.map(v=>`<button type="button" class="chip" data-ver="${esc(v.id)}" aria-pressed="${cur===v}">${esc(v.n)}</button>`).join("")}</div></div>`;
 }
 function serveHtml(r){
-  const sides=(r.sides||[]).map(id=>byId(id)).filter(Boolean);
+  const sides=(r.sides||[]).map(s0=>{const[id,v]=String(s0).split(":"),x=byId(id);if(!x)return null;const vo=sideVer(x,v);return{id,name:x.name+(vo?" ("+vo.n.toLowerCase()+")":""),ver:vo&&v?vo.id:""};}).filter(Boolean);
   if(!r.serve&&!sides.length)return"";
-  return`<div class="serve">${r.serve?`<p>${esc(r.serve)}</p>`:""}${sides.length?`<div class="chips">${sides.map(x=>`<button type="button" class="chip sch" data-oside="${esc(x.id)}">${esc(x.name)}${ico("chev")}</button>`).join("")}</div>`:""}</div>`;
+  return`<div class="serve">${r.serve?`<p>${esc(r.serve)}</p>`:""}${sides.length?`<div class="chips">${sides.map(x=>`<button type="button" class="chip sch" data-oside="${esc(x.id)}"${x.ver?` data-over="${esc(x.ver)}"`:""}>${esc(x.name)}${ico("chev")}</button>`).join("")}</div>`:""}</div>`;
 }
 function tipsHtml(r){
   const tw=r.tw||[],tips=r.tips||[];
@@ -3385,7 +3395,7 @@ document.addEventListener("click",e=>{
   }
   if((x=t.closest("[data-ver]"))){const id=openId,v=x.dataset.ver;setSel(id,n=>{n.v=v;});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-ver="'+CSS.escape(v)+'"]');if(nb)nb.focus({preventScroll:true});return;}
   if((x=t.closest("[data-tw]"))){const id=openId,k=x.dataset.tw;setSel(id,n=>{const i=n.t.indexOf(k);if(i>=0)n.t.splice(i,1);else n.t.push(k);});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-tw="'+CSS.escape(k)+'"]');if(nb)nb.focus({preventScroll:true});return;}
-  if((x=t.closest("[data-oside]"))){openDlg(x.dataset.oside);return;}
+  if((x=t.closest("[data-oside]"))){if(x.dataset.over&&!state.lists.some(l=>l.cart.includes(x.dataset.oside)))useSideVer(x.dataset.oside,x.dataset.over);openDlg(x.dataset.oside);return;}
   if((x=t.closest("[data-acc]"))){const k=x.dataset.acc;if(k==="ing")ingOpen=!ingOpen;else if(k==="steps")stepOpen=!stepOpen;else nutOpen=!nutOpen;renderDlg();const nb=dlg.querySelector('[data-acc="'+k+'"]');if(nb)nb.focus();return;}
   if((x=t.closest("[data-pv]"))){setPv(openId,+x.dataset.pv);mutate();renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-pv="'+x.dataset.pv+'"]');if(nb)nb.focus();return;}
   if((x=t.closest("[data-reg-open]"))){openReg(x.dataset.regOpen);return;}
@@ -3435,7 +3445,7 @@ document.addEventListener("click",e=>{
     }
     return;
   }
-  if((x=t.closest("[data-side]"))){toggleSide(x.dataset.side,x.dataset.dish);return;}
+  if((x=t.closest("[data-side]"))){toggleSide(x.dataset.side,x.dataset.dish,x.dataset.sver);return;}
   if((x=t.closest("[data-sdmore]"))){if(sdOpen.has("all"))sdOpen.delete("all");else sdOpen.add("all");renderSd();return;}
   if((x=t.closest("[data-pside]"))){togglePSide(x.dataset.pside,x.dataset.dish);return;}
   if((x=t.closest("[data-sdown]"))){sdOwn=!sdOwn;renderSd();const inp=document.querySelector(dlg.open?"#sdslot .sdrow input":".sdrow.cs input");if(inp)inp.focus();return;}

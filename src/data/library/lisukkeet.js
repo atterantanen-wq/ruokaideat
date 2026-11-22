@@ -67,6 +67,14 @@ export default [
       "Kääntele kastike salaatin joukkoon juuri ennen tarjoilua.",
     ],
     tips: ["Kuivaa salaatti huolellisesti, niin kastike tarttuu lehtiin."],
+    vs: [
+      { id: "perus", n: "Perus" },
+      { id: "kreikkalainen", n: "Kreikkalainen", add: ["fetajuusto 100 g", "oliivit 0.5 dl", "oregano 0.5 tl"], step: { 3: "Kääntele kastike salaatin joukkoon, murenna päälle feta, lisää oliivit ja ripottele oregano." } },
+      { id: "omena", n: "Omena-pähkinä", rm: ["punasipuli"], add: ["omena 1 kpl", "pähkinät 0.5 dl", "hunaja 1 tl"], step: { 1: "Viipaloi kurkku ohuiksi, puolita tomaatit ja leikkaa omena ohuiksi lohkoiksi.", 2: "Vispaa öljy, sitruunan mehu, sinappi, hunaja, suola ja pippuri kastikkeeksi." }, ins: [[3, "Paahda pähkinät kuivalla pannulla ja ripottele ne salaatin päälle."]] },
+    ],
+    tw: [
+      { id: "siemenet", n: "Paahdetut siemenet", d: "Ripottele pinnalle kuivalla pannulla paahdettuja auringonkukan- tai kurpitsansiemeniä.", add: ["auringonkukansiemenet 0.5 dl"] },
+    ],
   },
   {
     id: "k-coleslaw", n: "Coleslaw", m: "v", t: "li", min: 15, w: 15, sv: 6,

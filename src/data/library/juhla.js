@@ -254,8 +254,8 @@ export default [
       "Pujota palat vuorotellen tikkuihin tiiviisti mutta litistämättä.",
       "Grillaa kuumalla grillillä noin 10–12 minuuttia ja käännä vartaita muutaman minuutin välein. Valele loput marinadista pinnalle grillauksen alussa.",
     ],
-    serve: "Tarjoa uusien perunoiden tai salaatin ja grillikastikkeen kanssa.",
-    sides: ["k-keitetyt-perunat", "k-vihersalaatti"],
+    serve: "Tarjoa uusien perunoiden tai kreikkalaisen salaatin ja grillikastikkeen kanssa.",
+    sides: ["k-keitetyt-perunat", "k-vihersalaatti:kreikkalainen"],
     tips: ["Vartaat onnistuvat myös uunin grillivastuksen alla 250 asteessa, käännä puolivälissä."],
     vs: [
       { id: "kana", n: "Kana", add: ["broilerinfilee 600 g"], m: "k" },

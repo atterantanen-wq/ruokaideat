@@ -80,7 +80,8 @@ export default [
       "Levitä kastike pohjalle, lisää täytteet ja ripottele juusto päälle.",
       "Paista uunin alatasolla 12–15 minuuttia, kunnes reunat ovat ruskeat ja juusto kuplii.",
     ],
-    serve: "Tarjoa vihreän salaatin kanssa.",
+    serve: "Tarjoa omena-pähkinäsalaatin kanssa.",
+    sides: ["k-vihersalaatti:omena"],
     tips: [
       "Mitä kuumempi uuni, sitä rapeampi pohja. Esikuumenna pelti uunissa, jos haluat pohjan erityisen rapeaksi.",
       "Valutettu tomaattimurska ei kastele pohjaa, joten pizza ei jää keskeltä vetiseksi.",
