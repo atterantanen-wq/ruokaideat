@@ -19,7 +19,7 @@ export default [
       "Paisti on usein seuraavana päivänä parempaa, joten sen voi valmistaa edellisenä iltana.",
     ],
     tw: [
-      { id: "liemi", n: "Lihaliemellä", d: "Korvaa vesi miedolla lihaliemellä, jolloin liemestä tulee täyteläisempi.", rm: ["vesi"], add: ["vesi 7 dl", "liemikuutio 1 kpl"] },
+      { id: "liemi", n: "Lihaliemellä", d: "Korvaa vesi miedolla lihaliemellä, jolloin liemestä tulee täyteläisempi.", rm: ["vesi"], add: ["vesi 7 dl", "liemikuutio 1 kpl"], step: {"3": "Irrota pannun pohjaan jääneet paistojäämät: kaada pannulle pari desiä vettä, kuumenna ja raaputa pohja puhtaaksi lastalla. Liuota liemikuutio loppuun veteen. Lisää nesteet pataan niin, että pinta on lihojen tasalla."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/karjalanpaisti/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/113651/Karjalanpaisti/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/karjalanpaisti/recipe-2291"], ["Valio", "https://www.valio.fi/reseptit/karjalanpaisti/"]],
   },
@@ -58,9 +58,9 @@ export default [
     sides: ["k-riisi", "k-pasta"],
     tips: ["Leikkaa broileri ohuiksi suikaleiksi, niin se kypsyy nopeasti eikä ehdi kuivua."],
     tw: [
-      { id: "chili", n: "Tulisempi", d: "Lisää ½ tl chilihiutaleita mausteiden kanssa.", add: ["chilijauhe 0.5 tl"] },
+      { id: "chili", n: "Tulisempi", d: "Lisää ½ tl chilihiutaleita mausteiden kanssa.", add: ["chilijauhe 0.5 tl"], step: {"2": "Laske lämpöä hiukan. Lisää pannulle sipuli ja paprika ja anna niiden pehmetä muutama minuutti. Mausta curryllä, paprikajauheella ja chilijauheella ja sekoita minuutin ajan."} },
       { id: "tomaatti", n: "Ananaksen tilalle tomaatti", d: "Korvaa ananas kahdella kuutioidulla tomaatilla ja 1 rkl:lla tomaattipyreetä.", rm: ["ananas"], add: ["tomaatti 2 kpl", "tomaattipyree 1 rkl"], step: { 3: "Palauta broilerit pannulle. Lisää tomaattikuutiot, tomaattipyree ja kerma." } },
-      { id: "kevyt", n: "Kevyempi", d: "Käytä ruokakerman tilalla kevyttä ruokakermaa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kevyt ruokakerma 2 dl"] },
+      { id: "kevyt", n: "Kevyempi", d: "Käytä ruokakerman tilalla kevyttä ruokakermaa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kevyt ruokakerma 2 dl"], step: {"3": "Palauta broilerit pannulle. Lisää ananas liemineen ja kevyt ruokakerma."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kanakastike/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-kanakastike/7re64k2HsvS2azmzuCE1MP"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/65583/Kanakastike/"]],
   },
@@ -95,7 +95,7 @@ export default [
     ],
     tw: [
       { id: "valmispohja", n: "Valmis pizzapohja", d: "Ohita taikinan teko ja käytä valmista pohjaa. Valmistusaika lyhenee noin 40 minuuttia.", rm: ["vesi", "hiiva", "suola 1 tl", "oliiviöljy", "vehnäjauho"], add: ["pizzapohja 1 kpl"], del: [0, 1], step: { 3: "Levitä valmis pizzapohja leivinpaperilla vuoratulle pellille." } },
-      { id: "chili", n: "Tulisempi", d: "Ripottele pinnalle chilihiutaleita ennen paistamista.", add: ["chiliflakes 1 tl"] },
+      { id: "chili", n: "Tulisempi", d: "Ripottele pinnalle chilihiutaleita ennen paistamista.", add: ["chiliflakes 1 tl"], step: {"4": "Levitä kastike pohjalle, lisää täytteet ja ripottele juusto ja chilihiutaleet päälle."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/pizza/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/93879/KOTIPIZZA/"]],
   },
@@ -114,8 +114,8 @@ export default [
     sides: ["k-perunamuusi", "k-keitetyt-perunat", "k-lohkoperunat"], extras: ["puolukkahillo"],
     tips: ["Kermaviili korppujauhon turvotusnesteenä tekee pihveistä erityisen mehukkaita."],
     tw: [
-      { id: "sipuli", n: "Paistetut sipulit päälle", d: "Paista kaksi sipulia renkaina voissa kullanruskeiksi ja nosta pihvien päälle.", add: ["sipuli 2 kpl", "voi 1 rkl"] },
-      { id: "broileri", n: "Broilerin jauhelihasta", d: "Käytä naudan jauhelihan tilalla broilerin jauhelihaa.", rm: ["jauheliha"], add: ["kanan jauheliha 500 g"], m: "k" },
+      { id: "sipuli", n: "Paistetut sipulit päälle", d: "Paista kaksi sipulia renkaina voissa kullanruskeiksi ja nosta pihvien päälle.", add: ["sipuli 2 kpl", "voi 1 rkl"], ins: [[4, "Leikkaa sipulit renkaiksi ja paista ne voissa keskilämmöllä kullanruskeiksi, noin 10 minuuttia. Nosta sipulit pihvien päälle."]] },
+      { id: "broileri", n: "Broilerin jauhelihasta", d: "Käytä naudan jauhelihan tilalla broilerin jauhelihaa.", rm: ["jauheliha"], add: ["kanan jauheliha 500 g"], m: "k", step: {"2": "Lisää turvonneeseen korppujauhoon broilerin jauheliha, sipulit, muna ja mausteet. Sekoita vain sen verran, että massa on tasainen."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/helpot-jauhelihapihvit/"], ["Martat", "https://www.martat.fi/reseptit/jauhelihapihvit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-jauhelihapihvit/recipe-2717"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/40824/Jauhelihapihvit/"]],
   },
@@ -135,7 +135,7 @@ export default [
     sides: ["k-vihersalaatti"],
     tips: ["Lasagne on parhaimmillaan seuraavana päivänä lämmitettynä. Se myös pakastuu hyvin."],
     tw: [
-      { id: "kasvis", n: "Puolet kasviksia", d: "Korvaa puolet jauhelihasta raastetulla porkkanalla ja kesäkurpitsalla.", rm: ["jauheliha"], add: ["jauheliha 200 g", "porkkana 2 kpl", "kesäkurpitsa 1 kpl"] },
+      { id: "kasvis", n: "Puolet kasviksia", d: "Korvaa puolet jauhelihasta raastetulla porkkanalla ja kesäkurpitsalla.", rm: ["jauheliha"], add: ["jauheliha 200 g", "porkkana 2 kpl", "kesäkurpitsa 1 kpl"], step: {"0": "Silppua sipulit ja valkosipuli. Raasta porkkanat ja kesäkurpitsa. Ruskista jauheliha öljyssä, lisää sipulit loppuvaiheessa ja kuullota raasteita vielä muutama minuutti."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/lasagne/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/lasagne/recipe-23860"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/83331/Lasagne/"]],
   },
@@ -154,8 +154,8 @@ export default [
     extras: ["tomaattiketsuppi", "kurkku"],
     tips: ["Jos maitoseos on vielä löysää, anna laatikon seistä vartti uunista ottamisen jälkeen. Se jähmettyy seistessään."],
     tw: [
-      { id: "tomaatti", n: "Tomaattisempi", d: "Sekoita lihan joukkoon 2 rkl tomaattipyreetä ja 1 tl paprikajauhetta.", add: ["tomaattipyree 2 rkl", "paprikajauhe 1 tl"] },
-      { id: "kasvi", n: "Kasvisversio", d: "Käytä jauhelihan tilalla kaurajauhista tai soijarouhetta.", rm: ["jauheliha"], add: ["soijarouhe 150 g"], m: "y" },
+      { id: "tomaatti", n: "Tomaattisempi", d: "Sekoita lihan joukkoon 2 rkl tomaattipyreetä ja 1 tl paprikajauhetta.", add: ["tomaattipyree 2 rkl", "paprikajauhe 1 tl"], step: {"1": "Ruskista jauheliha pannulla öljyssä, lisää silputtu sipuli ja paista, kunnes se pehmenee. Sekoita joukkoon tomaattipyree ja paprikajauhe ja mausta suolalla ja pippurilla."} },
+      { id: "kasvi", n: "Kasvisversio", d: "Käytä jauhelihan tilalla kaurajauhista tai soijarouhetta.", rm: ["jauheliha"], add: ["soijarouhe 150 g"], m: "y", step: {"1": "Paista soijarouhetta pannulla öljyssä muutama minuutti, lisää silputtu sipuli ja paista, kunnes se pehmenee. Mausta suolalla ja pippurilla."} },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/137/Makaronilaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/makaronilaatikko/5Ngx7EVmGTCR0vswLSyjpH"], ["Valio", "https://www.valio.fi/reseptit/makaronilaatikko/"]],
   },
@@ -174,8 +174,8 @@ export default [
     sides: ["k-riisi"], extras: ["smetana"],
     tips: ["Chili on vielä parempaa seuraavana päivänä, ja se pakastuu hyvin."],
     tw: [
-      { id: "kasvi", n: "Sin carne", d: "Jätä jauheliha pois ja lisää toinen tölkki papuja ja tölkki maissia.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y" },
-      { id: "mieto", n: "Miedompi", d: "Jätä chilijauhe pois. Tarjoa chilikastiketta erikseen niille, jotka haluavat.", rm: ["chilijauhe"] },
+      { id: "kasvi", n: "Sin carne", d: "Jätä jauheliha pois ja lisää toinen tölkki papuja ja tölkki maissia.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y", step: {"1": "Kuumenna öljy padassa tai isossa pannussa. Lisää sipulit ja paprika ja pehmennä muutama minuutti.", "3": "Kaada joukkoon tomaattimurska, pyree ja vesi. Huuhtele pavut ja maissi ja lisää ne."} },
+      { id: "mieto", n: "Miedompi", d: "Jätä chilijauhe pois. Tarjoa chilikastiketta erikseen niille, jotka haluavat.", rm: ["chilijauhe"], step: {"2": "Lisää mausteet chilijauhetta lukuun ottamatta ja paista hetki, jotta ne vapauttavat aromejaan."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/chili-con-carne/"], ["Martat", "https://www.martat.fi/reseptit/chili-con-carne/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-chili-con-carne/recipe-834"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/29394/Chili%20con%20carne/"]],
   },
@@ -194,7 +194,7 @@ export default [
     extras: ["puolukkahillo"],
     tips: ["Peitä vuoka foliolla ensimmäiseksi puoleksi tunniksi, jos pinta tummuu liian nopeasti."],
     tw: [
-      { id: "kasvi", n: "Kasvisversio", d: "Korvaa jauheliha kaurajauhiksella tai soijarouheella ja käytä kasvislientä.", rm: ["jauheliha", "liemikuutio"], add: ["soijarouhe 150 g", "kasvisliemikuutio 2 kpl"], m: "y" },
+      { id: "kasvi", n: "Kasvisversio", d: "Korvaa jauheliha kaurajauhiksella tai soijarouheella ja käytä kasvislientä.", rm: ["jauheliha", "liemikuutio"], add: ["soijarouhe 150 g", "kasvisliemikuutio 2 kpl"], m: "y", step: {"1": "Suikaloi kaali ja silppua sipulit. Paista soijarouhe ja sipulit pannulla puolessa öljystä ja siirrä ne syrjään.", "3": "Lämmitä uuni 175 asteeseen. Liuota kasvisliemikuutiot kuumaan veteen. Sekoita kaali, soijarouhe, riisi, liemi, siirappi ja mausteet ja levitä seos voideltuun vuokaan."} },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/paras-kaalilaatikko/recipe-4544"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/2359/Kaalilaatikko/"], ["Valio", "https://www.valio.fi/reseptit/vegaaninen-kaalilaatikko/"]],
   },
@@ -212,8 +212,8 @@ export default [
     serve: "Tarjoa salaatin kanssa.",
     sides: ["k-vihersalaatti"],
     tw: [
-      { id: "broileri", n: "Broilerin jauhelihasta", d: "Käytä broilerin jauhelihaa.", rm: ["jauheliha"], add: ["kanan jauheliha 400 g"], m: "k" },
-      { id: "ohra", n: "Ohralla", d: "Käytä riisin tilalla ohrasuurimoita.", rm: ["riisi"], add: ["ohrasuurimot 1 dl"] },
+      { id: "broileri", n: "Broilerin jauhelihasta", d: "Käytä broilerin jauhelihaa.", rm: ["jauheliha"], add: ["kanan jauheliha 400 g"], m: "k", step: {"2": "Ruskista broilerin jauheliha öljyssä ja lisää silputut sipulit. Sekoita mukaan riisi, tomaattipyree, mausteet ja tuorejuusto."} },
+      { id: "ohra", n: "Ohralla", d: "Käytä riisin tilalla ohrasuurimoita.", rm: ["riisi"], add: ["ohrasuurimot 1 dl"], step: {"0": "Keitä ohrasuurimot pakkauksen ohjeen mukaan.", "2": "Ruskista jauheliha öljyssä ja lisää silputut sipulit. Sekoita mukaan ohrasuurimot, tomaattipyree, mausteet ja tuorejuusto."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/taytetyt-paprikat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/taytetyt-paprikat/recipe-2425"], ["Valio", "https://www.valio.fi/reseptit/taytetyt-paprikat/"]],
   },
@@ -232,8 +232,8 @@ export default [
     sides: ["k-keitetyt-perunat", "k-perunamuusi"], extras: ["puolukkahillo"],
     tips: ["Kaada paistoliemi ja tilkka kermaa kattilaan ja suurusta, niin saat murekkeelle kastikkeen."],
     tw: [
-      { id: "pekoni", n: "Pekonikääre", d: "Kääri mureke pekoniviipaleisiin ennen paistamista.", add: ["pekoni 150 g"] },
-      { id: "juusto", n: "Juustotäytteellä", d: "Painele murekkeen keskelle uurre, täytä se juustoraasteella ja sulje.", add: ["juustoraaste 1 dl"] },
+      { id: "pekoni", n: "Pekonikääre", d: "Kääri mureke pekoniviipaleisiin ennen paistamista.", add: ["pekoni 150 g"], step: {"3": "Lämmitä uuni 200 asteeseen. Taputtele massasta leipämäinen mureke uunivuokaan ja kääri se pekoniviipaleisiin niin, että saumat jäävät alle."} },
+      { id: "juusto", n: "Juustotäytteellä", d: "Painele murekkeen keskelle uurre, täytä se juustoraasteella ja sulje.", add: ["juustoraaste 1 dl"], step: {"3": "Lämmitä uuni 200 asteeseen. Taputtele puolet massasta uunivuokaan, painele keskelle uurre ja täytä se juustoraasteella. Peitä lopulla massalla ja painele reunat umpeen."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/lihamureke/"], ["Martat", "https://www.martat.fi/reseptit/lihamureke/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/82530/jauhelihamureke/"]],
   },
@@ -301,7 +301,7 @@ export default [
     extras: ["etikkapunajuuri", "suolakurkku"],
     tips: ["Edellisenä päivänä keitetyt perunat ruskistuvat parhaiten, koska ne ovat kuivempia."],
     tw: [
-      { id: "liha", n: "Tähdelihalla", d: "Käytä makkaran tilalla edellisen päivän paistia tai kinkkua kuutioina.", rm: ["lenkkimakkara"], add: ["savukinkku 300 g"], m: "p" },
+      { id: "liha", n: "Tähdelihalla", d: "Käytä makkaran tilalla edellisen päivän paistia tai kinkkua kuutioina.", rm: ["lenkkimakkara"], add: ["savukinkku 300 g"], m: "p", step: {"0": "Kuutioi keitetyt ja jäähtyneet perunat sekä kinkku noin sentin paloiksi. Silppua sipulit.", "2": "Lisää sipuli ja paista, kunnes se on pehmeää. Lisää lopuksi kinkku ja paista vielä muutama minuutti."} },
       { id: "raaka", n: "Raaoista perunoista", d: "Käytä kuorittuja raakoja perunoita ja pidennä paistoaikaa noin 10 minuutilla kannen alla.", ins: [[1, "Peitä pannu kannella ensimmäiseksi 10 minuutiksi, jotta raa'at perunat kypsyvät läpi."]] },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/pyttipannu/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108114/Pyttipannu/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kermainen-pyttipannu/4nzzHjh0GnoBpUWXuWBWJ7"]],
@@ -351,7 +351,7 @@ export default [
     serve: "Tarjoa salaatin ja tortillalastujen kanssa.",
     sides: ["k-vihersalaatti"],
     tw: [
-      { id: "kasvi", n: "Kasvisversio", d: "Korvaa jauheliha mustilla pavuilla ja maissilla.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y" },
+      { id: "kasvi", n: "Kasvisversio", d: "Korvaa jauheliha mustilla pavuilla ja maissilla.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y", step: {"2": "Kuullota sipuli pannulla. Lisää huuhdotut pavut, maissi, kuutioitu paprika, tacomauste ja vesi ja hauduta, kunnes neste on imeytynyt. Sekoita salsa joukkoon."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/tacopiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tacopiirakka/recipe-837"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/293865/Tacopiirakka/"]],
   },
@@ -385,7 +385,7 @@ export default [
     sides: ["k-vihersalaatti"],
     tips: ["Tilkka punaviiniä tomaattien kanssa syventää kastikkeen makua."],
     tw: [
-      { id: "kaura", n: "Kasvisversio", d: "Korvaa jauheliha kaurajauhiksella tai soijarouheella.", rm: ["jauheliha"], add: ["soijarouhe 150 g"], m: "y" },
+      { id: "kaura", n: "Kasvisversio", d: "Korvaa jauheliha kaurajauhiksella tai soijarouheella.", rm: ["jauheliha"], add: ["soijarouhe 150 g"], m: "y", step: {"2": "Nosta lämpöä, lisää soijarouhe ja paista muutama minuutti. Sekoita tomaattipyree joukkoon ja paista vielä hetki."} },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/676397/Bolognese/"], ["Valio", "https://www.valio.fi/reseptit/vegaaninen-bolognese/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-bolognese/31Ar7uoyZ5mrHahDVejonU"]],
   },
@@ -404,9 +404,9 @@ export default [
     tips: ["Naudanlihapihviin kannattaa painaa peukalolla keskelle kuoppa ennen paistamista, niin pihvi ei pullistu paistuessaan."],
     vs: [
       { id: "nauta", n: "Naudanliha", add: ["jauheliha 600 g", "suola 0.75 tl", "mustapippuri 0.5 tl", "cheddar 80 g"], m: "n", step: { 1: "Mausta jauheliha suolalla ja pippurilla ja taputtele neljäksi sämpylää hieman leveämmäksi pihviksi. Nosta juustoviipale pihvin päälle paistamisen loppuvaiheessa." } },
-      { id: "kana", n: "Kana", add: ["broilerinfilee 500 g", "paprikajauhe 1 tl", "suola 0.5 tl"], m: "k", step: { 1: "Halkaise broilerinfileet ohuiksi leikkeiksi ja mausta paprikalla ja suolalla. Paista leikkeet kypsiksi, noin 4 minuuttia kummaltakin puolelta." } },
-      { id: "halloumi", n: "Halloumi", add: ["halloumi 400 g"], veg: true, step: { 1: "Leikkaa halloumi paksuiksi viipaleiksi ja paista ne kuumalla pannulla kullanruskeiksi." } },
-      { id: "kasvis", n: "Kasvispihvi", add: ["kasvispyörykät 4 kpl"], m: "y", step: { 1: "Lämmitä valmiit kasvispihvit pannulla pakkauksen ohjeen mukaan." } },
+      { id: "kana", n: "Kana", add: ["broilerinfilee 500 g", "paprikajauhe 1 tl", "suola 0.5 tl"], m: "k", step: { 2: "Paahda samalla sämpylöiden leikkauspinnat pannulla tai grillissä.", 1: "Halkaise broilerinfileet ohuiksi leikkeiksi ja mausta paprikalla ja suolalla. Paista leikkeet kypsiksi, noin 4 minuuttia kummaltakin puolelta." } },
+      { id: "halloumi", n: "Halloumi", add: ["halloumi 400 g"], veg: true, step: { 2: "Paahda samalla sämpylöiden leikkauspinnat pannulla tai grillissä.", 1: "Leikkaa halloumi paksuiksi viipaleiksi ja paista ne kuumalla pannulla kullanruskeiksi." } },
+      { id: "kasvis", n: "Kasvispihvi", add: ["kasvispyörykät 4 kpl"], m: "y", step: { 2: "Paahda samalla sämpylöiden leikkauspinnat pannulla tai grillissä.", 1: "Lämmitä valmiit kasvispihvit pannulla pakkauksen ohjeen mukaan." } },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/hampurilaiset/recipe-3489"], ["Valio", "https://www.valio.fi/reseptit/hampurilainen/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/25046/Hampurilainen/"]],
   },
@@ -441,7 +441,7 @@ export default [
     sides: ["k-riisi", "k-keitetyt-perunat"],
     tips: ["Luulliset paistileikkeet pysyvät mehukkaampina kuin rintafileet pitkässä haudutuksessa."],
     tw: [
-      { id: "appelsiini", n: "Appelsiinilla", d: "Käytä sitruunan tilalla appelsiinin mehua ja raastettua kuorta.", rm: ["sitruuna"], add: ["appelsiini 1 kpl"] },
+      { id: "appelsiini", n: "Appelsiinilla", d: "Käytä sitruunan tilalla appelsiinin mehua ja raastettua kuorta.", rm: ["sitruuna"], add: ["appelsiini 1 kpl"], step: {"2": "Raasta pataan appelsiinin kuori ja purista joukkoon puolet mehusta. Kaada mukaan tomaattimurska, hunaja ja suikaloidut kuivatut tomaatit ja kuumenna."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kanapata/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/appelsiini-broileripata/ldioZ8tlSZ4RKieEsKhW3"], ["Martat", "https://www.martat.fi/reseptit/filippiinilainen-kanapata-adobo/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/10537/Kanapata/"]],
   },
@@ -459,8 +459,8 @@ export default [
     serve: "Tarjoa vihersalaatin kanssa.",
     sides: ["k-vihersalaatti"],
     tw: [
-      { id: "pinaatti", n: "Pinaatilla", d: "Lisää loppuvaiheessa kourallinen tuoretta pinaattia.", add: ["pinaatti 65 g"] },
-      { id: "kevyt", n: "Kevyempi", d: "Korvaa ruokakerma kevyellä ruokakermalla.", rm: ["ruokakerma"], add: ["kevyt ruokakerma 2 dl"] },
+      { id: "pinaatti", n: "Pinaatilla", d: "Lisää loppuvaiheessa kourallinen tuoretta pinaattia.", add: ["pinaatti 65 g"], step: {"3": "Kun pasta on kypsää ja neste lähes imeytynyt, sekoita joukkoon kerma ja pinaatti ja kuumenna, kunnes pinaatti lysähtää."} },
+      { id: "kevyt", n: "Kevyempi", d: "Korvaa ruokakerma kevyellä ruokakermalla.", rm: ["ruokakerma"], add: ["kevyt ruokakerma 2 dl"], step: {"3": "Kun pasta on kypsää ja neste lähes imeytynyt, sekoita joukkoon kevyt ruokakerma ja kuumenna."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/one-pot-kanapasta/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/broileripasta-uunissa/recipe-2614"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/2048/Kanapasta/"]],
   },
@@ -478,7 +478,7 @@ export default [
     serve: "Tarjoa salaatin kanssa.",
     sides: ["k-vihersalaatti"],
     tw: [
-      { id: "pesto", n: "Pestolla", d: "Korvaa curry 2 rkl:lla vihreää pestoa.", rm: ["curry"], add: ["pesto 2 rkl"] },
+      { id: "pesto", n: "Pestolla", d: "Korvaa curry 2 rkl:lla vihreää pestoa.", rm: ["curry"], add: ["pesto 2 rkl"], step: {"3": "Sekoita kermaan pesto, suola ja pippuri ja kaada vuokaan. Ripottele pinnalle juusto."} },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/227863/Broilerikiusaus/"], ["Valio", "https://www.valio.fi/reseptit/rosmariini-broilerikiusaus/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kanakiusaus/recipe-3893"]],
   },
@@ -533,8 +533,8 @@ export default [
     sides: ["k-riisi"],
     tips: ["Wokki onnistuu parhaiten, kun kaikki on pilkottu valmiiksi ennen kuin pannu kuumenee."],
     tw: [
-      { id: "tulinen", n: "Tulisempi", d: "Lisää kastikkeeseen 1 tl srirachaa ja tuoretta chiliä.", add: ["sriracha 1 tl", "tuore chili 1 kpl"] },
-      { id: "ananas", n: "Ananaksella", d: "Lisää kasvisten joukkoon tölkillinen ananaspaloja.", add: ["ananas 230 g"] },
+      { id: "tulinen", n: "Tulisempi", d: "Lisää kastikkeeseen 1 tl srirachaa ja tuoretta chiliä.", add: ["sriracha 1 tl", "tuore chili 1 kpl"], step: {"1": "Sekoita kastikkeen ainekset: soija, hoisin, hunaja, maissitärkkelys, vesi ja sriracha.", "3": "Paista kasviksia, valkosipulia, raastettua inkivääriä ja silputtua chiliä kovalla lämmöllä sekoitellen 3–4 minuuttia. Kasvisten kuuluu jäädä napakoiksi."} },
+      { id: "ananas", n: "Ananaksella", d: "Lisää kasvisten joukkoon tölkillinen ananaspaloja.", add: ["ananas 230 g"], ins: [[3, "Lisää valutetut ananaspalat ja paista minuutti."]] },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/hoisin-kanawokki/67xdLFDdCHOyaHy7ZO4nFH"], ["Martat", "https://www.martat.fi/reseptit/broileriwokki/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/79424/Broileriwokki/"]],
   },
@@ -570,8 +570,8 @@ export default [
     sides: ["k-riisi"],
     tips: ["Marinoi broileri jogurtissa ja mausteissa edellisenä iltana, niin siitä tulee erityisen mureaa."],
     tw: [
-      { id: "cashew", n: "Cashewpähkinöillä", d: "Surauta kastikkeeseen kourallinen cashewpähkinöitä, jolloin se paksuuntuu ja pehmenee.", add: ["cashewpähkinä 1 dl"] },
-      { id: "tulinen", n: "Tulisempi", d: "Lisää mausteiden kanssa ¼ tl chilijauhetta.", add: ["chilijauhe 0.25 tl"] },
+      { id: "cashew", n: "Cashewpähkinöillä", d: "Surauta kastikkeeseen kourallinen cashewpähkinöitä, jolloin se paksuuntuu ja pehmenee.", add: ["cashewpähkinä 1 dl"], step: {"3": "Kaada joukkoon tomaattimurska, suola, sokeri ja cashewpähkinät. Hauduta 10 minuuttia ja soseuta sileäksi."} },
+      { id: "tulinen", n: "Tulisempi", d: "Lisää mausteiden kanssa ¼ tl chilijauhetta.", add: ["chilijauhe 0.25 tl"], step: {"2": "Lisää tomaattipyree, mausteet ja chilijauhe ja paista minuutin ajan, jotta mausteet paahtuvat."} },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/butter-chicken/4f7P1HsrxRBZRM6CWB8g6n"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/518673/Butter%20Chicken/"]],
   },
@@ -609,7 +609,7 @@ export default [
     sides: ["k-perunamuusi", "k-riisi"],
     tips: ["Broilerin jauheliha on tavallista jauhelihaa kosteampaa, joten pihvit on helpointa muotoilla pellillä."],
     tw: [
-      { id: "garam", n: "Garam masalalla", d: "Mausta pihvit 1 tl:lla garam masalaa ja ½ tl:lla inkivääriä paprikan tilalla.", rm: ["paprikajauhe"], add: ["garam masala 1 tl", "inkivääri 0.5 tl"] },
+      { id: "garam", n: "Garam masalalla", d: "Mausta pihvit 1 tl:lla garam masalaa ja ½ tl:lla inkivääriä paprikan tilalla.", rm: ["paprikajauhe"], add: ["garam masala 1 tl", "inkivääri 0.5 tl"], step: {"2": "Raasta omena ja sipuli hienoksi. Sekoita ne turvonneisiin hiutaleisiin jauhelihan, munan, garam masalan, inkiväärin ja muiden mausteiden kanssa."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/broileripihvit/"], ["Valio", "https://www.valio.fi/reseptit/garam-masala-broileripihvit/"]],
   },
@@ -641,8 +641,8 @@ export default [
     serve: "Tarjoa riisin kanssa.",
     sides: ["k-riisi:kookos"],
     tw: [
-      { id: "kookos", n: "Kookosmaidolla", d: "Korvaa creme fraiche kookosmaidolla.", rm: ["creme fraiche"], add: ["kookosmaito 2 dl"] },
-      { id: "kasvis", n: "Kikherneillä", d: "Korvaa broileri tölkillisellä kikherneitä ja lisää kourallinen pinaattia.", rm: ["broilerinfilee"], add: ["kikherneet 1 prk", "pinaatti 65 g"], m: "y" },
+      { id: "kookos", n: "Kookosmaidolla", d: "Korvaa creme fraiche kookosmaidolla.", rm: ["creme fraiche"], add: ["kookosmaito 2 dl"], step: {"3": "Sekoita kookosmaito joukkoon ja hauduta vielä 5 minuuttia. Viimeistele korianterilla."} },
+      { id: "kasvis", n: "Kikherneillä", d: "Korvaa broileri tölkillisellä kikherneitä ja lisää kourallinen pinaattia.", rm: ["broilerinfilee"], add: ["kikherneet 1 prk", "pinaatti 65 g"], m: "y", step: {"0": "Huuhtele ja valuta kikherneet ja silppua sipulit.", "1": "Kuullota sipulit voissa kasarissa. Lisää mausteet ja käännä muutama minuutti.", "2": "Lisää tomaattimurska, kikherneet ja suola ja hauduta kannen alla noin 15 minuuttia. Sekoita pinaatti joukkoon ja anna sen lysähtää."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/tomaattinen-broilericurry/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/431483/Kana-Curry/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/red-curry-kana-ja-kookosriisi/fmh-recipe-1802"]],
   },
@@ -661,7 +661,7 @@ export default [
     sides: ["k-vihersalaatti"],
     tw: [
       { id: "uuni", n: "Uunissa juuston kanssa", d: "Sekoita keitetty pasta ja kastike uunivuokaan, ripottele päälle juustoraastetta ja gratinoi 200 asteessa 15 minuuttia.", add: ["juustoraaste 150 g"], ins: [[4, "Kaada pasta uunivuokaan, ripottele juusto pinnalle ja gratinoi 200-asteisessa uunissa noin 15 minuuttia."]] },
-      { id: "feta", n: "Fetalla", d: "Korvaa kerma murustetulla fetalla.", rm: ["ruokakerma"], add: ["fetajuusto 150 g"] },
+      { id: "feta", n: "Fetalla", d: "Korvaa kerma murustetulla fetalla.", rm: ["ruokakerma"], add: ["fetajuusto 150 g"], step: {"3": "Valuta tonnikala ja sekoita se kastikkeeseen. Kuumenna ja mausta pippurilla ja suolalla. Murusta feta pinnalle juuri ennen tarjoilua."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/tonnikalapasta/"], ["Valio", "https://www.valio.fi/reseptit/tonnikalapasta-uunissa/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tonnikalapasta-uunissa/48Wo9qRdB2RPtSt3hpLteh"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3460/Tonnikalapasta/"]],
   },
@@ -677,8 +677,8 @@ export default [
       "Purista joukkoon sitruunan mehua, maista suola ja sekoita kastike pastaan ja parsakaaliin. Ripottele tilli pinnalle.",
     ],
     tw: [
-      { id: "savulohi", n: "Savulohesta", d: "Käytä tuoreen lohen tilalla 250 g kylmäsavulohta suikaleina ja lisää se vasta lopuksi.", rm: ["lohifile"], add: ["savulohi 250 g"] },
-      { id: "pinaatti", n: "Pinaatilla", d: "Korvaa parsakaali tuoreella pinaatilla, joka sekoitetaan kastikkeeseen lopuksi.", rm: ["parsakaali"], add: ["pinaatti 150 g"] },
+      { id: "savulohi", n: "Savulohesta", d: "Käytä tuoreen lohen tilalla 250 g kylmäsavulohta suikaleina ja lisää se vasta lopuksi.", rm: ["lohifile"], add: ["savulohi 250 g"], step: {"1": "Leikkaa savulohi suikaleiksi.", "3": "Lisää sitruunapippuri ja hauduta kastiketta hetki. Kääntele savulohisuikaleet joukkoon vasta lopuksi ja lämmitä vain läpi."} },
+      { id: "pinaatti", n: "Pinaatilla", d: "Korvaa parsakaali tuoreella pinaatilla, joka sekoitetaan kastikkeeseen lopuksi.", rm: ["parsakaali"], add: ["pinaatti 150 g"], step: {"0": "Keitä pasta pakkauksen ohjeen mukaan.", "4": "Sekoita pinaatti kastikkeeseen ja anna lysähtää. Purista joukkoon sitruunan mehua, maista suola ja sekoita kastike pastaan. Ripottele tilli pinnalle."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/helppo-lohipasta/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/yhden-astian-lohipasta/6G5lkLdKjzgj8aqft5MCCN"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/201621/SavuLohiPasta/"]],
   },
@@ -712,7 +712,7 @@ export default [
     serve: "Tarjoa keitettyjen perunoiden tai muusin kanssa.",
     sides: ["k-keitetyt-perunat", "k-perunamuusi"],
     tw: [
-      { id: "tomaatti", n: "Tomaatilla ja pizzamausteella", d: "Korvaa curry pizzamausteella ja lisää kahden tomaatin viipaleet kalan päälle.", rm: ["curry"], add: ["italialainen mausteseos 2 tl", "tomaatti 2 kpl"] },
+      { id: "tomaatti", n: "Tomaatilla ja pizzamausteella", d: "Korvaa curry pizzamausteella ja lisää kahden tomaatin viipaleet kalan päälle.", rm: ["curry"], add: ["italialainen mausteseos 2 tl", "tomaatti 2 kpl"], step: {"1": "Mausta palat suolalla, pippurilla ja pizzamausteella ja nosta tomaattiviipaleet kalan päälle."} },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-seiti-uunissa/recipe-2383"], ["Valio", "https://www.valio.fi/reseptit/uuniseiti/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/597425/Seiti%C3%A4%20uunissa/"]],
   },
@@ -742,7 +742,7 @@ export default [
       "Mausta sitruunan mehulla, suolalla ja pippurilla ja sekoita pastan joukkoon. Raasta pinnalle parmesaania.",
     ],
     tw: [
-      { id: "chili", n: "Tulisempi", d: "Lisää sipulin kanssa ripaus chilihiutaleita.", add: ["chiliflakes 0.5 tl"] },
+      { id: "chili", n: "Tulisempi", d: "Lisää sipulin kanssa ripaus chilihiutaleita.", add: ["chiliflakes 0.5 tl"], step: {"2": "Pehmennä silputtu sipuli, valkosipuli ja chilihiutaleet öljyssä. Raasta joukkoon sitruunan kuori ja lisää kerma. Anna kiehua hiljalleen pari minuuttia."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/katkarapupasta/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/sitruunainen-katkarapupasta/UMWXYv62Sl5C6PFLUmp62"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/48719/Katkarapupasta/"]],
   },
@@ -760,7 +760,7 @@ export default [
     serve: "Tarjoa perunamuusin ja puolukkahillon kanssa.",
     sides: ["k-perunamuusi", "k-keitetyt-perunat"], extras: ["puolukkahillo"],
     tw: [
-      { id: "aura", n: "Sinihomejuustolla", d: "Laita sinapin tilalle fileiden väliin ohut viipale sinihomejuustoa.", rm: ["sinappi"], add: ["sininen juusto 100 g"] },
+      { id: "aura", n: "Sinihomejuustolla", d: "Laita sinapin tilalle fileiden väliin ohut viipale sinihomejuustoa.", rm: ["sinappi"], add: ["sininen juusto 100 g"], step: {"1": "Leikkaa sinihomejuusto ohuiksi viipaleiksi.", "2": "Aseta puolet fileistä leikkuulaudalle nahka alaspäin, ripottele päälle yrttejä ja lisää ohut viipale sinihomejuustoa. Peitä toisella fileellä nahkapuoli ylöspäin."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/perinteiset-silakkapihvit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/silakkapihvit/recipe-685"], ["Valio", "https://www.valio.fi/reseptit/aura-silakkapihvit/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/515019/Silakkapihvit/"]],
   },
@@ -794,7 +794,7 @@ export default [
     serve: "Tarjoa leivän kanssa.",
     extras: ["patonki"],
     tw: [
-      { id: "seiti", n: "Vaaleasta kalasta", d: "Käytä lohen tilalla seitiä tai turskaa.", rm: ["lohifile"], add: ["valkoinen kalafile 400 g"] },
+      { id: "seiti", n: "Vaaleasta kalasta", d: "Käytä lohen tilalla seitiä tai turskaa.", rm: ["lohifile"], add: ["valkoinen kalafile 400 g"], step: {"0": "Leikkaa seiti tai turska isoiksi paloiksi ja ripottele päälle puolet suolasta."} },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/punainen-kalapata/recipe-4373"], ["Valio", "https://www.valio.fi/reseptit/juustoinen-kalavuoka/"], ["Martat", "https://www.martat.fi/reseptit/gnocchi-kalavuoka/"]],
   },
@@ -831,7 +831,7 @@ export default [
     sides: ["k-perunamuusi"],
     tw: [
       { id: "uuni", n: "Uunissa", d: "Kypsennä leivitetyt puikot öljytyllä pellillä 225 asteessa noin 15 minuuttia.", step: { 3: "Nosta puikot öljytylle pellille, pirskota pinnalle öljyä ja kypsennä 225 asteessa noin 15 minuuttia." } },
-      { id: "lohi", n: "Lohesta", d: "Käytä vaalean kalan tilalla ruodotonta lohta.", rm: ["valkoinen kalafile"], add: ["lohifile 400 g"] },
+      { id: "lohi", n: "Lohesta", d: "Käytä vaalean kalan tilalla ruodotonta lohta.", rm: ["valkoinen kalafile"], add: ["lohifile 400 g"], step: {"0": "Leikkaa ruodoton lohi 8–10 puikoksi. Mausta suolalla ja pippurilla."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/kalapuikot/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kalapuikot-airfryerissa/2VLj1qtQ29uYlAsS5gTeoz"]],
   },
@@ -850,7 +850,7 @@ export default [
     sides: ["k-vihersalaatti"], extras: ["etikkapunajuuri"],
     tips: ["Joulun jälkeen kiusaukseen voi käyttää kinkun tähteet."],
     tw: [
-      { id: "tuore", n: "Tuoreista perunoista", d: "Suikaloi pakasteperunoiden tilalle 1 kg kuorittuja perunoita ja yksi sipuli.", rm: ["peruna-sipulisekoitus"], add: ["peruna 1 kg", "sipuli 1 kpl"] },
+      { id: "tuore", n: "Tuoreista perunoista", d: "Suikaloi pakasteperunoiden tilalle 1 kg kuorittuja perunoita ja yksi sipuli.", rm: ["peruna-sipulisekoitus"], add: ["peruna 1 kg", "sipuli 1 kpl"], step: {"1": "Kuori ja suikaloi perunat ja silppua sipuli. Levitä ne uunivuokaan ja sekoita sekaan kinkkusuikaleet ja mausteet."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kinkkukiusaus/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-kinkkukiusaus/recipe-1696"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/46550/Kinkkukiusaus/"]],
   },
@@ -902,7 +902,7 @@ export default [
     sides: ["k-perunamuusi", "k-riisi"],
     tips: ["Painekattilassa haudutukseen riittää noin 25 minuuttia."],
     tw: [
-      { id: "sieni", n: "Sienillä", d: "Paista 200 g viipaloituja herkkusieniä sipulien kanssa.", add: ["herkkusienet 200 g"] },
+      { id: "sieni", n: "Sienillä", d: "Paista 200 g viipaloituja herkkusieniä sipulien kanssa.", add: ["herkkusienet 200 g"], step: {"1": "Ruskista lihaa voissa kolmessa erässä ja siirrä kattilaan. Kuullota sipulit ja viipaloidut herkkusienet pannulla ja lisää tomaattipyree hetkeksi."} },
       { id: "broileri", n: "Broilerista", d: "Käytä naudan tilalla broilerin suikaleita ja lyhennä haudutus 15 minuuttiin.", rm: ["naudan paisti"], add: ["broilerinfilee 600 g"], m: "k", step: { 3: "Hauduta noin 15 minuuttia, kunnes broileri on kypsää." } },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/stroganoff/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-stroganoff/recipe-2469"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/277935/Stroganoff/"]],
@@ -950,7 +950,7 @@ export default [
     ],
     tips: ["Aito carbonara tehdään guanciale-poskilihasta, mutta pekoni tai palvikylki toimii hyvin."],
     tw: [
-      { id: "kerma", n: "Kermalla", d: "Lisää munaseokseen 1 dl kermaa, jolloin kastike on helpompi saada sileäksi.", add: ["kuohukerma 1 dl"] },
+      { id: "kerma", n: "Kermalla", d: "Lisää munaseokseen 1 dl kermaa, jolloin kastike on helpompi saada sileäksi.", add: ["kuohukerma 1 dl"], step: {"1": "Vatkaa munat, kerma, raastettu parmesaani ja reilusti mustapippuria kulhossa."} },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/22984/Spaghetti%20carbonara/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-carbonara/5nUuXZ4iSNOG8cxG40vdRR"]],
   },
@@ -1002,7 +1002,7 @@ export default [
     serve: "Tarjoa perunoiden ja vihersalaatin kanssa.",
     sides: ["k-keitetyt-perunat", "k-perunamuusi", "k-vihersalaatti"],
     tw: [
-      { id: "broileri", n: "Broilerista", d: "Nuiji broilerinfileet ohuiksi ja valmista samalla tavalla.", rm: ["porsaanfilee"], add: ["broilerinfilee 600 g"], m: "k" },
+      { id: "broileri", n: "Broilerista", d: "Nuiji broilerinfileet ohuiksi ja valmista samalla tavalla.", rm: ["porsaanfilee"], add: ["broilerinfilee 600 g"], m: "k", step: {"0": "Halkaise broilerinfileet ja nuiji ne kelmun välissä noin puolen sentin paksuisiksi. Mausta suolalla ja pippurilla.", "3": "Kuumenna voi ja öljy pannulla ja paista leikkeitä 4–5 minuuttia kummaltakin puolelta kullanruskeiksi ja kypsiksi."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/wieninleike/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/wieninleike/recipe-2843"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/396937/Wieninleike/"]],
   },
@@ -1052,8 +1052,8 @@ export default [
     serve: "Tarjoa perunamuusin tai makaronin kanssa.",
     sides: ["k-perunamuusi", "k-pasta"],
     tw: [
-      { id: "kasvi", n: "Kasvinakeilla", d: "Käytä tavallisten nakkien tilalla kasvinakkeja.", rm: ["nakit"], add: ["kasvispyörykät 300 g"], m: "y" },
-      { id: "kurkku", n: "Kurkkusalaatilla", d: "Lisää kastikkeeseen 0,5 dl sinappista kurkkusalaattia.", add: ["suolakurkku 1 kpl"] },
+      { id: "kasvi", n: "Kasvinakeilla", d: "Käytä tavallisten nakkien tilalla kasvinakkeja.", rm: ["nakit"], add: ["kasvispyörykät 300 g"], m: "y", step: {"0": "Paloittele kasvinakit tai -pyörykät ja silppua sipuli.", "1": "Kuumenna öljy pannulla ja paista kasvispaloja ja sipulisilppua, kunnes ne ruskistuvat."} },
+      { id: "kurkku", n: "Kurkkusalaatilla", d: "Lisää kastikkeeseen 0,5 dl sinappista kurkkusalaattia.", add: ["suolakurkku 1 kpl"], step: {"3": "Hauduta hiljalleen muutama minuutti, kunnes kastike on sakeutunut. Lisää vettä, jos se on liian paksua. Sekoita joukkoon pieneksi kuutioitu suolakurkku."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/nopea-nakkikastike/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-nakkikastike/recipe-581"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/44300/Nakkikastike/"]],
   },
@@ -1071,7 +1071,7 @@ export default [
     serve: "Tarjoa keitettyjen perunoiden tai muusin ja punajuuren kanssa.",
     sides: ["k-keitetyt-perunat", "k-perunamuusi"], extras: ["etikkapunajuuri"],
     tw: [
-      { id: "kerma", n: "Kermainen", d: "Korvaa osa vedestä ruokakermalla.", rm: ["vesi"], add: ["vesi 3 dl", "ruokakerma 2 dl"] },
+      { id: "kerma", n: "Kermainen", d: "Korvaa osa vedestä ruokakermalla.", rm: ["vesi"], add: ["vesi 3 dl", "ruokakerma 2 dl"], step: {"3": "Lisää vesi vähitellen vispaten, murenna liemikuutio joukkoon ja sekoita lopuksi ruokakerma. Mausta sinapilla, tomaattipyreellä, soijalla ja maustepippurilla."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/makkarakastike/"], ["Valio", "https://www.valio.fi/reseptit/makkarakastike/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/138793/Makkarakastike/"]],
   },
@@ -1088,7 +1088,7 @@ export default [
     serve: "Tarjoa perunamuusin kanssa.",
     sides: ["k-perunamuusi", "k-lohkoperunat"],
     tw: [
-      { id: "kerma", n: "Kermassa", d: "Kaada vuokaan 2 dl ruokakermaa ja lisää tomaattikuutioita.", add: ["ruokakerma 2 dl", "tomaatti 2 kpl"] },
+      { id: "kerma", n: "Kermassa", d: "Kaada vuokaan 2 dl ruokakermaa ja lisää tomaattikuutioita.", add: ["ruokakerma 2 dl", "tomaatti 2 kpl"], step: {"3": "Kaada makkaran ympärille ruokakerma ja lisää kuutioidut tomaatit. Paista uunivuoassa noin 25 minuuttia, kunnes juusto kuplii viilloissa ja pinta on ruskistunut."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/uunimakkara/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/uunimakkara/4HQVqInJRnKgDvHPSeUv25"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/303130/Kermainen%20Uunimakkara/"]],
   },

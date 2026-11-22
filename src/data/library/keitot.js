@@ -19,8 +19,8 @@ export default [
       "Pakastetusta kalasta tulee yhtä hyvä keitto. Lisää se jäisenä paloina ja pidennä haudutusta pari minuuttia.",
     ],
     tw: [
-      { id: "kirjolohi", n: "Kirjolohesta", d: "Kirjolohi on lohta edullisempi ja sopii keittoon yhtä hyvin.", rm: ["lohifile"], add: ["kirjolohifile 500 g"] },
-      { id: "maidoton", n: "Maidoton", d: "Käytä ruokakerman tilalla kaurakermaa ja voin tilalla rypsiöljyä.", rm: ["ruokakerma", "voi"], add: ["kaurakerma 2 dl", "rypsiöljy 1 rkl"] },
+      { id: "kirjolohi", n: "Kirjolohesta", d: "Kirjolohi on lohta edullisempi ja sopii keittoon yhtä hyvin.", rm: ["lohifile"], add: ["kirjolohifile 500 g"], step: {"3": "Irrota kirjolohesta nahka, nypi ruodot pois ja leikkaa liha isoiksi kuutioiksi."} },
+      { id: "maidoton", n: "Maidoton", d: "Käytä ruokakerman tilalla kaurakermaa ja voin tilalla rypsiöljyä.", rm: ["ruokakerma", "voi"], add: ["kaurakerma 2 dl", "rypsiöljy 1 rkl"], step: {"1": "Kuumenna öljy kattilan pohjalla. Pehmennä sipulia ja purjoa siinä hetki ruskistamatta.", "4": "Lisää kaurakerma ja kalakuutiot. Pidä keitto juuri ja juuri kiehumapisteen alapuolella 4–5 minuuttia. Kova kiehuminen tekee lohesta kuivaa."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/lohikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/herkullinen-kermainen-lohikeitto/recipe-823"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/209622/Lohikeitto/"]],
   },
@@ -42,8 +42,8 @@ export default [
       "Curry tai juustokumina kuullotusvaiheessa antaa keitolle lämpimän maun.",
     ],
     tw: [
-      { id: "tuorejuusto", n: "Tuorejuustolla", d: "Korvaa kerma maustetulla tuorejuustolla, joka sulaa keittoon kuumentaessa.", rm: ["ruokakerma"], add: ["tuorejuusto 100 g"] },
-      { id: "maidoton", n: "Maidoton", d: "Käytä kerman tilalla kookosmaitoa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl"] },
+      { id: "tuorejuusto", n: "Tuorejuustolla", d: "Korvaa kerma maustetulla tuorejuustolla, joka sulaa keittoon kuumentaessa.", rm: ["ruokakerma"], add: ["tuorejuusto 100 g"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Lisää tuorejuusto ja kuumenna sekoittaen, kunnes se on sulanut."} },
+      { id: "maidoton", n: "Maidoton", d: "Käytä kerman tilalla kookosmaitoa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Sekoita kookosmaito joukkoon ja kuumenna vielä kertaalleen."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/kasvissosekeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kasvissosekeitto/recipe-4223"], ["Valio", "https://www.valio.fi/reseptit/nopea-kasvissosekeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/176/Kasvissosekeitto/"]],
   },
@@ -61,8 +61,8 @@ export default [
     extras: ["ruisleipä"],
     tips: ["Paista nakkipalat ennen keittoon lisäämistä kuivalla pannulla, niin keitto saa paahteisen maun."],
     tw: [
-      { id: "tomaatti", n: "Tomaattinen", d: "Lisää liemeen 2 rkl tomaattipyreetä ja ½ tl currya.", add: ["tomaattipyree 2 rkl", "curry 0.5 tl"] },
-      { id: "pakaste", n: "Pakastekasviksista", d: "Käytä juuresten ja perunoiden tilalla pussillinen perunasekoitusta keittoon.", rm: ["peruna", "porkkana", "juuriselleri", "purjo"], add: ["pakastevihannekset 750 g"] },
+      { id: "tomaatti", n: "Tomaattinen", d: "Lisää liemeen 2 rkl tomaattipyreetä ja ½ tl currya.", add: ["tomaattipyree 2 rkl", "curry 0.5 tl"], step: {"1": "Kiehauta vesi liemikuution, tomaattipyreen ja curryn kanssa. Lisää juurekset ja keitä kannen alla noin 15 minuuttia."} },
+      { id: "pakaste", n: "Pakastekasviksista", d: "Käytä juuresten ja perunoiden tilalla pussillinen perunasekoitusta keittoon.", rm: ["peruna", "porkkana", "juuriselleri", "purjo"], add: ["pakastevihannekset 750 g"], step: {"0": "Ota pakastevihannekset esiin.", "1": "Kiehauta vesi liemikuution kanssa. Lisää pakastevihannekset ja keitä pakkauksen ohjeen mukaan, yleensä noin 10 minuuttia."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/nakkikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-nakkikeitto/recipe-667"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/142843/Nakkikeitto/"]],
   },
@@ -81,8 +81,8 @@ export default [
     extras: ["leipä"],
     tips: ["Kokonaiset kanan paistileikkeet antavat liemelle enemmän makua. Keitä ne kokonaisina, nosta kypsinä pois ja revi liha haarukoilla takaisin keittoon."],
     tw: [
-      { id: "kerma", n: "Kermainen", d: "Lisää loppuvaiheessa 2 dl ruokakermaa ja jätä sitruuna pois.", rm: ["sitruuna"], add: ["ruokakerma 2 dl"] },
-      { id: "nuudeli", n: "Nuudeleilla", d: "Käytä riisin tilalla nuudeleita ja lisää ne vasta viimeisiksi minuuteiksi.", rm: ["riisi"], add: ["nuudelit 100 g"] },
+      { id: "kerma", n: "Kermainen", d: "Lisää loppuvaiheessa 2 dl ruokakermaa ja jätä sitruuna pois.", rm: ["sitruuna"], add: ["ruokakerma 2 dl"], step: {"4": "Sekoita joukkoon ruokakerma ja kuumenna. Mausta suolalla ja lisää silputtu persilja."} },
+      { id: "nuudeli", n: "Nuudeleilla", d: "Käytä riisin tilalla nuudeleita ja lisää ne vasta viimeisiksi minuuteiksi.", rm: ["riisi"], add: ["nuudelit 100 g"], step: {"3": "Lisää perunat ja keitä hiljalleen noin 15 minuuttia. Lisää nuudelit ja keitä vielä 3–4 minuuttia, kunnes ne ovat pehmeitä."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/fleksaajan-kanakeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kanakeitto/7HQbUKuuppdERs9bFHsY8u"], ["Valio", "https://www.valio.fi/reseptit/kanakeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/84878/Kanakeitto/"]],
   },
@@ -102,7 +102,7 @@ export default [
     extras: ["sinappi", "ruisleipä"],
     tips: ["Painekattilassa keitto valmistuu noin 40 minuutissa.", "Hernekeitto pakastuu hyvin, joten iso satsi kannattaa."],
     tw: [
-      { id: "kasvis", n: "Kasvisversio", d: "Jätä liha pois, käytä kasvisliemikuutiota ja mausta lisäksi savupaprikalla.", rm: ["savukinkku", "liemikuutio"], add: ["kasvisliemikuutio 2 kpl", "paprikajauhe 1 tl"], m: "v" },
+      { id: "kasvis", n: "Kasvisversio", d: "Jätä liha pois, käytä kasvisliemikuutiota ja mausta lisäksi savupaprikalla.", rm: ["savukinkku", "liemikuutio"], add: ["kasvisliemikuutio 2 kpl", "paprikajauhe 1 tl"], m: "v", step: {"2": "Lisää hienonnettu sipuli ja kasvisliemikuutio.", "4": "Sekoita keitto kevyesti. Herneiden kuuluu olla pehmenneitä ja liemen sakeaa.", "5": "Mausta meiramilla, paprikajauheella, pippurilla ja suolalla. Lisää vettä, jos keitto on liian paksua."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/hernekeitto/"], ["Valio", "https://www.valio.fi/reseptit/hernekeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-hernekeitto/recipe-3997"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/92489/Hernekeitto/"]],
   },
@@ -121,7 +121,7 @@ export default [
     extras: ["ruisleipä"],
     tips: ["Etikka säilyttää punajuuren värin kirkkaana. Keitto on seuraavana päivänä vielä parempaa."],
     tw: [
-      { id: "liha", n: "Lihaisa", d: "Lisää keittoon 300 g ruskistettuja nakkipaloja tai keitettyä naudanlihaa.", add: ["nakit 300 g"], m: "s" },
+      { id: "liha", n: "Lihaisa", d: "Lisää keittoon 300 g ruskistettuja nakkipaloja tai keitettyä naudanlihaa.", add: ["nakit 300 g"], m: "s", ins: [[2, "Paista nakkipalat pannulla ruskeiksi ja lisää ne keittoon viimeiseksi vartiksi."]] },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/borssikeitto/"], ["Martat", "https://www.martat.fi/reseptit/borssikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/borssikeitto/recipe-2393"]],
   },
@@ -141,7 +141,7 @@ export default [
     tips: ["Talvella säilyketomaatit ovat usein maukkaampia kuin tuoreet. Käytä silloin 2 tölkkiä tomaattimurskaa ja jätä paahtaminen väliin."],
     tw: [
       { id: "sailyke", n: "Säilyketomaateista", d: "Käytä tuoreiden tilalla kahta tölkkiä tomaattimurskaa ja kuullota sipuli kattilassa.", rm: ["tomaatti"], add: ["tomaattimurska 800 g"], step: { 0: "Silppua sipuli ja valkosipuli.", 1: "Kuullota sipuleita öljyssä kattilassa muutama minuutti. Lisää tomaattimurska, suola ja pippuri ja keitä 10 minuuttia." } },
-      { id: "chili", n: "Tulisempi", d: "Paahda tomaattien mukana yksi siemenistä puhdistettu chili.", add: ["tuore chili 1 kpl"] },
+      { id: "chili", n: "Tulisempi", d: "Paahda tomaattien mukana yksi siemenistä puhdistettu chili.", add: ["tuore chili 1 kpl"], step: {"0": "Lämmitä uuni 250 asteeseen. Lohko tomaatit ja sipuli ja levitä ne uunivuokaan kuorineen valkosipulinkynsien ja halkaistun, siemenistä puhdistetun chilin kanssa."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kermainen-tomaattikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-tomaattikeitto/recipe-445"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/197505/Tomaattikeitto/"]],
   },
@@ -177,8 +177,8 @@ export default [
     extras: ["ruisleipä"],
     tips: ["Seiti, turska, kuha ja ahven sopivat kaikki. Sekoita kahta kalaa, jos haluat monipuolisemman maun."],
     tw: [
-      { id: "curry", n: "Curry-riisikeitto", d: "Korvaa perunat 1½ dl:lla riisiä ja kuullota sipulin kanssa 1 tl currya.", rm: ["peruna"], add: ["riisi 1.5 dl", "curry 1 tl"] },
-      { id: "kerma", n: "Kermaisempi", d: "Käytä maidon tilalla ruokakermaa.", rm: ["maito"], add: ["ruokakerma 2 dl"] },
+      { id: "curry", n: "Curry-riisikeitto", d: "Korvaa perunat 1½ dl:lla riisiä ja kuullota sipulin kanssa 1 tl currya.", rm: ["peruna"], add: ["riisi 1.5 dl", "curry 1 tl"], step: {"0": "Kuutioi kuorittu porkkana. Silppua sipuli ja viipaloi purjo ohuiksi renkaiksi.", "1": "Pehmennä sipulia, purjoa ja currya voissa kattilan pohjalla pari minuuttia. Lisää vesi, liemikuutio, maustepippurit, riisi ja porkkana.", "2": "Keitä kansi päällä noin 15 minuuttia, kunnes riisi on lähes kypsää."} },
+      { id: "kerma", n: "Kermaisempi", d: "Käytä maidon tilalla ruokakermaa.", rm: ["maito"], add: ["ruokakerma 2 dl"], step: {"4": "Kaada ruokakerma keittoon ja lisää kalapalat ja sitruunapippuri. Hauduta hiljaisella lämmöllä 5 minuuttia niin, ettei keitto kiehu rajusti."} },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-kalakeitto/recipe-1682"], ["Valio", "https://www.valio.fi/reseptit/maukas-kalakeitto/"], ["Martat", "https://www.martat.fi/reseptit/curry-kalakeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/46501/Kalakeitto/"]],
   },
@@ -197,8 +197,8 @@ export default [
     extras: ["leipä"],
     tips: ["Keitto paksuuntuu seistessään. Lisää lämmitettäessä tilkka vettä."],
     tw: [
-      { id: "kerma", n: "Ruokakermalla", d: "Käytä kookosmaidon tilalla ruokakermaa.", rm: ["kookosmaito"], add: ["ruokakerma 2 dl"] },
-      { id: "tulinen", n: "Tulisempi", d: "Lisää mausteiden kanssa ripaus cayennepippuria tai chiliä.", add: ["chilijauhe 0.25 tl"] },
+      { id: "kerma", n: "Ruokakermalla", d: "Käytä kookosmaidon tilalla ruokakermaa.", rm: ["kookosmaito"], add: ["ruokakerma 2 dl"], step: {"3": "Kun linssit ovat hajonneet pehmeiksi, sekoita joukkoon ruokakerma. Soseuta osittain tai kokonaan, jos haluat sileän keiton."} },
+      { id: "tulinen", n: "Tulisempi", d: "Lisää mausteiden kanssa ripaus cayennepippuria tai chiliä.", add: ["chilijauhe 0.25 tl"], step: {"1": "Kuumenna öljy kattilassa ja pehmennä sipuleita ja porkkanaa muutama minuutti. Sekoita mausteet ja chilijauhe joukkoon ja paahda niitä minuutin verran."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/linssikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/linssikeitto/recipe-123"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/6769/Linssikeitto/"]],
   },
@@ -217,7 +217,7 @@ export default [
     extras: ["leipä"],
     tips: ["Kesän ulkopuolella keiton voi tehdä pakastevihanneksista. Lisää ne vasta suurustamisen jälkeen."],
     tw: [
-      { id: "juusto", n: "Juustoinen", d: "Sulata lopuksi keittoon 150 g sulatejuustoa.", add: ["sulatejuusto 150 g"] },
+      { id: "juusto", n: "Juustoinen", d: "Sulata lopuksi keittoon 150 g sulatejuustoa.", add: ["sulatejuusto 150 g"], step: {"3": "Lisää herneet ja sulatejuusto ja anna keiton hautua hiljaa sekoitellen muutama minuutti, kunnes juusto on liuennut liemeen ja kasvikset ovat kypsiä."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/kesakeitto/"], ["Valio", "https://www.valio.fi/reseptit/kesakeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kesakeitto/recipe-2444"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/400817/KES%C3%84KEITTO/"]],
   },
@@ -236,7 +236,7 @@ export default [
     extras: ["ruisleipä", "sinappi"],
     tips: ["Ruskista makkarakuutiot ensin pannulla, niin keiton maku syvenee."],
     tw: [
-      { id: "kasvi", n: "Kasvimakkaralla", d: "Käytä lenkin tilalla kasvimakkaraa ja lihaliemen tilalla kasvislientä.", rm: ["lenkkimakkara", "liemikuutio"], add: ["kasvispyörykät 300 g", "kasvisliemikuutio 1 kpl"], m: "v" },
+      { id: "kasvi", n: "Kasvimakkaralla", d: "Käytä lenkin tilalla kasvimakkaraa ja lihaliemen tilalla kasvislientä.", rm: ["lenkkimakkara", "liemikuutio"], add: ["kasvispyörykät 300 g", "kasvisliemikuutio 1 kpl"], m: "v", step: {"1": "Kiehauta vesi kasvisliemikuution, tomaattipyreen ja maustepippurien kanssa. Lisää perunat, porkkanat ja sipulit.", "3": "Paloittele kasvimakkara tai -pyörykät. Lisää keittoon ja kuumenna vielä 5 minuuttia."} },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/31443/Makkarakeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-makkarakeitto/6wU4GP78lZwhCrlDNWZaAG"]],
   },
@@ -255,7 +255,7 @@ export default [
     extras: ["ruisleipä"],
     tips: ["Pussillinen pakastekeittojuureksia nopeuttaa valmistusta. Lisää ne perunoiden kanssa."],
     tw: [
-      { id: "juusto", n: "Juustoinen", d: "Sulata lopuksi keittoon 100 g sulatejuustoa.", add: ["sulatejuusto 100 g"] },
+      { id: "juusto", n: "Juustoinen", d: "Sulata lopuksi keittoon 100 g sulatejuustoa.", add: ["sulatejuusto 100 g"], step: {"4": "Sulata sulatejuusto keittoon sekoittaen. Tarkista suola ja pippuri ja lisää persilja."} },
       { id: "pasta", n: "Pastalla", d: "Korvaa perunat 120 g:lla pientä pastaa ja keitä se liemessä noin 10 minuuttia.", rm: ["peruna"], add: ["makaroni 120 g"], step: { 3: "Lisää pasta ja keitä pakkauksen ohjeen mukaan, noin 10 minuuttia." } },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/7983/Jauhelihakeitto/"], ["Valio", "https://www.valio.fi/reseptit/jauhelihakeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/arjen-jauhelihakeitto/recipe-858"]],
@@ -275,8 +275,8 @@ export default [
     extras: ["patonki"],
     tips: ["Lusikallinen maustamatonta jogurttia annoksen päällä tuo raikkautta."],
     tw: [
-      { id: "kookos", n: "Kookoksella", d: "Käytä kerman tilalla kookosmaitoa ja mausta tilkalla limemehua.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl", "lime 0.5 kpl"] },
-      { id: "curry", n: "Curryllä", d: "Korvaa korianterinsiemenet 1 tl:lla currya.", rm: ["korianterinsiemen"], add: ["curry 1 tl"] },
+      { id: "kookos", n: "Kookoksella", d: "Käytä kerman tilalla kookosmaitoa ja mausta tilkalla limemehua.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl", "lime 0.5 kpl"], step: {"3": "Soseuta keitto sileäksi ja lisää kookosmaito. Kuumenna ja mausta suolalla ja limen mehulla."} },
+      { id: "curry", n: "Curryllä", d: "Korvaa korianterinsiemenet 1 tl:lla currya.", rm: ["korianterinsiemen"], add: ["curry 1 tl"], step: {"1": "Sulata voi kattilassa ja lisää kasvikset, raastettu inkivääri ja curry. Sekoittele muutama minuutti.", "4": "Nosta annoksille tuoretta persiljaa."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/porkkanasosekeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-porkkanasosekeitto/recipe-1971"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/503142/porkkanasosekeitto/"]],
   },
@@ -295,8 +295,8 @@ export default [
     extras: ["patonki"],
     tips: ["Pala sinihomejuustoa sulatejuuston rinnalla tekee keitosta voimakkaamman makuisen."],
     tw: [
-      { id: "kinkku", n: "Kinkulla", d: "Lisää keittoon 150 g kuutioitua savukinkkua.", add: ["savukinkku 150 g"], m: "p" },
-      { id: "sieni", n: "Sienillä", d: "Paista 200 g viipaloituja herkkusieniä voissa ja lisää keittoon.", add: ["herkkusienet 200 g", "voi 1 rkl"] },
+      { id: "kinkku", n: "Kinkulla", d: "Lisää keittoon 150 g kuutioitua savukinkkua.", add: ["savukinkku 150 g"], m: "p", step: {"3": "Lisää kuutioitu savukinkku ja anna keiton poreilla hiljaa pari minuuttia, kunnes se paksuuntuu. Hämmennä koko ajan, ettei juusto tartu pohjaan."} },
+      { id: "sieni", n: "Sienillä", d: "Paista 200 g viipaloituja herkkusieniä voissa ja lisää keittoon.", add: ["herkkusienet 200 g", "voi 1 rkl"], ins: [[-1, "Viipaloi herkkusienet ja paista ne voissa pannulla kullanruskeiksi. Nosta sivuun."]], step: {"3": "Lisää paistetut sienet ja anna keiton poreilla hiljaa pari minuuttia, kunnes se paksuuntuu. Hämmennä koko ajan, ettei juusto tartu pohjaan."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/juustokeitto/"], ["Martat", "https://www.martat.fi/reseptit/juustokeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/juustokeitto/recipe-2710"]],
   },

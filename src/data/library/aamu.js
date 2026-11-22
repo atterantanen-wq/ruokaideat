@@ -16,7 +16,7 @@ export default [
     tips: ["Jäänyt puuro kelpaa seuraavana päivänä riisipuuropannukakuksi."],
     tw: [
       { id: "uuni", n: "Uunissa", d: "Uunissa puuro ei pala pohjaan. Kypsennä 150 asteessa noin kaksi tuntia.", step: { 2: "Kaada riisi, maito ja vesi uunivuokaan ja sekoita.", 3: "Kypsennä 150-asteisessa uunissa noin kaksi tuntia. Sekoita kerran tai kahdesti." }, del: [0, 1] },
-      { id: "kaura", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja lisää lopuksi tilkka kaurakermaa.", rm: ["maito", "voi"], add: ["kauramaito 1 l", "kaurakerma 1 dl"] },
+      { id: "kaura", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja lisää lopuksi tilkka kaurakermaa.", rm: ["maito", "voi"], add: ["kauramaito 1 l", "kaurakerma 1 dl"], step: {"2": "Lisää kaurajuoma ja kuumenna puuro sekoittaen kiehahtamispisteeseen.", "4": "Kun riisinjyvät ovat pehmeitä ja puuro paksua, sekoita joukkoon suola ja kaurakerma."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/riisipuuro/"], ["Valio", "https://www.valio.fi/reseptit/riisipuuro/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/99039/Riisipuuro/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-riisipuuro/1sQUmedygzmeYacebUYNLO"]],
   },
@@ -33,8 +33,8 @@ export default [
     extras: ["mustikka", "puolukkahillo"],
     tips: ["Vesipuurona puuro on kevyempi, maitopuurona kermaisempi. Puolet ja puolet on hyvä välimuoto."],
     tw: [
-      { id: "vesi", n: "Vesipuuro", d: "Käytä maidon tilalla vettä.", rm: ["maito"], add: ["vesi 5 dl"] },
-      { id: "omena", n: "Omena-kaneli", d: "Raasta puuroon omena ja mausta kanelilla.", add: ["omena 1 kpl", "kaneli 1 tl"] },
+      { id: "vesi", n: "Vesipuuro", d: "Käytä maidon tilalla vettä.", rm: ["maito"], add: ["vesi 5 dl"], step: {"0": "Kuumenna vesi ja suola kiehuvaksi ja ripottele kaurahiutaleet joukkoon sekoittaen.", "1": "Keitä hiljaisella lämmöllä noin 5 minuuttia välillä hämmentäen."} },
+      { id: "omena", n: "Omena-kaneli", d: "Raasta puuroon omena ja mausta kanelilla.", add: ["omena 1 kpl", "kaneli 1 tl"], step: {"1": "Keitä pari minuuttia, kaada sitten maito joukkoon ja lisää raastettu omena ja kaneli. Hauduta hiljaisella lämmöllä noin 5 minuuttia välillä hämmentäen."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kaurapuuro/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kaurapuuro/SG27rsQvAzQw0ggR0xm5v"]],
   },
@@ -82,8 +82,8 @@ export default [
     extras: ["kuohukerma"],
     tips: ["Torstaina pannukakku kuuluu hernekeiton jälkiruoaksi."],
     tw: [
-      { id: "omena", n: "Omenapannukakku", d: "Ripottele taikinan päälle kahden omenan lohkot ja kanelisokeria ennen paistamista.", add: ["omena 2 kpl", "kaneli 1 tl"] },
-      { id: "pekoni", n: "Pekonipannukakku", d: "Jätä sokeri pois ja lisää pinnalle 150 g paistettua pekonia.", rm: ["sokeri"], add: ["pekoni 150 g"], m: "p" },
+      { id: "omena", n: "Omenapannukakku", d: "Ripottele taikinan päälle kahden omenan lohkot ja kanelisokeria ennen paistamista.", add: ["omena 2 kpl", "kaneli 1 tl"], step: {"2": "Lämmitä uuni 225 asteeseen. Kostuta uunipannu vedellä ja painele leivinpaperi sen päälle. Sekoita taikina ja kaada pannulle. Asettele pinnalle omenalohkot ja ripottele kanelia."} },
+      { id: "pekoni", n: "Pekonipannukakku", d: "Jätä sokeri pois ja lisää pinnalle 150 g paistettua pekonia.", rm: ["sokeri"], add: ["pekoni 150 g"], m: "p", step: {"0": "Sekoita munat ja maito kulhossa. Vispaa sekaan vehnäjauhot ja suola sileäksi ja sekoita lopuksi mukaan sulatettu voi.", "2": "Lämmitä uuni 225 asteeseen ja paista pekoni pannulla rapeaksi. Kostuta uunipannu vedellä ja painele leivinpaperi sen päälle. Sekoita taikina, kaada pannulle ja ripottele pekoni pinnalle."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/pannukakku/"], ["Martat", "https://www.martat.fi/reseptit/pannukakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/paras-pannukakku/recipe-1828"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/36831/Pannukakku/"]],
   },
@@ -102,7 +102,7 @@ export default [
     extras: ["puolukkahillo"],
     tips: ["Ensimmäinen letku epäonnistuu usein. Se on kokin oma."],
     tw: [
-      { id: "kaura", n: "Kauramaidolla", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla öljyä.", rm: ["maito", "voi"], add: ["kauramaito 6 dl", "rypsiöljy 2 rkl"] },
+      { id: "kaura", n: "Kauramaidolla", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla öljyä.", rm: ["maito", "voi"], add: ["kauramaito 6 dl", "rypsiöljy 2 rkl"], step: {"0": "Sekoita munat kulhossa tasaisiksi. Lisää noin puolet kaurajuomasta, sokeri ja suola.", "1": "Vispaa jauhot joukkoon sileäksi ennen kuin lisäät loput kaurajuomasta. Näin taikinaan ei jää paakkuja.", "2": "Sekoita mukaan öljy ja anna taikinan levätä puoli tuntia."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/letut/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3735/Letut/"]],
   },
@@ -119,8 +119,8 @@ export default [
     serve: "Tarjoa marjojen ja vaahterasiirapin kanssa.",
     extras: ["mustikka"],
     tw: [
-      { id: "mustikka", n: "Mustikoilla", d: "Ripottele mustikoita taikinan päälle pannulla ennen kääntämistä.", add: ["mustikka 125 g"] },
-      { id: "suklaa", n: "Suklaalla", d: "Sekoita taikinaan 1 dl rouhittua tummaa suklaata.", add: ["tumma suklaa 50 g"] },
+      { id: "mustikka", n: "Mustikoilla", d: "Ripottele mustikoita taikinan päälle pannulla ennen kääntämistä.", add: ["mustikka 125 g"], step: {"3": "Paista keskilämmöllä lettupannulla tai paistinpannulla noin 1 dl:n kokoisia pannukakkuja. Ripottele pinnalle mustikoita ja käännä, kun pinnalle nousee kuplia."} },
+      { id: "suklaa", n: "Suklaalla", d: "Sekoita taikinaan 1 dl rouhittua tummaa suklaata.", add: ["tumma suklaa 50 g"], step: {"1": "Kaada nesteet kuivien aineiden päälle, lisää rouhittu suklaa ja sekoita vain sen verran, että jauhot kostuvat. Pieni paakkuisuus kuuluu asiaan."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/amerikkalaiset-pannukakut/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/amerikkalaiset-pannukakut/5TJlCm38a4ILl6xKdMjTKu"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3461/Amerikkalaiset%20pannukakut/"]],
   },
@@ -157,7 +157,7 @@ export default [
     serve: "Tarjoa voin, juuston ja vihannesten kanssa.",
     tips: ["Sämpylät pakastuvat hyvin. Lämmitä pakastimesta otetut uunissa muutama minuutti."],
     tw: [
-      { id: "graham", n: "Grahamjauhoilla", d: "Korvaa kaurahiutaleet 5 dl:lla grahamjauhoja ja vähennä vehnäjauhoja 2 dl.", rm: ["kaurahiutaleet", "vehnäjauho"], add: ["grahamjauho 5 dl", "vehnäjauho 6 dl"] },
+      { id: "graham", n: "Grahamjauhoilla", d: "Korvaa kaurahiutaleet 5 dl:lla grahamjauhoja ja vähennä vehnäjauhoja 2 dl.", rm: ["kaurahiutaleet", "vehnäjauho"], add: ["grahamjauho 5 dl", "vehnäjauho 6 dl"], step: {"1": "Lisää grahamjauhot ja anna niiden turvota hetki. Alusta vehnäjauhot vähitellen joukkoon ja vaivaa öljy taikinaan viimeisenä.", "4": "Voitele sämpylät halutessasi maidolla. Paista uunin keskiosassa noin 15 minuuttia."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/sampylat/"], ["Martat", "https://www.martat.fi/reseptit/sampylat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-sampylat/1zQ6j481TjEzaYBNLYhT6O"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/104817/S%C3%A4mpyl%C3%A4t/"]],
   },

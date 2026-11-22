@@ -13,6 +13,7 @@
  *   tw     muunnelmat, joita voi olla päällä useita:
  *          {id, n, d, add:[rivit], rm:[ainekset], step:{indeksi:teksti}, ins:[[indeksi, teksti]], del:[indeksit], m}
  *          (indeksit viittaavat aina perusreseptin vaiheisiin)
+ *          Jos muunnelma vaihtaa tai lisää aineksen, päivitä myös vaiheet (step/ins), muuten ohje jää vanhaksi.
  *   vs     versiot, joista valitaan yksi; ensimmäinen on oletus. Reseptin ing sisältää vain kaikille
  *          versioille yhteiset ainekset, ja versio tuo omansa add-kentässä:
  *          {id, n, add, rm, step, ins, m, veg}

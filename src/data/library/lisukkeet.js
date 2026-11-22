@@ -32,7 +32,7 @@ export default [
       "Pala palsternakkaa tai juuriselleriä perunoiden joukossa keitettynä tuo muusiin makeutta.",
     ],
     tw: [
-      { id: "kasvi", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla margariinia.", rm: ["maito", "voi"], add: ["kauramaito 2 dl", "margariini 30 g"] },
+      { id: "kasvi", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla margariinia.", rm: ["maito", "voi"], add: ["kauramaito 2 dl", "margariini 30 g"], step: {"2": "Kuumenna kaurajuoma. Lisää se vähitellen muusiin sekoittaen, kunnes rakenne on sopivan pehmeä.", "3": "Sekoita joukkoon margariini ja mausta suolalla ja ripauksella muskottia."} },
     ],
     vs: [
       { id: "perus", n: "Perus" },
@@ -70,7 +70,7 @@ export default [
     ],
     tips: ["Tilkka talteen otettua keitinvettä sitoo kastikkeen pastan pintaan."],
     tw: [
-      { id: "voi", n: "Voi ja parmesaani", d: "Sekoita kuumaan pastaan nokare voita ja raastettua parmesaania, niin se käy sellaisenaan lisukkeeksi.", add: ["voi 2 rkl", "parmesaani 40 g"] },
+      { id: "voi", n: "Voi ja parmesaani", d: "Sekoita kuumaan pastaan nokare voita ja raastettua parmesaania, niin se käy sellaisenaan lisukkeeksi.", add: ["voi 2 rkl", "parmesaani 40 g"], ins: [[3, "Palauta pasta kattilaan ja sekoita joukkoon voi ja raastettu parmesaani."]] },
     ],
   },
   {
@@ -90,7 +90,7 @@ export default [
       { id: "omena", n: "Omena-pähkinä", rm: ["punasipuli"], add: ["omena 1 kpl", "pähkinät 0.5 dl", "hunaja 1 tl"], step: { 1: "Viipaloi kurkku ohuiksi, puolita tomaatit ja leikkaa omena ohuiksi lohkoiksi.", 2: "Vispaa öljy, sitruunan mehu, sinappi, hunaja, suola ja pippuri kastikkeeksi." }, ins: [[3, "Paahda pähkinät kuivalla pannulla ja ripottele ne salaatin päälle."]] },
     ],
     tw: [
-      { id: "siemenet", n: "Paahdetut siemenet", d: "Ripottele pinnalle kuivalla pannulla paahdettuja auringonkukan- tai kurpitsansiemeniä.", add: ["auringonkukansiemenet 0.5 dl"] },
+      { id: "siemenet", n: "Paahdetut siemenet", d: "Ripottele pinnalle kuivalla pannulla paahdettuja auringonkukan- tai kurpitsansiemeniä.", add: ["auringonkukansiemenet 0.5 dl"], ins: [[3, "Paahda siemenet kuivalla pannulla ja ripottele ne salaatin pinnalle."]] },
     ],
   },
   {
@@ -118,7 +118,7 @@ export default [
       "Kuohkeuta haarukalla ja sekoita joukkoon öljy ja persilja.",
     ],
     tw: [
-      { id: "kasvis", n: "Kasvikset joukkoon", d: "Sekoita mukaan kuutioitua kurkkua, tomaattia ja paprikaa salaatiksi.", add: ["kurkku 0.5 kpl", "tomaatti 2 kpl", "paprika 1 kpl"] },
+      { id: "kasvis", n: "Kasvikset joukkoon", d: "Sekoita mukaan kuutioitua kurkkua, tomaattia ja paprikaa salaatiksi.", add: ["kurkku 0.5 kpl", "tomaatti 2 kpl", "paprika 1 kpl"], step: {"2": "Kuohkeuta haarukalla ja sekoita joukkoon öljy, persilja sekä kuutioitu kurkku, tomaatti ja paprika."} },
     ],
   },
   {

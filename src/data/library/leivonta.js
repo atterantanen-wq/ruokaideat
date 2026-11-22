@@ -24,7 +24,7 @@ export default [
       "Kuivahiivaa käytettäessä sekoita 2 pussia jauhoihin ja lämmitä maito vähän kuumemmaksi, noin 42-asteiseksi.",
     ],
     tw: [
-      { id: "manteli", n: "Mantelirouhe pinnalle", d: "Käytä raesokerin tilalla mantelirouhetta.", rm: ["raesokeri"], add: ["mantelirouhe 0.5 dl"] },
+      { id: "manteli", n: "Mantelirouhe pinnalle", d: "Käytä raesokerin tilalla mantelirouhetta.", rm: ["raesokeri"], add: ["mantelirouhe 0.5 dl"], step: {"8": "Sivele puustien pintaan munaa ja sirottele päälle mantelirouhetta. Paista uunin keskitasolla 9–12 minuuttia, kunnes ne ovat kauniin ruskeita."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"]],
   },
@@ -42,7 +42,7 @@ export default [
     serve: "Tarjoa haaleana jäätelön tai vaniljakastikkeen kanssa.",
     tips: ["Pakastemustikat käyvät sellaisenaan. Kääntele ne ensin lusikallisessa perunajauhoa, niin mehu ei värjää taikinaa."],
     tw: [
-      { id: "muru", n: "Murupinnalla", d: "Nypi 100 g voista, 1 dl sokerista ja 2 dl jauhoista muru ja ripottele marjojen päälle.", add: ["voi 100 g", "sokeri 1 dl", "vehnäjauho 2 dl"] },
+      { id: "muru", n: "Murupinnalla", d: "Nypi 100 g voista, 1 dl sokerista ja 2 dl jauhoista muru ja ripottele marjojen päälle.", add: ["voi 100 g", "sokeri 1 dl", "vehnäjauho 2 dl"], step: {"3": "Tasoita taikina vuokaan ja peitä pinta mustikoilla. Nypi voista, sokerista ja jauhoista murua ja ripottele se marjojen päälle."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/mustikkapiirakka/"], ["Martat", "https://www.martat.fi/reseptit/mustikkapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-mustikkapiirakka/recipe-688"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/27357/Mustikkapiirakka/"]],
   },
@@ -61,7 +61,7 @@ export default [
     ],
     tips: ["Kahvin voi korvata maidolla, jos leivot lapsille."],
     tw: [
-      { id: "nonparellit", n: "Nonparelleilla", d: "Koristele kookoshiutaleiden tilalla nonparelleilla.", rm: ["kookoshiutale"], add: ["nonparellit 0.5 dl"] },
+      { id: "nonparellit", n: "Nonparelleilla", d: "Koristele kookoshiutaleiden tilalla nonparelleilla.", rm: ["kookoshiutale"], add: ["nonparellit 0.5 dl"], step: {"6": "Levitä kuorrute jäähtyneelle pohjalle, ripottele nonparellit pinnalle ja leikkaa paloiksi, kun kuorrute on jähmettynyt."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/mokkapalat/"], ["Martat", "https://www.martat.fi/reseptit/mokkapalat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/mokkapalat/recipe-4470"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/888/Mokkapalat/"]],
   },
@@ -174,7 +174,7 @@ export default [
     ],
     tips: ["Mitä mustempia banaanit ovat, sitä makeampi ja kosteampi kakusta tulee."],
     tw: [
-      { id: "suklaa", n: "Suklaalla", d: "Korvaa pähkinät rouhitulla tummalla suklaalla.", rm: ["pähkinät"], add: ["tumma suklaa 100 g"] },
+      { id: "suklaa", n: "Suklaalla", d: "Korvaa pähkinät rouhitulla tummalla suklaalla.", rm: ["pähkinät"], add: ["tumma suklaa 100 g"], step: {"2": "Yhdistä jauhot, leivinjauhe, kaneli ja suola ja lisää ne banaaniseokseen. Kääntele mukaan rouhittu suklaa. Sekoita vain sen verran, ettei kuivia jauhoja jää."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/banaanileipa/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-banaanikakku/recipe-2242"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/4830/Banaanikakku/"]],
   },
@@ -222,7 +222,7 @@ export default [
     ],
     tips: ["Kääri levy vielä lämpimänä, niin se ei halkeile."],
     tw: [
-      { id: "rahka", n: "Marjarahkatäytteellä", d: "Täytä hillon tilalla vaahdotetun kerman, rahkan ja marjojen seoksella. Kääri levy ensin tyhjänä ja täytä jäähtyneenä.", rm: ["puolukkahillo"], add: ["kuohukerma 2 dl", "maitorahka 250 g", "pakastemansikka 2 dl", "vaniljasokeri 1 tl"] },
+      { id: "rahka", n: "Marjarahkatäytteellä", d: "Täytä hillon tilalla vaahdotetun kerman, rahkan ja marjojen seoksella. Kääri levy ensin tyhjänä ja täytä jäähtyneenä.", rm: ["puolukkahillo"], add: ["kuohukerma 2 dl", "maitorahka 250 g", "pakastemansikka 2 dl", "vaniljasokeri 1 tl"], step: {"5": "Kääri lämmin levy pitkältä sivulta rullaksi paperin avulla ja anna jäähtyä. Vaahdota kerma, sekoita joukkoon rahka, vaniljasokeri ja sulaneet mansikat. Avaa rulla, levitä täyte ja kääri uudelleen."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kaaretorttu/"], ["Martat", "https://www.martat.fi/reseptit/kaaretorttu/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/gluteeniton-kaaretorttu/recipe-575"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/70350/K%C3%A4%C3%A4retorttu/"]],
   },
@@ -254,7 +254,7 @@ export default [
     tips: ["Täytä pullat vasta juuri ennen tarjoilua, muuten kermavaahto pehmentää pullan."],
     vs: [
       { id: "hillo", n: "Hillo", add: ["puolukkahillo 2 dl"] },
-      { id: "manteli", n: "Mantelimassa", add: ["mantelijauhe 200 g"] },
+      { id: "manteli", n: "Mantelimassa", add: ["mantelijauhe 200 g"], ins: [[3, "Sekoita mantelijauhe, kolme ruokalusikallista sokeria ja tilkka maitoa tahnaksi."]] },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/laskiaispullat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-laskiaispullat/fmh-recipe-1163"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108095/Laskiaispullat/"]],
   },
@@ -301,7 +301,7 @@ export default [
     ],
     tips: ["Valitse paistonkestävää marmeladia, muuten se valuu pellille.", "Kärjet pysyvät paremmin kiinni, kun kastat ne ensin vedellä."],
     tw: [
-      { id: "omena", n: "Omenahillolla", d: "Käytä luumun sijaan omena- tai omena-kanelihilloa.", rm: ["luumumarmeladi"], add: ["omenahillo 300 g"] },
+      { id: "omena", n: "Omenahillolla", d: "Käytä luumun sijaan omena- tai omena-kanelihilloa.", rm: ["luumumarmeladi"], add: ["omenahillo 300 g"], step: {"2": "Nosta lusikallinen omenahilloa neliön keskelle. Käännä vuorotellen joka toisen kolmion kärki keskustaan ja painele kärjet kiinni toisiinsa, jolloin syntyy tähti.", "3": "Voitele tortut vatkatulla munalla. Paista uunin keskellä 10–12 minuuttia, kunnes ne ovat kohonneet ja kullanruskeita."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/joulutortut/"], ["Valio", "https://www.valio.fi/reseptit/joulutortut/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/50477/Parhaat%20joulutortut/"]],
   },
@@ -348,7 +348,7 @@ export default [
     ],
     tips: ["Keksejä ei kannata liottaa, nopea kastaminen riittää. Muuten kakusta tulee vetinen."],
     tw: [
-      { id: "munaton", n: "Ilman raakoja munia", d: "Jätä munat pois ja lisää kreemiin 2 dl kermaa lisää.", rm: ["kananmuna"], add: ["kuohukerma 2 dl"] },
+      { id: "munaton", n: "Ilman raakoja munia", d: "Jätä munat pois ja lisää kreemiin 2 dl kermaa lisää.", rm: ["kananmuna"], add: ["kuohukerma 2 dl"], step: {"1": "Vatkaa mascarpone, sokeri ja vaniljasokeri tasaiseksi.", "2": "Vaahdota kerma ja kääntele se mascarponeseokseen."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/tiramisu/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tiramisu/recipe-1446"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/231821/Tiramisu/"]],
   },

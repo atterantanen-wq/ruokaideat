@@ -15,7 +15,7 @@ export default [
     serve: "Tarjoa joulukinkun ja muiden laatikoiden kanssa.",
     tips: ["Laatikot voi paistaa jo viikkoja ennen joulua ja pakastaa. Lämmitä sulatettuna 150 asteessa noin tunti."],
     tw: [
-      { id: "maidoton", n: "Maidoton", d: "Käytä kerman tilalla kaurakermaa ja voin tilalla margariinia.", rm: ["kuohukerma", "voi"], add: ["kaurakerma 2 dl", "margariini 2 rkl"] },
+      { id: "maidoton", n: "Maidoton", d: "Käytä kerman tilalla kaurakermaa ja voin tilalla margariinia.", rm: ["kuohukerma", "voi"], add: ["kaurakerma 2 dl", "margariini 2 rkl"], step: {"2": "Survo lantut sileäksi soseeksi ja anna jäähtyä haaleaksi. Sekoita samalla korppujauho kaurakerman joukkoon turpoamaan.", "4": "Lämmitä uuni 175 asteeseen. Levitä massa rasvattuun vuokaan, piirrä pintaan lusikalla kuvioita, ripottele päälle hieman korppujauhoa ja lisää margariininokareet."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/lanttulaatikko/"], ["Martat", "https://www.martat.fi/reseptit/lanttulaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-lanttulaatikko/recipe-3926"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/37662/Lanttulaatikko/"]],
   },
@@ -71,7 +71,7 @@ export default [
     sides: ["k-vihersalaatti"],
     tips: ["Savulohi antaa kiusaukselle voimakkaamman maun. Vähennä silloin suolaa."],
     tw: [
-      { id: "kerma", n: "Kevyempi", d: "Korvaa kuohukerma ruokakermalla.", rm: ["kuohukerma"], add: ["ruokakerma 2.5 dl"] },
+      { id: "kerma", n: "Kevyempi", d: "Korvaa kuohukerma ruokakermalla.", rm: ["kuohukerma"], add: ["ruokakerma 2.5 dl"], step: {"3": "Sekoita ruokakerma ja maito ja kaada vuokaan. Nesteen kuuluu ulottua lähes pinnan tasalle."} },
       { id: "tuoreperuna", n: "Tuoreista perunoista", d: "Suikaloi 1 kg perunoita ja 1 sipuli pakastesekoituksen tilalle.", rm: ["peruna-sipulisekoitus"], add: ["peruna 1 kg", "sipuli 1 kpl"], ins: [[0, "Suikaloi kuoritut perunat ohuiksi tikuiksi ja sipuli ohuiksi viipaleiksi."]] },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/lohikiusaus/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-lohikiusaus/1ufgALpr0bvNaIJIUPDMOI"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/289629/Lohikiusaus/"]],
@@ -107,7 +107,7 @@ export default [
     serve: "Tarjoa joulukinkun ja muiden laatikoiden kanssa.",
     tips: ["Laatikon voi valmistaa etukäteen ja pakastaa. Lämmitä foliolla peitettynä."],
     tw: [
-      { id: "kerma", n: "Kermaisempi", d: "Korvaa osa maidosta kuohukermalla.", rm: ["maito"], add: ["maito 1 dl", "kuohukerma 2 dl"] },
+      { id: "kerma", n: "Kermaisempi", d: "Korvaa osa maidosta kuohukermalla.", rm: ["maito"], add: ["maito 1 dl", "kuohukerma 2 dl"], step: {"1": "Siivilöi keitinvesi talteen ja keitä riisi siinä, kunnes riisi on imenyt nesteen. Kaada sitten maito ja kerma joukkoon ja anna muhia miedolla lämmöllä puuroksi, noin 20 minuuttia."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/porkkanalaatikko/"], ["Martat", "https://www.martat.fi/reseptit/porkkanalaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-porkkanalaatikko/recipe-3925"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/102916/Porkkanalaatikko/"]],
   },
@@ -126,7 +126,7 @@ export default [
     serve: "Tarjoa siman kanssa.",
     tips: ["Liian kuumassa öljyssä munkit tummuvat pinnalta ennen kuin sisus kypsyy. Säädä lämpöä erien välillä."],
     tw: [
-      { id: "hillo", n: "Hillomunkit", d: "Tee reiättömiä palloja ja pursota paistettujen munkkien sisään vadelma- tai omenahilloa.", add: ["puolukkahillo 2 dl"] },
+      { id: "hillo", n: "Hillomunkit", d: "Tee reiättömiä palloja ja pursota paistettujen munkkien sisään vadelma- tai omenahilloa.", add: ["puolukkahillo 2 dl"], step: {"3": "Jaa taikina noin 30 palaan ja pyöritä palloiksi. Anna pallojen kohota leivinpaperilla vielä parikymmentä minuuttia."}, ins: [[5, "Kun munkit ovat jäähtyneet, tee kylkeen pieni reikä ja pursota sisään hilloa."]] },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/munkit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/munkit/recipe-2213"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/124855/Munkit/"]],
   },
@@ -143,7 +143,7 @@ export default [
     serve: "Tarjoa kastike erikseen joulukinkun ja laatikoiden rinnalla.",
     tips: ["Valmiit etikkapunajuuret ja keitetyt juurekset nopeuttavat valmistusta. Lisää etikkapunajuuret vasta tarjoillessa, etteivät ne värjää muita."],
     tw: [
-      { id: "silli", n: "Sillin kanssa", d: "Lisää kuutioiden joukkoon 150 g pieneksi pilkottua sillifileetä.", add: ["silli 150 g"], m: "f" },
+      { id: "silli", n: "Sillin kanssa", d: "Lisää kuutioiden joukkoon 150 g pieneksi pilkottua sillifileetä.", add: ["silli 150 g"], m: "f", step: {"1": "Kuori juurekset. Kuutioi ne, kurkut, omena, sipuli ja silli pieniksi, suunnilleen saman kokoisiksi kuutioiksi."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/rosolli/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/rosolli/recipe-3927"], ["Valio", "https://www.valio.fi/reseptit/rosolli/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/190217/Rosolli/"]],
   },
