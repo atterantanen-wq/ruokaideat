@@ -17,8 +17,8 @@ export default [
     d: "Pehmeä ja kuohkea muusi jauhoisista perunoista, maidosta ja voista.",
     ing: ["peruna 1 kg", "maito 2 dl", "voi 30 g", "suola 1 tl", "muskotti 1 ripaus"],
     steps: [
-      "Kuori perunat ja paloittele ne tasakokoisiksi. Keitä suolalla maustetussa vedessä kypsiksi, noin 20 minuuttia.",
-      "Kaada keitinvesi pois. Survo perunat heti kuumina perunasurvimella tai painele ne perunapuristimen läpi.",
+      "Kuori perunat ja paloittele ne tasakokoisiksi. Keitä niitä suolatussa vedessä noin 20 minuuttia, kunnes ne ovat pehmeitä.",
+      "Valuta perunat. Muussaa ne heti kuumina survimella tai painele perunapuristimen läpi.",
       "Kuumenna maito. Lisää se vähitellen muusiin sekoittaen, kunnes rakenne on sopivan pehmeä.",
       "Sekoita joukkoon voi ja mausta suolalla ja ripauksella muskottia.",
     ],

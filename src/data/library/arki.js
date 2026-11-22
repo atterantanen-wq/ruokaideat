@@ -88,7 +88,7 @@ export default [
     vs: [
       { id: "kinkku", n: "Kinkku-ananas", add: ["savukinkku 150 g", "ananas 230 g"], m: "p" },
       { id: "margherita", n: "Margherita", add: ["mozzarella 125 g", "tomaatti 2 kpl", "basilika 1 ruukku"], rm: ["juustoraaste"], veg: true },
-      { id: "jauheliha", n: "Jauheliha-sipuli", add: ["jauheliha 250 g", "punasipuli 1 kpl", "aurinkokuivattu tomaatti 50 g"], m: "j", ins: [[3, "Paista jauheliha pannulla murulle ja mausta suolalla ja pippurilla. Leikkaa punasipuli ohuiksi renkaiksi."]] },
+      { id: "jauheliha", n: "Jauheliha-sipuli", add: ["jauheliha 250 g", "punasipuli 1 kpl", "aurinkokuivattu tomaatti 50 g"], m: "j", ins: [[3, "Paista jauheliha pannulla murulle ja mausta se. Leikkaa punasipuli ohuiksi renkaiksi."]] },
       { id: "salami", n: "Salami", add: ["salami 100 g", "herkkusienet 150 g", "oliivit 0.5 dl"], m: "p" },
       { id: "kasvis", n: "Kasvis", add: ["paprika 1 kpl", "herkkusienet 150 g", "punasipuli 1 kpl", "oliivit 0.5 dl", "fetajuusto 100 g"], veg: true },
     ],

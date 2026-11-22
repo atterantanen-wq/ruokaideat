@@ -9,7 +9,7 @@ export default [
       "# Pinnalle", "kananmuna 1 kpl", "raesokeri 2 rkl",
     ],
     steps: [
-      "Lämmitä maito noin 37-asteiseksi ja sulata hiiva siihen. Sekoita joukkoon kardemumma, sokeri, suola ja muna.",
+      "Lämmitä maito noin 37-asteiseksi ja sulata hiiva siihen. Vatkaa sekaan kananmuna, kardemumma, sokeri ja suola.",
       "Lisää aluksi vain noin puolet jauhoista ja vatkaa puuromaista seosta voimakkaasti minuutin ajan. Tämä kehittää pullalle kuohkean rakenteen.",
       "Alusta jäljelle jääneet jauhot vähitellen taikinaan. Lopuksi vaivaa joukkoon sulatettu, haalea rasva. Taikina on valmis, kun pinta kiiltää eikä taikina enää tartu kulhoon.",
       "Peitä kulho liinalla ja anna taikinan kasvaa lämpimässä kaksinkertaiseksi, noin 40 minuuttia.",
