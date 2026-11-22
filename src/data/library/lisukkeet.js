@@ -79,7 +79,7 @@ export default [
   {
     id: "k-couscous", n: "Couscous", m: "v", t: "li", min: 10, w: 5, sv: 4,
     d: "Kymmenessä minuutissa valmis lisuke, joka imee itseensä kastikkeet ja liemet.",
-    ing: ["couscous 3 dl", "vesi 3 dl", "kasvisliemikuutio 0.5 kpl", "oliiviöljy 1 rkl", "persilja 0.5 dl"],
+    ing: ["couscous 3 dl", "vesi 3 dl", "kasvisliemikuutio 0.5 kpl", "oliiviöljy 1 rkl", "persilja 0.5 nippu"],
     steps: [
       "Kiehauta vesi ja liemikuutio.",
       "Kaada liemi couscousin päälle, sekoita ja peitä kannella. Anna turvota 5 minuuttia.",

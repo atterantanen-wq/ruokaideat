@@ -304,7 +304,7 @@ P2("pinaattipakaste",5.14,"kg","Hienonnettu pinaatti 150 g",{},"","pakasteet/kas
 
 for(const k of Object.keys(PR)){if(PU[k])PR[k].u=PBASE+PU[k];}
 const PALIAS={"kanankoipi":"kanankoivet","kananmunat":"kananmuna","herkkusieni":"herkkusienet","kirsikkatomaatti":"kirsikkatomaatit","kidneypapu":"kidneypavut","kikherne":"kikherneet","porsaankyljys":"porsaankyljykset","kasvisliemi":"kanaliemi","herne":"herneet","punasipulit":"punasipuli","sipulit":"sipuli","porkkanat":"porkkana","perunat":"peruna","nauta":"naudanliha","sika":"porsaanliha","lasagnelevy":"lasagnelevyt","linssit":"punaiset linssit","valkosipuli":"valkosipulinkynsi","kookosmaito":"kookosmaito","rahka":"maitorahka","maustamaton tofu":"tofu","broilerinfilee":"kananrintafilee","sekajauheliha":"sika-nauta jauheliha","paistijauheliha":"jauheliha","kaurajuoma":"kauramaito","omenat":"omena","banaanit":"banaani","tomaatit":"tomaatti","kurkut":"kurkku"};
-const PSKIP=new Set(["suola","pippuri","mustapippuri","maustepippuri","paprikajauhe","chilijauhe","kumina","oregano","timjami","yrttimauste","tacomauste","currytahna","laakerinlehti","inkivääri","siirappi","sinappi","kaprikset","tartarkastike","vesi","sokeri","persilja jauhe"]);
+const PSKIP=new Set(["suola","pippuri","mustapippuri","maustepippuri","paprikajauhe","chilijauhe","kumina","oregano","timjami","yrttimauste","tacomauste","currytahna","laakerinlehti","inkivääri","siirappi","sinappi","kaprikset","tartarkastike","vesi","sokeri","persilja jauhe","curry","meirami","muskotti","kardemumma","neilikka","kurkuma","korianterinsiemen","rosmariini","sitruunapippuri","italialainen mausteseos","chiliflakes","kaneli","juustokumina","garam masala","vaniljasokeri","merisuola","sriracha","kahvi","liivate","nonparellit","valkopippuri"]);
 const PKEYS=Object.keys(PR).sort((a,b)=>b.length-a.length);
 const wordHit=(name,k)=>name===k||name.startsWith(k+" ")||name.endsWith(" "+k)||name.includes(" "+k+" ");
 /* ---------- ainesosarekisteri: Fineli (THL), CC BY 4.0, Release 16 ---------- */
@@ -432,7 +432,7 @@ function recipeNut(r){
     if(c&&c.neg)continue;
     if(p.v==null)continue;
     const g=c&&c.n?gramsOf(p.key,p.fam,p.v):null;
-    if(g==null){miss.push(p.name);if(!(p.fam==="g"&&p.v<30)&&!(p.fam==="ml"&&p.v<30)&&!(p.fam==="tl")&&!(p.fam==="rkl"&&p.v<=2))big=true;continue;}
+    if(g==null){miss.push(p.name);if(!(p.fam==="g"&&p.v<30)&&!(p.fam==="ml"&&p.v<30)&&!(p.fam==="tl")&&!(p.fam==="rkl"&&p.v<=2)&&p.fam!=="ripaus"&&!nameSkip(p.key))big=true;continue;}
     for(const k of Object.keys(t))t[k]+=c.n[k]*g/100;
     n++;
   }
@@ -1517,6 +1517,24 @@ P3("sitruunamehu",5.5,"l","Sitruunamehu (arvio)",{},"Arvio, tuotetta ei löytyny
 P3("omenamehu",1.65,"l","Coop omenatäysmehu 1 l",{},"","kahvit-teet-ja-mehut/mehut");
 P3("valkopippuri",62,"kg","Valkopippuri (arvio)",{},"Arvio, tuotetta ei löytynyt verkkokaupasta.","oljyt-maustaminen-ja-kastikkeet/mausteet");
 P3("tilli",50,"kg","Tilli (arvio, ruukku tai nippu)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
+/* reseptikirjaston uusille aineksille arviohinnat (marraskuu 2026, ei tarkistettu kaupasta) */
+const PA=(k,p,per,src)=>P3(k,p,per,src+" (arvio)",{},"Arvio, ei tarkistettu kaupasta.","");
+PA("peruna-sipulisekoitus",2.4,"kg","Peruna-sipulisekoitus, pakaste");
+PA("lehtitaikina",4.5,"kg","Lehtitaikinalevyt, pakaste");
+PA("kebabliha",14,"kg","Kebabliha, pakaste");
+PA("porsaan kylki",9,"kg","Porsaan kylkisiivut");
+PA("joulukinkku",9.5,"kg","Suolattu joulukinkku");
+PA("lammas",21,"kg","Lampaan lapa tai paisti");
+PA("raparperi",5,"kg","Raparperi");
+PA("mascarpone",12,"kg","Mascarpone");
+PA("savoiardi",13,"kg","Savoiardi-keksit");
+PA("luumumarmeladi",8,"kg","Luumumarmeladi");
+PA("omenahillo",6,"kg","Omenahillo");
+PA("bbq-kastike",7,"kg","BBQ-kastike");
+PA("kaurakerma",4.6,"l","Kaurakerma ruoanvalmistukseen");
+PA("grahamjauho",1.7,"kg","Grahamjauho");
+PA("silli",12,"kg","Marinoitu silli");
+PA("meloni",2.5,"kg","Meloni");
 P3("persilja",50,"kg","Persilja (arvio, ruukku tai nippu)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
 P3("minttu",60,"kg","Minttu (arvio, ruukku)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
 P3("leivinjauhe",13,"kg","Leivinjauhe 100 g (arvio)",{},"Arvio, perustuu tyypilliseen pakkaushintaan.","kuivatuotteet-ja-leivonta/leivontatarvikkeet");
@@ -2969,7 +2987,7 @@ function renderNewHost(){
 }
 function beginNew(name){
   pf=null;
-  ned={id:"",isNew:true,draft:{name:clip(String(name||"").trim(),120),mo:"",t:"",s:[],min:"",ing:[],steps:[],serv:4,img:""},tagOpen:true,pickOpen:false,delArm:false,err:"",bulk:null};
+  ned={id:"",isNew:true,draft:{name:clip(String(name||"").trim(),120),mo:"",t:"",s:[],min:"",ing:[],steps:[],serv:4,img:"",intro:"",tips:"",serve:"",sides:[],extras:""},tagOpen:true,pickOpen:false,delArm:false,err:"",bulk:null};
   renderNewHost();
   window.scrollTo(0,0);
 }
@@ -3189,7 +3207,7 @@ function editAct(x){
   if(a==="rmtag"){d[x.dataset.k==="m"?"mo":x.dataset.k]="";}
   else if(a==="addtag"){d[x.dataset.k==="m"?"mo":x.dataset.k]=x.dataset.c;}
   else if(a==="mainpanel")edit.mainOpen=!edit.mainOpen;
-  else if(a==="sidetg"){const id=x.dataset.id,j=d.sides.indexOf(id);if(j>=0)d.sides.splice(j,1);else if(d.sides.length<8)d.sides.push(id);}
+  else if(a==="sidetg"){d.sides=d.sides||[];const id=x.dataset.id,j=d.sides.indexOf(id);if(j>=0)d.sides.splice(j,1);else if(d.sides.length<8)d.sides.push(id);}
   else if(a==="setmain"){d.mo=x.dataset.c;edit.mainOpen=false;}
   else if(a==="tagpanel")edit.tagOpen=!edit.tagOpen;
   else if(a==="xtra")edit.xOpen=!edit.xOpen;
@@ -3330,8 +3348,8 @@ document.addEventListener("click",e=>{
     const nb=[...dlg.querySelectorAll("[data-pm]")].find(b=>b.dataset.pm===k);if(nb)nb.focus();
     return;
   }
-  if((x=t.closest("[data-ver]"))){const id=openId,v=x.dataset.ver;setSel(id,n=>{n.v=v;});renderDlg();renderIdeas();refreshCart();return;}
-  if((x=t.closest("[data-tw]"))){const id=openId,k=x.dataset.tw;setSel(id,n=>{const i=n.t.indexOf(k);if(i>=0)n.t.splice(i,1);else n.t.push(k);});renderDlg();renderIdeas();refreshCart();return;}
+  if((x=t.closest("[data-ver]"))){const id=openId,v=x.dataset.ver;setSel(id,n=>{n.v=v;});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-ver="'+CSS.escape(v)+'"]');if(nb)nb.focus({preventScroll:true});return;}
+  if((x=t.closest("[data-tw]"))){const id=openId,k=x.dataset.tw;setSel(id,n=>{const i=n.t.indexOf(k);if(i>=0)n.t.splice(i,1);else n.t.push(k);});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-tw="'+CSS.escape(k)+'"]');if(nb)nb.focus({preventScroll:true});return;}
   if((x=t.closest("[data-oside]"))){openDlg(x.dataset.oside);return;}
   if((x=t.closest("[data-acc]"))){const k=x.dataset.acc;if(k==="ing")ingOpen=!ingOpen;else if(k==="steps")stepOpen=!stepOpen;else nutOpen=!nutOpen;renderDlg();const nb=dlg.querySelector('[data-acc="'+k+'"]');if(nb)nb.focus();return;}
   if((x=t.closest("[data-pv]"))){setPv(openId,+x.dataset.pv);mutate();renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-pv="'+x.dataset.pv+'"]');if(nb)nb.focus();return;}
@@ -3594,4 +3612,4 @@ buildChips();showTab("ideas");
 renderIdeas();refreshCart();
 startRemote(3);
 /* kehitystila: testiskriptien apu (ei mukana tuotantoversiossa) */
-if(import.meta.env.DEV)window.__app={R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,nutPer,byId,get state(){return state;}};
+if(import.meta.env.DEV)window.__app={R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};

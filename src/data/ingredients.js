@@ -1,5 +1,6 @@
 /* Ainesosarekisteri: Fineli (THL), CC BY 4.0, Release 16.
- * avain|synonyymit|tuoteryhmä|pääraaka-aine|g/dl,g/rkl,g/tl,g/kpl,...|ravintoarvot|... */
+ * avain|synonyymit|tuoteryhmä|pääraaka-aine|g/dl,g/rkl,g/tl,g/kpl,...|ravintoarvot|... 
+ * Lopun rivit ilman Fineli-tunnistetta ovat arvioita reseptikirjaston aineksille (marraskuu 2026). */
 export const ING_RAW=`peruna|perunat,uusi peruna,uudet perunat,jauhoinen peruna|0||,,,60,,|76,1.9,0.2,0,15.5,0||205|peruna, vanha, kuorittu
 bataatti|bataatit|0||,,,130,,|81,1.6,0.1,0,16.8,0.1||30223|bataatti, kuorittu
 porkkana|porkkanat,porkkanaraaste|0||,,,65,,|33,0.6,0.2,0,5.6,0||300|porkkana
@@ -119,7 +120,7 @@ ruisjauho|ruisjauhot,ruisjauhoa|3||55,8,,,,|304,8.8,1.9,0.2,55.4,0||100|jauho, r
 kaurahiutaleet|kaurahiutale,puuro hiutaleet,hiutaleet|2||40,6,,,,|374,14.5,7.3,0.7,57,0||153|kaurahiutale
 korppujauho|korppujauhot,korppujauhoja,korppu|3||50,7,,,,|366,10.5,1,0.2,74.9,1.1||126|jauho, korppujauho
 leivinjauhe|leivinjauhetta|3||,15,5,,,|176,5.2,0,0,37.8,30.1||74|leivinjauhe
-sokeri|kidesokeri,hienosokeri,sokeria,ruskea sokeri,fariinisokeri,muscovado|3||85,12,4,3,,|406,0,0,0,99.9,0||1|sokeri
+sokeri|kidesokeri,hienosokeri,sokeria,ruskea sokeri,fariinisokeri,muscovado,raesokeri|3||85,12,4,3,,|406,0,0,0,99.9,0||1|sokeri
 tomaattiketsuppi|ketsuppi|7||120,18,5,,,|91,1.2,0.4,0,19.2,2.6||353|ketsuppi
 patonki|patongit,ranskanleipä,vaalea patonki|1||,,,25,,|261,7.9,0.9,0.1,53,1.1||1309|vaalea leipä, patonki/ranskanleipä, vesi, vehnäjauho, teollinen
 leipä|ruisleipä,vaalea leipä,paahtoleipä,vehnäleipä|1||,,,30,,|240,7.5,1.3,0.1,44.9,1.2||1036|ruisleipä, ruista 51%
@@ -284,4 +285,20 @@ ohrasuurimo|ohrahelmi,ohrasuurimot,ruokaohra,ohrahelmiä|2||80,12,,,,|350,9,1.2,
 täysjyväriisi|ruskea riisi,täysjyväpitkäjyväinen riisi,täysjyväriisiä|2||80,12,,,,|350,7.5,2.5,0.5,72,0|||täysjyväriisi
 tahini|tahinia,seesamitahna,seesamitahnaa|7||,15,5,,300,|600,18,54,8,12,0.1|||tahini
 currykastike|ateriakastike,curry-kastike,butter chicken kastike,tikka masala kastike|7||,,,,450,|110,1.5,6,3,11,1.1|||currykastike
-juustokumina|jauhettu juustokumina,juustokuminaa|6||,,2,,,|375,18,22,1.5,44,0.5|||juustokumina|1`;
+juustokumina|jauhettu juustokumina,juustokuminaa|6||,,2,,,|375,18,22,1.5,44,0.5|||juustokumina|1
+peruna-sipulisekoitus|perunasuikaleet,peruna-sipuli,pakasteperuna|16|||70,1.8,0.1,0,14.5,0||||
+lehtitaikina|voitaikina,lehtitaikinalevyt|16||,,,,,|400,5.5,25,12,38,1||||
+kebabliha|kebab,kebabsuikaleet|10|n|,,,,,|220,18,15,6,3,1.8||||
+porsaan kylki|siankylki,kylkisiivut,porsaankylki|10|p|,,,,,|320,15,29,10.5,0,0.15||||
+joulukinkku|kinkku kokonainen,suolattu kinkku|10|p|,,,,,|190,22,11,4,0,3||||
+lammas|lampaanpaisti,karitsanpaisti,lampaanlapa,lampaan keittoliha|10|n|,,,,,|230,18,17,8,0,0.17||||
+raparperi|raparperinvarret,raparperia|0||60,,,,,|20,0.9,0.1,0,2.7,0||||
+mascarpone|mascarponejuusto|14||100,15,,,250,|420,4.6,44,29,3.5,0.08||||
+savoiardi|savoiardikeksit,naisensormet,ladyfingers|8||,,,10,,|390,8,4,1.3,80,0.4||||
+luumumarmeladi|luumusose,aprikoosimarmeladi,marmeladi|5||120,18,6,,300,|220,0.5,0.1,0,55,0||||
+omenahillo|omenasose,omena-kanelihillo|5||115,17,6,,300,|180,0.3,0.1,0,44,0||||
+bbq-kastike|barbeque-kastike,grillikastike|7||110,17,5.5,,,|170,1,0.5,0.1,40,2.2||||
+kaurakerma|kaurakermaa,kaurakasvirasvasekoite|13||100,15,5,,,|150,1,14,1.2,6,0.1||||
+grahamjauho|grahamjauhoja,täysjyvävehnäjauho|3||60,9,3,,,|340,12,2.3,0.4,64,0||||
+silli|sillifilee,marinoitu silli,matjessilli|12|f|,,,,,|190,9,11,2.5,13,2||||
+meloni|hunajameloni,cantaloupe,vesimeloni|0||,,,800,,|30,0.6,0.1,0,6.5,0||||`;

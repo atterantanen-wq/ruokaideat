@@ -3,7 +3,7 @@ export default [
   {
     n: "Kasvislasagne", m: "v", t: "uu", min: 90, w: 40, sv: 6, wd: "it",
     d: "Juureksista ja tomaatista syntyvä mehevä kastike levyjen välissä ja kullanruskea juustopinta. Hyvä tehdä isona vuokana.",
-    ing: ["lasagnelevyt 12 kpl", "porkkana 300 g", "kesäkurpitsa 1 kpl", "paprika 1 kpl", "sipuli 2 kpl", "valkosipulinkynsi 2 kpl", "oliiviöljy 2 rkl", "tomaattimurska 400 g", "tomaattipyree 2 rkl", "kasvisliemikuutio 1 kpl", "vesi 1 dl", "oregano 1 tl", "mustapippuri 0.5 tl", "ruokakerma 2.5 dl", "maito 2 dl", "juustoraaste 200 g"],
+    ing: ["lasagnelevyt 240 g", "porkkana 300 g", "kesäkurpitsa 1 kpl", "paprika 1 kpl", "sipuli 2 kpl", "valkosipulinkynsi 2 kpl", "oliiviöljy 2 rkl", "tomaattimurska 400 g", "tomaattipyree 2 rkl", "kasvisliemikuutio 1 kpl", "vesi 1 dl", "oregano 1 tl", "mustapippuri 0.5 tl", "ruokakerma 2.5 dl", "maito 2 dl", "juustoraaste 200 g"],
     steps: [
       "Raasta porkkanat karkeaksi. Leikkaa kesäkurpitsa ja paprika pieniksi kuutioiksi. Silppua sipulit ja valkosipuli.",
       "Kuumenna öljy isossa kattilassa. Kypsennä sipuleita ja porkkanaa keskilämmöllä viitisen minuuttia ja lisää sitten kesäkurpitsa ja paprika vielä muutamaksi minuutiksi.",
@@ -95,7 +95,7 @@ export default [
   {
     n: "Kasviswokki", m: "y", t: "wo", min: 30, w: 30, sv: 4, wd: "as",
     d: "Rapeaksi paistettu tofu ja rouskuvat kasvikset makeanhapokkaassa kastikkeessa.",
-    ing: ["tofu 270 g", "rypsiöljy 3 rkl", "valkosipulinkynsi 1 kpl", "sipuli 1 kpl", "porkkana 2 kpl", "parsakaali 200 g", "valkokaali 200 g", "soijakastike 2 rkl", "sweet chili 2 rkl", "lime 1 kpl", "sokeri 1 tl", "korianteri 0.5 dl"],
+    ing: ["tofu 270 g", "rypsiöljy 3 rkl", "valkosipulinkynsi 1 kpl", "sipuli 1 kpl", "porkkana 2 kpl", "parsakaali 200 g", "valkokaali 200 g", "soijakastike 2 rkl", "sweet chili 2 rkl", "lime 1 kpl", "sokeri 1 tl", "korianteri 0.5 nippu"],
     steps: [
       "Kuivaa tofu talouspaperin välissä painon alla vartin ajan ja kuutioi.",
       "Leikkaa sipuli ja porkkanat ohuiksi tikuiksi, jaa parsakaali kukinnoiksi ja leikkaa kaali kaistaleiksi.",
@@ -114,7 +114,7 @@ export default [
   {
     n: "Uunifetapasta", m: "v", t: "ps", min: 40, w: 10, sv: 4, wd: "vm", pop: true,
     d: "Kokonainen feta ja kirsikkatomaatit paahdetaan uunissa pehmeiksi ja sekoitetaan pastan kanssa kastikkeeksi.",
-    ing: ["kirsikkatomaatit 500 g", "fetajuusto 200 g", "oliiviöljy 0.75 dl", "valkosipulinkynsi 3 kpl", "chiliflakes 0.5 tl", "mustapippuri 0.5 tl", "suola 0.25 tl", "spagetti 350 g", "basilika 1 ruukku"],
+    ing: ["kirsikkatomaatit 500 g", "fetajuusto 200 g", "oliiviöljy 0.75 dl", "valkosipulinkynsi 3 kpl", "chiliflakes 0.5 tl", "mustapippuri 0.5 tl", "suola 0.25 tl", "spagetti 350 g", "basilika 1 nippu"],
     steps: [
       "Lämmitä uuni 200 asteeseen. Levitä tomaatit öljyttyyn uunivuokaan ja nosta feta kokonaisena keskelle.",
       "Ripottele päälle viipaloidut valkosipulit ja mausteet ja valuta öljy pinnalle.",
@@ -145,7 +145,7 @@ export default [
   {
     n: "Juustoinen perunalaatikko", m: "v", t: "uu", min: 70, w: 15, sv: 4,
     d: "Ohuet perunaviipaleet sulatejuustolla maustetussa maidossa uunissa. Lisuke tai kevyt pääruoka.",
-    ing: ["peruna 1 kg", "suola 0.5 tl", "maito 3 dl", "kasvisliemikuutio 1 kpl", "sulatejuusto 250 g", "voi 1 rkl", "persilja 0.5 dl"],
+    ing: ["peruna 1 kg", "suola 0.5 tl", "maito 3 dl", "kasvisliemikuutio 1 kpl", "sulatejuusto 250 g", "voi 1 rkl", "persilja 0.5 nippu"],
     steps: [
       "Lämmitä uuni 200 asteeseen ja voitele uunivuoka.",
       "Viipaloi kuoritut perunat ohuiksi, levitä vuokaan ja suolaa.",
@@ -181,7 +181,7 @@ export default [
   {
     n: "Kikhernecurry", m: "y", t: "pa", min: 30, w: 15, sv: 4, wd: "in",
     d: "Lämpimästi maustettu tomaattinen kikhernecurry, joka pehmennetään lopuksi jogurtilla. Valmistuu kaappiaineksista.",
-    ing: ["kikherneet 460 g", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "inkivääri 1 rkl", "rypsiöljy 1 rkl", "curry 2 tl", "juustokumina 1 tl", "kaneli 0.5 tl", "kardemumma 0.5 tl", "tomaattimurska 400 g", "vesi 2 dl", "kasvisliemikuutio 1 kpl", "turkkilainen jogurtti 2 dl", "pinaatti 65 g", "korianteri 0.5 dl"],
+    ing: ["kikherneet 2 prk", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "inkivääri 1 rkl", "rypsiöljy 1 rkl", "curry 2 tl", "juustokumina 1 tl", "kaneli 0.5 tl", "kardemumma 0.5 tl", "tomaattimurska 400 g", "vesi 2 dl", "kasvisliemikuutio 1 kpl", "turkkilainen jogurtti 2 dl", "pinaatti 65 g", "korianteri 0.5 nippu"],
     steps: [
       "Silppua sipuli ja valkosipuli ja raasta inkivääri.",
       "Kuumenna öljy kasarissa ja kuullota sipuleita ja inkivääriä muutama minuutti. Lisää mausteet ja paista hetki sekoittaen.",
@@ -200,7 +200,7 @@ export default [
   {
     n: "Sienikastike", m: "v", t: "pn", min: 25, w: 20, sv: 4,
     d: "Kermainen kastike metsäsienistä tai herkkusienistä. Syksyn sienisaaliille paras käyttö.",
-    ing: ["sieni 400 g", "voi 2 rkl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "vehnäjauho 1 rkl", "ruokakerma 2 dl", "creme fraiche 150 g", "suola 0.5 tl", "mustapippuri 0.25 tl", "timjami 1 tl", "persilja 0.5 dl"],
+    ing: ["sieni 400 g", "voi 2 rkl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "vehnäjauho 1 rkl", "ruokakerma 2 dl", "creme fraiche 150 g", "suola 0.5 tl", "mustapippuri 0.25 tl", "timjami 1 tl", "persilja 0.5 nippu"],
     steps: [
       "Harjaa sienet puhtaiksi ja pilko ne. Silppua sipuli ja valkosipuli.",
       "Kuumenna sienet kuivalla pannulla ja anna niistä irtoavan nesteen kiehua pois. Sen jälkeen lisää voi ja sipulit ja paista, kunnes sienet saavat väriä.",
@@ -281,7 +281,7 @@ export default [
     serve: "Tarjoa riisin kanssa.",
     sides: ["k-riisi"],
     tw: [
-      { id: "kikherne", n: "Kikherneillä", d: "Lisää tölkillinen kikherneitä täyttävyyttä tuomaan.", add: ["kikherneet 400 g"], m: "y" },
+      { id: "kikherne", n: "Kikherneillä", d: "Lisää tölkillinen kikherneitä täyttävyyttä tuomaan.", add: ["kikherneet 1 prk"], m: "y" },
       { id: "tahna", n: "Punaisella currytahnalla", d: "Korvaa jauhetut mausteet 2 rkl:lla punaista currytahnaa.", rm: ["juustokumina", "kurkuma", "curry"], add: ["currytahna 2 rkl"] },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/kasviscurry/recipe-5290"], ["Valio", "https://www.valio.fi/reseptit/helppo-kasviscurry/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/574742/Kasviscurry/"]],
@@ -300,14 +300,14 @@ export default [
     vs: [
       { id: "feta", n: "Feta", add: ["fetajuusto 200 g", "oliivit 0.5 dl"], veg: true },
       { id: "kana", n: "Broileri", add: ["broilerinfilee 300 g"], m: "k" },
-      { id: "tonnikala", n: "Tonnikala", add: ["tonnikala 1 tlk", "viinirypäle 200 g"], m: "f" },
+      { id: "tonnikala", n: "Tonnikala", add: ["tonnikala 1 prk", "viinirypäle 200 g"], m: "f" },
     ],
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/63218/Pastasalaatti/"], ["Martat", "https://www.martat.fi/reseptit/pastasalaatti/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/nopea-pastasalaatti/recipe-2641"]],
   },
   {
     n: "Falafel", m: "y", t: "pn", min: 40, w: 35, sv: 4, wd: "vm",
     d: "Kikherne-yrttipyörykät paistettuna rapeiksi. Pitaleivässä jogurttikastikkeen ja kasvisten kanssa.",
-    ing: ["kikherneet 400 g", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "persilja 1 dl", "korianteri 0.5 dl", "juustokumina 2 tl", "korianterinsiemen 1 tl", "leivinjauhe 1 tl", "vehnäjauho 3 rkl", "suola 1 tl", "rypsiöljy 3 rkl", "# Kastike", "turkkilainen jogurtti 2 dl", "tahini 1 rkl", "sitruuna 0.5 kpl"],
+    ing: ["kikherneet 1 prk", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "persilja 0.5 nippu", "korianteri 0.5 nippu", "juustokumina 2 tl", "korianterinsiemen 1 tl", "leivinjauhe 1 tl", "vehnäjauho 3 rkl", "suola 1 tl", "rypsiöljy 3 rkl", "# Kastike", "turkkilainen jogurtti 2 dl", "tahini 1 rkl", "sitruuna 0.5 kpl"],
     steps: [
       "Huuhtele ja valuta kikherneet huolellisesti ja kuivaa ne talouspaperilla.",
       "Surauta kikherneet, sipuli, valkosipuli, yrtit ja mausteet monitoimikoneessa karkeaksi massaksi. Sekoita joukkoon leivinjauhe ja jauhot.",

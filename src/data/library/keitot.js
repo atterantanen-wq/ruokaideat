@@ -3,7 +3,7 @@ export default [
   {
     n: "Lohikeitto", m: "f", t: "ke", min: 35, w: 20, sv: 4, pop: true,
     d: "Kermainen kalakeitto, jossa peruna ja porkkana keitetään ensin kypsiksi ja lohi haudutetaan lopuksi mehukkaaksi. Tilli on pakollinen.",
-    ing: ["lohifile 500 g", "peruna 600 g", "porkkana 1 kpl", "sipuli 1 kpl", "purjo 50 g", "voi 1 rkl", "vesi 8 dl", "kalaliemikuutio 1 kpl", "laakerinlehti 2 kpl", "maustepippuri 6 kpl", "ruokakerma 2 dl", "suola 0.5 tl", "tilli 1 ruukku"],
+    ing: ["lohifile 500 g", "peruna 600 g", "porkkana 1 kpl", "sipuli 1 kpl", "purjo 50 g", "voi 1 rkl", "vesi 8 dl", "kalaliemikuutio 1 kpl", "laakerinlehti 2 kpl", "maustepippuri 6 kpl", "ruokakerma 2 dl", "suola 0.5 tl", "tilli 1 nippu"],
     steps: [
       "Kuori perunat ja porkkana ja leikkaa ne suupaloiksi. Silppua sipuli ja purjo.",
       "Kuumenna voi kattilan pohjalla. Pehmennä sipulia ja purjoa siinä hetki ruskistamatta.",
@@ -27,7 +27,7 @@ export default [
   {
     n: "Kasvissosekeitto", m: "v", t: "ke", min: 35, w: 15, sv: 4, pop: true,
     d: "Samettisen sileä keitto juureksista ja perunasta. Toimii melkein millä tahansa kasviksilla, joita jääkaapista löytyy.",
-    ing: ["porkkana 400 g", "peruna 300 g", "palsternakka 1 kpl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "rypsiöljy 1 rkl", "vesi 8 dl", "kasvisliemikuutio 2 kpl", "ruokakerma 2 dl", "mustapippuri 0.25 tl", "suola 0.5 tl", "persilja 0.5 dl"],
+    ing: ["porkkana 400 g", "peruna 300 g", "palsternakka 1 kpl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "rypsiöljy 1 rkl", "vesi 8 dl", "kasvisliemikuutio 2 kpl", "ruokakerma 2 dl", "mustapippuri 0.25 tl", "suola 0.5 tl", "persilja 0.5 nippu"],
     steps: [
       "Kuori kasvikset. Pilko porkkanat, perunat ja palsternakka suunnilleen samankokoisiksi paloiksi ja sipuli lohkoiksi.",
       "Kuumenna öljy kattilassa ja käännä kasviksia siinä muutama minuutti. Lisää lopuksi viipaloitu valkosipuli.",
@@ -50,7 +50,7 @@ export default [
   {
     n: "Nakkikeitto", m: "s", t: "ke", min: 30, w: 15, sv: 4, pop: true,
     d: "Lasten suosikki: perunaa, juureksia ja nakkeja kirkkaassa liemessä, tilkka smetanaa lopuksi.",
-    ing: ["nakit 300 g", "peruna 600 g", "porkkana 2 kpl", "juuriselleri 100 g", "purjo 100 g", "vesi 1 l", "liemikuutio 1 kpl", "smetana 120 g", "persilja 0.5 dl"],
+    ing: ["nakit 300 g", "peruna 600 g", "porkkana 2 kpl", "juuriselleri 100 g", "purjo 100 g", "vesi 1 l", "liemikuutio 1 kpl", "smetana 120 g", "persilja 0.5 nippu"],
     steps: [
       "Kuori perunat, porkkanat ja selleri ja leikkaa ne kuutioiksi. Halkaise purjo, huuhtele lehtien välit ja leikkaa ohuiksi kaariksi.",
       "Kiehauta vesi liemikuution kanssa. Lisää juurekset ja keitä kannen alla noin 15 minuuttia.",
@@ -69,7 +69,7 @@ export default [
   {
     n: "Kanakeitto", m: "k", t: "ke", min: 40, w: 15, sv: 4, pop: true,
     d: "Lämmittävä keitto kanasta, juureksista ja riisistä. Sitruuna ja persilja raikastavat lopuksi.",
-    ing: ["broilerinfilee 400 g", "sipuli 1 kpl", "porkkana 2 kpl", "varsiselleri 2 kpl", "peruna 300 g", "rypsiöljy 1 rkl", "vesi 1.2 l", "kanaliemi 2 kpl", "riisi 0.75 dl", "laakerinlehti 2 kpl", "mustapippuri 0.25 tl", "suola 0.5 tl", "persilja 0.5 dl", "sitruuna 0.5 kpl"],
+    ing: ["broilerinfilee 400 g", "sipuli 1 kpl", "porkkana 2 kpl", "varsiselleri 2 kpl", "peruna 300 g", "rypsiöljy 1 rkl", "vesi 1.2 l", "kanaliemi 2 kpl", "riisi 0.75 dl", "laakerinlehti 2 kpl", "mustapippuri 0.25 tl", "suola 0.5 tl", "persilja 0.5 nippu", "sitruuna 0.5 kpl"],
     steps: [
       "Kuutioi sipuli, porkkanat, sellerinvarret ja perunat. Leikkaa broileri pieniksi paloiksi.",
       "Kuumenna öljy isossa kattilassa ja paista broilerin paloja, kunnes ne ovat pinnalta vaaleita. Lisää sipuli, porkkana ja selleri ja pehmennä hetki.",
@@ -109,7 +109,7 @@ export default [
   {
     n: "Borssikeitto", m: "v", t: "ke", min: 75, w: 25, sv: 6,
     d: "Syvänpunainen punajuuri-kaalikeitto, jossa hapokkuus ja makeus ovat tasapainossa. Smetana on olennainen osa annosta.",
-    ing: ["punajuuri 500 g", "porkkana 2 kpl", "juuriselleri 100 g", "valkokaali 500 g", "sipuli 2 kpl", "valkosipulinkynsi 2 kpl", "voi 2 rkl", "tomaattipyree 3 rkl", "vesi 1.5 l", "liemikuutio 2 kpl", "etikka 2 rkl", "laakerinlehti 2 kpl", "maustepippuri 6 kpl", "suola 1 tl", "smetana 240 g", "tilli 0.5 dl"],
+    ing: ["punajuuri 500 g", "porkkana 2 kpl", "juuriselleri 100 g", "valkokaali 500 g", "sipuli 2 kpl", "valkosipulinkynsi 2 kpl", "voi 2 rkl", "tomaattipyree 3 rkl", "vesi 1.5 l", "liemikuutio 2 kpl", "etikka 2 rkl", "laakerinlehti 2 kpl", "maustepippuri 6 kpl", "suola 1 tl", "smetana 240 g", "tilli 0.5 nippu"],
     steps: [
       "Raasta kuoritut juurekset karkeaksi raasteeksi. Suikaloi kaali ohueksi, viipaloi sipulit ja silppua valkosipuli.",
       "Sulata voi isossa kattilassa. Pehmennä kasviksia siinä sekoitellen 5 minuuttia ja lisää tomaattipyree viimeiseksi minuutiksi.",
@@ -128,7 +128,7 @@ export default [
   {
     n: "Tomaattikeitto", m: "v", t: "ke", min: 30, w: 15, sv: 4,
     d: "Uunissa paahdetut tomaatit tekevät keitosta makean ja syvän makuisen. Kerma pyöristää lopuksi.",
-    ing: ["tomaatti 1 kg", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "oliiviöljy 2 rkl", "suola 0.5 tl", "mustapippuri 0.25 tl", "sokeri 1 tl", "kasvisliemikuutio 1 kpl", "vesi 3 dl", "ruokakerma 2 dl", "basilika 0.5 ruukku"],
+    ing: ["tomaatti 1 kg", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "oliiviöljy 2 rkl", "suola 0.5 tl", "mustapippuri 0.25 tl", "sokeri 1 tl", "kasvisliemikuutio 1 kpl", "vesi 3 dl", "ruokakerma 2 dl", "basilika 0.5 nippu"],
     steps: [
       "Lämmitä uuni 250 asteeseen. Lohko tomaatit ja sipuli ja levitä ne uunivuokaan kuorineen valkosipulinkynsien kanssa.",
       "Valuta päälle öljy, ripottele suola ja pippuri ja paahda uunin yläosassa noin 15 minuuttia, kunnes tomaatit ovat pehmenneet ja reunoilta tummuneet.",
@@ -148,7 +148,7 @@ export default [
   {
     n: "Siskonmakkarakeitto", m: "s", t: "ke", min: 35, w: 15, sv: 4,
     d: "Juureksia kirkkaassa liemessä ja suolesta puristettuja makkarapalleroita. Perinteinen ja edullinen arkikeitto.",
-    ing: ["siskonmakkara 400 g", "peruna 600 g", "porkkana 2 kpl", "lanttu 200 g", "purjo 100 g", "vesi 1.3 l", "liemikuutio 2 kpl", "maustepippuri 6 kpl", "laakerinlehti 1 kpl", "suola 0.5 tl", "persilja 0.5 dl"],
+    ing: ["siskonmakkara 400 g", "peruna 600 g", "porkkana 2 kpl", "lanttu 200 g", "purjo 100 g", "vesi 1.3 l", "liemikuutio 2 kpl", "maustepippuri 6 kpl", "laakerinlehti 1 kpl", "suola 0.5 tl", "persilja 0.5 nippu"],
     steps: [
       "Kuori juurekset. Porkkanasta ja lantusta tehdään pieniä kuutioita, perunoista vähän isompia.",
       "Kiehauta vesi liemikuutioiden ja mausteiden kanssa. Lisää porkkana ja lanttu ja keitä viitisen minuuttia.",
@@ -164,7 +164,7 @@ export default [
   {
     n: "Kalakeitto", m: "f", t: "ke", min: 35, w: 15, sv: 4,
     d: "Maitopohjainen kalakeitto juureksista ja vaaleasta kalasta. Edullinen arkiversio lohikeitosta.",
-    ing: ["valkoinen kalafile 400 g", "peruna 600 g", "porkkana 1 kpl", "sipuli 1 kpl", "purjo 50 g", "voi 1 rkl", "vesi 7 dl", "kalaliemikuutio 1 kpl", "maustepippuri 8 kpl", "maito 3 dl", "sitruunapippuri 1 tl", "suola 0.5 tl", "tilli 1 dl"],
+    ing: ["valkoinen kalafile 400 g", "peruna 600 g", "porkkana 1 kpl", "sipuli 1 kpl", "purjo 50 g", "voi 1 rkl", "vesi 7 dl", "kalaliemikuutio 1 kpl", "maustepippuri 8 kpl", "maito 3 dl", "sitruunapippuri 1 tl", "suola 0.5 tl", "tilli 0.5 nippu"],
     steps: [
       "Kuutioi kuoritut perunat ja porkkana. Silppua sipuli ja viipaloi purjo ohuiksi renkaiksi.",
       "Pehmennä sipulia ja purjoa voissa kattilan pohjalla pari minuuttia. Lisää vesi, liemikuutio, maustepippurit, perunat ja porkkana.",
@@ -205,7 +205,7 @@ export default [
   {
     n: "Kesäkeitto", m: "v", t: "ke", min: 30, w: 15, sv: 4, fe: "ju",
     d: "Uusia perunoita, porkkanaa, kukkakaalia ja herneitä maitoisessa liemessä. Parhaimmillaan kesän ensimmäisistä kasviksista.",
-    ing: ["uudet perunat 500 g", "porkkana 3 kpl", "kukkakaali 300 g", "kevätsipuli 1 nippu", "vesi 6 dl", "suola 1 tl", "herneet 2 dl", "maito 5 dl", "vehnäjauho 2 rkl", "voi 1 rkl", "tilli 0.5 dl", "persilja 0.5 dl"],
+    ing: ["uudet perunat 500 g", "porkkana 3 kpl", "kukkakaali 300 g", "kevätsipuli 1 nippu", "vesi 6 dl", "suola 1 tl", "herneet 2 dl", "maito 5 dl", "vehnäjauho 2 rkl", "voi 1 rkl", "tilli 0.5 nippu", "persilja 0.5 nippu"],
     steps: [
       "Harjaa perunat ja lohko ne. Viipaloi porkkanat, jaa kukkakaali pieniksi kukinnoiksi ja leikkaa sipulit varsineen ohuiksi.",
       "Keitä perunoita ja porkkanoita suolatussa vedessä 10 minuuttia. Lisää kukkakaali ja sipulit ja jatka 5 minuuttia.",
@@ -224,7 +224,7 @@ export default [
   {
     n: "Makkarakeitto", m: "s", t: "ke", min: 35, w: 15, sv: 4, pop: true,
     d: "Perusarjen makkarakeitto: lenkkimakkaraa, perunaa ja porkkanaa lihaliemessä. Tomaattipyree antaa liemelle väriä.",
-    ing: ["lenkkimakkara 400 g", "peruna 700 g", "porkkana 3 kpl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "vesi 1.2 l", "liemikuutio 1 kpl", "tomaattipyree 2 rkl", "maustepippuri 6 kpl", "mustapippuri 0.25 tl", "persilja 0.5 dl"],
+    ing: ["lenkkimakkara 400 g", "peruna 700 g", "porkkana 3 kpl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "vesi 1.2 l", "liemikuutio 1 kpl", "tomaattipyree 2 rkl", "maustepippuri 6 kpl", "mustapippuri 0.25 tl", "persilja 0.5 nippu"],
     steps: [
       "Pilko kuoritut perunat isoiksi lohkoiksi ja porkkanat paksuiksi kiekoiksi. Silppua sipuli ja valkosipuli.",
       "Kiehauta vesi liemikuution, tomaattipyreen ja maustepippurien kanssa. Lisää perunat, porkkanat ja sipulit.",
@@ -243,7 +243,7 @@ export default [
   {
     n: "Jauhelihakeitto", m: "j", t: "ke", min: 40, w: 15, sv: 4, pop: true,
     d: "Ruskistettu jauheliha, peruna ja juurekset samassa kattilassa. Helppo ja täyttävä keitto koko perheelle.",
-    ing: ["jauheliha 400 g", "sipuli 1 kpl", "porkkana 2 kpl", "lanttu 150 g", "peruna 500 g", "tomaattipyree 2 rkl", "vesi 1.2 l", "liemikuutio 2 kpl", "paprikajauhe 1 tl", "mustapippuri 0.25 tl", "laakerinlehti 1 kpl", "suola 0.5 tl", "persilja 0.5 dl"],
+    ing: ["jauheliha 400 g", "sipuli 1 kpl", "porkkana 2 kpl", "lanttu 150 g", "peruna 500 g", "tomaattipyree 2 rkl", "vesi 1.2 l", "liemikuutio 2 kpl", "paprikajauhe 1 tl", "mustapippuri 0.25 tl", "laakerinlehti 1 kpl", "suola 0.5 tl", "persilja 0.5 nippu"],
     steps: [
       "Ruskista jauheliha kuivassa kattilassa murulle. Lisää silputtu sipuli ja paista vielä pari minuuttia.",
       "Sekoita tomaattipyree ja paprikajauhe lihaan ja anna niiden paistua hetki.",
@@ -263,7 +263,7 @@ export default [
   {
     n: "Porkkanasosekeitto", m: "v", t: "ke", min: 30, w: 10, sv: 4,
     d: "Kirkkaan oranssi keitto, jossa porkkanan makeutta tasapainottavat inkivääri ja korianteri.",
-    ing: ["porkkana 500 g", "peruna 250 g", "sipuli 1 kpl", "voi 1 rkl", "inkivääri 1 tl", "korianterinsiemen 1 tl", "vesi 7 dl", "kasvisliemikuutio 1 kpl", "ruokakerma 2 dl", "suola 0.5 tl", "korianteri 0.5 dl"],
+    ing: ["porkkana 500 g", "peruna 250 g", "sipuli 1 kpl", "voi 1 rkl", "inkivääri 1 tl", "korianterinsiemen 1 tl", "vesi 7 dl", "kasvisliemikuutio 1 kpl", "ruokakerma 2 dl", "suola 0.5 tl", "korianteri 0.5 nippu"],
     steps: [
       "Kuori kasvikset ja pilko ne pieniksi paloiksi, jotta ne kypsyvät nopeasti.",
       "Sulata voi kattilassa ja lisää kasvikset, raastettu inkivääri ja murskatut korianterinsiemenet. Sekoittele muutama minuutti.",
@@ -283,7 +283,7 @@ export default [
   {
     n: "Juustokeitto", m: "v", t: "ke", min: 20, w: 15, sv: 4,
     d: "Nopea ja kermainen keitto sulatejuustosta. Valmis vartissa, ja lisukkeeksi riittää hyvä leipä.",
-    ing: ["sulatejuusto 250 g", "vesi 7 dl", "kasvisliemikuutio 1 kpl", "ruokakerma 2 dl", "maissitärkkelys 3 rkl", "valkosipulinkynsi 1 kpl", "mustapippuri 0.25 tl", "persilja 0.5 dl"],
+    ing: ["sulatejuusto 250 g", "vesi 7 dl", "kasvisliemikuutio 1 kpl", "ruokakerma 2 dl", "maissitärkkelys 3 rkl", "valkosipulinkynsi 1 kpl", "mustapippuri 0.25 tl", "persilja 0.5 nippu"],
     steps: [
       "Kuumenna vesi liemikuution ja murskatun valkosipulin kanssa kiehuvaksi.",
       "Pilko juusto pieniksi palasiksi ja anna niiden sulaa liemeen hämmentäen.",

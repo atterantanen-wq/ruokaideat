@@ -26,7 +26,7 @@ export default [
   {
     n: "Jauhelihakastike", m: "j", t: "pn", min: 25, w: 25, sv: 4, pop: true,
     d: "Arjen pelastaja, joka on pöydässä puolessa tunnissa. Perusversio on kermainen, tomaattinen löytyy muunnelmista.",
-    ing: ["jauheliha 400 g", "sipuli 1 kpl", "voi 1 rkl", "vehnäjauho 2 rkl", "vesi 3 dl", "liemikuutio 1 kpl", "ruokakerma 2 dl", "maustepippuri 6 kpl", "mustapippuri 0.5 tl", "persilja 0.5 dl"],
+    ing: ["jauheliha 400 g", "sipuli 1 kpl", "voi 1 rkl", "vehnäjauho 2 rkl", "vesi 3 dl", "liemikuutio 1 kpl", "ruokakerma 2 dl", "maustepippuri 6 kpl", "mustapippuri 0.5 tl", "persilja 0.5 nippu"],
     steps: [
       "Silppua sipuli pieneksi.",
       "Kuumenna rasva leveässä pannussa. Paista jauheliha murulle niin, että se ehtii saada väriä, ja lisää sipuli loppuvaiheessa pehmenemään.",
@@ -87,7 +87,7 @@ export default [
     ],
     vs: [
       { id: "kinkku", n: "Kinkku-ananas", add: ["savukinkku 150 g", "ananas 230 g"], m: "p" },
-      { id: "margherita", n: "Margherita", add: ["mozzarella 125 g", "tomaatti 2 kpl", "basilika 1 ruukku"], rm: ["juustoraaste"], veg: true },
+      { id: "margherita", n: "Margherita", add: ["mozzarella 125 g", "tomaatti 2 kpl", "basilika 1 nippu"], rm: ["juustoraaste"], veg: true },
       { id: "jauheliha", n: "Jauheliha-sipuli", add: ["jauheliha 250 g", "punasipuli 1 kpl", "aurinkokuivattu tomaatti 50 g"], m: "j", ins: [[3, "Paista jauheliha pannulla murulle ja mausta se. Leikkaa punasipuli ohuiksi renkaiksi."]] },
       { id: "salami", n: "Salami", add: ["salami 100 g", "herkkusienet 150 g", "oliivit 0.5 dl"], m: "p" },
       { id: "kasvis", n: "Kasvis", add: ["paprika 1 kpl", "herkkusienet 150 g", "punasipuli 1 kpl", "oliivit 0.5 dl", "fetajuusto 100 g"], veg: true },
@@ -121,7 +121,7 @@ export default [
   {
     n: "Lasagne", m: "j", t: "uu", min: 90, w: 40, sv: 6, wd: "it", jf: true, pop: true,
     d: "Tomaattinen jauhelihakastike, valkokastike ja lasagnelevyt kerroksittain, päälle reilusti juustoa.",
-    ing: ["# Lihakastike", "jauheliha 400 g", "sipuli 2 kpl", "valkosipulinkynsi 3 kpl", "rypsiöljy 1 rkl", "tomaattimurska 800 g", "tomaattipyree 2 rkl", "vesi 1 dl", "liemikuutio 1 kpl", "oregano 1 tl", "sokeri 1 tl", "mustapippuri 0.25 tl", "# Valkokastike", "voi 3 rkl", "vehnäjauho 3 rkl", "maito 6 dl", "suola 0.5 tl", "muskotti 1 ripaus", "# Kokoaminen", "lasagnelevyt 12 kpl", "juustoraaste 150 g"],
+    ing: ["# Lihakastike", "jauheliha 400 g", "sipuli 2 kpl", "valkosipulinkynsi 3 kpl", "rypsiöljy 1 rkl", "tomaattimurska 800 g", "tomaattipyree 2 rkl", "vesi 1 dl", "liemikuutio 1 kpl", "oregano 1 tl", "sokeri 1 tl", "mustapippuri 0.25 tl", "# Valkokastike", "voi 3 rkl", "vehnäjauho 3 rkl", "maito 6 dl", "suola 0.5 tl", "muskotti 1 ripaus", "# Kokoaminen", "lasagnelevyt 240 g", "juustoraaste 150 g"],
     steps: [
       "Silppua sipulit ja valkosipuli. Ruskista jauheliha öljyssä ja lisää sipulit loppuvaiheessa.",
       "Sekoita joukkoon tomaattimurska, pyree, vesi, liemikuutio ja mausteet. Hauduta kastiketta hiljalleen noin 15 minuuttia valkokastikkeen teon ajan.",
@@ -161,7 +161,7 @@ export default [
   {
     n: "Chili con carne", m: "j", t: "pa", min: 45, w: 20, sv: 4, wd: "tm", pop: true,
     d: "Mausteinen jauhelihapata papujen ja tomaatin kanssa. Riisin, tortillalastujen tai leivän kanssa.",
-    ing: ["jauheliha 400 g", "rypsiöljy 1 rkl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "paprika 1 kpl", "chilijauhe 1 tl", "juustokumina 1 tl", "paprikajauhe 1 tl", "oregano 1 tl", "tomaattimurska 400 g", "tomaattipyree 2 rkl", "kidneypavut 400 g", "vesi 1 dl", "suola 0.75 tl"],
+    ing: ["jauheliha 400 g", "rypsiöljy 1 rkl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "paprika 1 kpl", "chilijauhe 1 tl", "juustokumina 1 tl", "paprikajauhe 1 tl", "oregano 1 tl", "tomaattimurska 400 g", "tomaattipyree 2 rkl", "kidneypavut 1 prk", "vesi 1 dl", "suola 0.75 tl"],
     steps: [
       "Silppua sipuli ja valkosipuli ja kuutioi paprika.",
       "Ruskista jauheliha öljyssä padassa tai isossa pannussa. Lisää sipulit ja paprika ja pehmennä muutama minuutti.",
@@ -173,7 +173,7 @@ export default [
     sides: ["k-riisi"], extras: ["smetana"],
     tips: ["Chili on vielä parempaa seuraavana päivänä, ja se pakastuu hyvin."],
     tw: [
-      { id: "kasvi", n: "Sin carne", d: "Jätä jauheliha pois ja lisää toinen tölkki papuja ja tölkki maissia.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 200 g"], m: "y" },
+      { id: "kasvi", n: "Sin carne", d: "Jätä jauheliha pois ja lisää toinen tölkki papuja ja tölkki maissia.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y" },
       { id: "mieto", n: "Miedompi", d: "Jätä chilijauhe pois. Tarjoa chilikastiketta erikseen niille, jotka haluavat.", rm: ["chilijauhe"] },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/chili-con-carne/"], ["Martat", "https://www.martat.fi/reseptit/chili-con-carne/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-chili-con-carne/recipe-834"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/29394/Chili%20con%20carne/"]],
@@ -323,7 +323,7 @@ export default [
   {
     n: "Lihakeitto", m: "n", t: "ke", min: 120, w: 25, sv: 6, pop: true,
     d: "Kirkas keitto naudanlihasta ja juureksista. Liha haudutetaan ensin mureaksi, juurekset lisätään vasta lopuksi.",
-    ing: ["naudanliha 600 g", "vesi 1.8 l", "suola 1.5 tl", "maustepippuri 8 kpl", "laakerinlehti 2 kpl", "sipuli 1 kpl", "porkkana 3 kpl", "lanttu 300 g", "juuriselleri 100 g", "peruna 600 g", "liemikuutio 1 kpl", "persilja 0.5 dl"],
+    ing: ["naudanliha 600 g", "vesi 1.8 l", "suola 1.5 tl", "maustepippuri 8 kpl", "laakerinlehti 2 kpl", "sipuli 1 kpl", "porkkana 3 kpl", "lanttu 300 g", "juuriselleri 100 g", "peruna 600 g", "liemikuutio 1 kpl", "persilja 0.5 nippu"],
     steps: [
       "Huuhtele liha ja nosta se kattilaan kylmään veteen. Kuumenna hitaasti kiehuvaksi ja kuori pinnalle nouseva harmaa vaahto huolellisesti pois.",
       "Lisää suola, pippurit, laakerinlehdet ja kokonainen kuorittu sipuli. Hauduta kannen alla miedolla lämmöllä, kunnes liha on mureaa, noin tunti.",
@@ -350,7 +350,7 @@ export default [
     serve: "Tarjoa salaatin ja tortillalastujen kanssa.",
     sides: ["k-vihersalaatti"],
     tw: [
-      { id: "kasvi", n: "Kasvisversio", d: "Korvaa jauheliha mustilla pavuilla ja maissilla.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 150 g"], m: "y" },
+      { id: "kasvi", n: "Kasvisversio", d: "Korvaa jauheliha mustilla pavuilla ja maissilla.", rm: ["jauheliha"], add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y" },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/tacopiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tacopiirakka/recipe-837"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/293865/Tacopiirakka/"]],
   },
@@ -391,7 +391,7 @@ export default [
   {
     n: "Hampurilaiset", m: "n", t: "ha", min: 30, w: 30, sv: 4, wd: "am", kq: ["gl"],
     d: "Kotitekoiset hampurilaiset: paahdettu sämpylä, mehevä pihvi ja omat täytteet. Pihvin voi valita version mukaan.",
-    ing: ["hampurilaissämpylä 4 kpl", "jäävuorisalaatti 4 lehteä", "tomaatti 2 kpl", "punasipuli 1 kpl", "suolakurkku 1 kpl", "majoneesi 1 dl", "tomaattiketsuppi 4 rkl"],
+    ing: ["hampurilaissämpylä 4 kpl", "jäävuorisalaatti 0.5 kpl", "tomaatti 2 kpl", "punasipuli 1 kpl", "suolakurkku 1 kpl", "majoneesi 1 dl", "tomaattiketsuppi 4 rkl"],
     steps: [
       "Valmistele täytteet: huuhtele salaatti, viipaloi tomaatit, punasipuli ja kurkku.",
       "Valmistele pihvit version mukaan.",
@@ -402,7 +402,7 @@ export default [
     sides: ["k-lohkoperunat"],
     tips: ["Jauhelihapihvin kypsyys: paina peukalolla keskelle kuoppa ennen paistamista, niin pihvi ei pullistu."],
     vs: [
-      { id: "nauta", n: "Naudanliha", add: ["jauheliha 600 g", "suola 0.75 tl", "mustapippuri 0.5 tl", "cheddar 4 viipaletta"], m: "n", step: { 1: "Mausta jauheliha suolalla ja pippurilla ja taputtele neljäksi sämpylää hieman leveämmäksi pihviksi. Nosta juustoviipale pihvin päälle paistamisen loppuvaiheessa." } },
+      { id: "nauta", n: "Naudanliha", add: ["jauheliha 600 g", "suola 0.75 tl", "mustapippuri 0.5 tl", "cheddar 80 g"], m: "n", step: { 1: "Mausta jauheliha suolalla ja pippurilla ja taputtele neljäksi sämpylää hieman leveämmäksi pihviksi. Nosta juustoviipale pihvin päälle paistamisen loppuvaiheessa." } },
       { id: "kana", n: "Kana", add: ["broilerinfilee 500 g", "paprikajauhe 1 tl", "suola 0.5 tl"], m: "k", step: { 1: "Halkaise broilerinfileet ohuiksi leikkeiksi ja mausta paprikalla ja suolalla. Paista leikkeet kypsiksi, noin 4 minuuttia kummaltakin puolelta." } },
       { id: "halloumi", n: "Halloumi", add: ["halloumi 400 g"], veg: true, step: { 1: "Leikkaa halloumi paksuiksi viipaleiksi ja paista ne kuumalla pannulla kullanruskeiksi." } },
       { id: "kasvis", n: "Kasvispihvi", add: ["kasvispyörykät 4 kpl"], m: "y", step: { 1: "Lämmitä valmiit kasvispihvit pannulla pakkauksen ohjeen mukaan." } },
@@ -428,7 +428,7 @@ export default [
   {
     n: "Kanapata", m: "k", t: "pa", min: 60, w: 20, sv: 6, pop: true,
     d: "Uunissa haudutettu broileripata tomaatin, sitruunan ja aurinkokuivattujen tomaattien kanssa. Kerma pehmentää lopuksi.",
-    ing: ["broilerin paistileike 800 g", "suola 1 tl", "mustapippuri 0.5 tl", "timjami 1 tl", "sipuli 2 kpl", "valkosipulinkynsi 3 kpl", "voi 2 rkl", "sitruuna 1 kpl", "tomaattimurska 400 g", "aurinkokuivattu tomaatti 50 g", "hunaja 1 rkl", "ruokakerma 2 dl", "persilja 0.5 dl"],
+    ing: ["kanan ylereisi 800 g", "suola 1 tl", "mustapippuri 0.5 tl", "timjami 1 tl", "sipuli 2 kpl", "valkosipulinkynsi 3 kpl", "voi 2 rkl", "sitruuna 1 kpl", "tomaattimurska 400 g", "aurinkokuivattu tomaatti 50 g", "hunaja 1 rkl", "ruokakerma 2 dl", "persilja 0.5 nippu"],
     steps: [
       "Lämmitä uuni 200 asteeseen. Hiero leikkeisiin suola, pippuri ja timjami.",
       "Ruskista leikkeet voissa uuninkestävässä padassa tai pannulla molemmin puolin. Lisää lohkotut sipulit ja viipaloidut valkosipulit ja pehmennä hetki.",
@@ -503,7 +503,7 @@ export default [
   {
     n: "Kanasalaatti", m: "k", t: "sa", min: 25, w: 25, sv: 4,
     d: "Caesar-tyylinen salaatti: paistettu broileri, rapea romainesalaatti, krutongit ja kermainen parmesaanikastike.",
-    ing: ["broilerinfilee 400 g", "rypsiöljy 1 rkl", "suola 0.5 tl", "mustapippuri 0.25 tl", "salaatti 2 kpl", "parmesaani 60 g", "leipä 3 viipaletta", "oliiviöljy 2 rkl", "# Kastike", "turkkilainen jogurtti 2 dl", "valkosipulinkynsi 1 kpl", "sitruuna 0.5 kpl", "sinappi 1 tl", "ansjovis 2 kpl"],
+    ing: ["broilerinfilee 400 g", "rypsiöljy 1 rkl", "suola 0.5 tl", "mustapippuri 0.25 tl", "salaatti 2 kpl", "parmesaani 60 g", "leipä 3 kpl", "oliiviöljy 2 rkl", "# Kastike", "turkkilainen jogurtti 2 dl", "valkosipulinkynsi 1 kpl", "sitruuna 0.5 kpl", "sinappi 1 tl", "ansjovis 10 g"],
     steps: [
       "Kuutioi leipä, sekoita oliiviöljyyn ja paahda pannulla rapeiksi krutongeiksi.",
       "Mausta broileri ja paista öljyssä kypsäksi, noin 5 minuuttia kummaltakin puolelta. Anna levätä hetki ja viipaloi.",
@@ -513,7 +513,7 @@ export default [
     tips: ["Ansjovikset tuovat kastikkeeseen klassisen suolaisen syvyyden. Ne voi korvata tilkalla worcestershirekastiketta."],
     vs: [
       { id: "caesar", n: "Caesar" },
-      { id: "meloni", n: "Meloni-leipäjuusto", rm: ["parmesaani", "leipä", "oliiviöljy", "turkkilainen jogurtti", "valkosipulinkynsi", "sinappi", "ansjovis"], add: ["meloni 400 g", "leipäjuusto 300 g", "tomaatti 3 kpl", "minttu 0.5 ruukku", "hunaja 1 rkl", "lime 1 kpl"], step: { 0: "Leikkaa melonista ja leipäjuustosta kuutioita ja lohko tomaatit.", 2: "Sekoita limen mehu, hunaja ja ruokalusikallinen öljyä kastikkeeksi.", 3: "Kokoa salaatti, meloni, leipäjuusto, tomaatit ja broileri vadille. Valuta päälle kastike ja ripottele minttua." } },
+      { id: "meloni", n: "Meloni-leipäjuusto", rm: ["parmesaani", "leipä", "oliiviöljy", "turkkilainen jogurtti", "valkosipulinkynsi", "sinappi", "ansjovis"], add: ["meloni 400 g", "leipäjuusto 300 g", "tomaatti 3 kpl", "minttu 0.5 nippu", "hunaja 1 rkl", "lime 1 kpl"], step: { 0: "Leikkaa melonista ja leipäjuustosta kuutioita ja lohko tomaatit.", 2: "Sekoita limen mehu, hunaja ja ruokalusikallinen öljyä kastikkeeksi.", 3: "Kokoa salaatti, meloni, leipäjuusto, tomaatit ja broileri vadille. Valuta päälle kastike ja ripottele minttua." } },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/kana-caesarsalaatti/"], ["Martat", "https://www.martat.fi/reseptit/caesarsalaatti/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kanasalaatti/8rpMZ53J8odYLXQg8p0Q6"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/17272/Broilerisalaatti/"]],
   },
@@ -557,7 +557,7 @@ export default [
   {
     n: "Butter chicken", m: "k", t: "pa", min: 40, w: 25, sv: 4, wd: "in", pop: true,
     d: "Intialainen kermainen tomaattikastike broilerille, maustettuna garam masalalla ja inkiväärillä.",
-    ing: ["broilerinfilee 550 g", "voi 3 rkl", "sipuli 1 kpl", "valkosipulinkynsi 3 kpl", "inkivääri 1 rkl", "tomaattipyree 2 rkl", "garam masala 2 tl", "kurkuma 1 tl", "tomaattimurska 500 g", "suola 0.75 tl", "sokeri 1 tl", "ruokakerma 2 dl", "korianteri 0.5 dl"],
+    ing: ["broilerinfilee 550 g", "voi 3 rkl", "sipuli 1 kpl", "valkosipulinkynsi 3 kpl", "inkivääri 1 rkl", "tomaattipyree 2 rkl", "garam masala 2 tl", "kurkuma 1 tl", "tomaattimurska 500 g", "suola 0.75 tl", "sokeri 1 tl", "ruokakerma 2 dl", "korianteri 0.5 nippu"],
     steps: [
       "Paloittele broileri ja ruskista palat kasarissa ruokalusikallisessa voita. Nosta lautaselle.",
       "Silppua sipuli ja valkosipuli ja raasta inkivääri. Kuullota ne lopussa voissa pehmeiksi.",
@@ -589,14 +589,14 @@ export default [
     vs: [
       { id: "kana", n: "Kana", add: ["broilerinfilee 450 g"], m: "k", step: { 1: "Leikkaa broileri suikaleiksi ja paista öljyssä kypsäksi." } },
       { id: "jauheliha", n: "Jauheliha", add: ["jauheliha 400 g"], m: "j", step: { 1: "Ruskista jauheliha öljyssä murulle." } },
-      { id: "kasvis", n: "Pavut ja maissi", add: ["mustat pavut 400 g", "maissi 200 g"], m: "y", step: { 1: "Huuhtele pavut ja valuta maissi. Lisää ne pannulle sipulien kanssa." } },
+      { id: "kasvis", n: "Pavut ja maissi", add: ["mustat pavut 400 g", "maissi 1 prk"], m: "y", step: { 1: "Huuhtele pavut ja valuta maissi. Lisää ne pannulle sipulien kanssa." } },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/broileritortillat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/sheriffin-broileritortillat/recipe-23418"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/42759/Fajitas/"]],
   },
   {
     n: "Kanapihvit", m: "k", t: "uu", min: 35, w: 20, sv: 4,
     d: "Broilerin jauhelihasta tehdyt pihvit, joissa raastettu omena ja kaurahiutaleet pitävät rakenteen mehevänä.",
-    ing: ["kanan jauheliha 400 g", "ruokakerma 2 dl", "kaurahiutaleet 1 dl", "kananmuna 1 kpl", "omena 1 kpl", "sipuli 1 kpl", "paprikajauhe 1 tl", "suola 0.75 tl", "mustapippuri 0.25 tl", "persilja 0.5 dl"],
+    ing: ["kanan jauheliha 400 g", "ruokakerma 2 dl", "kaurahiutaleet 1 dl", "kananmuna 1 kpl", "omena 1 kpl", "sipuli 1 kpl", "paprikajauhe 1 tl", "suola 0.75 tl", "mustapippuri 0.25 tl", "persilja 0.5 nippu"],
     steps: [
       "Lämmitä uuni 225 asteeseen ja vuoraa pelti leivinpaperilla.",
       "Liota kaurahiutaleita kermassa viitisen minuuttia.",
@@ -615,7 +615,7 @@ export default [
   {
     n: "Kanalasagne", m: "k", t: "uu", min: 80, w: 35, sv: 6, wd: "it",
     d: "Broileri ja pestolla maustettu juustokastike lasagnelevyjen välissä. Vaihtelua perinteiselle lasagnelle.",
-    ing: ["broilerinfilee 600 g", "sipuli 1 kpl", "rypsiöljy 1 rkl", "suola 1 tl", "mustapippuri 0.25 tl", "basilika 1 ruukku", "voi 3 rkl", "vehnäjauho 0.75 dl", "maito 8 dl", "tuorejuusto 200 g", "pesto 190 g", "lasagnelevyt 14 kpl", "juustoraaste 100 g"],
+    ing: ["broilerinfilee 600 g", "sipuli 1 kpl", "rypsiöljy 1 rkl", "suola 1 tl", "mustapippuri 0.25 tl", "basilika 1 nippu", "voi 3 rkl", "vehnäjauho 0.75 dl", "maito 8 dl", "tuorejuusto 200 g", "pesto 190 g", "lasagnelevyt 280 g", "juustoraaste 100 g"],
     steps: [
       "Silppua sipuli ja leikkaa broileri pieniksi suikaleiksi. Paista ne öljyssä pannulla ja mausta suolalla, pippurilla ja puolella silputusta basilikasta.",
       "Sulata voi kattilassa, sekoita jauhot joukkoon ja vispaa maito sekaan erissä. Keitä hämmentäen paksuksi kastikkeeksi.",
@@ -630,7 +630,7 @@ export default [
   {
     n: "Kanacurry", m: "k", t: "pa", min: 35, w: 20, sv: 4, wd: "in",
     d: "Mausteinen tomaattinen broilericurry, joka pehmennetään lopuksi creme fraichella. Valmistuu alle tunnissa.",
-    ing: ["broilerinfilee 450 g", "voi 2 rkl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "garam masala 1 tl", "juustokumina 1 tl", "kurkuma 1 tl", "inkivääri 1 tl", "chilijauhe 0.5 tl", "tomaattimurska 400 g", "suola 0.5 tl", "creme fraiche 150 g", "korianteri 0.5 dl"],
+    ing: ["broilerinfilee 450 g", "voi 2 rkl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "garam masala 1 tl", "juustokumina 1 tl", "kurkuma 1 tl", "inkivääri 1 tl", "chilijauhe 0.5 tl", "tomaattimurska 400 g", "suola 0.5 tl", "creme fraiche 150 g", "korianteri 0.5 nippu"],
     steps: [
       "Leikkaa broileri paloiksi ja silppua sipulit.",
       "Paista broileria voissa kasarissa, kunnes pinta on vaalea. Lisää sipulit ja mausteet ja käännä muutama minuutti.",
@@ -641,14 +641,14 @@ export default [
     sides: ["k-riisi"],
     tw: [
       { id: "kookos", n: "Kookosmaidolla", d: "Korvaa creme fraiche kookosmaidolla.", rm: ["creme fraiche"], add: ["kookosmaito 2 dl"] },
-      { id: "kasvis", n: "Kikherneillä", d: "Korvaa broileri tölkillisellä kikherneitä ja lisää kourallinen pinaattia.", rm: ["broilerinfilee"], add: ["kikherneet 400 g", "pinaatti 65 g"], m: "y" },
+      { id: "kasvis", n: "Kikherneillä", d: "Korvaa broileri tölkillisellä kikherneitä ja lisää kourallinen pinaattia.", rm: ["broilerinfilee"], add: ["kikherneet 1 prk", "pinaatti 65 g"], m: "y" },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/tomaattinen-broilericurry/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/431483/Kana-Curry/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/red-curry-kana-ja-kookosriisi/fmh-recipe-1802"]],
   },
   {
     n: "Tonnikalapasta", m: "f", t: "ps", min: 30, w: 15, sv: 4, wd: "it", pop: true,
     d: "Tomaattinen tonnikalakastike pastalle. Edullinen kaappiruoka, joka valmistuu puolessa tunnissa.",
-    ing: ["pasta 350 g", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "oliiviöljy 1 rkl", "herkkusienet 200 g", "tomaattimurska 400 g", "tomaattipyree 2 rkl", "tonnikala 2 tlk", "italialainen mausteseos 2 tl", "hunaja 1 tl", "ruokakerma 2 dl", "mustapippuri 0.25 tl", "suola 0.5 tl", "basilika 0.5 ruukku"],
+    ing: ["pasta 350 g", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "oliiviöljy 1 rkl", "herkkusienet 200 g", "tomaattimurska 400 g", "tomaattipyree 2 rkl", "tonnikala 2 prk", "italialainen mausteseos 2 tl", "hunaja 1 tl", "ruokakerma 2 dl", "mustapippuri 0.25 tl", "suola 0.5 tl", "basilika 0.5 nippu"],
     steps: [
       "Keitä pasta runsaassa suolatussa vedessä.",
       "Silppua sipuli ja valkosipuli ja viipaloi sienet. Paista niitä öljyssä pannulla, kunnes sienistä irronnut neste on haihtunut.",
@@ -667,7 +667,7 @@ export default [
   {
     n: "Lohipasta", m: "f", t: "ps", min: 25, w: 20, sv: 4, wd: "it", pop: true,
     d: "Kermainen lohikastike parsakaalilla ja sitruunalla. Nauhapastan kanssa arkiruoka, joka maistuu ravintolalta.",
-    ing: ["nauhapasta 300 g", "lohifile 450 g", "sipuli 1 kpl", "voi 1 rkl", "parsakaali 300 g", "ruokakerma 2.5 dl", "sitruunapippuri 1 tl", "sitruuna 0.5 kpl", "suola 0.5 tl", "tilli 0.5 dl"],
+    ing: ["pasta 300 g", "lohifile 450 g", "sipuli 1 kpl", "voi 1 rkl", "parsakaali 300 g", "ruokakerma 2.5 dl", "sitruunapippuri 1 tl", "sitruuna 0.5 kpl", "suola 0.5 tl", "tilli 0.5 nippu"],
     steps: [
       "Keitä pasta pakkauksen ohjeen mukaan. Lisää parsakaalin kukinnot samaan kattilaan kolmeksi viimeiseksi minuutiksi.",
       "Irrota lohi nahasta, nypi ruodot ja kuutioi.",
@@ -684,7 +684,7 @@ export default [
   {
     n: "Lohilaatikko", m: "f", t: "ki", min: 80, w: 20, sv: 5,
     d: "Perunat, lohi ja tilli kermassa uunissa. Perunat esikypsytetään, jotta lohi ei ehdi kuivua.",
-    ing: ["peruna-sipulisekoitus 1 kg", "sitruunapippuri 1 tl", "suola 1.25 tl", "kirjolohifile 450 g", "ruokakerma 2 dl", "creme fraiche 180 g", "tilli 1 dl", "juustoraaste 0.5 dl"],
+    ing: ["peruna-sipulisekoitus 1 kg", "sitruunapippuri 1 tl", "suola 1.25 tl", "kirjolohifile 450 g", "ruokakerma 2 dl", "creme fraiche 180 g", "tilli 0.5 nippu", "juustoraaste 0.5 dl"],
     steps: [
       "Lämmitä uuni 175 asteeseen. Levitä perunat vuokaan ja mausta puolella suolasta ja pippurista. Esikypsennä 20 minuuttia.",
       "Irrota kalasta nahka ja ruodot ja suikaloi liha. Mausta lopulla suolalla ja pippurilla.",
@@ -700,7 +700,7 @@ export default [
   {
     n: "Uuniseiti", m: "f", t: "uu", min: 40, w: 10, sv: 4,
     d: "Seitifileet purjon ja currylla maustetun kerman kanssa uunissa, pinnalla kullanruskea juusto. Pakastekalasta arkeen.",
-    ing: ["seiti 400 g", "suola 0.5 tl", "valkopippuri 0.5 tl", "curry 1 tl", "purjo 0.5 kpl", "tilli 0.5 dl", "ruokakerma 2 dl", "juustoraaste 1 dl"],
+    ing: ["seiti 400 g", "suola 0.5 tl", "valkopippuri 0.5 tl", "curry 1 tl", "purjo 0.5 kpl", "tilli 0.5 nippu", "ruokakerma 2 dl", "juustoraaste 1 dl"],
     steps: [
       "Lämmitä uuni 200 asteeseen. Sulata kala osittain ja leikkaa se annospaloiksi voideltuun vuokaan.",
       "Mausta palat suolalla, pippurilla ja curryllä.",
@@ -748,7 +748,7 @@ export default [
   {
     n: "Silakkapihvit", m: "f", t: "pn", min: 40, w: 35, sv: 4,
     d: "Kaksi silakkafileetä tilli-sinappitäytteen kanssa, ruisjauhoissa kääntäen ja voissa rapeaksi paistaen.",
-    ing: ["silakkafile 600 g", "suola 1 tl", "valkopippuri 0.25 tl", "tilli 1 dl", "ruohosipuli 0.5 dl", "sinappi 2 rkl", "ruisjauho 1 dl", "voi 3 rkl"],
+    ing: ["silakkafile 600 g", "suola 1 tl", "valkopippuri 0.25 tl", "tilli 0.5 nippu", "ruohosipuli 0.5 dl", "sinappi 2 rkl", "ruisjauho 1 dl", "voi 3 rkl"],
     steps: [
       "Huuhtele silakkafileet tarvittaessa ja kuivaa ne talouspaperilla. Mausta suolalla ja pippurilla.",
       "Sekoita silputut yrtit sinappiin.",
@@ -766,7 +766,7 @@ export default [
   {
     n: "Paistetut kuhafileet", m: "f", t: "pn", min: 20, w: 20, sv: 4, jf: true,
     d: "Jauhoissa käännetyt kuhafileet ruskistetussa voissa, viimeistelynä kaprikset, persilja ja sitruuna.",
-    ing: ["kuha 500 g", "suola 1 tl", "mustapippuri 0.25 tl", "vehnäjauho 1 dl", "voi 75 g", "persilja 1 dl", "kaprikset 2 rkl", "sitruuna 1 kpl"],
+    ing: ["kuha 500 g", "suola 1 tl", "mustapippuri 0.25 tl", "vehnäjauho 1 dl", "voi 75 g", "persilja 0.5 nippu", "kaprikset 2 rkl", "sitruuna 1 kpl"],
     steps: [
       "Kuivaa fileet talouspaperilla ja mausta suolalla ja pippurilla. Kääntele ne kevyesti jauhoissa ja ravista ylimääräiset pois.",
       "Kuumenna puolet voista pannulla, kunnes se vaahtoaa. Paista fileitä 2–3 minuuttia kummaltakin puolelta. Kala on valmis, kun se lohkeaa mutta on vielä mehevää.",
@@ -782,7 +782,7 @@ export default [
   {
     n: "Kalapata", m: "f", t: "pa", min: 45, w: 20, sv: 4,
     d: "Tomaattinen kalapata, jossa juurekset ja perunat haudutetaan ensin ja lohi lisätään lopuksi. Oliivit ja sitruuna antavat raikkautta.",
-    ing: ["lohifile 400 g", "suola 1 tl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "porkkana 2 kpl", "varsiselleri 1 kpl", "peruna 400 g", "oliiviöljy 2 rkl", "tomaattipyree 2 rkl", "tomaattimurska 400 g", "vesi 5 dl", "kalaliemikuutio 1 kpl", "laakerinlehti 1 kpl", "timjami 1 tl", "oliivit 0.5 dl", "sitruuna 0.5 kpl", "tilli 0.5 dl"],
+    ing: ["lohifile 400 g", "suola 1 tl", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "porkkana 2 kpl", "varsiselleri 1 kpl", "peruna 400 g", "oliiviöljy 2 rkl", "tomaattipyree 2 rkl", "tomaattimurska 400 g", "vesi 5 dl", "kalaliemikuutio 1 kpl", "laakerinlehti 1 kpl", "timjami 1 tl", "oliivit 0.5 dl", "sitruuna 0.5 kpl", "tilli 0.5 nippu"],
     steps: [
       "Leikkaa kala isoiksi paloiksi ja ripottele päälle puolet suolasta.",
       "Silppua sipuli ja valkosipuli, lohko porkkanat ja paloittele selleri ja perunat.",
@@ -811,7 +811,7 @@ export default [
     serve: "Tarjoa perunoiden tai uunijuuresten ja salaatin kanssa.",
     sides: ["k-keitetyt-perunat", "k-uunijuurekset"],
     tw: [
-      { id: "kerma", n: "Kermassa", d: "Jätä kuorrute pois ja kaada fileen päälle 2 dl ruokakermaa, johon on sekoitettu tilliä ja sitruunapippuria.", rm: ["korppujauho", "parmesaani", "voi", "timjami"], add: ["ruokakerma 2 dl", "tilli 0.5 dl", "sitruunapippuri 1 tl"], step: { 1: "Sekoita kerman joukkoon tilli ja sitruunapippuri.", 2: "Kaada kerma fileen päälle." } },
+      { id: "kerma", n: "Kermassa", d: "Jätä kuorrute pois ja kaada fileen päälle 2 dl ruokakermaa, johon on sekoitettu tilliä ja sitruunapippuria.", rm: ["korppujauho", "parmesaani", "voi", "timjami"], add: ["ruokakerma 2 dl", "tilli 0.5 nippu", "sitruunapippuri 1 tl"], step: { 1: "Sekoita kerman joukkoon tilli ja sitruunapippuri.", 2: "Kaada kerma fileen päälle." } },
     ],
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/parmesaanikuorrutettu-kirjolohi/fmh-recipe-1083"], ["Martat", "https://www.martat.fi/reseptit/kirjolohta-uunissa/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/193118/Uunikirjolohi/"]],
   },
@@ -837,7 +837,7 @@ export default [
   {
     n: "Kinkkukiusaus", m: "p", t: "ki", min: 70, w: 10, sv: 4, fe: "jo", pop: true,
     d: "Perunasuikaleita, savukinkkua ja kermaa uunissa. Yksinkertainen ja täyttävä, koko perheen suosikki.",
-    ing: ["peruna-sipulisekoitus 1 kg", "savukinkku 200 g", "suola 0.5 tl", "mustapippuri 0.25 tl", "ruokakerma 2.5 dl", "maito 2 dl", "juustoraaste 1 dl", "persilja 0.5 dl"],
+    ing: ["peruna-sipulisekoitus 1 kg", "savukinkku 200 g", "suola 0.5 tl", "mustapippuri 0.25 tl", "ruokakerma 2.5 dl", "maito 2 dl", "juustoraaste 1 dl", "persilja 0.5 nippu"],
     steps: [
       "Lämmitä uuni 200 asteeseen.",
       "Levitä perunat uunivuokaan. Sekoita sekaan kinkkusuikaleet ja mausteet.",
@@ -909,7 +909,7 @@ export default [
   {
     n: "Pekonipasta", m: "p", t: "ps", min: 25, w: 20, sv: 4, wd: "it",
     d: "Rapeaa pekonia, paprikaa ja kermaista tomaattikastiketta pastan kanssa. Nopea arki-illan ruoka.",
-    ing: ["pasta 300 g", "pekoni 170 g", "paprika 1 kpl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "vehnäjauho 1 rkl", "ruokakerma 2 dl", "vesi 1.5 dl", "tomaattiketsuppi 2 rkl", "mustapippuri 0.25 tl", "basilika 0.5 ruukku"],
+    ing: ["pasta 300 g", "pekoni 170 g", "paprika 1 kpl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "vehnäjauho 1 rkl", "ruokakerma 2 dl", "vesi 1.5 dl", "tomaattiketsuppi 2 rkl", "mustapippuri 0.25 tl", "basilika 0.5 nippu"],
     steps: [
       "Keitä pasta runsaassa suolatussa vedessä.",
       "Leikkaa pekoni paloiksi, suikaloi paprika ja silppua sipulit.",
@@ -990,7 +990,7 @@ export default [
   {
     n: "Wieninleike", m: "p", t: "pn", min: 30, w: 30, sv: 4,
     d: "Ohueksi nuijitut leivitetyt porsaanleikkeet, paistettuna voissa rapeiksi. Sitruuna, anjovis ja kapris päälle.",
-    ing: ["porsaanfilee 600 g", "suola 1 tl", "mustapippuri 0.25 tl", "vehnäjauho 1 dl", "kananmuna 2 kpl", "korppujauho 1.5 dl", "voi 2 rkl", "rypsiöljy 2 rkl", "sitruuna 1 kpl", "ansjovis 4 kpl", "kaprikset 1 rkl"],
+    ing: ["porsaanfilee 600 g", "suola 1 tl", "mustapippuri 0.25 tl", "vehnäjauho 1 dl", "kananmuna 2 kpl", "korppujauho 1.5 dl", "voi 2 rkl", "rypsiöljy 2 rkl", "sitruuna 1 kpl", "ansjovis 20 g", "kaprikset 1 rkl"],
     steps: [
       "Leikkaa liha neljäksi viipaleeksi ja nuiji ne kelmun välissä noin puolen sentin paksuisiksi. Mausta suolalla ja pippurilla.",
       "Asettele kolme lautasta: jauhot, vatkatut munat ja korppujauho.",
@@ -1094,7 +1094,7 @@ export default [
   {
     n: "Makkarastroganoff", m: "s", t: "pn", min: 30, w: 20, sv: 4,
     d: "Makkarakuutiot hapokkaassa tomaatti-smetanakastikkeessa suolakurkun kera. Stroganoffin edullinen arkiversio.",
-    ing: ["lenkkimakkara 500 g", "sipuli 1 kpl", "rypsiöljy 1 rkl", "tomaattipyree 2 rkl", "sinappi 1 rkl", "paprikajauhe 1 tl", "vesi 3 dl", "suolakurkku 2 kpl", "smetana 120 g", "mustapippuri 0.25 tl", "persilja 0.5 dl"],
+    ing: ["lenkkimakkara 500 g", "sipuli 1 kpl", "rypsiöljy 1 rkl", "tomaattipyree 2 rkl", "sinappi 1 rkl", "paprikajauhe 1 tl", "vesi 3 dl", "suolakurkku 2 kpl", "smetana 120 g", "mustapippuri 0.25 tl", "persilja 0.5 nippu"],
     steps: [
       "Kuori makkarat ja kuutioi ne. Silppua sipuli ja kuutioi kurkut.",
       "Ruskista makkara kasarissa ja nosta syrjään. Kuullota sipuli öljyssä.",

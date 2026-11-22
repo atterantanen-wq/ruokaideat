@@ -184,7 +184,7 @@ export default [
   {
     n: "Lämpimät voileivät", m: "p", t: "ha", min: 15, w: 10, sv: 4,
     d: "Uunissa gratinoidut paahtoleivät, joiden täytteet voi valita mieltymyksen mukaan. Nopea iltapala.",
-    ing: ["paahtoleipä 4 viipaletta", "voi 2 rkl", "sinappi 2 rkl", "juustoraaste 2 dl", "kananmuna 1 kpl"],
+    ing: ["paahtoleipä 4 kpl", "voi 2 rkl", "sinappi 2 rkl", "juustoraaste 2 dl", "kananmuna 1 kpl"],
     steps: [
       "Lämmitä uuni 250 asteeseen. Levitä leiville voi ja sinappi ja nosta ne pellille leivinpaperin päälle.",
       "Asettele leiville täytteet.",
@@ -193,7 +193,7 @@ export default [
     ],
     vs: [
       { id: "kinkku", n: "Kinkku-tomaatti", add: ["palvikinkku 80 g", "tomaatti 2 kpl"], m: "p" },
-      { id: "tonnikala", n: "Tonnikala", add: ["tonnikala 1 tlk", "punasipuli 0.5 kpl"], m: "f" },
+      { id: "tonnikala", n: "Tonnikala", add: ["tonnikala 1 prk", "punasipuli 0.5 kpl"], m: "f" },
       { id: "kasvis", n: "Kasvis", add: ["tomaatti 2 kpl", "paprika 1 kpl", "oliivit 0.5 dl"], veg: true },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/lampimat-voileivat/"], ["Martat", "https://www.martat.fi/reseptit/lampimat-voileivat/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/223/L%C3%A4mpim%C3%A4t%20voileiv%C3%A4t/"]],

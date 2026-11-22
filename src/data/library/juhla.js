@@ -39,7 +39,7 @@ export default [
   {
     n: "Uunilohi", m: "f", t: "uu", min: 45, w: 10, sv: 4, jf: true, pop: true,
     d: "Kokonainen lohifile kypsyy kermassa ja sitruunassa mehukkaaksi. Vähällä vaivalla juhlava pääruoka.",
-    ing: ["lohifile 800 g", "suola 0.5 tl", "sitruunapippuri 0.5 tl", "ruokakerma 2.5 dl", "sitruuna 1 kpl", "tilli 0.5 dl"],
+    ing: ["lohifile 800 g", "suola 0.5 tl", "sitruunapippuri 0.5 tl", "ruokakerma 2.5 dl", "sitruuna 1 kpl", "tilli 0.5 nippu"],
     steps: [
       "Lämmitä uuni 175 asteeseen. Poista fileestä ruodot pinseteillä ja leikkaa se halutessasi annospaloiksi.",
       "Nosta kala uunivuokaan nahkapuoli alaspäin ja ripottele pinnalle suola ja sitruunapippuri.",
@@ -59,7 +59,7 @@ export default [
   {
     n: "Lohikiusaus", m: "f", t: "ki", min: 70, w: 15, sv: 5, jf: true, pop: true,
     d: "Ohuet perunasuikaleet, lohi, tilli ja kerma muhivat uunissa. Kiusauksista rakastetuin.",
-    ing: ["peruna-sipulisekoitus 1 kg", "kirjolohifile 400 g", "tilli 1 dl", "suola 1 tl", "valkopippuri 0.25 tl", "kuohukerma 2.5 dl", "maito 2 dl", "voi 1 rkl"],
+    ing: ["peruna-sipulisekoitus 1 kg", "kirjolohifile 400 g", "tilli 0.5 nippu", "suola 1 tl", "valkopippuri 0.25 tl", "kuohukerma 2.5 dl", "maito 2 dl", "voi 1 rkl"],
     steps: [
       "Lämmitä uuni 200 asteeseen ja voitele uunivuoka.",
       "Irrota kala nahasta, nypi ruodot pois ja pilko liha kuutioiksi. Silppua tilli.",
@@ -150,7 +150,7 @@ export default [
   {
     n: "Graavilohi", m: "f", t: "al", min: 1460, w: 15, sv: 10, fe: "jo", jf: true,
     d: "Suolan, sokerin ja tillin kanssa vuorokauden maustunut lohi, joka leikataan ohuiksi siivuiksi. Helppo ja aina juhlava.",
-    ing: ["lohifile 800 g", "merisuola 2 rkl", "sokeri 2 tl", "valkopippuri 1 tl", "tilli 1 ruukku"],
+    ing: ["lohifile 800 g", "suola 2 rkl", "sokeri 2 tl", "valkopippuri 1 tl", "tilli 1 nippu"],
     steps: [
       "Kuivaa filee talouspaperilla ja nypi ruodot pois. Leikkaa vatsan puolelta ohut rasvainen reuna halutessasi irti.",
       "Sekoita suola, sokeri ja pippuri. Levitä seos tasaisesti kalan lihapuolelle ja painele kevyesti.",
