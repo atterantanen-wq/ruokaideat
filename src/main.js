@@ -914,9 +914,12 @@ function sdRowHtml(r,cls){
   const on=x=>!!tl&&(x.t==="r"?tl.cart.includes(x.id):(tl.x||[]).some(i=>i.k===x.id));
   const all2=sdOpen.has("all"),n=(g.out.c.length&&g.out.v.length)?2:3;
   const pick=(L,m)=>all2?L:L.filter((x,i)=>i<m||on(x));
-  const shown=[...pick(g.out.c,n),...pick(g.out.v,n),...pick(g.out.o,2)].sort((a,b)=>(b.l?1:0)-(a.l?1:0));
-  const total=g.out.c.length+g.out.v.length+g.out.o.length;
-  const chip=x=>{const p=on(x);return`<button type="button" class="chip sdc" ${x.t==="r"?`data-side="${esc(x.id)}"`:`data-pside="${esc(x.id)}"`} data-dish="${esc(r.id)}" aria-pressed="${p}">${ico(p?"check":"plus")}${esc(x.name)}</button>`;};
+  const all0=[...g.out.c,...g.out.v,...g.out.o];
+  const recs=all0.filter(x=>x.t==="r").sort((a,b)=>b.sc-a.sc),prods=all0.filter(x=>x.t!=="r").sort((a,b)=>b.sc-a.sc);
+  /* reseptit ensin reseptikuvakkeella, sitten valmiit tuotteet */
+  const shown=[...pick(recs,3),...pick(prods,3)];
+  const total=all0.length;
+  const chip=x=>{const p=on(x);return`<button type="button" class="chip sdc${x.t==="r"?" sdr":""}" ${x.t==="r"?`data-side="${esc(x.id)}"`:`data-pside="${esc(x.id)}"`} data-dish="${esc(r.id)}" aria-pressed="${p}" title="${x.t==="r"?"Lisukeresepti: ainekset listalle":"Valmis tuote kaupasta"}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
   const more=total>shown.length?`<button type="button" class="chip sdm" data-sdmore="1">Muut (${total-shown.length})</button>`:(all2&&total>n?`<button type="button" class="chip sdm" data-sdmore="1">Vähemmän</button>`:"");
   const own=`<button type="button" class="chip sdm" data-sdown="1" aria-expanded="${sdOwn}">${ico("plus")}Oma…</button>`;
   const form=sdOwn?`<div class="xrow sdown"><input type="text" maxlength="60" placeholder="esim. raejuusto" autocomplete="off" aria-label="Oma lisuke"><button type="button" class="go" data-sdadd data-dish="${esc(r.id)}">Lisää</button></div><p class="note sdmsg" role="status"></p>`:"";
@@ -2099,14 +2102,17 @@ function renderAdd(focusSel){
   let sides="";
   const sg=r.t==="li"?null:sideSug(r),nd=sideNeeds(r);
   if(sg&&!state.nos.includes(r.id)){
-    const on=x=>x.t==="r"?aS.sides.includes(x.id):aS.ps.includes(x.id),n=(sg.out.c.length&&sg.out.v.length)?2:3;
+    const on=x=>x.t==="r"?aS.sides.includes(x.id):aS.ps.includes(x.id);
+    /* lisukereseptit ja valmiit tuotteet omille riveilleen */
+    const all0=[...sg.out.c,...sg.out.v,...sg.out.o];
+    const recs=all0.filter(x=>x.t==="r").sort((a,b)=>b.sc-a.sc),prods=all0.filter(x=>x.t!=="r").sort((a,b)=>b.sc-a.sc);
     const pickN=(L,m)=>aS.all?L:L.filter((x,i)=>i<m||on(x));
-    const shown=[...pickN(sg.out.c,n),...pickN(sg.out.v,n),...pickN(sg.out.o,2)].sort((a,b)=>(b.l?1:0)-(a.l?1:0));
-    const total=sg.out.c.length+sg.out.v.length+sg.out.o.length;
-    const chip=x=>{const p=on(x);return`<button type="button" class="chip" data-a="${x.t==="r"?"side":"pside"}" data-id="${esc(x.id)}" aria-pressed="${p}">${ico(p?"check":"plus")}${esc(x.name)}</button>`;};
-    const more=total>shown.length?`<button type="button" class="chip" data-a="more">Muut (${total-shown.length})</button>`:(aS.all&&total>n?`<button type="button" class="chip" data-a="more">Vähemmän</button>`:"");
+    const shR=pickN(recs,3),shP=pickN(prods,3),total=recs.length+prods.length,shown=shR.length+shP.length;
+    const chip=x=>{const p=on(x);return`<button type="button" class="chip${x.t==="r"?" sdr":""}" data-a="${x.t==="r"?"side":"pside"}" data-id="${esc(x.id)}" aria-pressed="${p}">${ico(p?"check":(x.t==="r"?"chef":"plus"))}${esc(x.name)}</button>`;};
+    const more=total>shown?`<button type="button" class="chip sdm" data-a="more">Muut (${total-shown})</button>`:(aS.all&&total>6?`<button type="button" class="chip sdm" data-a="more">Vähemmän</button>`:"");
     const ownChips=aS.own.map((v,i)=>`<button type="button" class="chip" data-a="ownrm" data-i="${i}" aria-pressed="true" aria-label="Poista: ${esc(v)}">${ico("check")}${esc(v)}</button>`).join("");
-    sides=`<h4 class="ag">Lisukkeeksi?</h4><div class="chips sdrow">${shown.map(chip).join("")}${more}${ownChips}<button type="button" class="chip" data-a="ownopen" aria-expanded="${aS.ownOpen}">${ico("plus")}Oma…</button></div>`+
+    sides=(shR.length?`<h4 class="ag">Lisukkeeksi</h4><p class="sdhint">Reseptin ainekset tulevat listalle</p><div class="chips sdrow">${shR.map(chip).join("")}</div>`:"")+
+      `<h4 class="ag">Lisäksi kaupasta</h4><div class="chips sdrow">${shP.map(chip).join("")}${ownChips}${more}<button type="button" class="chip sdm" data-a="ownopen" aria-expanded="${aS.ownOpen}">${ico("plus")}Oma…</button></div>`+
       (aS.ownOpen?`<div class="xrow"><input id="aown" type="text" maxlength="60" placeholder="esim. raejuusto" autocomplete="off" aria-label="Oma lisuke"><button type="button" class="go" data-a="ownadd" style="min-height:44px;padding:0 18px;font-size:.9375rem">Lisää</button></div>`:"")+
       (aS.msg?`<p class="note err" role="alert">${esc(aS.msg)}</p>`:"")+
       `<button type="button" class="lk2" data-a="nos">Älä ehdota lisukkeita tälle ruoalle</button>`;

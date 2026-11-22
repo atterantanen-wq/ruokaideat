@@ -871,3 +871,10 @@ body:not([data-view="ideas"]) .spill{display:none}
 .tip{margin:8px 2px 0;padding-left:26px;position:relative;font-size:.9375rem}
 .tip:before{content:"";position:absolute;left:6px;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--or)}
 .etx{width:100%;margin:0 0 6px;font:inherit;font-size:.9375rem;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);resize:vertical}
+#adlg .sdhint{margin:-2px 0 6px;font-size:.8125rem;color:var(--muted)}
+#adlg .chip.sdr .ico{color:var(--or-ink)}
+#adlg .chip.sdr[aria-pressed="true"] .ico{color:inherit}
+.sdrow .chip.sdr .ico{color:var(--or-ink)}
+.sdrow .chip.sdr[aria-pressed="true"] .ico{color:inherit}
+#adlg .sdrow .chip{display:inline-flex;align-items:center;gap:6px}
+#adlg .sdrow .chip .ico{width:16px;height:16px}
