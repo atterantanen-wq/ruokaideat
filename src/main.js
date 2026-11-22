@@ -1,5 +1,7 @@
 import "./styles/main.css";
-import {raw,DATA} from "./data/recipes.js";
+import {LIB} from "./data/library/index.js";
+import {fromLib,applySel,selOf,optLines} from "./recipes.js";
+import {migrateLegacy} from "./migrate.js";
 import {ING_RAW} from "./data/ingredients.js";
 import {STORE_P,STORE_L,STORE_K,STORE_KS,STORE_S} from "./data/stores.js";
 import {LOGO} from "./data/logos.js";
@@ -27,39 +29,10 @@ const ico=n=>`<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</
 const cartInner=on=>ico(on?"check":"tlist")+"<span>"+(on?"Ostoslistalla":"Lisää ostoslistalle")+"</span>";
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clip=(s,n)=>String(s==null?"":s).slice(0,n);
-const DL=DATA.split("\n");
-const R=raw.split("\n").map((l,i)=>{
-  const[name,m,t,s,min,d,sv]=l.split("|");
-  const[ing,stp]=DL[i].split("|");
-  return{id:"b"+i,name,m,t,s:[],min:+min,d,
-    ing:ing.split(";").map(x=>x.trim()).filter(Boolean),
-    steps:stp.split("/").map(x=>x.trim()).filter(Boolean),url:"",custom:false,sv:+sv||0,ns:[]};
-});
-/* suositut ruoat: kyselyt (Yle, K-ruoka, Anna, Herkkusuut) */
-const POP=new Set(R.filter(r=>["Makaronilaatikko", "Lihapullat ja perunamuusi", "Uunilohi ja juurekset", "Spagetti ja jauhelihakastike", "Lasagne", "Kaalilaatikko", "Karjalanpaisti", "Karjalanpaisti (Yhteishyvä)", "Hernekeitto", "Lohikeitto", "Lihamureke", "Makkarakeitto", "Silakkapihvit", "Munakas", "Jauhelihakeitto", "Pinaattiohukaiset", "Maksalaatikko", "Kalakeitto", "Paistetut kalafileet", "Itse tehty pizza", "Uunimakkara ja perunat", "Nakkikeitto", "Janssoninkiusaus", "Kaalikääryleet", "Täytetyt tortillat", "Lämpimät voileivät", "Hampurilaiset", "Poronkäristys", "Butter chicken", "Halloumi-kesäkurpitsapihvit", "Kanakastike", "Kinkkukiusaus", "Nakkikastike", "Kasvissosekeitto", "Perunaletut"].includes(r.name)).map(r=>r.id));
-const isPop=r=>POP.has(r.id);
-/* ainesosiot: [otsikko, alkuperäiset rivinumerot] */
-const GRP={"b2":[["Lihapullat",[0,1,2,3,4,11]],["Perunamuussi",[5,6]],["Kastike",[7,8,9]],["Lisäksi",[10]]],"b3":[["Spagetti",[1]],["Jauhelihakastike",[0,2,3,4,5,6]]],"b4":[["Lihamureke",[0,1,2,3,4,5]],["Lisäke",[6,7]]],"b5":[["Chili",[0,1,2,3,4,5]],["Riisi",[6]]],"b7":[["Lihakastike",[0,2,3,4]],["Valkokastike",[5,6,7]],["Kokoaminen",[1,8]]],"b12":[["Pata",[0,1,2,3,4,5]],["Riisi",[6]]],"b14":[["Kana",[0,5,6]],["Juurekset",[1,2,3,4]]],"b17":[["Wokki",[0,1,2,4]],["Riisi",[3]]],"b18":[["Kana ja kastike",[0,1,2,3,4]],["Riisi",[5]]],"b20":[["Kalapuikot",[0,4,5]],["Perunamuusi",[1,2,3]]],"b22":[["Lohi",[0,4,5]],["Juurekset",[1,2,3]]],"b23":[["Silakkapihvit",[0,1,2,4]],["Perunat",[3]]],"b24":[["Kalapata",[0,1,2,3,4,5]],["Riisi",[6]]],"b28":[["Porsaanfilee ja kastike",[0,1,2,3,5]],["Perunat",[4]]],"b29":[["Kyljykset",[0,3,4,5]],["Perunat ja kermaviili",[1,2]]],"b30":[["Stroganoff",[0,1,2,3,4]],["Riisi",[5]]],"b33":[["Pata",[0,1,2,3,4,5,6]],["Perunat",[7]]],"b34":[["Stroganoff",[0,1,2,3,4]],["Riisi",[5]]],"b36":[["Stroganoff",[0,1,2,3,5]],["Riisi",[4]]],"b43":[["Curry",[0,1,2,3,4,5]],["Riisi",[6]]],"b44":[["Ohukaiset",[0,1,2,3,4,5]],["Lisäksi",[6]]],"b59":[["Pohja",[0,1,2,3,4]],["Täyte",[5,6]]],"b62":[["Täyte",[0,5]],["Murska",[1,2,3,4]]],"b73":[["Maksalaatikko",[0,1,2,3,4,5,6,7,8,9,10]],["Lisäksi",[11]]],"b75":[["Kalafileet",[0,1,2,4,5,6,7]],["Perunat",[3]]],"b76":[["Taikina",[0,1,2,3,4]],["Täyte",[5,6,7,8,9,10]]],"b80":[["Kääryleet",[0,1,2,3,4,5,7,8]],["Paistaminen",[6,9,10]],["Lisäksi",[11]]],"b81":[["Tortillat",[0]],["Lihatäyte",[1,2]],["Täytteet",[3,4,5,6,7]]],"b83":[["Pihvit",[0,2,3,4,10,11,12]],["Sämpylät ja täytteet",[1,5,6,7]],["Kastikkeet",[8,9]]],"b84":[["Käristys",[0,1,2,3,4,5,6,7,8]],["Lisukkeet",[9,10]]],"b85":[["Kana ja marinadi",[0,1,2,3,4]],["Kastike",[5,6,7,8,10,11]],["Riisi",[9]]],"b86":[["Pihvit",[0,1,2,3,4,5,6]],["Kastike",[7,8]]],"b87":[["Kastike",[0,1,2,3,4,5,7,8,9,10]],["Riisi",[6]]],"b89":[["Kastike",[0,1,2,3,4,5,6]],["Riisi",[7]]],"b91":[["Letut",[0,1,2,3,4,5]],["Lisäksi",[6]]]};
-R.forEach(r=>{r.gr=[];const g=GRP[r.id];if(!g)return;const o=[],gr=[];for(const[t,ix]of g){gr.push([o.length,t]);ix.forEach(i=>o.push(r.ing[i]));}if(o.length===r.ing.length){r.ing=o;r.gr=gr;}});
-const BT={};
-const bt=(names,o)=>names.forEach(n=>{BT[n]=Object.assign(BT[n]||{},o);});
-bt(["Spagetti ja jauhelihakastike","Lasagne","Kanarisotto","Kanapasta tomaattikermakastikkeessa","Lohipasta","Tonnikalapasta","Pasta pestolla","Itse tehty pizza"],{wd:"it"});
-bt(["Tacopannu","Chili con carne","Täytetyt tortillat"],{wd:"tm"});
-bt(["Kanawokki"],{wd:"as"});
-bt(["Butter chicken","Kikhernecurry","Currykanapata"],{wd:"in"});
-bt(["Hampurilaiset"],{wd:"am"});
-bt(["Kreikkalainen salaatti"],{wd:"vm"});
-bt(["Karjalanpaisti","Karjalanpaisti (Yhteishyvä)","Nautapata punaviinillä","Lasagne","Porsaankyljykset uunissa","Uunilohi ja juurekset","Poronkäristys","Janssoninkiusaus","Kinkkukiusaus","Maksalaatikko","Kaalikääryleet","Itse tehty pizza","Hampurilaiset"],{jf:true});
-bt(["Kinkkukiusaus","Janssoninkiusaus","Maksalaatikko"],{fe:"jo"});
-bt(["Itse tehty pizza"],{t:"pi"});
-bt(["Hampurilaiset","Lämpimät voileivät","Täytetyt tortillat"],{t:"ha"});
-bt(["Kanawokki"],{t:"wo"});
-bt(["Munakas"],{mo:"e"});
-R.forEach(r=>{r.wd="";r.fe="";r.jf=false;r.kq=[];if(BT[r.name])Object.assign(r,BT[r.name]);});
-const SRC={b47:"https://yhteishyva.fi/reseptit/karjalanpaisti/recipe-2291"};
-R.forEach(r=>{if(SRC[r.id])r.url=SRC[r.id];});
-const WORK={"Makaronilaatikko":25,"Lihamureke":20,"Jauhelihaperunalaatikko":30,"Lasagne":40,"Kaalilaatikko":25,"Uunikana ja juurekset":15,"Kanaperunakiusaus":20,"Lohikiusaus":15,"Karjalanpaisti":15,"Hernekeitto":30,"Lihakeitto":25,"Nautapata punaviinillä":25,"Uunijuurekset ja fetajuusto":15,"Kukkakaaliperunakiusaus":20,"Kesäkurpitsakiusaus":15,"Karjalanpaisti (Yhteishyvä)":30,"Maksalaatikko":30,"Janssoninkiusaus":15,"Kaalikääryleet":40,"Kinkkukiusaus":15,"Uunimakkara ja perunat":10,"Itse tehty pizza":30};
-const workOf=r=>r.w>0?r.w:(!r.custom?(WORK[(R.find(x=>x.id===r.id)||{}).name]||0):0);
+/* reseptikirjasto: ks. src/data/library ja src/recipes.js */
+const R=LIB.map(fromLib);
+const isPop=r=>!!r.pop;
+const workOf=r=>r.w>0?r.w:0;
 const defServ=id=>{const r=R.find(x=>x.id===id);return r&&r.sv||4;};
 
 /* ---------- apurit: linkit, ainekset ---------- */
@@ -70,7 +43,7 @@ function safeUrl(u){
   try{const x=new URL(u);return(x.protocol==="http:"||x.protocol==="https:")?x.href:"";}catch(e){return"";}
 }
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"");}catch(e){return"";}};
-const UN="(?:kg|g|dl|ml|cl|l|rkl|tl|kpl|prk|pss|nippu|pkt|rs|tlk)";
+const UN="(?:kg|g|dl|ml|cl|l|rkl|tl|kpl|prk|pss|nippu|pkt|rs|tlk|ruukku|ripaus)";
 const reA=new RegExp("^(.+?)\\s+(\\d+(?:[.,]\\d+)?)\\s*("+UN+")?(?![a-zäöå])\\s*$","i");
 const reB=new RegExp("^(\\d+(?:[.,]\\d+)?)\\s*("+UN+")?(?![a-zäöå])\\s+(.+)$","i");
 const SYN={"kerma":"ruokakerma","pippuri":"mustapippuri"};
@@ -475,7 +448,7 @@ function nutPer(r){
 /* pääraaka-aine ainesten mukaan; käsin valittu (mo) ohittaa */
 function autoMain(r){
   const sc={},wk={};let any=false;
-  for(const line of r.ing){
+  for(const line of selR(r).ing){
     const p=parseIng(line);any=true;
     const ui=state.ing[p.key];
     let code="",w=false;
@@ -494,6 +467,7 @@ function autoMain(r){
 }
 function mainOf(r){
   if(r.mo&&M[r.mo])return r.mo;
+  if(r.vs&&r.vs.length){const v=selOf(r,state.tv[r.id]).ver;if(v&&v.veg)return"v";if(v&&M[v.m])return v.m;}
   const a=autoMain(r);
   return a||(r.custom?"":(M[r.m]?r.m:""));
 }
@@ -588,7 +562,15 @@ function scaleLine(line,f){
   let q=p.q*f;q=q>=100?Math.round(q/5)*5:Math.round(q*100)/100;
   return p.rawName+" "+String(q)+(p.u?" "+p.u:"");
 }
-const ingOf=r=>{const f=pvOf(r)/servOf(r);return f===1?r.ing:r.ing.map(l=>scaleLine(l,f));};
+/* versiot ja muunnelmat: valinta tallennetaan reseptikohtaisesti kuten annosmäärä */
+const hasOpt=r=>!!((r.vs&&r.vs.length)||(r.tw&&r.tw.length));
+const keyOfLine=l=>parseIng(l).key;
+const selR=r=>hasOpt(r)?applySel(r,state.tv[r.id],keyOfLine):{ing:r.ing,gr:r.gr||[],steps:r.steps,mods:[]};
+const stepsOf=r=>selR(r).steps;
+const ingOf=r=>{const f=pvOf(r)/servOf(r),a=selR(r).ing;return f===1?a:a.map(l=>scaleLine(l,f));};
+function setSel(id,fn){const r=byId(id);if(!r)return;const c=state.tv[id]||{},n={v:c.v,t:[...(c.t||[])]};fn(n);
+  const e={};if(n.v&&r.vs&&r.vs.length&&n.v!==r.vs[0].id)e.v=n.v;if(n.t.length)e.t=n.t;
+  if(e.v||e.t)state.tv[id]=e;else delete state.tv[id];mutate();}
 function recipeCost(r,all0){
   let sum=0,n=0,weak=false,big=false,stale=false;const miss=[],lines=[];
   for(const line of ingOf(r)){
@@ -659,11 +641,16 @@ function cleanRec(c){
     steps:Array.isArray(c.steps)?c.steps.slice(0,100).map(v=>clip(v,600)):[],
     gr:(()=>{const n=Array.isArray(c.ing)?Math.min(100,c.ing.length):0,o=[];if(Array.isArray(c.gr))for(const g of c.gr.slice(0,20)){if(Array.isArray(g)&&Number.isInteger(g[0])&&g[0]>=0&&g[0]<n&&typeof g[1]==="string"&&g[1].trim()&&(!o.length||g[0]>o[o.length-1][0]))o.push([g[0],clip(g[1].trim(),40)]);}return o;})(),
     wd:WLD[c.wd]?c.wd:"",fe:HOL[c.fe]?c.fe:"",jf:c.jf===true,kq:Array.isArray(c.kq)?KQ.filter(k=>c.kq.includes(k)):[],
-    url:safeUrl(c.url)};
+    url:safeUrl(c.url),
+    intro:clip(c.intro,600),serve:clip(c.serve,300),
+    tips:Array.isArray(c.tips)?c.tips.filter(v=>typeof v==="string"&&v.trim()).slice(0,12).map(v=>clip(v.trim(),400)):[],
+    sides:Array.isArray(c.sides)?[...new Set(c.sides.filter(v=>typeof v==="string"&&/^[a-z0-9-]{1,60}$/.test(v)))].slice(0,8):[],
+    extras:Array.isArray(c.extras)?[...new Set(c.extras.filter(v=>typeof v==="string"&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(v)).map(v=>v.toLowerCase()))].slice(0,8):[],
+    src:Array.isArray(c.src)?c.src.filter(v=>Array.isArray(v)&&typeof v[0]==="string"&&safeUrl(v[1])).slice(0,6).map(v=>[clip(v[0],40),safeUrl(v[1])]):[]};
 }
-function cleanState(x){return aliasState(cleanState0(x));}
+function cleanState(x){return aliasState(cleanState0(migrateLegacy(x,R)));}
 function cleanState0(x){
-  const o={custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2};
+  const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2};
   if(x&&x.sp===true)o.sp=true;
   if(x&&x.rv===true)o.rv=true;
   if(x&&(x.th==="light"||x.th==="dark"))o.th=x.th;
@@ -701,6 +688,13 @@ function cleanState0(x){
   }
   const ids=new Set([...rid].filter(i=>!o.hidden.includes(i)&&!RETIRED.has(i)).concat(o.custom.map(c=>c.id)));
   if(x.pv&&typeof x.pv==="object")for(const k of Object.keys(x.pv)){const n=parseInt(x.pv[k]);if(ids.has(k)&&PCH.includes(n))o.pv[k]=n;}
+  if(x.tv&&typeof x.tv==="object")for(const k of Object.keys(x.tv).slice(0,600)){
+    const v=x.tv[k],r0=R.find(r=>r.id===k);if(!r0||!v||typeof v!=="object")continue;
+    const e={};
+    if(typeof v.v==="string"&&(r0.vs||[]).some(q=>q.id===v.v))e.v=v.v;
+    if(Array.isArray(v.t)){const t=[...new Set(v.t.filter(i=>(r0.tw||[]).some(q=>q.id===i)))];if(t.length)e.t=t;}
+    if(e.v||e.t)o.tv[k]=e;
+  }
   const cc=a=>Array.isArray(a)?[...new Set(a.filter(i=>ids.has(i)))]:[];
   const kk=a=>Array.isArray(a)?a.filter(k=>typeof k==="string").slice(0,500):[];
   if(Array.isArray(x.lists)){
@@ -881,21 +875,28 @@ const PSIDE=[{k:"patonki",n:"Patonki",q:"1 kpl"},{k:"ruisleipä",n:"Ruisleipä",
 function sideSug(r){
   if(!r||r.t==="li")return null;
   const need=sideNeeds(r),pr=state.pair[r.id]||{},out={c:[],v:[],o:[]};
+  /* reseptin omat ehdotukset: omien valintojen jälkeen, ennen yleistä päättelyä */
+  const rs=r.sides||[],rx=(r.extras||[]).map(k=>String(k).toLowerCase());
   all().filter(x=>x.t==="li").forEach((x,i)=>{
-    const kd=sideKind(x);
-    if(!(pr[x.id]>0)&&!(need[kd]&&!(r.t==="ke"&&kd==="c")))return;
-    let sc=(pr[x.id]||0)*1000+(state.sk[x.id]||0)*10+Math.max(0,100-i);
+    const kd=sideKind(x),ri=rs.indexOf(x.id);
+    if(!(pr[x.id]>0)&&ri<0&&(rs.length||!(need[kd]&&!(r.t==="ke"&&kd==="c"))))return;
+    let sc=(pr[x.id]||0)*1000+(state.sk[x.id]||0)*10+Math.max(0,100-i)+(ri>=0?800-ri*10:0);
     if(r.t==="sa")sc+=({"Couscous":450,"Keitetyt perunat":200})[x.name]||0;
     out[kd].push({t:"r",id:x.id,name:x.name,sc,l:pr[x.id]>0});
   });
   PSIDE.forEach((p,i)=>{
-    const key="p:"+p.k;
-    if(!(pr[key]>0)&&!need.c)return;
-    let sc=(pr[key]||0)*1000+(state.sk[key]||0)*10+(60-i);
+    const key="p:"+p.k,xi=rx.indexOf(p.k);
+    if(!(pr[key]>0)&&xi<0&&(rs.length||rx.length||!need.c))return;
+    let sc=(pr[key]||0)*1000+(state.sk[key]||0)*10+(60-i)+(xi>=0?700-xi*10:0);
     if(r.t==="ke")sc+=500-i*10;else if(r.t==="sa")sc+=({"patonki":500,"ruisleipä":400})[p.k]||0;
     out.c.push({t:"p",id:p.k,name:p.n,sc,l:pr[key]>0});
   });
-  const known=new Set(PSIDE.map(p=>"p:"+p.k));
+  rx.forEach((k,i)=>{
+    if(PSIDE.some(p=>p.k===k))return;
+    const key="p:"+k;
+    out.o.push({t:"p",id:k,name:capF(k),sc:(pr[key]||0)*1000+(state.sk[key]||0)*10+700-i*10,l:pr[key]>0});
+  });
+  const known=new Set([...PSIDE.map(p=>"p:"+p.k),...rx.map(k=>"p:"+k)]);
   for(const key of new Set([...Object.keys(state.sk),...Object.keys(pr)])){
     if(!key.startsWith("p:")||known.has(key))continue;
     if(!(pr[key]>0)&&!((need.c||need.v)&&state.sk[key]>0))continue;
@@ -1033,8 +1034,11 @@ const favBtn=(r,cls)=>{const on=isFav(r.id);return`<button type="button" class="
 
 const chipEls={a:{},s:{},t:{},m:{},v:{},w:{},f:{}};
 const timeCodes=r=>{const m=+r.min||0;if(m<=0)return[];if(m>60)return["61"];return["60"].concat(m<=30?["30"]:[],m<=15?["15"]:[]);};
-const FV={a:mealOf,s:tagsOf,t:r=>[r.t],m:r=>[mainOf(r)],v:timeCodes,w:r=>r.wd?[r.wd]:[],f:r=>r.fe?[r.fe]:[]};
-const poolOf=r=>({lt:r.t,v0:{a:mealOf(r),s:tagsOf(r),t:[r.t],m:[mainOf(r)],v:timeCodes(r),w:r.wd?[r.wd]:[],f:r.fe?[r.fe]:[]}});
+/* pääraaka-aineet kaikista versioista: suodatin "Kasvis" löytää pizzan, jolla on kasvisversio */
+const verMain=(r,v)=>v.veg?"v":(M[v.m]?v.m:"");
+function mainsOf(r){const a=[mainOf(r)];for(const v of r.vs||[]){const m=verMain(r,v);if(m&&!a.includes(m))a.push(m);}return a;}
+const FV={a:mealOf,s:tagsOf,t:r=>[r.t],m:mainsOf,v:timeCodes,w:r=>r.wd?[r.wd]:[],f:r=>r.fe?[r.fe]:[]};
+const poolOf=r=>({lt:r.t,v0:{a:mealOf(r),s:tagsOf(r),t:[r.t],m:mainsOf(r),v:timeCodes(r),w:r.wd?[r.wd]:[],f:r.fe?[r.fe]:[]}});
 const xOpen={},hkX={};
 /* chipien tila: osumamäärä, himmennys, tyhjien piilotus ja "Näytä lisää" */
 function chipStats(cfg){
@@ -1084,7 +1088,26 @@ function qIngs(r){
   if(!v){v=r.ing.map(l=>parseIng(l).key.replace(/kananmun\w*/g,"muna"));if(qIngCache.size>800)qIngCache.clear();qIngCache.set(k,v);}
   return v;
 }
-/* -1 = ei osu; 0..9 = nimi osuu; 100+ = vain aines osuu */
+/* versioiden ja muunnelmien tuomat ainekset: [avain, versio/muunnelma] */
+const qOptCache=new Map();
+function qOptRows(r){
+  if(!hasOpt(r))return[];
+  let v=qOptCache.get(r.id);
+  if(!v){v=optLines(r).map(([l,m])=>[parseIng(l).key.replace(/kananmun\w*/g,"muna"),m]);qOptCache.set(r.id,v);}
+  return v;
+}
+/* hakusanat, jotka osuvat vain versioon tai muunnelmaan: palauttaa osuneet versiot/muunnelmat */
+function qOpts(r,ts){
+  const out=[];
+  for(const t0 of ts){
+    const t=t0.replace(/kananmu\w*/g,"muna"),ok=v=>v>=0&&(v<=2||t.length>=5);
+    if(ok(fzBest(t,[r.name]))||ok(fzBest(t,qIngs(r))))continue;
+    const hit=qOptRows(r).find(([k])=>ok(fzScore(t,fold(k))));
+    if(hit&&!out.includes(hit[1]))out.push(hit[1]);
+  }
+  return out;
+}
+/* -1 = ei osu; 0..9 = nimi osuu; 100+ = vain aines osuu; 200+ = vain version tai muunnelman aines osuu */
 function qHit(r,ts0){
   const ts=ts0||qTerms();if(!ts.length)return 0;
   let best=0;
@@ -1095,6 +1118,8 @@ function qHit(r,ts0){
     if(ok(n)){best=Math.max(best,n);continue;}
     const g=fzBest(t,qIngs(r));
     if(ok(g)){best=Math.max(best,100+g);continue;}
+    const o=fzBest(t,qOptRows(r).map(x=>x[0]));
+    if(ok(o)){best=Math.max(best,200+o);continue;}
     return-1;
   }
   return best;
@@ -1223,7 +1248,7 @@ function renderHk(){
     box.innerHTML=head+`<p class="empty">${ts.length?"Ei osumia haulle. Kokeile lyhyempää sanaa":"Ei osumia näillä valinnoilla"}${hkAny()?" tai poista suodattimia.":"."}</p>`+(hkAny()?`<div class="actions"><button type="button" class="go" data-hkclrf>Tyhjennä suodattimet</button></div>`:"");
     return;
   }
-  box.innerHTML=head+`<div class="grid hkgrid" data-lay="${state.lay==="grid"?"grid":"list"}">${res.map(r=>{const w=hkWhy(r,ts);return cardHtml(r,w.length?`<div class="why">Sisältää ${w.map(esc).join(", ")}</div>`:"");}).join("")}</div>`;
+  box.innerHTML=head+`<div class="grid hkgrid" data-lay="${state.lay==="grid"?"grid":"list"}">${res.map(r=>{const w=hkWhy(r,ts),o=qOpts(r,ts);return cardHtml(r,(w.length?`<div class="why">Sisältää ${w.map(esc).join(", ")}</div>`:"")+(o.length?`<div class="why">${o.map(m=>((r.vs||[]).includes(m)?"Versiona: ":"Muunnelmana: ")+esc(m.n)).join(" · ")}</div>`:""));}).join("")}</div>`;
 }
 function hkRemember(){
   const q=hq.trim();if(q.length<2||!termsOf(q).length)return;
@@ -1287,7 +1312,15 @@ $("hkdlg").addEventListener("click",e=>{
     else{hf[k].delete(c);if(hkEls[k][c])hkEls[k][c].setAttribute("aria-pressed","false");}
     renderHk();return;
   }
-  if(e.target.closest(".card[data-id], [data-open]")&&!e.target.closest("[data-cart]"))hkRemember();
+  if(e.target.closest(".card[data-id], [data-open]")&&!e.target.closest("[data-cart]")){
+    hkRemember();
+    /* hakusana osui versioon tai muunnelmaan: avataan ruoka se valittuna, ellei ruoka ole jo listalla */
+    const c=e.target.closest("[data-id], [data-open]"),r=c&&byId(c.dataset.open||c.dataset.id);
+    if(r&&hasOpt(r)&&!state.lists.some(l=>l.cart.includes(r.id))){
+      const o=qOpts(r,termsOf(hq));
+      if(o.length)setSel(r.id,n=>{for(const m of o){if((r.vs||[]).includes(m))n.v=m.id;else if(!n.t.includes(m.id))n.t.push(m.id);}});
+    }
+  }
 });
 /* ---------- hakupainike vieritettäessä ---------- */
 let pillY=0,pillT=false;
@@ -2488,6 +2521,26 @@ function srcHtml(r,url){
   if(!r.custom&&state.over[r.id])t+=` · muokattu`;
   return`<p class="srcl"><span>Lähde</span><i>${t}</i></p>`;
 }
+/* ---------- kirjaston lisäosat ruoan sivulla ---------- */
+const introOf=r=>r.custom?(r.intro||""):(r.d||"");
+const introHtml=r=>introOf(r)?`<p class="intro">${esc(introOf(r))}</p>`:"";
+function verHtml(r){
+  if(!r.vs||r.vs.length<2)return"";
+  const cur=selOf(r,state.tv[r.id]).ver;
+  return`<div class="vrow" role="group" aria-label="Versio"><span class="vlb">Versio</span><div class="chips">${r.vs.map(v=>`<button type="button" class="chip" data-ver="${esc(v.id)}" aria-pressed="${cur===v}">${esc(v.n)}</button>`).join("")}</div></div>`;
+}
+function serveHtml(r){
+  const sides=(r.sides||[]).map(id=>byId(id)).filter(Boolean);
+  if(!r.serve&&!sides.length)return"";
+  return`<div class="serve">${r.serve?`<p>${esc(r.serve)}</p>`:""}${sides.length?`<div class="chips">${sides.map(x=>`<button type="button" class="chip sch" data-oside="${esc(x.id)}">${esc(x.name)}${ico("chev")}</button>`).join("")}</div>`:""}</div>`;
+}
+function tipsHtml(r){
+  const tw=r.tw||[],tips=r.tips||[];
+  if(!tw.length&&!tips.length)return"";
+  const on=new Set((state.tv[r.id]||{}).t||[]);
+  return`<section class="tips"><h3>${ico("chef")}${tw.length?"Vinkit ja muunnelmat":"Vinkit"}</h3>${tw.map(t=>`<button type="button" class="twb" data-tw="${esc(t.id)}" aria-pressed="${on.has(t.id)}"><span class="twc">${ico(on.has(t.id)?"check":"plus")}</span><span><b>${esc(t.n)}</b>${t.d?`<small>${esc(t.d)}</small>`:""}</span></button>`).join("")}${tips.map(x=>`<p class="tip">${esc(x)}</p>`).join("")}</section>`;
+}
+const libSrcHtml=r=>`<p class="srcl"><span>Pohjana</span><i>${r.src.map(([n,u])=>{const su=safeUrl(u);return su?`<a href="${esc(su)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`:esc(n);}).join(" · ")}${!r.custom&&state.over[r.id]?" · muokattu":""}</i></p>`;
 function renderDlg(){
   if(edit&&edit.isNew){$("newBody").innerHTML=renderEdit(NEWREC());return;}
   const r=byId(openId);
@@ -2495,7 +2548,7 @@ function renderDlg(){
   if(edit&&edit.id===openId){$("dbody").innerHTML=renderEdit(r);return;}
   const ing=ingOf(r).map(parseIng);
   const url=safeUrl(r.url);
-  const rc=recipeCost(r),pv=pvOf(r),grp=r.gr||[];
+  const sl=selR(r),rc=recipeCost(r),pv=pvOf(r),grp=sl.gr||[];
   let gi=0;
   const ingHtml=ing.map((p,i)=>{
     const x=rc.lines[i];
@@ -2510,17 +2563,20 @@ function renderDlg(){
   }).join("");
   const priceBox=rc.big?`<p class="note sumn">Hintaa ei voi arvioida: ainekselle ${esc(rc.miss.join(", "))} ei ole hintaa.</p>`:rc.n?`<p class="sumc"><span>Ainekset yhteensä</span><b>${rc.miss.length?"väh. ":"noin "}${eur1(rc.sum)}</b></p>${rc.lines.some(x=>x&&x.t==="skip")?`<p class="note sn">Pienet (alle ${eur(SKIP_EUR)}) ainekset eivät ole mukana hinnassa.</p>`:""}${rc.stale?`<p class="stale sn">${ico("alert")}Osa hinnoista on yli 6 kuukautta vanhoja.</p>`:""}`:"";
   $("dbody").innerHTML=
-    `<button type="button" class="dx" data-close aria-label="Sulje">${ico("x")}${ico("left")}</button><div class="dh2"><h2 class="dh" style="font-size:${dhSize(r.name)}rem">${esc(r.name)}</h2>${favBtn(r)}</div>${imgUrl(r)?`<img class="hero" alt="" src="${esc(imgUrl(r))}">`:""}${tagsHtml(r,"top")}`+
+    `<button type="button" class="dx" data-close aria-label="Sulje">${ico("x")}${ico("left")}</button><div class="dh2"><h2 class="dh" style="font-size:${dhSize(r.name)}rem">${esc(r.name)}</h2>${favBtn(r)}</div>${imgUrl(r)?`<img class="hero" alt="" src="${esc(imgUrl(r))}">`:""}${tagsHtml(r,"top")}${introHtml(r)}${verHtml(r)}`+
     `<div class="prow" role="group" aria-label="Annosmäärä"><span class="pic" title="Annokset">${ico("users")}</span><div class="pseg">${PCH.map(n=>`<button type="button" class="pc" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${n} annosta">${n}</button>`).join("")}</div></div>`+
     (ing.length?accHtml("ing","basket","Ainekset",ingOpen,`<ul class="il2">${ingHtml}</ul>${priceBox}`,`<small class="accn">${ing.length}</small>`):"")+
-    (r.steps.length?accHtml("steps","chef","Valmistus",stepOpen,`<ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="cookrow"><button type="button" class="go" data-cook="${esc(r.id)}">${ico("play")}<span>Aloita kokkaus</span></button></p>`):"")+
-    nutHtml(r)+(url?`<p style="margin:14px 0 0"><a class="go" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Avaa resepti: ${esc(host(url))}</a></p>`:"")+
+    (sl.steps.length?accHtml("steps","chef","Valmistus",stepOpen,`<ol>${sl.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${serveHtml(r)}<p class="cookrow"><button type="button" class="go" data-cook="${esc(r.id)}">${ico("play")}<span>Aloita kokkaus</span></button></p>`):"")+
+    tipsHtml(r)+nutHtml(r)+(url?`<p style="margin:14px 0 0"><a class="go" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Avaa resepti: ${esc(host(url))}</a></p>`:"")+
     (url&&!ing.length?`<p class="note">Aineksia ei ole tallennettu, joten tämä ruoka ei lisää tuotteita ostoslistalle.</p>`:"")+
-    (!url&&!ing.length&&!r.steps.length?`<p class="note">Tähän ruokaan ei ole tallennettu aineksia eikä ohjetta.</p>`:"")+
-    tagsHtml(r,"tags")+srcHtml(r,url)+
-    sdOnLink(r)+`<p class="cpy"><button type="button" class="clear" data-copy="${esc(r.id)}">Kopioi uudeksi versioksi</button></p><div class="actions"><div class="sdslot" id="sdslot">${sdFor===r.id?sdRowHtml(r):""}</div>${(()=>{const fl=dlgList&&state.lists.find(q=>q.id===dlgList);return fl&&fl.cart.includes(r.id)?`<button type="button" class="cartbtn rmfl" data-rmfl="${esc(r.id)}" data-lid="${esc(fl.id)}">${ico("x")}<span>Poista listalta: ${esc(fl.name)}</span></button>`:cartBtn(r);})()}<button type="button" class="cartbtn" data-edit="${esc(r.id)}">${ico("pencil")}<span>Muokkaa</span></button></div>`;
+    (!url&&!ing.length&&!sl.steps.length?`<p class="note">Tähän ruokaan ei ole tallennettu aineksia eikä ohjetta.</p>`:"")+
+    tagsHtml(r,"tags")+(r.src&&r.src.length?libSrcHtml(r):srcHtml(r,url))+
+    sdOnLink(r)+`<p class="cpy"><button type="button" class="clear" data-copy="${esc(r.id)}">Tee oma kopio</button></p><div class="actions"><div class="sdslot" id="sdslot">${sdFor===r.id?sdRowHtml(r):""}</div>${(()=>{const fl=dlgList&&state.lists.find(q=>q.id===dlgList);return fl&&fl.cart.includes(r.id)?`<button type="button" class="cartbtn rmfl" data-rmfl="${esc(r.id)}" data-lid="${esc(fl.id)}">${ico("x")}<span>Poista listalta: ${esc(fl.name)}</span></button>`:cartBtn(r);})()}<button type="button" class="cartbtn" data-edit="${esc(r.id)}">${ico("pencil")}<span>Muokkaa</span></button></div>`;
 }
 function openDlg(id,fl){
+  /* pääraaka-ainesuodatin päällä: avataan versio, joka vastaa suodatinta */
+  {const r=byId(id),want=$("hkdlg").open?hf.m:sel.m;
+   if(r&&r.vs&&r.vs.length>1&&want&&want.size&&!want.has(mainOf(r))){const v=r.vs.find(v=>want.has(verMain(r,v)));if(v)setSel(id,n=>{n.v=v.id;});}}
   if(!edit&&byId(id)){state.views[id]=Math.min(99999,(state.views[id]||0)+1);mutate();}
   openId=id;dlgList=fl||"";delAsk=false;pf=null;nutOpen=false;ingOpen=true;stepOpen=false;pmOpen.clear();sdOpen.clear();renderDlg();
   if(!openId)return;
@@ -2946,7 +3002,8 @@ const fmtQ=q=>String(Math.round(q*100)/100);
 function mkDraft(r){
   return{name:r.name,mo:r.mo||"",t:r.t,wd:r.wd||"",fe:r.fe||"",jf:!!r.jf,kq:[...(r.kq||[])],s:[],min:r.min>0?String(r.min):"",w:workOf(r)>0?String(workOf(r)):"",
     ing:(()=>{const o=[],gr=r.gr||[];r.ing.forEach((l,i)=>{gr.forEach(g=>{if(g[0]===i)o.push({name:"",h:g[1]});});const p=parseIng(l);o.push({name:p.rawName,qty:p.q==null?"":fmtQ(p.q),unit:p.u||"kpl"});});return o;})(),
-    steps:[...r.steps],serv:servOf(r),img:state.img[r.id]||""};
+    steps:[...r.steps],serv:servOf(r),img:state.img[r.id]||"",
+    intro:introOf(r),tips:(r.tips||[]).join("\n"),serve:r.serve||"",sides:[...(r.sides||[])],extras:(r.extras||[]).join(", ")};
 }
 function tagList(d){
   const a=[];
@@ -3024,6 +3081,13 @@ function addSynTo(k,nm){
   rebuildCat();mutate();
   return"";
 }
+function serveEditHtml(d){
+  const li=all().filter(x=>x.t==="li").sort((a,b)=>a.name.localeCompare(b.name,"fi"));
+  return`<h3>Tarjoilu</h3>
+<input type="text" class="etx" data-ed-in="serve" maxlength="300" value="${esc(d.serve||"")}" placeholder="esim. Tarjoa perunamuusin ja puolukkahillon kanssa." aria-label="Tarjoiluehdotus">
+${li.length?`<p class="gt">Lisukkeet, joita ehdotetaan ostoslistalle lisätessä</p><div class="chips">${li.map(x=>`<button type="button" class="chip" data-ed="sidetg" data-id="${esc(x.id)}" aria-pressed="${(d.sides||[]).includes(x.id)}">${esc(x.name)}</button>`).join("")}</div>`:""}
+<label class="rf2 w" style="margin-top:10px"><span>Lisäksi ostoslistalle ehdotettavat tuotteet, pilkulla eroteltuna</span><input type="text" data-ed-in="extras" maxlength="200" value="${esc(d.extras||"")}" placeholder="esim. puolukkahillo, ruisleipä"></label>`;
+}
 function renderEdit(r){
   const d=edit.draft,tags=tagList(d),have=new Set(tags.map(x=>x[0]+x[1]));
   const tg=([k,c,l])=>`<span class="t ed">${esc(l)}<button type="button" data-ed="rmtag" data-k="${k}" data-c="${c}" aria-label="Poista tägi ${esc(l)}">${ico("x")}</button></span>`;
@@ -3060,6 +3124,8 @@ ${assetsApi?`<div class="eimg">${d.img?`<img alt="" src="/_blob/${esc(d.img)}">`
 <div class="mrow"><span class="lb2" id="svl">Annosmäärä</span><span class="step"><button type="button" class="sb" data-ed="servm" aria-label="Vähennä annoksia"${d.serv<=1?" disabled":""}>−</button><b aria-live="polite" aria-labelledby="svl">${d.serv}</b><button type="button" class="sb" data-ed="servp" aria-label="Lisää annoksia"${d.serv>=24?" disabled":""}>+</button></span></div>
 <div class="mrow"><label for="emin">Aika yhteensä (min)</label><input id="emin" type="number" min="0" inputmode="numeric" data-ed-in="min" value="${esc(d.min)}"></div>
 <div class="mrow"><label for="ew">Josta työtä (min)</label><input id="ew" type="number" min="0" inputmode="numeric" data-ed-in="w" value="${esc(d.w)}" placeholder="valinnainen"></div>
+<h3>Kuvaus</h3>
+<textarea class="etx" rows="2" data-ed-in="intro" maxlength="600" placeholder="Muutama lause ruoasta, näkyy ruoan sivulla" aria-label="Kuvaus">${esc(d.intro||"")}</textarea>
 <h3>Ainekset</h3>
 ${edit.info?`<p class="note ok" role="status">${esc(edit.info)}</p>`:""}
 ${rows?`<ul class="il">${rows}</ul>`:`<p class="note">Ei aineksia.</p>`}
@@ -3069,11 +3135,15 @@ ${xtraHtml}
 <h3>Ohje</h3>
 ${steps?`<ol class="sl">${steps}</ol>`:`<p class="note">Ei ohjevaiheita.</p>`}
 <div class="edb"><button type="button" class="cartbtn" data-ed="addstep">${ico("plus")}<span>Lisää vaihe</span></button><button type="button" class="lk" data-ed="bulk" data-k="steps" aria-expanded="${edit.bulk==="steps"}">Liitä ohje tekstinä</button></div>${edit.bulk==="steps"?bulkHtml("steps"):""}
+${serveEditHtml(d)}
+<h3>Vinkit</h3>
+<textarea class="etx" rows="3" data-ed-in="tips" placeholder="Yksi vinkki per rivi" aria-label="Vinkit, yksi per rivi">${esc(d.tips||"")}</textarea>
 ${edit.isNew?"":`<div class="dz">${!r.custom&&state.over[r.id]?`<button type="button" class="clear" data-ed="reset">Palauta alkuperäinen</button>`:""}<button type="button" class="clear err" data-ed="del">${edit.delArm?"Varmista poisto":"Poista ruoka"}</button></div>`}
 <div class="actions"><button type="button" class="go" data-ed="save">Tallenna</button><button type="button" class="cartbtn" data-ed="cancel"><span>Peruuta</span></button></div>`;
 }
 function beginEdit(id){
   const r=byId(id);if(!r)return;
+  if(!r.custom&&hasOpt(r)){copyRecipe(id,"Muokkaat omaa kopiotasi valituilla versiolla ja muunnelmilla. Alkuperäinen resepti säilyy ennallaan.");return;}
   pf=null;edit={id,draft:mkDraft(r),tagOpen:false,pickOpen:false,delArm:false,err:""};
   if(!dlg.open||openId!==id)openDlg(id);else renderDlg();
 }
@@ -3092,7 +3162,12 @@ function saveEdit(){
   const steps=d.steps.map(x=>x.trim()).filter(Boolean);
   if(!name){edit.err="Kirjoita ruoalle nimi.";return renderDlg();}
   if(!ing.length&&!steps.length&&!r.url){edit.err="Lisää ainakin yksi aines tai ohjevaihe.";return renderDlg();}
-  const f={name,mo:d.mo||"",t:d.t||"",wd:WLD[d.wd]?d.wd:"",fe:HOL[d.fe]?d.fe:"",jf:!!d.jf,kq:(d.kq||[]).filter(k=>KQ.includes(k)),s:[],min:Math.max(0,Math.min(1440,parseInt(d.min)||0)),w:Math.max(0,Math.min(1440,parseInt(d.w)||0)),ing,gr:draftGr(d),steps};
+  const f={name,mo:d.mo||"",t:d.t||"",wd:WLD[d.wd]?d.wd:"",fe:HOL[d.fe]?d.fe:"",jf:!!d.jf,kq:(d.kq||[]).filter(k=>KQ.includes(k)),s:[],min:Math.max(0,Math.min(1440,parseInt(d.min)||0)),w:Math.max(0,Math.min(1440,parseInt(d.w)||0)),ing,gr:draftGr(d),steps,
+    intro:clip((d.intro||"").trim(),600),serve:clip((d.serve||"").trim(),300),
+    tips:String(d.tips||"").split("\n").map(x=>x.trim()).filter(Boolean).slice(0,12).map(x=>clip(x,400)),
+    sides:(d.sides||[]).slice(0,8),
+    extras:String(d.extras||"").split(",").map(x=>x.trim().toLowerCase()).filter(x=>/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(x)).slice(0,8)};
+  if(!r.custom&&!isNew)delete f.intro;
   if(isNew){
     if(state.custom.length>=500){edit.err="Omia ruokia voi olla enintään 500.";return renderDlg();}
     const id="c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -3114,6 +3189,7 @@ function editAct(x){
   if(a==="rmtag"){d[x.dataset.k==="m"?"mo":x.dataset.k]="";}
   else if(a==="addtag"){d[x.dataset.k==="m"?"mo":x.dataset.k]=x.dataset.c;}
   else if(a==="mainpanel")edit.mainOpen=!edit.mainOpen;
+  else if(a==="sidetg"){const id=x.dataset.id,j=d.sides.indexOf(id);if(j>=0)d.sides.splice(j,1);else if(d.sides.length<8)d.sides.push(id);}
   else if(a==="setmain"){d.mo=x.dataset.c;edit.mainOpen=false;}
   else if(a==="tagpanel")edit.tagOpen=!edit.tagOpen;
   else if(a==="xtra")edit.xOpen=!edit.xOpen;
@@ -3203,6 +3279,10 @@ function edInput(e){
   else if(k==="qty"&&d.ing[i])d.ing[i].qty=t.value;
   else if(k==="unit"&&d.ing[i])d.ing[i].unit=t.value;
   else if(k==="step")d.steps[i]=t.value;
+  else if(k==="intro")d.intro=t.value;
+  else if(k==="tips")d.tips=t.value;
+  else if(k==="serve")d.serve=t.value;
+  else if(k==="extras")d.extras=t.value;
   else if(k==="pq")$("pl").innerHTML=pickList(t.value);
   else if(k==="nsq"&&edit.newIng){edit.newIng.q=t.value;$("npl").innerHTML=synList(edit.newIng);}
   else if(k==="nid"&&edit.newIng)edit.newIng.d=t.value;
@@ -3211,15 +3291,21 @@ function edInput(e){
 $("dbody").addEventListener("input",edInput);
 
 /* ---------- kopiointi ja kuvan valinta ---------- */
-function copyRecipe(id){
+function copyRecipe(id,info){
   const r=byId(id);if(!r)return;
   const nid="c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-  const c={id:nid,name:clip(r.name+" (kopio)",120),m:r.m,mo:r.mo||"",t:r.t,wd:r.wd||"",fe:r.fe||"",jf:!!r.jf,kq:[...(r.kq||[])],s:[],min:r.min,w:workOf(r),d:r.d||"",ing:[...r.ing],gr:(r.gr||[]).map(g=>[g[0],g[1]]),steps:[...r.steps],url:r.url||"",custom:true};
+  /* kopio tehdään siitä, mitä ruoan sivulla näkyy: valittu versio ja muunnelmat litistetään tavalliseksi reseptiksi */
+  const sl=selR(r),ver=hasOpt(r)&&r.vs&&r.vs.length?selOf(r,state.tv[id]).ver:null;
+  const nm=r.name+(ver?" – "+ver.n:"")+(r.custom?" (kopio)":" (oma)");
+  const c={id:nid,name:clip(nm,120),m:mainOf(r),mo:r.mo||"",t:r.t,wd:r.wd||"",fe:r.fe||"",jf:!!r.jf,kq:[...(r.kq||[])],s:[],min:r.min,w:workOf(r),d:r.d||"",
+    ing:[...sl.ing],gr:(sl.gr||[]).map(g=>[g[0],g[1]]),steps:[...sl.steps],url:r.url||"",custom:true,
+    intro:introOf(r),serve:r.serve||"",tips:[...(r.tips||[])],sides:[...(r.sides||[])],extras:[...(r.extras||[])],src:(r.src||[]).map(x=>[x[0],x[1]])};
   state.custom.push(c);
-  if(state.serv[id])state.serv[nid]=state.serv[id];
+  if(state.serv[id])state.serv[nid]=state.serv[id];else if(!r.custom)state.serv[nid]=servOf(r);
   if(state.img[id])state.img[nid]=state.img[id];
   pick=null;mutate();renderIdeas();
   beginEdit(nid);
+  if(info&&edit){edit.info=info;renderDlg();}
 }
 $("dbody").addEventListener("change",async e=>{
   if(e.target.id!=="eimg"||!edit)return;
@@ -3244,6 +3330,9 @@ document.addEventListener("click",e=>{
     const nb=[...dlg.querySelectorAll("[data-pm]")].find(b=>b.dataset.pm===k);if(nb)nb.focus();
     return;
   }
+  if((x=t.closest("[data-ver]"))){const id=openId,v=x.dataset.ver;setSel(id,n=>{n.v=v;});renderDlg();renderIdeas();refreshCart();return;}
+  if((x=t.closest("[data-tw]"))){const id=openId,k=x.dataset.tw;setSel(id,n=>{const i=n.t.indexOf(k);if(i>=0)n.t.splice(i,1);else n.t.push(k);});renderDlg();renderIdeas();refreshCart();return;}
+  if((x=t.closest("[data-oside]"))){openDlg(x.dataset.oside);return;}
   if((x=t.closest("[data-acc]"))){const k=x.dataset.acc;if(k==="ing")ingOpen=!ingOpen;else if(k==="steps")stepOpen=!stepOpen;else nutOpen=!nutOpen;renderDlg();const nb=dlg.querySelector('[data-acc="'+k+'"]');if(nb)nb.focus();return;}
   if((x=t.closest("[data-pv]"))){setPv(openId,+x.dataset.pv);mutate();renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-pv="'+x.dataset.pv+'"]');if(nb)nb.focus();return;}
   if((x=t.closest("[data-reg-open]"))){openReg(x.dataset.regOpen);return;}
@@ -3451,8 +3540,8 @@ async function ckLockOn(){try{if(navigator.wakeLock&&!ckLock){ckLock=await navig
 function ckLockOff(){try{if(ckLock)ckLock.release();}catch(e){}ckLock=null;}
 document.addEventListener("visibilitychange",()=>{if(kd.open&&document.visibilityState==="visible")ckLockOn();});
 function openCook(id){
-  const r=byId(id);if(!r||!r.steps.length)return;
-  if(!ck||ck.id!==id||ck.steps.join("|")!==r.steps.join("|")){ck={id,i:0,steps:r.steps.slice(),ing:false,got:new Set()};ckTimers=ckTimers.filter(t=>t.rid===id);}
+  const r=byId(id);if(!r||!stepsOf(r).length)return;
+  if(!ck||ck.id!==id||ck.steps.join("|")!==stepsOf(r).join("|")){ck={id,i:0,steps:stepsOf(r).slice(),ing:false,got:new Set()};ckTimers=ckTimers.filter(t=>t.rid===id);}
   renderCook();
   if(!kd.open)kd.showModal();
   clearInterval(ckInt);ckInt=setInterval(renderTimers,1000);
@@ -3504,3 +3593,5 @@ if(window.innerWidth<350){document.querySelectorAll(".srt").forEach(e=>e.textCon
 buildChips();showTab("ideas");
 renderIdeas();refreshCart();
 startRemote(3);
+/* kehitystila: testiskriptien apu (ei mukana tuotantoversiossa) */
+if(import.meta.env.DEV)window.__app={R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,nutPer,byId,get state(){return state;}};

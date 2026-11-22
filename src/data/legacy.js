@@ -1,4 +1,5 @@
-/* Valmiit reseptit.
+/* VANHA reseptikirjasto (ennen marraskuuta 2026). Käytetään vain vanhojen tallennettujen tietojen
+ * siirtämiseen uuteen kirjastoon (src/migrate.js), ei näytetä sovelluksessa.
  * raw: nimi|pääraaka-aine|ruokalaji|tägit|aika (min)|kuvaus|annokset
  * DATA: reseptien ainekset samassa järjestyksessä, yksi rivi per resepti, ainekset ";"-erotettuna. */
 export const raw=`Makaronilaatikko|j|ki|e|60|Makaroni, jauheliha ja sipuli, päälle muna-maitoseos. Hyvä puolukkahillon kanssa.

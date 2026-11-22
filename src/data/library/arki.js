@@ -1,0 +1,101 @@
+/* Arkiruoat: jauheliha, kana, kala, porsas ja nauta, makkara */
+export default [
+  {
+    n: "Karjalanpaisti", m: "p", t: "pa", min: 210, w: 25, sv: 6, jf: true, fe: "jo", pop: true,
+    d: "Kolme lihaa tai valmis paistiliha, juurekset ja maustepippuri muhivat uunissa, kunnes liha on niin mureaa, että sen voi jakaa lusikalla.",
+    ing: ["karjalanpaistiliha 1 kg", "rypsiöljy 1 rkl", "sipuli 2 kpl", "porkkana 2 kpl", "lanttu 150 g", "maustepippuri 12 kpl", "laakerinlehti 3 kpl", "suola 1.5 tl", "vesi 7 dl"],
+    steps: [
+      "Laita uuni lämpenemään 200 asteeseen.",
+      "Kuumenna paistinpannu kunnolla ja lisää rasva. Ruskista lihakuutiot muutamassa erässä niin, ettei pannu jäähdy ja palat saavat ruskean pinnan. Nosta valmiit palat pataan ja suolaa ne.",
+      "Kuori juurekset. Halkaise sipulit ja leikkaa ne lohkoiksi, porkkanat ja lanttu isoiksi kuutioiksi. Sekoita ne lihojen sekaan ja lisää maustepippurit ja laakerinlehdet.",
+      "Irrota pannun pohjaan jääneet paistojäämät: kaada pannulle pari desiä vettä, kuumenna ja raaputa pohja puhtaaksi lastalla. Lisää neste pataan ja täydennä vedellä, kunnes pinta on lihojen tasalla.",
+      "Nosta kansi päälle tai sulje vuoka foliolla. Anna padan hautua uunissa kolmisen tuntia ja käännä lihoja välillä. Lisää nestettä, jos pohja uhkaa kuivua.",
+      "Liha on valmista, kun pala hajoaa haarukalla painamalla. Viimeiset puoli tuntia pata voi seistä sammutetussa uunissa. Ota laakerinlehdet pois ja maista suola.",
+    ],
+    serve: "Tarjoa perunamuusin tai keitettyjen perunoiden, puolukkahillon ja punajuurien kanssa.",
+    sides: ["k-perunamuusi", "k-keitetyt-perunat"], extras: ["puolukkahillo", "punajuuri"],
+    tips: [
+      "Ruskistamaton paisti onnistuu myös, mutta liemestä tulee miedompi.",
+      "Paisti on usein seuraavana päivänä parempaa, joten sen voi valmistaa edellisenä iltana.",
+    ],
+    tw: [
+      { id: "liemi", n: "Lihaliemellä", d: "Korvaa vesi miedolla lihaliemellä, jolloin liemestä tulee täyteläisempi.", rm: ["vesi"], add: ["vesi 7 dl", "liemikuutio 1 kpl"] },
+    ],
+    src: [["Martat", "https://www.martat.fi/reseptit/karjalanpaisti/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/113651/Karjalanpaisti/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/karjalanpaisti/recipe-2291"], ["Valio", "https://www.valio.fi/reseptit/karjalanpaisti/"]],
+  },
+  {
+    n: "Jauhelihakastike", m: "j", t: "pn", min: 25, w: 25, sv: 4, pop: true,
+    d: "Arjen pelastaja, joka on pöydässä puolessa tunnissa. Perusversio on kermainen, tomaattinen löytyy muunnelmista.",
+    ing: ["jauheliha 400 g", "sipuli 1 kpl", "voi 1 rkl", "vehnäjauho 2 rkl", "vesi 3 dl", "liemikuutio 1 kpl", "ruokakerma 2 dl", "maustepippuri 6 kpl", "mustapippuri 0.5 tl", "persilja 0.5 dl"],
+    steps: [
+      "Silppua sipuli pieneksi.",
+      "Kuumenna rasva leveässä pannussa. Paista jauheliha murulle niin, että se ehtii saada väriä, ja lisää sipuli loppuvaiheessa pehmenemään.",
+      "Sirottele jauhot lihan päälle ja anna niiden paistua sekoitellen pari minuuttia, jotta kastikkeeseen ei jää raakaa jauhon makua.",
+      "Lisää vesi, liemikuutio ja molemmat pippurit. Sekoita, kunnes neste sakenee kuplivaksi kastikkeeksi.",
+      "Kaada kerma joukkoon ja hauduta hiljaisella lämmöllä noin viisi minuuttia. Ohenna tilkalla vettä, jos kastike on liian paksua.",
+      "Maista suola ja nosta päälle tuoreita yrttejä.",
+    ],
+    serve: "Tarjoa keitettyjen perunoiden tai pastan, kurkun ja puolukkahillon kanssa.",
+    sides: ["k-keitetyt-perunat", "k-perunamuusi", "k-pasta"], extras: ["puolukkahillo", "kurkku"],
+    tips: ["Hienoksi raastettu palsternakka tai porkkana sulaa kastikkeeseen ja tuo sille täyteläisyyttä."],
+    tw: [
+      { id: "tomaatti", n: "Tomaattinen", d: "Korvaa kerma tomaattimurskalla ja mausta ripauksella sokeria ja oreganoa. Sopii erityisesti pastalle.", rm: ["ruokakerma"], add: ["tomaattimurska 400 g", "sokeri 1 tl", "oregano 1 tl"], step: { 4: "Lisää tomaattimurska, sokeri ja oregano. Hauduta hiljaisella lämmöllä 10 minuuttia, jotta tomaatin happamuus pehmenee." } },
+    ],
+    src: [["Valio", "https://www.valio.fi/reseptit/perinteinen-jauhelihakastike/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/jauhelihakastike/recipe-136"], ["Martat", "https://www.martat.fi/reseptit/jauhelihakastike/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/35072/Jauhelihakastike/"]],
+  },
+  {
+    n: "Kanakastike", m: "k", t: "pn", min: 20, w: 20, sv: 4, pop: true,
+    d: "Kermainen kastike, jossa makeutta antaa ananas ja lämpöä curry. Valmistuu siinä ajassa, kun riisi kypsyy.",
+    ing: ["broilerinfilee 400 g", "rypsiöljy 1 rkl", "sipuli 1 kpl", "paprika 1 kpl", "curry 1 tl", "paprikajauhe 0.5 tl", "suola 0.5 tl", "ananas 230 g", "ruokakerma 2 dl", "mustapippuri 0.25 tl"],
+    steps: [
+      "Kuori ja silppua sipuli. Poista paprikasta siemenet ja leikkaa se kuutioiksi. Leikkaa broileri suikaleiksi, jos käytät kokonaisia fileitä.",
+      "Paista broilerisuikaleet kuumassa öljyssä kahdessa erässä, jotta ne saavat pintaan väriä. Siirrä ne lautaselle.",
+      "Laske lämpöä hiukan. Lisää pannulle sipuli ja paprika ja anna niiden pehmetä muutama minuutti. Mausta curryllä ja paprikajauheella ja sekoita minuutin ajan.",
+      "Palauta broilerit pannulle. Lisää ananas liemineen ja kerma.",
+      "Anna kastikkeen poreilla miedosti 5–8 minuuttia. Suikaleiden pitää olla läpikypsiä ja nesteen hieman sakeutunutta. Tarkista suola ja pippuri.",
+    ],
+    serve: "Tarjoa riisin, pastan tai ohraryynien kanssa.",
+    sides: ["k-riisi", "k-pasta"],
+    tips: ["Leikkaa broileri ohuiksi suikaleiksi, niin se kypsyy nopeasti eikä ehdi kuivua."],
+    tw: [
+      { id: "chili", n: "Tulisempi", d: "Lisää ½ tl chilihiutaleita mausteiden kanssa.", add: ["chilijauhe 0.5 tl"] },
+      { id: "tomaatti", n: "Ananaksen tilalle tomaatti", d: "Korvaa ananas kahdella kuutioidulla tomaatilla ja 1 rkl:lla tomaattipyreetä.", rm: ["ananas"], add: ["tomaatti 2 kpl", "tomaattipyree 1 rkl"], step: { 3: "Palauta broilerit pannulle. Lisää tomaattikuutiot, tomaattipyree ja kerma." } },
+      { id: "kevyt", n: "Kevyempi", d: "Käytä ruokakerman tilalla kevyttä ruokakermaa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kevyt ruokakerma 2 dl"] },
+    ],
+    src: [["Valio", "https://www.valio.fi/reseptit/kanakastike/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-kanakastike/7re64k2HsvS2azmzuCE1MP"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/65583/Kanakastike/"]],
+  },
+  {
+    n: "Pizza", m: "v", t: "pi", min: 75, w: 30, sv: 4, wd: "it", pop: true,
+    d: "Kotona leivottu pellillinen pizzaa. Pohja ja tomaattikastike pysyvät samoina, täytteet valitaan version mukaan.",
+    ing: [
+      "# Pohja", "vesi 2.5 dl", "hiiva 25 g", "suola 1 tl", "oliiviöljy 2 rkl", "vehnäjauho 6 dl",
+      "# Tomaattikastike", "tomaattimurska 400 g", "valkosipulinkynsi 2 kpl", "oregano 1 tl", "suola 0.5 tl",
+      "# Päälle", "juustoraaste 150 g",
+    ],
+    steps: [
+      "Lämmitä vesi kädenlämpöiseksi ja sekoita hiiva siihen. Lisää suola ja öljy.",
+      "Lisää jauhot vähitellen ja vaivaa, kunnes taikina on pehmeää ja joustavaa. Anna kohota liinan alla lämpimässä noin 30 minuuttia.",
+      "Kuumenna uuni 250 asteeseen. Valuta tomaattimurskasta suurin osa nesteestä pois ja sekoita joukkoon murskattu valkosipuli, oregano ja suola.",
+      "Painele taikina leivinpaperilla vuoratulle pellille ohueksi levyksi. Jätä reunoille hieman paksumpi kohouma.",
+      "Levitä kastike pohjalle, lisää täytteet ja ripottele juusto päälle.",
+      "Paista uunin alatasolla 12–15 minuuttia, kunnes reunat ovat ruskeat ja juusto kuplii.",
+    ],
+    serve: "Tarjoa vihreän salaatin kanssa.",
+    tips: [
+      "Mitä kuumempi uuni, sitä rapeampi pohja. Esikuumenna pelti uunissa, jos haluat pohjan erityisen rapeaksi.",
+      "Valutettu tomaattimurska ei kastele pohjaa, joten pizza ei jää keskeltä vetiseksi.",
+    ],
+    vs: [
+      { id: "kinkku", n: "Kinkku-ananas", add: ["savukinkku 150 g", "ananas 230 g"], m: "p" },
+      { id: "margherita", n: "Margherita", add: ["mozzarella 125 g", "tomaatti 2 kpl", "basilika 1 ruukku"], rm: ["juustoraaste"], veg: true },
+      { id: "jauheliha", n: "Jauheliha-sipuli", add: ["jauheliha 250 g", "punasipuli 1 kpl", "aurinkokuivattu tomaatti 50 g"], m: "j", ins: [[3, "Paista jauheliha pannulla murulle ja mausta suolalla ja pippurilla. Leikkaa punasipuli ohuiksi renkaiksi."]] },
+      { id: "salami", n: "Salami", add: ["salami 100 g", "herkkusienet 150 g", "oliivit 0.5 dl"], m: "p" },
+      { id: "kasvis", n: "Kasvis", add: ["paprika 1 kpl", "herkkusienet 150 g", "punasipuli 1 kpl", "oliivit 0.5 dl", "fetajuusto 100 g"], veg: true },
+    ],
+    tw: [
+      { id: "valmispohja", n: "Valmis pizzapohja", d: "Ohita taikinan teko ja käytä valmista pohjaa. Valmistusaika lyhenee noin 40 minuuttia.", rm: ["vesi", "hiiva", "suola 1 tl", "oliiviöljy", "vehnäjauho"], add: ["pizzapohja 1 kpl"], del: [0, 1], step: { 3: "Levitä valmis pizzapohja leivinpaperilla vuoratulle pellille." } },
+      { id: "chili", n: "Tulisempi", d: "Ripottele pinnalle chilihiutaleita ennen paistamista.", add: ["chiliflakes 1 tl"] },
+    ],
+    src: [["Valio", "https://www.valio.fi/reseptit/pizza/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/93879/KOTIPIZZA/"]],
+  },
+];

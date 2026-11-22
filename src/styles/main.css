@@ -846,3 +846,28 @@ body:not([data-view="ideas"]) .spill{display:none}
 @media (min-width:560px){.hkgrid[data-lay="grid"]{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .why{margin-top:6px;font-size:.8125rem;line-height:1.3;color:var(--muted)}
 .gc .why{padding:0}
+
+/* ---------- kirjaston lisäosat ruoan sivulla ---------- */
+.intro{margin:6px 0 2px;font-size:1rem;color:var(--muted);line-height:1.5}
+.vrow{margin:12px 0 0}
+.vrow .vlb{display:block;font-size:.8125rem;font-weight:600;color:var(--muted);margin:0 0 6px}
+.vrow .chips{gap:6px}
+.vrow .chip{min-height:38px;padding:0 13px;font-size:.875rem}
+.serve{margin:12px 0 0;padding:10px 12px;background:var(--surface);border-radius:12px;font-size:.9375rem}
+.serve p{margin:0}
+.serve .chips{gap:6px;margin-top:8px}
+.serve .sch{display:inline-flex;align-items:center;gap:2px;min-height:36px;padding:0 8px 0 12px;font-size:.875rem}
+.serve .sch .ico{width:16px;height:16px;transform:rotate(-90deg);color:var(--muted)}
+.tips{margin:12px 0 0;padding:14px 16px;background:var(--bg);border-radius:16px}
+.tips h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:1rem}
+.tips h3 .ico{color:var(--or-ink)}
+.twb{display:flex;align-items:flex-start;gap:12px;width:100%;margin:0 0 8px;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.twb b{display:block;font-size:.9375rem}
+.twb small{display:block;font-size:.8125rem;color:var(--muted);line-height:1.35;margin-top:2px}
+.twc{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1.5px dashed var(--or);color:var(--or-ink)}
+.twc .ico{width:16px;height:16px}
+.twb[aria-pressed="true"]{border-color:var(--gr);background:var(--gr-bg)}
+.twb[aria-pressed="true"] .twc{border:0;background:var(--gr);color:#fff}
+.tip{margin:8px 2px 0;padding-left:26px;position:relative;font-size:.9375rem}
+.tip:before{content:"";position:absolute;left:6px;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--or)}
+.etx{width:100%;margin:0 0 6px;font:inherit;font-size:.9375rem;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);resize:vertical}
