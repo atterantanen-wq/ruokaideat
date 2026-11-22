@@ -400,7 +400,7 @@ export default [
     ],
     serve: "Tarjoa lohkoperunoiden tai ranskalaisten kanssa.",
     sides: ["k-lohkoperunat"],
-    tips: ["Jauhelihapihvin kypsyys: paina peukalolla keskelle kuoppa ennen paistamista, niin pihvi ei pullistu."],
+    tips: ["Naudanlihapihviin kannattaa painaa peukalolla keskelle kuoppa ennen paistamista, niin pihvi ei pullistu paistuessaan."],
     vs: [
       { id: "nauta", n: "Naudanliha", add: ["jauheliha 600 g", "suola 0.75 tl", "mustapippuri 0.5 tl", "cheddar 80 g"], m: "n", step: { 1: "Mausta jauheliha suolalla ja pippurilla ja taputtele neljäksi sämpylää hieman leveämmäksi pihviksi. Nosta juustoviipale pihvin päälle paistamisen loppuvaiheessa." } },
       { id: "kana", n: "Kana", add: ["broilerinfilee 500 g", "paprikajauhe 1 tl", "suola 0.5 tl"], m: "k", step: { 1: "Halkaise broilerinfileet ohuiksi leikkeiksi ja mausta paprikalla ja suolalla. Paista leikkeet kypsiksi, noin 4 minuuttia kummaltakin puolelta." } },
