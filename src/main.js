@@ -3791,6 +3791,10 @@ function plCostPer(r,v,t){
 const isVegR=r=>["v","y"].includes(mainOf(r));
 const PL_addDays=(iso,n)=>{const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;};
 let plCandsMemo=null;
+/* viikonloppu: enemmän aikaa vievät ruoat ja herkuttelu (pizza, hampurilaiset, pihvit, uuniruoat); juhla: juhlapöytään merkityt ja juhlapyhien ruoat */
+const WKND=/pizza|hampurilai|burger|taco|tortill|fajita|kebab|pulled|grilli|pippuripihvi|paisti|lasagne|uunilohi|butter chicken|tikka|lammas|karitsa|ribs|siivet|nachos|wings|moussaka|risotto/i;
+/* juhlapyhien ruoat (joulu ym.) vain Juhla-sirulla */
+const plWknd=(r,meal)=>!r.fe&&(meal.includes("j")||WKND.test(r.name));
 /* pääruoat ehdokkaiksi */
 function plCands(){
   if(plCandsMemo)return plCandsMemo;
@@ -3804,7 +3808,7 @@ function plCands(){
     const vegV=(r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y"),fishV=(r.vs||[]).find(v=>v.m==="f");
     const meal=mealOf(r),tags=tagsOf(r);
     out.push({id:r.id,name:r.name,t:r.t,main:mainOf(r),veg:isVegR(r)||!!vegV,vegV:isVegR(r)?"":(vegV?vegV.id:""),fish:mainOf(r)==="f"||!!fishV,fishV:mainOf(r)==="f"?"":(fishV?fishV.id:""),
-      arki:meal.includes("a"),wknd:meal.includes("j")&&!r.jf,juhla:!!r.jf||!!r.fe,holiday:!!r.fe&&!r.jf,cheap:tags.includes("e"),light:tags.includes("k"),
+      arki:meal.includes("a"),wknd:plWknd(r,meal),juhla:!!r.jf||!!r.fe,holiday:!!r.fe&&!r.jf,cheap:tags.includes("e"),light:tags.includes("k"),
       work:workOf(r)||r.min||0,cost:plCostPer(r,""),fav:isFav(r.id),pop:isPop(r),recent:recent.has(r.id)});
   }
   return plCandsMemo=out;
@@ -3916,8 +3920,7 @@ function renderPlan(){
       <div class="pn-step"><span>Annoksia vähintään</span><div><button type="button" class="pn-ib sm" data-pa="sv" data-d="-1" aria-label="Vähemmän annoksia"${pl.sv<=2?" disabled":""}>${ico("minus")}</button><b>${pl.sv}</b><button type="button" class="pn-ib sm" data-pa="sv" data-d="1" aria-label="Enemmän annoksia"${pl.sv>=16?" disabled":""}>${ico("plus")}</button></div></div></div>
       ${rows?`<ol class="pn-list">${rows}</ol>`:""}
       ${addBox}
-      ${pl.items.length?`<p class="note">Muokkaa ruokaa napauttamalla sen nimeä. ${ico("shuffle")} vaihtaa ruoan.</p>`
-      :`<div class="actions" style="margin-top:10px"><button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota 4 ruokaa</span></button></div>`}</section>
+      ${pl.items.length?"":`<div class="actions" style="margin-top:10px"><button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota 4 ruokaa</span></button></div>`}</section>
     <section class="pn-card"><h3 class="pn-h" style="margin-top:0">Lisäksi kaupasta</h3>
       ${sec("sn","Aamu- ja välipalat",snSum,snInner)}${sec("bk","Leivonta",bkSum,bkInner)}${sec("vk","Vakiot ja tuotteet",vkSum,vkInner)}</section>
     <section class="pn-card pn-sum"><div class="pn-sr"><span>Ruoat ja lisukkeet</span><b>${eur1(tot.food)}</b></div>${tot.extra>0?`<div class="pn-sr"><span>Aamu- ja välipalat, leivonta</span><b>${eur1(tot.extra)}</b></div>`:""}

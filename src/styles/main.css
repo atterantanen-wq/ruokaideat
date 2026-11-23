@@ -1027,3 +1027,4 @@ body:not([data-view="ideas"]) .spill{display:none}
 @media (prefers-reduced-motion:reduce){.pn-item.pn-new{animation:none}}
 .pn-del{color:var(--err,#b3261e);margin:4px auto 0}
 #pkdlg .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.25;height:auto;padding-top:8px;padding-bottom:8px}
+.pn-pl li{border:0;padding:0;margin:0}
