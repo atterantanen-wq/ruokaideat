@@ -182,7 +182,7 @@ export default [
     src: [["Martat", "https://www.martat.fi/reseptit/karjalanpiirakat/"], ["Valio", "https://www.valio.fi/reseptit/karjalanpiirakat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-karjalanpiirakat/52u8KbDEVyhxpJJxjZ8mkt"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/123616/Karjalanpiirakat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/karjalanpiirakat/"]],
   },
   {
-    n: "Lämpimät voileivät", m: "p", t: "ha", min: 15, w: 10, sv: 4,
+    n: "Lämpimät voileivät", m: "p", t: "ha", min: 15, w: 10, sv: 4, ml: ["a", "v", "i"],
     d: "Uunissa gratinoidut paahtoleivät, joiden täytteet voi valita mieltymyksen mukaan. Nopea iltapala.",
     ing: ["paahtoleipä 4 kpl", "voi 2 rkl", "sinappi 2 rkl", "juustoraaste 2 dl", "kananmuna 1 kpl"],
     steps: [

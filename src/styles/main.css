@@ -961,3 +961,28 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-row.lo .pn-nm .lk{font-weight:500}
 .pn-stp{margin:4px 0;line-height:1.5}
 .pn-stp .lk{font:inherit;background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);cursor:pointer}
+
+/* suunnitelma */
+.pn-ctl{display:grid;gap:2px;margin-bottom:6px}
+.pn-list{list-style:none;margin:6px 0 0;padding:0}
+.pn-item{display:flex;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.pn-no{flex:none;width:26px;height:26px;border-radius:50%;background:var(--bg);color:var(--muted);font-weight:700;font-size:.8125rem;display:flex;align-items:center;justify-content:center;margin-top:8px}
+.pn-body{flex:1;min-width:0}
+.pn-top{display:flex;gap:8px;align-items:flex-start}
+.pn-top .pn-nm{flex:1;min-width:0}
+.pn-name{font-weight:600;font-size:1rem}
+.pn-nm small{display:block;color:var(--muted);font-size:.8125rem;margin-top:2px}
+.pn-tags{display:flex;flex-wrap:nowrap;gap:6px;margin:8px -16px 0 0;padding-right:16px;overflow-x:auto;scrollbar-width:none}
+.pn-tags::-webkit-scrollbar{display:none}
+.pn-tg{flex:none}
+.pn-tg{font:inherit;font-size:.8125rem;font-weight:600;min-height:34px;padding:0 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.pn-tg[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.pn-x{border-top:1px solid var(--line)}
+.pn-x:first-of-type{border-top:0}
+.pn-xh{display:flex;align-items:center;gap:10px;width:100%;font:inherit;background:none;border:0;color:var(--ink);padding:10px 0;text-align:left;cursor:pointer;min-height:52px}
+.pn-xh span{flex:1;min-width:0}
+.pn-xh b{display:block}
+.pn-xh small{display:block;color:var(--muted);font-size:.8125rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn-xb{padding:0 0 12px}
+.pn-bud label{font-weight:500;margin-right:4px}
+.pn-rmv .lk{font:inherit;background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer}

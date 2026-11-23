@@ -108,7 +108,7 @@ Muuten ohje neuvoo käyttämään ainesta, jota ei enää ole.
   Sille riittävät ainekset ja yksi tai kaksi vaihetta. Lähdettä ei tarvita, ja kortissa näkyy merkintä
   "Perusateria".
 - `ml` kertoo, mille aterioille ruoka sopii: `a` aamupala, `l` lounas, `p` päivällinen, `v` välipala,
-  `i` iltapala, `e` eväs. Viikkosuunnitelma käyttää tätä ehdotuksiin. Jos kenttä puuttuu, kohta
+  `i` iltapala, `e` eväs. Suunnitelma käyttää tätä aamu- ja välipalojen valikoimaan. Jos kenttä puuttuu, kohta
   päätellään ruokalajista.
 
 ## Lisukkeet
