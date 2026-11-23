@@ -185,10 +185,10 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   const n0 = await page.evaluate(() => window.__app.state.pl.items.filter((x) => x.id).length);
   ok(n0 === 4, "ehdotuksia " + n0);
   /* sirut: kasvis ja kala vaihtavat ruoan sopivaksi */
-  await click('[data-pa="edit"][data-i="0"]'); await wait(150);
+  await click('[data-pa="type"][data-i="0"]'); await wait(150);
   await click('#pkbody [data-pe="tg"][data-k="v"]'); await wait(100);
   await click('#pkbody [data-pp-x]');
-  await click('[data-pa="edit"][data-i="1"]'); await wait(150);
+  await click('[data-pa="type"][data-i="1"]'); await wait(150);
   await click('#pkbody [data-pe="tg"][data-k="f"]'); await wait(100);
   await click('#pkbody [data-pp-x]'); await wait(150);
   const r = await page.evaluate(() => {
@@ -217,12 +217,6 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   const e = await page.evaluate((i) => window.__app.state.pl.items[i], tw);
   ok(e.t.length === 1 && e.n >= 5, "muokkaus ei tallentunut: " + JSON.stringify(e));
   ok(!sdk || e.sd.includes(sdk), "lisuke ei tallentunut");
-  if (tw !== 2) await click(`[data-pa="lock"][data-i="${tw}"]`);
-  /* lukitus säilyy uusissa ehdotuksissa */
-  await click('[data-pa="lock"][data-i="2"]');
-  const id2 = await page.evaluate(() => window.__app.state.pl.items[2].id);
-  await click('[data-pa="all"]'); await wait(200);
-  ok(id2 === (await page.evaluate(() => window.__app.state.pl.items[2].id)), "lukittu ruoka vaihtui");
   await click('[data-pa="add"][data-k="k"]'); await wait(150);
   const it5 = await page.evaluate(() => { const A = window.__app, it = A.state.pl.items; return { n: it.length, light: !!(it[4] && A.plCands().find((c) => c.id === it[4].id) || {}).light }; });
   ok(it5.n === 5 && it5.light, "kevyen ruoan lisäys ei onnistunut: " + JSON.stringify(it5));

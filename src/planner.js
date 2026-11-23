@@ -42,10 +42,8 @@ export function matches(c, tags) {
   return true;
 }
 
-/* bonus(c): lisäpisteet esim. edellisten ruokien ylijäämien käytöstä (0–1,5) */
-function score(c, others, rnd, bonus) {
+function score(c, others, rnd) {
   let s = rnd() * 1.5;
-  if (bonus) s += bonus(c);
   if (c.fav) s += 1.2;
   if (c.pop) s += 0.5;
   if (c.recent) s -= 1;
@@ -56,26 +54,26 @@ function score(c, others, rnd, bonus) {
   return s;
 }
 /* valitsee ruoan siruilla; others = listan muut ruoat (vaihtelua varten), exclude = id:t, joita ei saa valita */
-export function pick(cands, tags, others, rnd = Math.random, exclude = [], bonus = null) {
+export function pick(cands, tags, others, rnd = Math.random, exclude = []) {
   const used = new Set(others.map((o) => o.id).concat(exclude));
   let best = null, bs = -Infinity;
   for (const c of cands) {
     if (used.has(c.id) || !matches(c, tags)) continue;
-    const s = score(c, others, rnd, bonus);
+    const s = score(c, others, rnd);
     if (s > bs) { bs = s; best = c; }
   }
   return best;
 }
-export function ranked(cands, tags, others, bonus = null) {
+export function ranked(cands, tags, others) {
   const used = new Set(others.map((o) => o.id));
-  return cands.filter((c) => !used.has(c.id) && matches(c, tags)).map((c) => [score(c, others, () => 0.5, bonus), c]).sort((a, b) => b[0] - a[0]).map((x) => x[1]);
+  return cands.filter((c) => !used.has(c.id) && matches(c, tags)).map((c) => [score(c, others, () => 0.5), c]).sort((a, b) => b[0] - a[0]).map((x) => x[1]);
 }
 /* versio siruihin: kasvis- tai kalaversio, jos ruoka itse ei ole sellainen */
 export const versionFor = (c, tags) => (tags.includes("v") && c.vegV) || (tags.includes("f") && c.fishV) || "";
 
 /* täyttää listan: lukitut ja jo valitut säilyvät, puuttuvat valitaan; fresh = arvotaan lukitsemattomat uudelleen.
- * bonusFor(items) palauttaa bonusfunktion jo valittujen ruokien perusteella; onPick(item) täydentää valitun ruoan (lisukkeet ym.) */
-export function fill(cands, pl, rnd = Math.random, fresh = false, today = new Date(), bonusFor = null, onPick = null) {
+ * onPick(item) täydentää valitun ruoan (lisukkeet ym.) */
+export function fill(cands, pl, rnd = Math.random, fresh = false, today = new Date(), onPick = null) {
   const byId = new Map(cands.map((c) => [c.id, c]));
   const items = [];
   for (let i = 0; i < pl.n; i++) {
@@ -87,7 +85,7 @@ export function fill(cands, pl, rnd = Math.random, fresh = false, today = new Da
   for (const it of items) {
     if (it.id) continue;
     const others = items.filter((x) => x !== it && x.id).map((x) => byId.get(x.id)).filter(Boolean);
-    const c = pick(cands, it.tg, others, rnd, [], bonusFor ? bonusFor(items.filter((x) => x !== it && x.id)) : null);
+    const c = pick(cands, it.tg, others, rnd);
     if (c) { it.id = c.id; it.v = versionFor(c, it.tg); if (onPick) onPick(it); }
   }
   pl.items = items;
