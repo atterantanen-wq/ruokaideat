@@ -892,3 +892,4 @@ body:not([data-view="ideas"]) .spill{display:none}
 .hl .ownop{font:inherit;font-weight:600;text-align:left;background:none;border:0;padding:6px 0;color:var(--ink);cursor:pointer}
 #adlg .ar .an small{display:inline-block;width:100%;text-decoration:none}
 #adlg #aownsug{min-height:45vh}
+.pseg .pcw{flex:1;width:auto;padding:0 10px;white-space:nowrap}

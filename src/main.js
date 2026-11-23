@@ -517,6 +517,11 @@ function costOf(key,fam,v){
   if(x.t==="ok"?x.c<SKIP_EUR:pantryHit(key))return{t:"skip"};
   return x;
 }
+function costBake(key,fam,v){
+  const x=costOf0(key,fam,v);
+  if(x.t==="ok")return x.c<SKIP_EUR?{t:"skip"}:x;
+  return pantryHit(key)?{t:"skip"}:x;
+}
 function costOf0(key,fam,v){
   const e=findPrice(key);
   if(!e)return{t:"none"};
@@ -551,11 +556,20 @@ function costOf0(key,fam,v){
 }
 const eur=v=>(Math.round(v*100)/100).toFixed(2).replace(".",",")+" €";
 const eur1=v=>(Math.round(v*10)/10).toFixed(1).replace(".",",")+" €";
+const eur2=v=>(Math.round(v*100)/100).toFixed(2).replace(".",",")+" €";
+/* kesto: 45 min, 1 h 30 min, 13 h; pitkä lepo (yön yli) näytetään sanoin */
+const fmtDur=m=>{m=Math.round(+m||0);if(m<60)return m+" min";if(m>=720)return Math.round(m/60)+" h";const h=Math.floor(m/60),k=m%60;return h+" h"+(k?" "+k+" min":"");};
+const timeTxt=r=>{const w=workOf(r),wait=r.min-w;
+  const rest=wait>=600&&/yön yli|yöksi/.test((r.steps||[]).join(" "))?"yön yli":wait>=1200?Math.round(wait/1440)+" vrk":"";
+  return rest?(w>0?fmtDur(w)+" + "+rest:rest):fmtDur(r.min);};
 const servOf=r=>state.serv[r.id]||defServ(r.id);
 const PCH=[2,4,6,8,10];
 const nearP=n=>n<=2?2:n>=10?10:(n%2?n+1:n);
-const pvOf=r=>state.pv[r.id]||nearP(servOf(r));
-function setPv(id,n){const r=byId(id),b=r?nearP(servOf(r)):nearP(defServ(id));if(n===b)delete state.pv[id];else state.pv[id]=n;}
+/* leivonnaisissa (annos = pala tai keksi) määrä valitaan erinä, muissa annoksina 2–10 */
+const isBatch=r=>!!r&&r.t==="le";
+const baseP=r=>isBatch(r)?servOf(r):nearP(servOf(r));
+const pvOf=r=>state.pv[r.id]||baseP(r);
+function setPv(id,n){const r=byId(id),b=r?baseP(r):nearP(defServ(id));if(n===b)delete state.pv[id];else state.pv[id]=n;}
 function scaleLine(line,f){
   if(f===1)return line;
   const p=parseIng(line);if(p.q==null)return line;
@@ -576,7 +590,7 @@ function recipeCost(r,all0){
   for(const line of ingOf(r)){
     const p=parseIng(line);
     if(p.v==null){lines.push(null);continue;}
-    const x=all0?costOf0(p.key,p.fam,p.v):costOf(p.key,p.fam,p.v);
+    const x=all0?costOf0(p.key,p.fam,p.v):isBatch(r)?costBake(p.key,p.fam,p.v):costOf(p.key,p.fam,p.v);
     if(x.t==="ok"){sum+=x.c;n++;if(x.w&&x.c>=1)weak=true;if(x.s)stale=true;lines.push(x);}
     else{lines.push(x);if(x.t!=="skip"){miss.push(p.name);if(p.fam==="g"&&p.v>=300)big=true;}}
   }
@@ -604,12 +618,16 @@ function nutHtml(r){
   const inner=`<div class="nut2"><div><b>${f0(p.kcal)}</b><span>kcal / annos${x.full?"":", vähintään"}</span></div><div><b>${f0(p.prot)} g</b><span>proteiinia / annos${x.full?"":", vähintään"}</span></div></div><p class="note nd">Rasvaa ${f1(p.fat)} g (tyydyttynyttä ${f1(p.sat)} g) · hiilihydraatteja ${f1(p.carb)} g · suolaa ${fs(p.salt)} g</p>${x.miss.length?`<p class="note nd">Ei laskettu: ${esc(x.miss.join(", "))}.</p>`:""}<p class="note nd">Arvio raaka-aineiden perusteella, ei huomioi kypsennyksen vaikutusta. Ravintoarvot: <a href="https://fineli.fi" target="_blank" rel="noopener noreferrer">Fineli, THL</a>, CC BY 4.0.</p>`;
   return accHtml("nut","flame","Ravintoarvot / annos",nutOpen,inner);
 }
-function priceTag(r){
+/* hinta kortille; leivonnaisissa annos on yksi pala tai keksi, joten näytetään koko taikinan hinta */
+function priceTxt(r){
   const c=recipeCost(r);
   if(!c.n||c.big)return"";
+  const pre=c.miss.length?"väh. ":"";
+  if(isBatch(r))return pre+eur1(c.sum*servOf(r)/pvOf(r))+" / erä";
   const per=c.sum/pvOf(r);
-  return`<b class="pr">${c.miss.length?"väh. ":""}${eur1(per)} / annos</b>`;
+  return pre+(per<0.95?eur2(per):eur1(per))+" / annos";
 }
+function priceTag(r){const t=priceTxt(r);return t?`<b class="pr">${t}</b>`:"";}
 /* ---------- tila ja tallennus ---------- */
 const LS="ruokaideat-v1";
 const todayLocal=todayIso;
@@ -687,7 +705,11 @@ function cleanState0(x){
     const f=cleanRec(x.over[k]);if(f){delete f.d;delete f.url;o.over[k]=f;}
   }
   const ids=new Set([...rid].filter(i=>!o.hidden.includes(i)&&!RETIRED.has(i)).concat(o.custom.map(c=>c.id)));
-  if(x.pv&&typeof x.pv==="object")for(const k of Object.keys(x.pv)){const n=parseInt(x.pv[k]);if(ids.has(k)&&PCH.includes(n))o.pv[k]=n;}
+  /* leivonnaisissa määrä on erä (½, 1 tai 2 erää kappaleina), muissa annosmäärä 2–10 */
+  const recOf=k=>R.find(z=>z.id===k)||o.custom.find(z=>z.id===k);
+  if(x.pv&&typeof x.pv==="object")for(const k of Object.keys(x.pv)){const n=parseInt(x.pv[k]);if(!ids.has(k))continue;const r=recOf(k);
+    if(r&&r.t==="le"){const sv=+((x.serv&&x.serv[k])||r.sv)||4;if([.5,2].some(m=>Math.max(1,Math.round(sv*m))===n))o.pv[k]=n;}
+    else if(PCH.includes(n))o.pv[k]=n;}
   if(x.tv&&typeof x.tv==="object")for(const k of Object.keys(x.tv).slice(0,600)){
     const v=x.tv[k],r0=R.find(r=>r.id===k);if(!r0||!v||typeof v!=="object")continue;
     const e={};
@@ -1171,9 +1193,9 @@ function matches(r){
   return(!onlyFP||isFav(r.id)||isPop(r))&&qHit(r)>=0&&FK.every(k=>k==="t"?(sel.t.size?sel.t.has(r.t):r.t!=="li"):(!sel[k].size||FV[k](r).some(x=>sel[k].has(x))));
 }
 function tagsHtml(r,part){
-  if(part==="top")return`<div class="meta top"><div class="mg">${priceTag(r)}${r.min>0?`<b class="mn2">${ico("clock")}${r.min} min</b>`:""}${workOf(r)>0&&r.min>workOf(r)?`<span class="wk">työtä ${workOf(r)} min</span>`:""}</div>${state.views[r.id]?`<span class="vw" title="Katsottu ${state.views[r.id]} ${state.views[r.id]===1?"kerran":"kertaa"}" aria-label="Katsottu ${state.views[r.id]} ${state.views[r.id]===1?"kerran":"kertaa"}">${ico("eye")}${state.views[r.id]}</span>`:""}</div>`;
+  if(part==="top")return`<div class="meta top"><div class="mg">${priceTag(r)}${r.min>0?`<b class="mn2">${ico("clock")}${timeTxt(r)}</b>`:""}${workOf(r)>0&&r.min>workOf(r)&&!/yön yli/.test(timeTxt(r))?`<span class="wk">työtä ${fmtDur(workOf(r))}</span>`:""}</div>${state.views[r.id]?`<span class="vw" title="Katsottu ${state.views[r.id]} ${state.views[r.id]===1?"kerran":"kertaa"}" aria-label="Katsottu ${state.views[r.id]} ${state.views[r.id]===1?"kerran":"kertaa"}">${ico("eye")}${state.views[r.id]}</span>`:""}</div>`;
   if(part==="tags")return`<div class="meta tg">${T[r.t]?`<span class="t">${T[r.t]}</span>`:""}${M[mainOf(r)]?`<span class="t">${M[mainOf(r)]}</span>`:""}${WLD[r.wd]?`<span class="t">${WLD[r.wd]}</span>`:""}${HOL[r.fe]?`<span class="t">${HOL[r.fe]}</span>`:""}${r.jf?`<span class="t">${A.j}</span>`:""}${tagsOf(r).map(x=>`<span class="t">${S[x]}</span>`).join("")}${isPop(r)?`<span class="t">Suosittu</span>`:""}${r.custom?`<span class="t">Oma</span>`:""}</div>`;
-  return`<div class="meta">${priceTag(r)}${r.min>0?`<b class="mn2">${ico("clock")}${r.min} min</b>`:""}${T[r.t]?`<span class="t">${T[r.t]}</span>`:""}${M[mainOf(r)]?`<span class="t">${M[mainOf(r)]}</span>`:""}${tagsOf(r).map(x=>`<span class="t">${S[x]}</span>`).join("")}${isPop(r)?`<span class="t">Suosittu</span>`:""}${r.custom?`<span class="t">Oma</span>`:""}</div>`;
+  return`<div class="meta">${priceTag(r)}${r.min>0?`<b class="mn2">${ico("clock")}${timeTxt(r)}</b>`:""}${T[r.t]?`<span class="t">${T[r.t]}</span>`:""}${M[mainOf(r)]?`<span class="t">${M[mainOf(r)]}</span>`:""}${tagsOf(r).map(x=>`<span class="t">${S[x]}</span>`).join("")}${isPop(r)?`<span class="t">Suosittu</span>`:""}${r.custom?`<span class="t">Oma</span>`:""}</div>`;
 }
 const cartIc=r=>{const on=inCart(r.id);return`<button type="button" class="cartbtn ic" data-cart="${esc(r.id)}" aria-pressed="${on}" aria-label="${on?"Poista ostoslistalta":"Lisää ostoslistalle"}: ${esc(r.name)}">${ico(on?"check":"tlist")}</button>`;};
 const cartBtn=r=>{const on=inCart(r.id);return`<button type="button" class="cartbtn" data-cart="${esc(r.id)}" aria-pressed="${on}">${cartInner(on)}</button>`;};
@@ -1367,16 +1389,15 @@ function applyLay(){
 }
 const LAYH={pa:22,ki:38,ke:8,uu:30,pn:48,ps:42,pu:62,am:52,sa:120,le:335,ja:350,li:95,wo:52,pi:28,ha:40,vp:70,al:100};
 function gridPrice(r){
-  const c=recipeCost(r);
-  if(!c.n||c.big)return"";
-  return`<b class="gp">${c.miss.length?"väh. ":""}${eur1(c.sum/pvOf(r))} / annos</b>`;
+  const t=priceTxt(r);
+  return t?`<b class="gp">${t}</b>`:"";
 }
 function gridCard(r,why=""){
   const u=imgUrl(r);
-  return`<article class="card gc" data-id="${esc(r.id)}"><div class="gt" style="--h:${LAYH[r.t]||30}"><span class="gi">${ico("chef")}</span>${u?`<img class="th" alt="" loading="lazy" src="${esc(u)}">`:""}${isFav(r.id)?`<span class="gfv" title="Suosikki">${ico("heart")}</span>`:""}${cartIc(r)}</div><div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="gm">${gridPrice(r)}${r.min>0?`<span class="mn">${ico("clock")}${r.min} min</span>`:""}</div>${why}</div></article>`;
+  return`<article class="card gc" data-id="${esc(r.id)}"><div class="gt" style="--h:${LAYH[r.t]||30}"><span class="gi">${ico("chef")}</span>${u?`<img class="th" alt="" loading="lazy" src="${esc(u)}">`:""}${isFav(r.id)?`<span class="gfv" title="Suosikki">${ico("heart")}</span>`:""}${cartIc(r)}</div><div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="gm">${gridPrice(r)}${r.min>0?`<span class="mn">${ico("clock")}${timeTxt(r)}</span>`:""}</div>${why}</div></article>`;
 }
 function listCard(r,why=""){
-  return`<article class="card${imgUrl(r)?" pic":""}" data-id="${esc(r.id)}">${imgUrl(r)?`<div class="thw"><img class="th" alt="" loading="lazy" src="${esc(imgUrl(r))}"></div>`:""}<div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="meta">${priceTag(r)}<span class="mtr">${r.min>0?`<span class="mn">${ico("clock")}${r.min} min</span>`:""}${nutChip(r)}</span></div>${why}</div>${cartIc(r)}</article>`;
+  return`<article class="card${imgUrl(r)?" pic":""}" data-id="${esc(r.id)}">${imgUrl(r)?`<div class="thw"><img class="th" alt="" loading="lazy" src="${esc(imgUrl(r))}"></div>`:""}<div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="meta">${priceTag(r)}<span class="mtr">${r.min>0?`<span class="mn">${ico("clock")}${timeTxt(r)}</span>`:""}${nutChip(r)}</span></div>${why}</div>${cartIc(r)}</article>`;
 }
 const cardHtml=(r,why="")=>state.lay==="grid"?gridCard(r,why):listCard(r,why);
 function renderIdeas(){
@@ -2627,7 +2648,7 @@ function renderDlg(){
   const priceBox=rc.big?`<p class="note sumn">Hintaa ei voi arvioida: ainekselle ${esc(rc.miss.join(", "))} ei ole hintaa.</p>`:rc.n?`<p class="sumc"><span>Ainekset yhteensä</span><b>${rc.miss.length?"väh. ":"noin "}${eur1(rc.sum)}</b></p>${rc.lines.some(x=>x&&x.t==="skip")?`<p class="note sn">Pienet (alle ${eur(SKIP_EUR)}) ainekset eivät ole mukana hinnassa.</p>`:""}${rc.stale?`<p class="stale sn">${ico("alert")}Osa hinnoista on yli 6 kuukautta vanhoja.</p>`:""}`:"";
   $("dbody").innerHTML=
     `<button type="button" class="dx" data-close aria-label="Sulje">${ico("x")}${ico("left")}</button><div class="dh2"><h2 class="dh" style="font-size:${dhSize(r.name)}rem">${esc(r.name)}</h2>${favBtn(r)}</div>${imgUrl(r)?`<img class="hero" alt="" src="${esc(imgUrl(r))}">`:""}${tagsHtml(r,"top")}${introHtml(r)}${verHtml(r)}`+
-    `<div class="prow" role="group" aria-label="Annosmäärä"><span class="pic" title="Annokset">${ico("users")}</span><div class="pseg">${PCH.map(n=>`<button type="button" class="pc" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${n} annosta">${n}</button>`).join("")}</div></div>`+
+    (isBatch(r)?`<div class="prow" role="group" aria-label="Erän koko"><span class="pic" title="Erä">${ico("users")}</span><div class="pseg">${[[.5,"½ erä"],[1,"1 erä"],[2,"2 erää"]].map(([k,t])=>{const n=Math.max(1,Math.round(servOf(r)*k));return`<button type="button" class="pc pcw" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${t}, ${n} kpl">${t}</button>`;}).join("")}</div></div><p class="note" style="margin:4px 2px 0">${pv} kpl</p>`:`<div class="prow" role="group" aria-label="Annosmäärä"><span class="pic" title="Annokset">${ico("users")}</span><div class="pseg">${PCH.map(n=>`<button type="button" class="pc" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${n} annosta">${n}</button>`).join("")}</div></div>`)+
     (ing.length?accHtml("ing","basket","Ainekset",ingOpen,`<ul class="il2">${ingHtml}</ul>${priceBox}`,`<small class="accn">${ing.length}</small>`):"")+
     (sl.steps.length?accHtml("steps","chef","Valmistus",stepOpen,`<ol>${sl.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${serveHtml(r)}<p class="cookrow"><button type="button" class="go" data-cook="${esc(r.id)}">${ico("play")}<span>Aloita kokkaus</span></button></p>`):"")+
     tipsHtml(r)+nutHtml(r)+(url?`<p style="margin:14px 0 0"><a class="go" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Avaa resepti: ${esc(host(url))}</a></p>`:"")+
