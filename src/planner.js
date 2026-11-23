@@ -2,7 +2,7 @@
  * Moduulissa ei ole käyttöliittymää eikä riippuvuuksia sovelluksen tilaan, joten sen voi testata erikseen.
  *
  * Tila (state.pl): { n: ruokien määrä, sv: annoksia ruokaa kohden, ba: budjetti €,
- *                    items: [{ id, v, tg: [sirut], lk }],
+ *                    items: [{ id, v, tg: [sirut], lk, t: [muunnelmat], sd: ["lisuke" tai "lisuke:versio"], px: [tuotteet], n: annokset (0 = yhteinen) }],
  *                    sn: { id: annokset } aamu- ja välipalat, bk: [id] leivonta, vo: [pois tältä kerralta] }
  * Vakio-ostokset ovat erikseen (state.vk), koska ne säilyvät listasta toiseen. */
 

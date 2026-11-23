@@ -97,8 +97,11 @@ test("valittu versio menee ostoslistalle", async () => {
 });
 
 test("kokkausnäkymä aukeaa", async () => {
+  await wait(400); /* edellisen testin suljetun dialogin historiatapahtuma ehtii käsitellä */
   await openCard("Pizza");
-  if (!(await page.$("#dlg [data-cook]"))) await click('#dlg [data-acc="steps"]');
+  await page.waitForSelector('#dlg [data-acc="steps"]');
+  if ((await page.$eval('#dlg [data-acc="steps"]', (b) => b.getAttribute("aria-expanded"))) !== "true") await click('#dlg [data-acc="steps"]');
+  await page.waitForSelector("#dlg [data-cook]", { timeout: 3000 }).catch(async (e) => { throw new Error(await page.evaluate(() => { const d = document.getElementById("dlg"); return "open=" + d.open + " " + [...d.querySelectorAll("[data-acc]")].map((b) => b.dataset.acc + ":" + b.getAttribute("aria-expanded")).join(",") + " h=" + (d.querySelector("h2") || {}).innerText; })); });
   await click("#dlg [data-cook]");
   await wait(300);
   const t = await page.evaluate(() => document.getElementById("kdlg").innerText);
@@ -180,8 +183,12 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   const n0 = await page.evaluate(() => window.__app.state.pl.items.filter((x) => x.id).length);
   ok(n0 === 4, "ehdotuksia " + n0);
   /* sirut: kasvis ja kala vaihtavat ruoan sopivaksi */
-  await click('[data-pa="tg"][data-i="0"][data-k="v"]');
-  await click('[data-pa="tg"][data-i="1"][data-k="f"]'); await wait(200);
+  await click('[data-pa="edit"][data-i="0"]'); await wait(150);
+  await click('#pkbody [data-pe="tg"][data-k="v"]'); await wait(100);
+  await click('#pkbody [data-pp-x]');
+  await click('[data-pa="edit"][data-i="1"]'); await wait(150);
+  await click('#pkbody [data-pe="tg"][data-k="f"]'); await wait(100);
+  await click('#pkbody [data-pp-x]'); await wait(150);
   const r = await page.evaluate(() => {
     const A = window.__app, it = A.state.pl.items, c = (i) => A.plCands().find((x) => x.id === it[i].id);
     return { veg: !!c(0) && c(0).veg, fish: !!c(1) && c(1).fish, uniq: new Set(it.map((x) => x.id)).size === it.length };
@@ -189,6 +196,26 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   ok(r.veg, "kasvissiru ei tuottanut kasvisruokaa");
   ok(r.fish, "kalasiru ei tuottanut kalaruokaa");
   ok(r.uniq, "sama ruoka kahdesti");
+  /* kumoa vaihto */
+  const id3 = await page.evaluate(() => window.__app.state.pl.items[3].id);
+  await click('[data-pa="swap"][data-i="3"]'); await wait(150);
+  ok(id3 !== (await page.evaluate(() => window.__app.state.pl.items[3].id)), "vaihto ei vaihtanut");
+  await click('#toast [data-pundo]'); await wait(150);
+  ok(id3 === (await page.evaluate(() => window.__app.state.pl.items[3].id)), "kumoa ei palauttanut ruokaa");
+  /* muokkausikkuna: muunnelma, lisuke ja annokset */
+  const tw = await page.evaluate(() => { const A = window.__app, it = A.state.pl.items; const i = it.findIndex((x) => (A.byId(x.id).tw || []).length); return i; });
+  ok(tw >= 0, "ei muunneltavaa ruokaa");
+  await click(`[data-pa="edit"][data-i="${tw}"]`); await wait(150);
+  await click('#pkbody [data-pe="t"]');
+  await click('#pkbody [data-pe="n"][data-k="1"]'); await wait(100);
+  const sdb = await page.$('#pkbody [data-pe="sd"][aria-pressed="false"]');
+  const sdk = sdb ? await sdb.evaluate((b) => b.dataset.k) : "";
+  if (sdb) await sdb.click();
+  await click('#pkbody [data-pp-x]'); await wait(150);
+  const e = await page.evaluate((i) => window.__app.state.pl.items[i], tw);
+  ok(e.t.length === 1 && e.n === 5, "muokkaus ei tallentunut: " + JSON.stringify(e));
+  ok(!sdk || e.sd.includes(sdk), "lisuke ei tallentunut");
+  if (tw !== 2) await click(`[data-pa="lock"][data-i="${tw}"]`);
   /* lukitus säilyy uusissa ehdotuksissa */
   await click('[data-pa="lock"][data-i="2"]');
   const id2 = await page.evaluate(() => window.__app.state.pl.items[2].id);
@@ -204,8 +231,12 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   await click('[data-pa="vkq"][data-k="maito"]'); await wait(100);
   await click('[data-pa="vkq"][data-k="kahvi"]'); await wait(100);
   await click('[data-pa="vo"][data-k="kahvi"]'); await wait(100);
-  await click('[data-pa="shop"]'); await wait(500);
-  const l = await page.evaluate(() => { const s = window.__app.state; const l = s.lists[s.lists.length - 1]; return { pl: (l.pl || []).length, x: (l.x || []).map((e) => e.k), name: l.name }; });
+  await click('[data-pa="shop"]'); await wait(300);
+  const nOff = await page.evaluate(() => document.querySelectorAll('#pkbody .ar.off').length);
+  ok(nOff > 0, "kaapin tarkistus: kaappitavaroita ei rastitettu pois");
+  await click('#pkbody [data-pc-ok]'); await wait(500);
+  const l = await page.evaluate(() => { const s = window.__app.state; const l = s.lists[s.lists.length - 1]; return { pl: (l.pl || []).length, x: (l.x || []).map((e) => e.k), name: l.name, have: (l.have || []).length, t: (l.pl || []).some((e) => e.t && e.t.length) }; });
+  ok(l.have > 0 && l.t, "kaappi tai muunnelmat puuttuvat listalta: " + JSON.stringify(l));
   ok(l.pl >= 6 && /Suunnitelma/.test(l.name), "ostoslistalle ei tullut suunnitelmaa: " + JSON.stringify(l));
   ok(l.x.includes("maito") && !l.x.includes("kahvi"), "vakiot väärin: " + l.x.join(","));
   await click(".lcard"); await wait(300);
