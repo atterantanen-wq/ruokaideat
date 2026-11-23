@@ -1020,3 +1020,11 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-cost{margin:2px 0 0;font-size:.9375rem}
 .pn-tg.pn-twh{border-style:dashed;color:var(--or-ink)}
 .pn-fit{margin-left:auto;font-size:.75rem;font-weight:600;color:var(--gr-ink);background:var(--gr-bg);border-radius:999px;padding:2px 8px}
+.pn-add{margin-top:12px;padding:14px;border:2px dashed var(--line);border-radius:18px}
+.pn-addb{font:inherit;font-weight:700;font-size:1.0625rem;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border:0;border-radius:14px;background:var(--bg);color:var(--ink);cursor:pointer}
+.pn-add .note{margin:10px 0 6px}
+.pn-sh{display:block;color:var(--gr-ink);font-size:.8125rem;margin-top:2px}
+.pn-item.pn-new{animation:pnNew 1.6s ease-out}
+@keyframes pnNew{from{background:var(--gr-bg)}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){.pn-item.pn-new{animation:none}}
+.pn-del{color:var(--err,#b3261e);margin:4px auto 0}

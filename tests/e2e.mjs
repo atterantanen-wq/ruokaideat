@@ -180,6 +180,8 @@ test("leivonnaisissa hinta ja määrä erinä", async () => {
 test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   await fresh();
   await click('.tab[data-tab="plan"]'); await wait(300);
+  ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 0, "suunnitelma ei ala tyhjänä");
+  await click('[data-pa="four"]'); await wait(300);
   const n0 = await page.evaluate(() => window.__app.state.pl.items.filter((x) => x.id).length);
   ok(n0 === 4, "ehdotuksia " + n0);
   /* sirut: kasvis ja kala vaihtavat ruoan sopivaksi */
@@ -221,8 +223,15 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   const id2 = await page.evaluate(() => window.__app.state.pl.items[2].id);
   await click('[data-pa="all"]'); await wait(200);
   ok(id2 === (await page.evaluate(() => window.__app.state.pl.items[2].id)), "lukittu ruoka vaihtui");
-  await click('[data-pa="n"][data-d="1"]'); await wait(150);
-  ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 5, "ruokien määrä ei kasvanut");
+  await click('[data-pa="add"][data-k="k"]'); await wait(150);
+  const it5 = await page.evaluate(() => { const A = window.__app, it = A.state.pl.items; return { n: it.length, light: !!(it[4] && A.plCands().find((c) => c.id === it[4].id) || {}).light }; });
+  ok(it5.n === 5 && it5.light, "kevyen ruoan lisäys ei onnistunut: " + JSON.stringify(it5));
+  /* poisto ja kumoa */
+  await click('[data-pa="edit"][data-i="4"]'); await wait(150);
+  await click('#pkbody [data-pe="rm"]'); await wait(150);
+  ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 4, "poisto ei onnistunut");
+  await click('#toast [data-pundo]'); await wait(150);
+  ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 5, "poiston kumoaminen ei onnistunut");
   /* lisäostokset */
   await click('[data-pa="xo"][data-k="sn"]'); await wait(100);
   const sid = await page.$eval('[data-pa="sn"][data-d="1"]', (b) => b.dataset.id);
