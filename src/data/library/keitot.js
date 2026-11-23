@@ -87,7 +87,7 @@ export default [
     src: [["Martat", "https://www.martat.fi/reseptit/fleksaajan-kanakeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kanakeitto/7HQbUKuuppdERs9bFHsY8u"], ["Valio", "https://www.valio.fi/reseptit/kanakeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/84878/Kanakeitto/"]],
   },
   {
-    n: "Hernekeitto", m: "p", t: "ke", min: 180, w: 20, sv: 8, pop: true,
+    n: "Hernekeitto", m: "p", t: "ke", min: 780, w: 20, sv: 8, pop: true,
     d: "Torstain perinneruoka kuivatuista herneistä ja savulihasta. Herneet liotetaan edellisenä iltana, loput hoituu hiljaa porisemalla.",
     ing: ["kuivatut herneet 500 g", "vesi 2.5 l", "savukinkku 500 g", "sipuli 2 kpl", "liemikuutio 1 kpl", "meirami 1 tl", "suola 1 tl", "mustapippuri 0.5 tl"],
     steps: [

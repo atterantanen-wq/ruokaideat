@@ -90,7 +90,11 @@ Muuten ohje neuvoo käyttämään ainesta, jota ei enää ole.
 ## Annokset, ajat ja suosio
 
 - `sv` on annosmäärä. **Leivonnaisissa** (`t: "le"`) se on kappaleita tai paloja. Niiden hinta
-  näytetään koko erälle, ja määrä valitaan ½, 1 tai 2 eränä.
+  näytetään koko erälle, ja määrä valitaan ½, 1 tai 2 eränä. Saman voi ottaa käyttöön muissakin
+  erissä tehtävissä resepteissä kentällä `batch: true` (esim. sima). Kenttä `yu` kertoo yksikön,
+  esim. `yu: "lasia"` (oletus kpl).
+- `min` sisältää myös liotukset, käymisen ja tekeytymisen. Yli vuorokauden odotus näkyy kortissa
+  vuorokausina, esim. sima "30 min + 4 vrk".
 - `min` on kokonaisaika ja `w` työaika minuutteina. Jos taikina tai ruoka lepää yön yli, kirjoita
   vaiheeseen sanat "yön yli". Silloin kortissa lukee esimerkiksi "1 h + yön yli".
 - `pop: true` (Suosittu-merkintä) annetaan, kun resepti on lähdesivustoilla erityisen suosittu,

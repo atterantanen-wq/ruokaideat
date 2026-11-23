@@ -565,7 +565,7 @@ const servOf=r=>state.serv[r.id]||defServ(r.id);
 const PCH=[2,4,6,8,10];
 const nearP=n=>n<=2?2:n>=10?10:(n%2?n+1:n);
 /* leivonnaisissa (annos = pala tai keksi) määrä valitaan erinä, muissa annoksina 2–10 */
-const isBatch=r=>!!r&&r.t==="le";
+const isBatch=r=>!!r&&(r.t==="le"||!!r.batch);
 const baseP=r=>isBatch(r)?servOf(r):nearP(servOf(r));
 const pvOf=r=>state.pv[r.id]||baseP(r);
 function setPv(id,n){const r=byId(id),b=r?baseP(r):nearP(defServ(id));if(n===b)delete state.pv[id];else state.pv[id]=n;}
@@ -707,7 +707,7 @@ function cleanState0(x){
   /* leivonnaisissa määrä on erä (½, 1 tai 2 erää kappaleina), muissa annosmäärä 2–10 */
   const recOf=k=>R.find(z=>z.id===k)||o.custom.find(z=>z.id===k);
   if(x.pv&&typeof x.pv==="object")for(const k of Object.keys(x.pv)){const n=parseInt(x.pv[k]);if(!ids.has(k))continue;const r=recOf(k);
-    if(r&&r.t==="le"){const sv=+((x.serv&&x.serv[k])||r.sv)||4;if([.5,2].some(m=>Math.max(1,Math.round(sv*m))===n))o.pv[k]=n;}
+    if(r&&(r.t==="le"||r.batch)){const sv=+((x.serv&&x.serv[k])||r.sv)||4;if([.5,2].some(m=>Math.max(1,Math.round(sv*m))===n))o.pv[k]=n;}
     else if(PCH.includes(n))o.pv[k]=n;}
   if(x.tv&&typeof x.tv==="object")for(const k of Object.keys(x.tv).slice(0,600)){
     const v=x.tv[k],r0=R.find(r=>r.id===k);if(!r0||!v||typeof v!=="object")continue;
@@ -2660,7 +2660,7 @@ function renderDlg(){
   const priceBox=rc.big?`<p class="note sumn">Hintaa ei voi arvioida: ainekselle ${esc(rc.miss.join(", "))} ei ole hintaa.</p>`:rc.n?`<p class="sumc"><span>Ainekset yhteensä</span><b>${rc.miss.length?"väh. ":"noin "}${eur1(rc.sum)}</b></p>${rc.lines.some(x=>x&&x.t==="skip")?`<p class="note sn">Pienet (alle ${eur(SKIP_EUR)}) ainekset eivät ole mukana hinnassa.</p>`:""}${rc.stale?`<p class="stale sn">${ico("alert")}Osa hinnoista on yli 6 kuukautta vanhoja.</p>`:""}`:"";
   $("dbody").innerHTML=
     `<button type="button" class="dx" data-close aria-label="Sulje">${ico("x")}${ico("left")}</button><div class="dh2"><h2 class="dh" style="font-size:${dhSize(r.name)}rem">${esc(r.name)}</h2>${favBtn(r)}</div>${imgUrl(r)?`<img class="hero" alt="" src="${esc(imgUrl(r))}">`:""}${tagsHtml(r,"top")}${introHtml(r)}${verHtml(r)}`+
-    (isBatch(r)?`<div class="prow" role="group" aria-label="Erän koko"><span class="pic" title="Erä">${ico("users")}</span><div class="pseg">${[[.5,"½ erä"],[1,"1 erä"],[2,"2 erää"]].map(([k,t])=>{const n=Math.max(1,Math.round(servOf(r)*k));return`<button type="button" class="pc pcw" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${t}, ${n} kpl">${t}</button>`;}).join("")}</div></div><p class="note" style="margin:4px 2px 0">${pv} kpl</p>`:`<div class="prow" role="group" aria-label="Annosmäärä"><span class="pic" title="Annokset">${ico("users")}</span><div class="pseg">${PCH.map(n=>`<button type="button" class="pc" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${n} annosta">${n}</button>`).join("")}</div></div>`)+
+    (isBatch(r)?`<div class="prow" role="group" aria-label="Erän koko"><span class="pic" title="Erä">${ico("users")}</span><div class="pseg">${[[.5,"½ erä"],[1,"1 erä"],[2,"2 erää"]].map(([k,t])=>{const n=Math.max(1,Math.round(servOf(r)*k));return`<button type="button" class="pc pcw" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${t}, ${n} kpl">${t}</button>`;}).join("")}</div></div><p class="note" style="margin:4px 2px 0">${pv} ${esc(r.yu||"kpl")}</p>`:`<div class="prow" role="group" aria-label="Annosmäärä"><span class="pic" title="Annokset">${ico("users")}</span><div class="pseg">${PCH.map(n=>`<button type="button" class="pc" data-pv="${n}" aria-pressed="${n===pv}" aria-label="${n} annosta">${n}</button>`).join("")}</div></div>`)+
     (ing.length?accHtml("ing","basket","Ainekset",ingOpen,`<ul class="il2">${ingHtml}</ul>${priceBox}`,`<small class="accn">${ing.length}</small>`):"")+
     (sl.steps.length?accHtml("steps","chef","Valmistus",stepOpen,`<ol>${sl.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${serveHtml(r)}<p class="cookrow"><button type="button" class="go" data-cook="${esc(r.id)}">${ico("play")}<span>Aloita kokkaus</span></button></p>`):"")+
     tipsHtml(r)+nutHtml(r)+(url?`<p style="margin:14px 0 0"><a class="go" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Avaa resepti: ${esc(host(url))}</a></p>`:"")+

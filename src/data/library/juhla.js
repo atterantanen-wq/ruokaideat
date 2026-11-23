@@ -77,7 +77,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/lohikiusaus/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-lohikiusaus/1ufgALpr0bvNaIJIUPDMOI"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/289629/Lohikiusaus/"]],
   },
   {
-    n: "Sima", m: "v", t: "vp", min: 30, w: 30, sv: 16, fe: "va",
+    n: "Sima", m: "v", t: "vp", min: 5790, w: 30, sv: 16, batch: true, yu: "lasia", fe: "va",
     d: "Vapun kotitekoinen sima sitruunasta, kahdesta sokerista ja hiivanmurusesta. Valmistuu muutamassa päivässä.",
     ing: ["vesi 4 l", "sokeri 2.5 dl", "fariinisokeri 3 dl", "sitruuna 2 kpl", "hiiva 1 g", "rusinat 1 rkl", "sokeri 2 rkl"],
     steps: [

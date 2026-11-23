@@ -22,6 +22,7 @@
  *   src    lähteet [[nimi, url], ...]
  *   pop    suosittu (näkyy "Suosittu"-merkintänä)
  *   aka    muut nimet, joilla resepti löytyy haulla (esim. vanha nimi)
+ *   batch  erä: hinta koko erälle ja määrä erinä (leivonnaisissa aina); yu = kappaleiden yksikkö ("lasia", oletus "kpl")
  *   wd, fe, jf, kq, mo  kuten ennenkin (maailmalta, juhlapyhä, juhlaruoka, airfryer/grilli, pääraaka-aine käsin)
  */
 
@@ -81,6 +82,8 @@ export function fromLib(e) {
     src: e.src || [],
     vh: e.vh || "",
     aka: e.aka || [],
+    batch: !!e.batch || e.t === "le",
+    yu: e.yu || "",
   };
 }
 
