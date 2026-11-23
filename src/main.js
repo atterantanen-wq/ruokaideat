@@ -3825,9 +3825,12 @@ const plN=it=>it.n>0?it.n:state.pl.sv;
 function plItemCost(it){
   const r=byId(it.id);if(!r)return 0;const n=plN(it);
   let c=plCostPer(r,it.v,it.t||[])*n;
-  for(const s of it.sd||[]){const{id,v}=sdParse(s),x=byId(id);if(x)c+=plCostPer(x,v,[])*n;}
+  for(const s of it.sd||[])c+=sdCost(s,n);
   return c;
 }
+/* lisukkeen hinta annoksille n */
+function sdCost(s,n){const{id,v}=sdParse(s),x=byId(id);return x?plCostPer(x,v,[])*n:0;}
+const sdPrice=(s,n)=>{const c=sdCost(s,n);return c>0?eur1(c):"";};
 function plTotals(){
   const pl=state.pl;let food=0,extra=0;
   for(const it of pl.items)food+=plItemCost(it);
@@ -3840,10 +3843,10 @@ function rowChips(it,i){
   const r=byId(it.id);if(!r)return"";
   const tg=it.tg.length?it.tg.map(t=>PL.TAG_N[t]).join(", "):"Mikä tahansa";
   const out=[`<button type="button" class="pn-tg pn-tsum" data-pa="edit" data-i="${i}" aria-label="Muokkaa ruokaa ${i+1}: ${esc(tg)}">${esc(tg)} ▾</button>`];
-  for(const s of it.sd||[])out.push(`<button type="button" class="pn-tg on" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="true">${ico("check")}${esc(sdName(s))}</button>`);
+  for(const s of it.sd||[])out.push(`<button type="button" class="pn-tg on" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="true">${ico("check")}${esc(sdName(s))}<span class="pn-pc">${sdPrice(s,plN(it))}</span></button>`);
   for(const k of it.px||[])out.push(`<button type="button" class="pn-tg on" data-pa="px" data-i="${i}" data-k="${esc(k)}" aria-pressed="true">${ico("check")}${esc(capF(k))}</button>`);
   for(const t of it.t||[]){const m=(r.tw||[]).find(x=>x.id===t);if(m)out.push(`<button type="button" class="pn-tg tw" data-pa="edit" data-i="${i}">${esc(m.n)}</button>`);}
-  if(!(it.sd||[]).length){const g=sideSug(r);const x=g&&[...g.out.c,...g.out.v].find(y=>y.t==="r");if(x){const s=x.id+(x.ver?":"+x.ver:"");out.push(`<button type="button" class="pn-tg" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="false">${ico("plus")}${esc(sdName(s))}</button>`);}}
+  if(!(it.sd||[]).length){const g=sideSug(r);const x=g&&[...g.out.c,...g.out.v].find(y=>y.t==="r");if(x){const s=x.id+(x.ver?":"+x.ver:"");out.push(`<button type="button" class="pn-tg" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="false">${ico("plus")}${esc(sdName(s))}<span class="pn-pc">${sdPrice(s,plN(it))}</span></button>`);}}
   return`<div class="pn-tags">${out.join("")}</div>`;
 }
 function renderPlan(){
@@ -3911,7 +3914,7 @@ function renderEditPl(){
   if(!planEdit)return;
   const pl=state.pl,i=planEdit.i,it=pl.items[i];if(!it){$("pkdlg").close();return;}
   const r=byId(it.id);
-  const chip=(a,k,on,txt,extra="")=>`<button type="button" class="chip" data-pe="${a}" data-k="${esc(k)}" aria-pressed="${on}"${extra}>${on?ico("check"):""}${esc(txt)}</button>`;
+  const chip=(a,k,on,txt,extra="",pr="")=>`<button type="button" class="chip" data-pe="${a}" data-k="${esc(k)}" aria-pressed="${on}"${extra}>${on?ico("check"):""}${esc(txt)}${pr?`<span class="pn-pc">${pr}</span>`:""}</button>`;
   let body=`<h3 class="pn-h">Millainen ruoka</h3><div class="chips">${PL.TAGS.map(([k,n])=>chip("tg",k,it.tg.includes(k),n)).join("")}</div>`;
   if(r){
     if((r.vs||[]).length)body+=`<h3 class="pn-h">Versio</h3><div class="chips">${r.vs.map((v,j)=>chip("v",v.id,(it.v||r.vs[0].id)===v.id,v.n)).join("")}</div>`;
@@ -3924,9 +3927,9 @@ function renderEditPl(){
     for(const x of g?[...g.out.c,...g.out.v]:[])if(x.t==="r")put(x.id+(x.ver?":"+x.ver:""));
     for(const x of all().filter(y=>y.t==="li"))put(x.id);
     const top=planEdit.allSd?sides:sides.slice(0,6);
-    body+=`<h3 class="pn-h">Lisukkeet</h3><div class="chips">${top.map(s=>chip("sd",s,(it.sd||[]).includes(s),sdName(s))).join("")}${sides.length>6?`<button type="button" class="chip sdm" data-pe="allsd" data-k="1">${planEdit.allSd?"Vähemmän":"Muut lisukkeet"}</button>`:""}</div>`;
+    body+=`<h3 class="pn-h">Lisukkeet</h3><div class="chips">${top.map(s=>chip("sd",s,(it.sd||[]).includes(s),sdName(s),"",sdPrice(s,plN(it)))).join("")}${sides.length>6?`<button type="button" class="chip sdm" data-pe="allsd" data-k="1">${planEdit.allSd?"Vähemmän":"Muut lisukkeet"}</button>`:""}</div>`;
     for(const s of it.sd||[]){const{id,v}=sdParse(s),x=byId(id);if(!x||(x.vs||[]).length<2)continue;
-      body+=`<p class="note" style="margin:10px 0 2px">${esc(x.name)}</p><div class="chips">${x.vs.map((w,j)=>chip("sdv",id+":"+w.id,(v||x.vs[0].id)===w.id,w.n)).join("")}</div>`;}
+      body+=`<p class="note" style="margin:10px 0 2px">${esc(x.name)}</p><div class="chips">${x.vs.map((w,j)=>chip("sdv",id+":"+w.id,(v||x.vs[0].id)===w.id,w.n,"",sdPrice(id+":"+w.id,plN(it)))).join("")}</div>`;}
     const prods=g?[...g.out.c,...g.out.v,...g.out.o].filter(x=>x.t==="p"):[];
     const pk=[...new Set([...prods.map(x=>x.id),...(it.px||[])])].slice(0,8);
     if(pk.length)body+=`<h3 class="pn-h">Lisäksi kaupasta</h3><div class="chips">${pk.map(k=>chip("px",k,(it.px||[]).includes(k),capF(k))).join("")}</div>`;
@@ -3934,7 +3937,9 @@ function renderEditPl(){
   }
   const ver=r&&it.v&&(r.vs||[]).find(v=>v.id===it.v);
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${r?esc(r.name)+(ver?" – "+esc(ver.n):""):"Ruoka "+(i+1)}</h2>
-    ${r?`<p class="note">${fmtN(plN(it))} annosta · ${eur1(plItemCost(it))} · ${fmtDur(workOf(r)||r.min||0)} · <button type="button" class="lk" data-pe="open" data-k="${esc(r.id)}">Avaa resepti</button></p>`:""}
+    ${r?(()=>{const sc=(it.sd||[]).reduce((a,s)=>a+sdCost(s,plN(it)),0),tot=plItemCost(it);
+      return`<p class="note">${fmtN(plN(it))} annosta · ${fmtDur(workOf(r)||r.min||0)} · <button type="button" class="lk" data-pe="open" data-k="${esc(r.id)}">Avaa resepti</button></p>
+      <p class="pn-cost">${sc>0?`Ruoka ${eur1(tot-sc)} + lisukkeet ${eur1(sc)} = <b>${eur1(tot)}</b>`:`Hinta <b>${eur1(tot)}</b>`}</p>`;})():""}
     <div class="actions" style="margin:6px 0 0"><button type="button" class="cartbtn" data-pe="swap" data-k="1"${it.lk?" disabled":""}>${ico("shuffle")}<span>Vaihda ruoka</span></button><button type="button" class="cartbtn" data-pe="pick" data-k="1">${ico("search")}<span>Valitse itse</span></button></div>
     ${body}<div class="actions"><button type="button" class="go" data-pp-x="1" style="width:100%">Valmis</button></div>`;
 }

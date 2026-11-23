@@ -1015,3 +1015,6 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-twb b .ico{width:16px;height:16px}
 .pn-twb small{display:block;color:var(--muted);font-size:.8125rem;margin-top:2px}
 .pn-twb[aria-pressed="true"]{border-color:var(--ink);background:var(--bg)}
+.pn-pc{margin-left:6px;font-weight:500;opacity:.8;font-size:.92em}
+.pn-pc:empty{display:none}
+.pn-cost{margin:2px 0 0;font-size:.9375rem}
