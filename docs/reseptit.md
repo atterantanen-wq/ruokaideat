@@ -122,7 +122,7 @@ Muuten ohje neuvoo käyttämään ainesta, jota ei enää ole.
 
 ## Ennen julkaisua
 
-1. `npm run check`
+1. `npm run check` ja `npm test` (selaintestit: kaikki reseptit, versiot, ostoslista, haku, omat ruoat)
 2. `npm run dev` ja selaimessa: avaa muutettu resepti, kokeile jokainen versio ja muunnelma, tarkista
    että ainekset, vaiheet, hinta ja ravintoarvot muuttuvat, ja lisää resepti ostoslistalle.
 3. Push `main`-haaraan julkaisee sovelluksen GitHub Pagesiin.

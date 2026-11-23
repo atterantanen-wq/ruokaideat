@@ -39,6 +39,7 @@ src/
     logos.js               kauppaketjujen logot
   assets/                  yläpalkin kuvat ja logot
 scripts/check-library.mjs  reseptikirjaston tarkistus (npm run check)
+tests/e2e.mjs              selaintestit (npm test)
 docs/reseptit.md           ohje reseptien lisäämiseen ja muuttamiseen
 ```
 
@@ -49,6 +50,14 @@ Kirjaston tarkistus:
 ```bash
 npm run check
 ```
+
+Selaintestit (käynnistävät kehityspalvelimen ja käyvät läpi kaikki reseptit, ostoslistan, haun ja omat ruoat):
+
+```bash
+npm test
+```
+
+Testit ajetaan GitHubissa jokaisen pushin yhteydessä, ja `main`-haarassa ne ajetaan ennen julkaisua.
 
 ## Tallennus
 
