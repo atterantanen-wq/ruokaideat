@@ -145,7 +145,7 @@ kikherneet|kikherne,kikherneitä|4||60,10,,,250,|133,8.4,2,0.3,17.6,0||11089|kik
 kuivatut herneet|keitto herneet,herneet kuivattu,hernekeittoherneet|4||85,,,,,|302,17.9,1,0.1,48.5,0||371|herne, kuivattu
 kidneypavut|kidneypapu,kidneyherneet,pavut säilyke,valkoiset pavut|4||85,,,,250,|116,8.6,0.5,0.1,15.3,0.6||31214|papu, kidneypapu, keitetty
 mustat pavut|musta papu,mustapapu|4||85,,,,,|116,8.6,0.5,0.1,15.3,0.6||31214|papu, kidneypapu, keitetty
-pähkinät|manteli,mantelirouhe,cashew,cashewpähkinät,pähkinä,saksanpähkinä|3||60,6,,,,|661,14.7,65.2,6.1,3.2,0||376|pähkinä, saksanpähkinä
+pähkinät|manteli,mantelit,mantelilastut,mantelirouhe,cashew,cashewpähkinät,pähkinä,saksanpähkinä|3||60,6,,,,|661,14.7,65.2,6.1,3.2,0||376|pähkinä, saksanpähkinä
 auringonkukansiemenet|auringonkukansiemen,seesaminsiemen,seesami,kurpitsansiemen,siemenet,seesaminsiemenet,kurpitsansiemenet|3||100,15,,,,|594,23,49.5,5.2,12.6,0||11212|auringonkukansiemen
 rusinat|rusina,kuivatut hedelmät,taatelit|3||60,9,3,0.4,,|292,2.8,0.5,0,60.1,0||428|rusina
 tofu|tofua,savutofu|14||100,14,4,,,|82,8.1,4.8,0.7,1.6,0||33501|tofu, soijavalmiste, soijapapujuusto
@@ -298,6 +298,9 @@ savoiardi|savoiardikeksit,naisensormet,ladyfingers|8||,,,10,,|390,8,4,1.3,80,0.4
 luumumarmeladi|luumusose,aprikoosimarmeladi,marmeladi|5||120,18,6,,300,|220,0.5,0.1,0,55,0||||
 omenahillo|omenasose,omena-kanelihillo|5||115,17,6,,300,|180,0.3,0.1,0,44,0||||
 mansikkahillo|mansikkahilloa,vadelmahillo,marjahillo|5||115,17,6,,300,|160,0.4,0.1,0,39,0||||
+chia-siemenet|chiansiemenet,chiasiemenet,chia|3||65,10,3.5,,,|486,17,31,3.3,8,0||||
+kuivatut karpalot|kuivattu karpalo,karpalot kuivattu,kuivatut karpalot makeutettu|3||50,8,,,,|325,0.1,1.4,0.1,77,0||||
+mysli|myslit,muromysli,mysliä|2||40,6,,,,|370,9,7,1.5,62,0.1||||
 bbq-kastike|barbeque-kastike,grillikastike|7||110,17,5.5,,,|170,1,0.5,0.1,40,2.2||||
 kaurakerma|kaurakermaa,kaurakasvirasvasekoite|13||100,15,5,,,|150,1,14,1.2,6,0.1||||
 grahamjauho|grahamjauhoja,täysjyvävehnäjauho|3||60,9,3,,,|340,12,2.3,0.4,64,0||||

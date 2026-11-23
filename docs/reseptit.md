@@ -13,6 +13,8 @@ ravintoarvot, haku ja valmistusohjeet pysyvät oikein. Kenttien tarkka kuvaus on
 | `src/data/library/juhla.js` | juhla- ja sesonkiruoat |
 | `src/data/library/kasvis.js` | kasvisruoat |
 | `src/data/library/aamu.js` | aamu-, väli- ja iltapalat |
+| `src/data/library/valipalat.js` | nopeat aamu- ja välipalat sekä eväät |
+| `src/data/library/perus.js` | perusateriat ilman reseptiä (jogurtti ja mysli, eväsleipä…) |
 | `src/data/library/leivonta.js` | leivonnaiset ja jälkiruoat |
 | `src/data/library/lisukkeet.js` | lisukkeet, joita ruoat ehdottavat (`t: "li"`) |
 | `src/data/ingredients.js` | ainesrekisteri: osasto, yksikkömuunnokset ja ravintoarvot (Fineli) |
@@ -99,6 +101,15 @@ Muuten ohje neuvoo käyttämään ainesta, jota ei enää ole.
   vaiheeseen sanat "yön yli". Silloin kortissa lukee esimerkiksi "1 h + yön yli".
 - `pop: true` (Suosittu-merkintä) annetaan, kun resepti on lähdesivustoilla erityisen suosittu,
   karkeasti yli 100 arviota tai tykkäystä tai sivuston suosituimpien joukossa.
+
+## Perusateriat ja aterian kohdat
+
+- **Perusateria** (`perus: true`) on arjen yhdistelmä ilman varsinaista reseptiä, esim. *Jogurtti ja mysli*.
+  Sille riittävät ainekset ja yksi tai kaksi vaihetta. Lähdettä ei tarvita, ja kortissa näkyy merkintä
+  "Perusateria".
+- `ml` kertoo, mille aterioille ruoka sopii: `a` aamupala, `l` lounas, `p` päivällinen, `v` välipala,
+  `i` iltapala, `e` eväs. Viikkosuunnitelma käyttää tätä ehdotuksiin. Jos kenttä puuttuu, kohta
+  päätellään ruokalajista.
 
 ## Lisukkeet
 

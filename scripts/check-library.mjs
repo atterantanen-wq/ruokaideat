@@ -22,7 +22,8 @@ for (const [i, e] of LIB.entries()) {
   const r = R[i], n = r.name;
   if (!e.d) warn(n, "kuvaus (d) puuttuu");
   if (!r.steps.length) err(n, "työvaiheet puuttuvat");
-  if (!r.src.length && r.t !== "li") warn(n, "lähteet (src) puuttuvat");
+  if (!r.src.length && r.t !== "li" && !r.perus) warn(n, "lähteet (src) puuttuvat");
+  for (const x of r.ml) if (!"alpvie".includes(x) || x.length !== 1) err(n, `tuntematon aterian kohta ml: ${x}`);
   for (const l of r.ing) if (!LINE.test(l)) warn(n, `ainesrivi ei ole muotoa "nimi määrä yksikkö": ${l}`);
   for (const a of r.aka) if (names.has(a.toLowerCase()) && names.get(a.toLowerCase()) !== r) warn(n, `muu nimi "${a}" on toisen reseptin nimi`);
 

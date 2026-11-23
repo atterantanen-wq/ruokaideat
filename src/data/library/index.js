@@ -7,5 +7,7 @@ import juhla from "./juhla.js";
 import kasvis from "./kasvis.js";
 import aamu from "./aamu.js";
 import leivonta from "./leivonta.js";
+import valipalat from "./valipalat.js";
+import perus from "./perus.js";
 
-export const LIB = [...arki, ...keitot, ...juhla, ...kasvis, ...aamu, ...leivonta, ...lisukkeet];
+export const LIB = [...arki, ...keitot, ...juhla, ...kasvis, ...aamu, ...valipalat, ...perus, ...leivonta, ...lisukkeet];

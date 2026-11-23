@@ -1205,7 +1205,7 @@ function matches(r){
 }
 function tagsHtml(r,part){
   if(part==="top")return`<div class="meta top"><div class="mg">${priceTag(r)}${r.min>0?`<b class="mn2">${ico("clock")}${timeTxt(r)}</b>`:""}${workOf(r)>0&&r.min>workOf(r)&&!/yön yli/.test(timeTxt(r))?`<span class="wk">työtä ${fmtDur(workOf(r))}</span>`:""}</div>${state.views[r.id]?`<span class="vw" title="Katsottu ${state.views[r.id]} ${state.views[r.id]===1?"kerran":"kertaa"}" aria-label="Katsottu ${state.views[r.id]} ${state.views[r.id]===1?"kerran":"kertaa"}">${ico("eye")}${state.views[r.id]}</span>`:""}</div>`;
-  if(part==="tags")return`<div class="meta tg">${T[r.t]?`<span class="t">${T[r.t]}</span>`:""}${M[mainOf(r)]?`<span class="t">${M[mainOf(r)]}</span>`:""}${WLD[r.wd]?`<span class="t">${WLD[r.wd]}</span>`:""}${HOL[r.fe]?`<span class="t">${HOL[r.fe]}</span>`:""}${r.jf?`<span class="t">${A.j}</span>`:""}${tagsOf(r).map(x=>`<span class="t">${S[x]}</span>`).join("")}${isPop(r)?`<span class="t">Suosittu</span>`:""}${r.custom?`<span class="t">Oma</span>`:""}</div>`;
+  if(part==="tags")return`<div class="meta tg">${T[r.t]?`<span class="t">${T[r.t]}</span>`:""}${M[mainOf(r)]?`<span class="t">${M[mainOf(r)]}</span>`:""}${WLD[r.wd]?`<span class="t">${WLD[r.wd]}</span>`:""}${HOL[r.fe]?`<span class="t">${HOL[r.fe]}</span>`:""}${r.jf?`<span class="t">${A.j}</span>`:""}${tagsOf(r).map(x=>`<span class="t">${S[x]}</span>`).join("")}${isPop(r)?`<span class="t">Suosittu</span>`:""}${r.perus?`<span class="t">Perusateria</span>`:""}${r.custom?`<span class="t">Oma</span>`:""}</div>`;
   return`<div class="meta">${priceTag(r)}${r.min>0?`<b class="mn2">${ico("clock")}${timeTxt(r)}</b>`:""}${T[r.t]?`<span class="t">${T[r.t]}</span>`:""}${M[mainOf(r)]?`<span class="t">${M[mainOf(r)]}</span>`:""}${tagsOf(r).map(x=>`<span class="t">${S[x]}</span>`).join("")}${isPop(r)?`<span class="t">Suosittu</span>`:""}${r.custom?`<span class="t">Oma</span>`:""}</div>`;
 }
 const cartIc=r=>{const on=inCart(r.id);return`<button type="button" class="cartbtn ic" data-cart="${esc(r.id)}" aria-pressed="${on}" aria-label="${on?"Poista ostoslistalta":"Lisää ostoslistalle"}: ${esc(r.name)}">${ico(on?"check":"tlist")}</button>`;};
@@ -1575,6 +1575,9 @@ PA("savoiardi",13,"kg","Savoiardi-keksit");
 PA("luumumarmeladi",8,"kg","Luumumarmeladi");
 PA("omenahillo",6,"kg","Omenahillo");
 PA("mansikkahillo",7,"kg","Mansikkahillo");
+PA("chia-siemenet",12,"kg","Chiansiemenet");
+PA("kuivatut karpalot",11,"kg","Kuivatut karpalot");
+PA("mysli",5,"kg","Mysli");
 PA("bbq-kastike",7,"kg","BBQ-kastike");
 PA("kaurakerma",4.6,"l","Kaurakerma ruoanvalmistukseen");
 PA("grahamjauho",1.7,"kg","Grahamjauho");
@@ -1587,6 +1590,50 @@ P3("leivinjauhe",13,"kg","Leivinjauhe 100 g (arvio)",{},"Arvio, perustuu tyypill
 P3("garam masala",37.5,"kg","Meira garam masala 28 g",{},"Vain yksi tuote.","oljyt-maustaminen-ja-kastikkeet/mausteet");
 P3("ansjovis",25,"kg","Ansjovis (arvio)",{},"Arvio, tuotetta ei löytynyt verkkokaupasta.","hillot-ja-sailykkeet/kala-ja-ayriaissailykkeet");
 P3("poronliha",36,"kg","Poronkäristys (arvio)",{},"Arvio, tuotetta ei löytynyt verkkokaupasta.","liha-ja-kasviproteiinit");
+
+/* arvioiden tarkistus: S-kaupat.fi 23.11.2026 (oletusmyymälä), mediaani tuoteryhmän vastaavista tuotteista */
+const PV=(k,p,src,w)=>{const e=PR[k];if(!e)return;const o={};for(const x of Object.keys(e))if(!["p","per","src","w","d"].includes(x))o[x]=e[x];P(k,p,e.per,src,o,w||"",undefined,"2026-11-23");};
+PV("kuohukerma",6.75,"Kuohukerma 35 % (2 tuotteen keskiarvo, 6,25–7,25 €/l)","");
+PV("rucola",37.8,"Rucola, 50 g rasia (1 tuote, 37,8 €/kg)","Vain yksi tuote.");
+PV("papu",5.76,"Pavut suolaliemessä (kidney, mustat, jättipavut), valutettu paino (mediaani 30 tuotteesta, 3,17–12,68 €/kg)","");
+PV("kokonainen kana",6.25,"Kokonainen broileri, maustamaton (1 tuote, 6,25 €/kg)","Vain yksi tuote.");
+PV("kalkkunafilee",20.69,"Kalkkunan filee ja fileerulla (mediaani 6 tuotteesta, 17,99–23,37 €/kg)","");
+PV("patonki",9.39,"Patonki (mediaani 5 tuotteesta, 7,92–10,45 €/kg)","");
+PV("pitaleipä",7.16,"Pitaleipä (mediaani 5 tuotteesta, 6,94–12,5 €/kg)","");
+PV("ohrasuurimot",3.67,"Ohrasuurimot ja -ryynit (mediaani 4 tuotteesta, 3,3–5,1 €/kg)","");
+PV("punaviini",9.99,"Punaviini (tetra ja hanapakkaus) (mediaani 27 tuotteesta, 7,69–15,19 €/l)","");
+PV("olut",3.2,"Vaalea lager-olut, edullinen","Ruoanlaittoon riittää edullinen lager; kalliimmat erikoisoluet jätetty pois.");
+PV("siika",16.9,"Siikafilee, pakaste (1 tuote, 16,9 €/kg)","Vain yksi tuote.");
+PV("ricotta",11.96,"Ricotta (1 tuote, 11,96 €/kg)","Vain yksi tuote.");
+PV("ohrajauho",1.67,"Ohrajauho (2 tuotteen keskiarvo, 1,55–1,79 €/kg)","");
+PV("vihreät linssit",7.29,"Vihreät linssit, kuivat (mediaani 8 tuotteesta, 3,39–12,12 €/kg)","");
+PV("sitruunamehu",5.0,"Sitruunamehu, pullo","");
+PV("valkopippuri",78.33,"Valkopippuri (mediaani 3 tuotteesta, 59,68–88,16 €/kg)","");
+PV("leivinjauhe",10.72,"Leivinjauhe (mediaani 6 tuotteesta, 5,29–15,8 €/kg)","");
+PV("peruna-sipulisekoitus",2.18,"Peruna-sipulisekoitus, pakaste (mediaani 9 tuotteesta, 1,49–4,7 €/kg)","");
+PV("lehtitaikina",7.48,"Lehtitaikina, pakaste (mediaani 9 tuotteesta, 3,18–19,96 €/kg)","");
+PV("porsaan kylki",9.92,"Porsaan kylkiviipaleet (2 tuotteen keskiarvo, 9,59–10,25 €/kg)","");
+PV("joulukinkku",8.64,"Joulukinkku, pakaste (mediaani 10 tuotteesta, 6,29–31,95 €/kg)","");
+PV("mascarpone",13.16,"Mascarpone (mediaani 3 tuotteesta, 8,2–14,9 €/kg)","");
+PV("savoiardi",16.9,"Savoiardi-keksit (mediaani 4 tuotteesta, 15,7–24,85 €/kg)","");
+PV("luumumarmeladi",5.52,"Luumumarmeladi (mediaani 3 tuotteesta, 5–5,96 €/kg)","");
+PV("omenahillo",7.13,"Omenahillot ja -marmeladit (mediaani 17 tuotteesta, 2,07–39,24 €/kg)","");
+PV("mansikkahillo",10.19,"Mansikkahillot ja -valmisteet (mediaani 28 tuotteesta, 2,99–25,3 €/kg)","");
+PV("bbq-kastike",9.71,"BBQ-kastike (mediaani 31 tuotteesta, 5,85–70,47 €/kg)","");
+PV("grahamjauho",1.89,"Grahamjauho (1 tuote, 1,89 €/kg)","Vain yksi tuote.");
+PV("silli",19.56,"Marinoitu silli (mediaani 52 tuotteesta, 4,63–44,9 €/kg)","");
+PV("meloni",2.99,"Meloni (mediaani 6 tuotteesta, 2,39–3,89 €/kg)","");
+PV("etikkapunajuuri",6.02,"Säilötyt punajuuret (mediaani 13 tuotteesta, 1,95–9,46 €/kg)","");
+PV("chia-siemenet",15.95,"Chiansiemenet (mediaani 6 tuotteesta, 11,89–19,3 €/kg)","");
+PV("kuivatut karpalot",13.05,"Kuivatut karpalot (2 tuotteen keskiarvo, 8,47–17,63 €/kg)","");
+PV("mysli",9.9,"Mysli (mediaani 41 tuotteesta, 2,49–20,63 €/kg)","");
+PV("lammas",22.2,"Karitsan paisti (2 tuotetta, 20,39–23,99 €/kg)","");
+PV("kaurakerma",3.96,"Kaurakerma ruoanvalmistukseen (Oatly iMat 13 %)","Vain yksi maustamaton tuote.");
+PV("ansjovis",34.1,"Anjovisfileet (2 tuotetta, 26,38–41,85 €/kg)","");
+PV("juuriselleri",3.89,"Juuriselleri","Vain yksi tuote.");
+PV("tilli",57.7,"Tilli, ruukku tai pussi (3 tuotetta, 1,28–2,48 € / kpl, noin 30 g)","");
+PV("persilja",68.3,"Persilja, ruukku tai pussi (7 tuotetta, 1,28–2,48 € / kpl, noin 30 g)","");
+PV("minttu",90.4,"Minttu, ruukku (4 tuotetta, 1,48–2,48 € / kpl, noin 25 g)","");
 const DEPS=["Hedelmät ja vihannekset", "Leivät ja leivonnaiset", "Pasta, riisi ja viljat", "Leivonta", "Säilykkeet", "Hillot ja levitteet", "Mausteet ja liemet", "Öljyt, kastikkeet ja texmex", "Makeiset ja naposteltavat", "Juomat", "Tuore liha", "Leikkeleet ja makkarat", "Kala ja merenelävät", "Maito, munat ja rasvat", "Juustot ja tofu", "Valmisruoka", "Pakasteet", "Koti ja hygienia", "Muut"];
 const DEPMAP={"hedelmat-ja-vihannekset":0,"hedelmat-ja-vihannekset-1":0,"leivat-ja-leivonnaiset":1,"pastat-riisit-ja-nuudelit":2,"kuivatuotteet-ja-leivonta":3,"hillot-ja-sailykkeet":4,"oljyt-maustaminen-ja-kastikkeet":7,"texmex-ja-maailman-makuja":7,"karkit-suklaat-ja-keksit":8,"snacksit":8,"kahvit-teet-ja-mehut":9,"alkoholi-ja-virvoitusjuomat":9,"liha-ja-kasviproteiinit":10,"liha-ja-kasviproteiinit-1":10,"kala-ja-merenelavat":12,"maito-munat-ja-rasvat":13,"juustot-tofut-ja-kasvipohjaiset":14,"valmisruoka":15,"pakasteet":16,"kodinhoito-ja-taloustarvikkeet":17,"kosmetiikka-ja-hygienia":17,"lapset":17,"lemmikit":17,"keittio-ja-kattaus":17};
 const DEPSUB={"hillot":5,"marmeladit":5,"pahkina-ja-suklaalevitteet":5,"soseet-ja-hyytelot":5,"mausteet":6,"suolat":6,"liemivalmisteet-ja-fondit":6,"kinkut-ja-leikkeleet":11,"makkarat-nakit-ja-pekonit":11,"hiutaleet":2,"murot":2,"myslit-ja-granolat":2,"leseet-alkiot-rouheet":2};
@@ -2613,7 +2660,7 @@ function srcHtml(r,url){
   let t;
   if(r.custom)t=url?`<b>Oma lisäys</b> · ohje: <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(nm)}</a>`:`<b>Oma lisäys</b>`;
   else if(url)t=`<b>${esc(nm)}</b> · <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(h)}</a>`;
-  else t=r.t==="li"?`<b>Perusohje</b> · ei ulkoista lähdettä`:`<b>Sovelluksen oma resepti</b> · ei ulkoista lähdettä`;
+  else t=r.perus?`<b>Perusateria</b> · ei reseptiä`:r.t==="li"?`<b>Perusohje</b> · ei ulkoista lähdettä`:`<b>Sovelluksen oma resepti</b> · ei ulkoista lähdettä`;
   if(!r.custom&&state.over[r.id])t+=` · muokattu`;
   return`<p class="srcl"><span>Lähde</span><i>${t}</i></p>`;
 }
