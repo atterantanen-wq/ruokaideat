@@ -807,16 +807,22 @@ function cleanState0(x){
   if(x.xh&&typeof x.xh==="object")for(const k of Object.keys(x.xh).slice(0,200)){const n=parseInt(x.xh[k]);if(n>0&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))o.xh[k]=Math.min(n,9999);}
   /* kotitalous ja viikkosuunnitelma */
   const okIso=v=>typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v);
-  if(x.hh&&Array.isArray(x.hh.m)){const m=[];for(const y of x.hh.m.slice(0,8)){if(!y||typeof y.id!=="string"||!/^m[a-z0-9]{1,12}$/.test(y.id)||m.some(z=>z.id===y.id))continue;const w=Array.isArray(y.w)?y.w.slice(0,7).map(t=>PL.DT[t]?t:"koti"):[];while(w.length<7)w.push("koti");m.push({id:y.id,n:clip(String(y.n||""),20).trim()||"Jäsen",c:!!y.c,w});}if(m.length)o.hh={m};}
+  const num=(v,lo,hi,st=0.5)=>{v=+v;return isFinite(v)?Math.min(hi,Math.max(lo,Math.round(v/st)*st)):null;};
+  if(x.hh&&typeof x.hh==="object"){const h=x.hh,q=o.hh;
+    if(Array.isArray(h.m)){q.a=h.m.filter(m=>m&&!m.c).length||1;q.c=h.m.filter(m=>m&&m.c).length;q.ab=q.a;}
+    else{for(const[k,lo,hi,st]of [["a",0,10,1],["c",0,10,1],["lu",0,10,0.5],["ab",0,10,0.5],["vn",0,20,1]]){const v=num(h[k],lo,hi,st);if(v!=null)q[k]=v;}}
+  }
   if(x.pl&&typeof x.pl==="object"){const p=x.pl,q=o.pl;
     if(Array.isArray(p.days))q.days=[...new Set(p.days.filter(okIso))].sort().slice(0,14);
-    if(Array.isArray(p.ml)){const ml=PL.MEALS.map(m=>m[0]).filter(k=>p.ml.includes(k));if(ml.length)q.ml=ml;}
     if(["d","w","m"].includes(p.bm))q.bm=p.bm;
     {const ba=+p.ba;if(ba>0&&ba<=10000)q.ba=Math.round(ba*100)/100;}
     if([0,20,30,45,60].includes(+p.wk))q.wk=+p.wk;
     q.veg=p.veg===true;
-    if(p.ov&&typeof p.ov==="object")for(const d of Object.keys(p.ov)){if(!q.days.includes(d)||!p.ov[d]||typeof p.ov[d]!=="object")continue;const e={};for(const k of Object.keys(p.ov[d]))if(o.hh.m.some(z=>z.id===k)&&PL.DT[p.ov[d][k]])e[k]=p.ov[d][k];if(Object.keys(e).length)q.ov[d]=e;}
-    if(p.s&&typeof p.s==="object")for(const k of Object.keys(p.s)){const[d,m]=k.split("|");if(!q.days.includes(d)||!q.ml.includes(m))continue;const v=p.s[k];if(!v||typeof v!=="object")continue;if(v.lo){q.s[k]={lo:1};continue;}if(typeof v.id==="string"&&ids.has(v.id)){const e={id:v.id};if(typeof v.v==="string"&&v.v)e.v=clip(v.v,30);if(v.lk)e.lk=1;q.s[k]=e;}}
+    if(+p.mx===3)q.mx=3;
+    if(p.wb===false)q.wb=false;
+    for(const k of ["ab","vb"])if(Array.isArray(p[k]))q[k]=[...new Set(p[k].filter(i=>typeof i==="string"&&ids.has(i)))].slice(0,12);
+    if(p.ov&&typeof p.ov==="object")for(const d of Object.keys(p.ov)){const v=p.ov[d];if(!q.days.includes(d)||!v||typeof v!=="object")continue;const e={};const lu=num(v.lu,0,20);if(v.lu!=null&&lu!=null)e.lu=lu;if(v.nd)e.nd=1;if(v.nc)e.nc=1;if(Object.keys(e).length)q.ov[d]=e;}
+    if(p.s&&typeof p.s==="object")for(const k of Object.keys(p.s)){const[d,m]=k.split("|");if(!q.days.includes(d)||!["a","l","p"].includes(m))continue;const v=p.s[k];if(!v||typeof v!=="object"||typeof v.id!=="string"||!ids.has(v.id))continue;const e={id:v.id};if(typeof v.v==="string"&&v.v)e.v=clip(v.v,30);if(v.lk)e.lk=1;q.s[k]=e;}
   }
   return o;
 }
@@ -3765,11 +3771,14 @@ Object.assign(IC,{
   cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   unlock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/>',
-  shuffle:'<path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M20 20l-5-5M4 4l5 5"/>'
+  shuffle:'<path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M20 20l-5-5M4 4l5 5"/>',
+  minus:'<path d="M6 12h12"/>'
 });
 let planSet=null,planPick=null;
-const PL_MEALS=PL.MEALS.map(m=>m[0]);
 const plDate=iso=>{const d=PL.dateOf(iso);return PL.WEEKDAYS[PL.wdOf(iso)]+" "+d.getDate()+"."+(d.getMonth()+1)+".";};
+const plDay=iso=>PL.WEEKDAYS[PL.wdOf(iso)];
+const fmtN=n=>String(Math.round(n*2)/2).replace(".",",");
+const SLOT_N={a:"aamiainen",l:"lounas",p:"päivällinen"};
 /* reseptin raaka-ainerivit valitulla annosmäärällä ja versiolla */
 function ingFor(r,n,v){
   const sel=state.tv[r.id]||{};
@@ -3786,140 +3795,139 @@ function plCostPer(r,v){
   for(const line of ingFor(r,servOf(r),v)){const p=parseIng(line);if(p.v==null)continue;const x=isBatch(r)?costBake(p.key,p.fam,p.v):costOf(p.key,p.fam,p.v);if(x.t==="ok")sum+=x.c;}
   const per=sum/(servOf(r)||1);plCostMemo.set(k,per);return per;
 }
+/* ehdokkaat: p kokattava päivällinen, q nopea lounas, a viikonloppuaamiainen; lisäksi valikoimiin sopivat */
+let plCandsMemo=null;
 function plCands(){
+  if(plCandsMemo)return plCandsMemo;
   const recent=new Set(),lim=PL.addDays(todayLocal(),-14);
   for(const l of state.lists)if(l.d>=lim){l.cart.forEach(i=>recent.add(i));(l.pl||[]).forEach(e=>recent.add(e.id));}
   const out=[];
   for(const r of all()){
     if(r.t==="li"||r.t==="le"||r.t==="ja"||r.t==="al"||r.fe||isBatch(r)||!r.ing.length)continue;
-    const pool=new Set();
-    if(r.ml&&r.ml.length){for(const x of r.ml)if("alpvi".includes(x))pool.add(x);}
-    else if(MEAL_MAIN.has(r.t)){pool.add("p");if((workOf(r)||r.min)<=30||r.t==="ke"||r.t==="sa")pool.add("l");}
-    else if(r.t==="am"||r.t==="pu"){pool.add("a");pool.add("i");}
-    else if(r.t==="vp"){pool.add("v");pool.add("i");}
+    const ml=r.ml||[],work=workOf(r)||r.min||0,pool=new Set();
+    if(MEAL_MAIN.has(r.t)&&!r.perus){pool.add("p");if(work<=10)pool.add("q");}
+    if((ml.includes("l")||ml.includes("e"))&&work<=20)pool.add("q");
+    if((r.t==="am"||r.t==="pu")&&!r.perus&&work>5)pool.add("a");
+    if(ml.includes("a")||(!ml.length&&(r.t==="am"||r.t==="pu")))pool.add("ab");
+    if(ml.includes("v")||ml.includes("i")||(!ml.length&&r.t==="vp"))pool.add("vb");
     if(!pool.size)continue;
     const vegV=(r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y");
     const veg=["v","y"].includes(mainOf(r));
-    out.push({id:r.id,name:r.name,pool,main:mainOf(r),veg:veg||!!vegV,vegV:veg?"":(vegV?vegV.id:""),work:workOf(r)||r.min||0,min:r.min||0,
-      cost:plCostPer(r,""),fav:isFav(r.id),pop:isPop(r),perus:!!r.perus,jf:!!r.jf,recent:recent.has(r.id),eva:(r.ml||[]).includes("e")});
+    out.push({id:r.id,name:r.name,t:r.t,pool,main:mainOf(r),veg:veg||!!vegV,vegV:veg?"":(vegV?vegV.id:""),work,min:r.min||0,
+      cost:plCostPer(r,""),fav:isFav(r.id),pop:isPop(r),perus:!!r.perus,jf:!!r.jf,recent:recent.has(r.id),noCook:!!r.perus||work<=10});
   }
-  return out;
+  return plCandsMemo=out;
 }
-const plCtx=()=>({pl:state.pl,hh:state.hh});
-function plUsed(skip){const u=new Map();for(const[k,v]of Object.entries(state.pl.s))if(v&&v.id&&k!==skip)u.set(v.id,(u.get(v.id)||0)+1);return u;}
-function plPrevMains(iso){const o=[];for(const d of [PL.addDays(iso,-1),PL.addDays(iso,-2)]){const s=state.pl.s[d+"|p"];const r=s&&s.id&&byId(s.id);o.push(r?mainOf(r):undefined);}return o;}
-/* yhteenveto: hinta, budjetti ja työaika */
-function plSummary(){
-  const pl=state.pl,hh=state.hh;let cost=0,work=0,meals=0;
-  for(const iso of pl.days)for(const m of PL_MEALS){
-    if(!pl.ml.includes(m))continue;const s=pl.s[iso+"|"+m];if(!s||!s.id)continue;
-    const r=byId(s.id);if(!r)continue;const n=PL.portions(pl,hh,iso,m);if(n<=0)continue;
-    cost+=plCostPer(r,s.v)*n;work+=workOf(r)||r.min||0;meals++;
-  }
+/* valikoimiin sopivat: arkiaamuna ei kokata */
+const plStaples=k=>plCands().filter(c=>c.pool.has(k)&&(k!=="ab"||c.noCook));
+function plDefaults(){
+  const pl=state.pl;
+  if(!pl.ab.length){const pref=["Ruisleipä ja leikkeleet","Rahka ja marjat","Mikropuuro","Jogurtti ja mysli"];pl.ab=pref.map(n=>(plStaples("ab").find(c=>c.name===n)||{}).id).filter(Boolean);}
+  if(!pl.vb.length){const pref=["Hedelmä ja pähkinät","Näkkileipä ja raejuusto","Smoothie"];pl.vb=pref.map(n=>(plStaples("vb").find(c=>c.name===n)||{}).id).filter(Boolean);}
+}
+function plSched(){return PL.current(plCands(),state.pl,state.hh);}
+function plSummary(sch){
+  const pl=state.pl,hh=state.hh;let cost=0,work=0,cooks=0,cw=0;
+  for(const f of sch.cooks){const r=byId(f.id);if(!r)continue;cost+=plCostPer(r,f.v)*f.batch;if(f.kind==="cook"){cooks++;if(!PL.isWeekend(f.iso))cw++;work+=workOf(r)||r.min||0;}}
+  const st=PL.stapleTotals(pl,hh,sch);
+  for(const x of st.items){const r=byId(x.id);if(r)cost+=plCostPer(r,"")*x.n;}
   const bud=pl.bm==="m"||!(pl.ba>0)?0:(pl.bm==="w"?pl.ba/7:pl.ba)*pl.days.length;
-  return{cost,work,meals,bud};
+  return{cost,work,cooks,cw,bud,st};
 }
+const stepper=(k,v,label,min=0,max=12,step=1)=>`<div class="pn-step"><span>${label}</span><div><button type="button" class="pn-ib" data-pa="st" data-k="${k}" data-d="${-step}" aria-label="${label}: vähemmän"${v<=min?" disabled":""}>${ico("minus")}</button><b>${fmtN(v)}</b><button type="button" class="pn-ib" data-pa="st" data-k="${k}" data-d="${step}" aria-label="${label}: enemmän"${v>=max?" disabled":""}>${ico("plus")}</button></div></div>`;
 function renderPlan(){
   const h=$("planBody");if(!h)return;
-  plCostMemo.clear();
+  plCostMemo.clear();plCandsMemo=null;
   const pl=state.pl,hh=state.hh;
+  plDefaults();
   if(planSet==null)planSet=!pl.days.length;
-  const today=todayLocal(),next=PL.nextDays(today,14);
-  /* asetukset */
-  const mem=hh.m.map((m,i)=>`<div class="pn-mem"><div class="pn-mh"><input type="text" maxlength="20" value="${esc(m.n)}" data-pm-n="${i}" aria-label="Jäsenen nimi"><button type="button" class="chip" data-pa="mem-c" data-i="${i}" aria-pressed="${m.c}">${m.c?ico("check"):""}Lapsi (½ annosta)</button>${hh.m.length>1?`<button type="button" class="pn-ib" data-pa="mem-rm" data-i="${i}" aria-label="Poista ${esc(m.n)}">${ico("x")}</button>`:""}</div>
-    <div class="pn-week">${PL.WEEKDAYS.map((wd,j)=>`<label><span>${wd}</span><select data-pm-w="${i}|${j}" aria-label="${esc(m.n)}, ${wd}">${PL.DAYTYPES.map(t=>`<option value="${t.id}"${m.w[j]===t.id?" selected":""}>${esc(t.s)}</option>`).join("")}</select></label>`).join("")}</div></div>`).join("");
+  const next=PL.nextDays(todayLocal(),14);
   const seg=(k,opts,cur)=>`<div class="pn-seg" role="group">${opts.map(([v,t])=>`<button type="button" data-pa="${k}" data-k="${v}" aria-pressed="${String(cur)===String(v)}">${t}</button>`).join("")}</div>`;
-  const budHint=pl.ba>0?(pl.bm==="d"?`noin ${eur1(pl.ba*7)} / viikko`:pl.bm==="w"?`noin ${eur1(pl.ba/7)} / päivä`:"aterian enimmäishinta annosta kohden"):"ei budjettia";
+  const chipSel=(k,list,sel)=>`<div class="chips">${list.map(c=>`<button type="button" class="chip" data-pa="${k}" data-id="${esc(c.id)}" aria-pressed="${sel.includes(c.id)}">${sel.includes(c.id)?ico("check"):""}${esc(c.name)}</button>`).join("")}</div>`;
+  const budHint=pl.ba>0?(pl.bm==="d"?`noin ${eur1(pl.ba*7)} / viikko`:pl.bm==="w"?`noin ${eur1(pl.ba/7)} / päivä`:"lounaan tai päivällisen enimmäishinta annosta kohden"):"ei budjettia";
   const settings=`<section class="pn-card pn-set"><button type="button" class="pn-sh" data-pa="set" aria-expanded="${planSet}">${ico("users")}<span>Kotitalous ja asetukset</span>${ico(planSet?"up":"down")}</button>${planSet?`
-    <h3 class="pn-h">Kotitalous</h3><p class="note">Valitse kullekin perusviikko. Yksittäisen päivän voi vaihtaa suunnitelmassa nimeä napauttamalla.</p>${mem}
-    <button type="button" class="cartbtn" data-pa="mem-add">${ico("plus")}<span>Lisää jäsen</span></button>
-    <h3 class="pn-h">Ateriat</h3><div class="chips">${PL.MEALS.map(([k,n])=>`<button type="button" class="chip" data-pa="ml" data-k="${k}" aria-pressed="${pl.ml.includes(k)}">${pl.ml.includes(k)?ico("check"):""}${n}</button>`).join("")}</div>
-    <p class="note">Päivällisestä tehdään aina myös seuraavan päivän lounaan tähteet, jos lounas on mukana.</p>
+    <h3 class="pn-h">Kotitalous</h3>${stepper("a",hh.a,"Aikuiset",0,10)}${stepper("c",hh.c,"Lapset (½ annosta)",0,10)}
+    <h3 class="pn-h">Arkipäivisin</h3>${stepper("lu",hh.lu,"Lounaita kotona tai eväinä",0,10,0.5)}${stepper("ab",hh.ab,"Aamupaloja kotona",0,10,0.5)}${stepper("vn",hh.vn,"Väli- tai iltapaloja päivässä",0,20)}
+    <p class="note">Viikonloppuna kaikki syövät kotona. Yksittäisen päivän lounaita voi muuttaa suunnitelmassa.</p>
+    <h3 class="pn-h">Kokkaaminen</h3>${seg("mx",[[2,"Sama ruoka 2 päivänä"],[3,"Säilyvä 3. päivän lounaaksi"]],pl.mx)}
+    <div class="chips" style="margin-top:8px"><button type="button" class="chip" data-pa="wb" aria-pressed="${pl.wb}">${pl.wb?ico("check"):""}Viikonloppuna kokattu aamiainen</button><button type="button" class="chip" data-pa="veg" aria-pressed="${pl.veg}">${pl.veg?ico("check"):""}Vain kasvisruokia</button></div>
+    <p class="note">Ruokaa tehdään vähintään ${PL.MIN_BATCH} annosta kerralla, ja se syödään enintään kerran päivässä. Viikonlopun päivälliset tehdään erikseen.</p>
+    <h3 class="pn-h">Arjen työaika enintään</h3>${seg("wk",[[20,"20 min"],[30,"30 min"],[45,"45 min"],[60,"60 min"],[0,"Ei rajaa"]],pl.wk)}
     <h3 class="pn-h">Budjetti</h3>${seg("bm",[["d","€ / päivä"],["w","€ / viikko"],["m","€ / annos"]],pl.bm)}
     <div class="pn-bud"><input id="pba" type="number" inputmode="decimal" min="0" step="1" value="${pl.ba>0?pl.ba:""}" placeholder="esim. ${pl.bm==="w"?"150":pl.bm==="m"?"3":"25"}" aria-label="Budjetti euroina"><span>€</span><small>${esc(budHint)}</small></div>
-    <h3 class="pn-h">Arjen työaika enintään</h3>${seg("wk",[[20,"20 min"],[30,"30 min"],[45,"45 min"],[60,"60 min"],[0,"Ei rajaa"]],pl.wk)}
-    <h3 class="pn-h">Ruokavalio</h3><div class="chips"><button type="button" class="chip" data-pa="veg" aria-pressed="${pl.veg}">${pl.veg?ico("check"):""}Vain kasvisruokia</button></div>`:""}</section>`;
-  /* päivät */
-  const days=`<section class="pn-card"><h3 class="pn-h" style="margin-top:0">Päivät</h3><div class="pn-days">${next.map(d=>`<button type="button" class="pn-day" data-pa="day" data-d="${d}" aria-pressed="${pl.days.includes(d)}"><small>${PL.WEEKDAYS[PL.wdOf(d)]}</small>${PL.dateOf(d).getDate()}.${PL.dateOf(d).getMonth()+1}.</button>`).join("")}</div>
+    <h3 class="pn-h">Aamupalavalikoima</h3><p class="note">Vaihtoehdot, joita ei tarvitse kokata. Määrät lasketaan aamupalojen mukaan.</p>${chipSel("abx",plStaples("ab"),pl.ab)}
+    ${hh.vn>0?`<h3 class="pn-h">Väli- ja iltapalavalikoima</h3>${chipSel("vbx",plStaples("vb"),pl.vb)}`:""}`:""}</section>`;
+  const days=`<section class="pn-card"><h3 class="pn-h" style="margin-top:0">Päivät</h3><div class="pn-days">${next.map(d=>`<button type="button" class="pn-day" data-pa="day" data-d="${d}" aria-pressed="${pl.days.includes(d)}"><small>${plDay(d)}</small>${PL.dateOf(d).getDate()}.${PL.dateOf(d).getMonth()+1}.</button>`).join("")}</div>
     <div class="chips" style="margin-top:8px">${[["mf","Ma–Pe"],["wk","Koko viikko"],["3","3 päivää"],["clr","Tyhjennä"]].map(([k,t])=>`<button type="button" class="chip sdm" data-pa="q" data-k="${k}">${t}</button>`).join("")}</div>
-    <div class="actions" style="margin-top:12px"><button type="button" class="go" data-pa="gen"${pl.days.length&&pl.ml.length?"":" disabled"}>${ico("shuffle")}<span>${Object.keys(pl.s).length?"Tee uudet ehdotukset":"Tee suunnitelma"}</span></button></div>
+    <div class="actions" style="margin-top:12px"><button type="button" class="go" data-pa="gen"${pl.days.length&&(hh.a+hh.c)>0?"":" disabled"}>${ico("shuffle")}<span>${Object.keys(pl.s).length?"Tee uudet ehdotukset":"Tee suunnitelma"}</span></button></div>
     ${Object.values(pl.s).some(v=>v.lk)?`<p class="note">Lukitut ruoat säilyvät, kun ehdotukset tehdään uudelleen.</p>`:""}</section>`;
-  /* suunnitelma */
-  const has=Object.keys(pl.s).length&&pl.days.length;
   let plan="";
-  if(has){
-    const sm=plSummary();
-    const over=sm.bud>0&&sm.cost>sm.bud;
-    plan+=`<section class="pn-card pn-sum"><div class="pn-sr"><span>Arvioitu hinta</span><b>${eur1(sm.cost)}</b></div>${sm.bud>0?`<div class="pn-sr"><span>Budjetti ${pl.days.length} päivälle</span><b>${eur1(sm.bud)}</b></div><div class="pn-bar${over?" over":""}"><i style="width:${Math.min(100,Math.round(sm.cost/sm.bud*100))}%"></i></div>${over?`<p class="note err">Budjetti ylittyy ${eur1(sm.cost-sm.bud)}. Vaihda kalleimpia ruokia tai lukitse ne, jotka haluat pitää.</p>`:""}`:""}<p class="note">${sm.meals} ateriaa · työtä yhteensä noin ${fmtDur(sm.work)}. Hinta lasketaan annoksista; ostoslistan pakkaushinnat voivat olla suuremmat.</p></section>`;
+  if(Object.keys(pl.s).length&&pl.days.length){
+    const sch=plSched(),sm=plSummary(sch),over=sm.bud>0&&sm.cost>sm.bud;
+    plan+=`<section class="pn-card pn-sum"><div class="pn-sr"><span>Arvioitu hinta</span><b>${eur1(sm.cost)}</b></div>${sm.bud>0?`<div class="pn-sr"><span>Budjetti ${pl.days.length} päivälle</span><b>${eur1(sm.bud)}</b></div><div class="pn-bar${over?" over":""}"><i style="width:${Math.min(100,Math.round(sm.cost/sm.bud*100))}%"></i></div>${over?`<p class="note err">Budjetti ylittyy ${eur1(sm.cost-sm.bud)}. Vaihda kalleimpia ruokia tai lukitse ne, jotka haluat pitää.</p>`:""}`:""}
+      <p class="note">Kokataan ${sm.cooks} kertaa${sm.cw!==sm.cooks?`, joista arkena ${sm.cw}`:""} · työtä noin ${fmtDur(sm.work)}. Hinta on laskettu annoksista, joten ostoslistan pakkaushinnat voivat olla suuremmat.</p></section>`;
+    const stTxt=(ids,n)=>ids.map(id=>{const r=byId(id);return r?`<button type="button" class="lk" data-pa="open" data-id="${esc(id)}">${esc(r.name)}</button>`:"";}).filter(Boolean).join(", ");
+    if(sm.st.ab>0||sm.st.vb>0)plan+=`<section class="pn-card"><h3 class="pn-h" style="margin-top:0">Aamu- ja välipalat</h3>${sm.st.ab>0?`<p class="pn-stp"><b>${fmtN(sm.st.ab)} aamupalaa:</b> ${stTxt(pl.ab)||"valitse valikoima asetuksista"}</p>`:""}${sm.st.vb>0?`<p class="pn-stp"><b>${fmtN(sm.st.vb)} väli- tai iltapalaa:</b> ${stTxt(pl.vb)||"valitse valikoima asetuksista"}</p>`:""}<p class="note">Ainekset tulevat ostoslistalle näiden määrien mukaan.</p></section>`;
     for(const iso of [...pl.days].sort()){
-      const chips=hh.m.map(m=>{const t=PL.typeOf(hh,pl,m,iso);const ov=pl.ov[iso]&&pl.ov[iso][m.id];return`<button type="button" class="pn-who${ov?" ov":""}" data-pa="dt" data-d="${iso}" data-m="${esc(m.id)}" aria-label="${esc(m.n)}: ${esc(t.n)}, vaihda">${esc(m.n)}: ${esc(t.s)}</button>`;}).join("");
-      const rows=PL.MEALS.filter(([k])=>pl.ml.includes(k)).map(([k,mn])=>{
-        const key=iso+"|"+k,s=pl.s[key],n=PL.portions(pl,hh,iso,k),eat=PL.eaters(hh,pl,iso,k);
-        const lab="";const ml=`<span class="pn-ml">${mn}</span>`;
-        if(n<=0)return`<li class="pn-row muted">${lab}<span class="pn-nm">${ml}Ei kotona</span></li>`;
-        const evas=eat.who.filter(x=>x.v==="e").map(x=>x.m.n);
-        const evTxt=evas.length?` · eväs: ${esc(evas.join(", "))}`:"";
-        if(s&&s.lo){
-          const p=pl.s[PL.addDays(iso,-1)+"|p"],r=p&&p.id&&byId(p.id);
-          return`<li class="pn-row">${lab}<span class="pn-nm">${ml}<b>Tähteet</b>${r?": "+esc(r.name):""}<small>${fmtN(n)} annosta${evTxt}</small></span><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-key="${key}" aria-label="Tee lounaaksi oma ruoka">${ico("shuffle")}</button></span></li>`;
-        }
-        if(!s||!s.id)return`<li class="pn-row">${lab}<span class="pn-nm muted">${ml}Ei sopivaa ehdotusta</span><span class="pn-act"><button type="button" class="pn-ib" data-pa="pick" data-key="${key}" aria-label="Valitse itse">${ico("list")}</button></span></li>`;
-        const r=byId(s.id);if(!r)return"";
-        const ver=s.v&&(r.vs||[]).find(v=>v.id===s.v);
-        const lo=k==="p"?PL.leftoverFor(pl,hh,iso):0;
-        const c=plCostPer(r,s.v)*n;
-        return`<li class="pn-row">${lab}<span class="pn-nm">${ml}<button type="button" class="lk" data-pa="open" data-id="${esc(r.id)}">${esc(r.name)}${ver?" – "+esc(ver.n):""}</button><small>${fmtN(n)} annosta${lo?` (+ ${fmtN(lo)} lounaaksi)`:""}${evTxt} · ${eur1(c)} · ${fmtDur(workOf(r)||r.min||0)}</small></span><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-key="${key}" aria-label="Vaihda: ${esc(r.name)}"${s.lk?" disabled":""}>${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="pick" data-key="${key}" aria-label="Valitse itse">${ico("list")}</button><button type="button" class="pn-ib lk2b" data-pa="lock" data-key="${key}" aria-pressed="${!!s.lk}" aria-label="${s.lk?"Poista lukitus":"Lukitse"}: ${esc(r.name)}">${ico(s.lk?"lock":"unlock")}</button></span></li>`;
-      }).join("");
-      plan+=`<section class="pn-card pn-dayc"><h3 class="pn-dh">${plDate(iso)}</h3><div class="pn-whos">${chips}</div><ul class="pn-rows">${rows}</ul></section>`;
+      const d=sch.days[iso]||{},o=pl.ov[iso]||{},we=PL.isWeekend(iso),ln=PL.lunchN(pl,hh,iso);
+      const ctr=`<div class="pn-dq"><span class="pn-lu">Lounaita<button type="button" class="pn-ib sm" data-pa="lu" data-d="${iso}" data-k="-0.5" aria-label="Vähemmän lounaita"${ln<=0?" disabled":""}>${ico("minus")}</button><b>${fmtN(ln)}</b><button type="button" class="pn-ib sm" data-pa="lu" data-d="${iso}" data-k="0.5" aria-label="Enemmän lounaita">${ico("plus")}</button></span>
+        <button type="button" class="chip sdm" data-pa="nd" data-d="${iso}" aria-pressed="${!!o.nd}">${o.nd?ico("check"):""}Ei päivällistä kotona</button>${!o.nd?`<button type="button" class="chip sdm" data-pa="nc" data-d="${iso}" aria-pressed="${!!o.nc}">${o.nc?ico("check"):""}Ei kokata</button>`:""}</div>`;
+      const row=(slot,lab,x)=>{
+        const ml=`<span class="pn-ml">${lab}</span>`;
+        if(!x)return"";
+        if(x.type==="none")return`<li class="pn-row"><span class="pn-nm">${ml}<span class="muted">Ei sopivaa ehdotusta</span></span><span class="pn-act"><button type="button" class="pn-ib" data-pa="pick" data-key="${iso}|${slot}" data-kind="${slot==="l"&&!we?"quick":slot==="a"?"brunch":"cook"}" aria-label="Valitse itse">${ico("list")}</button></span></li>`;
+        const f=x.f,r=byId(f.id);if(!r)return"";
+        const ver=f.v&&(r.vs||[]).find(v=>v.id===f.v);
+        const nm=`<button type="button" class="lk" data-pa="open" data-id="${esc(r.id)}">${esc(r.name)}${ver?" – "+esc(ver.n):""}</button>`;
+        if(x.type==="lo")return`<li class="pn-row lo"><span class="pn-nm">${ml}<span class="pn-tag">Tähteet</span>${nm}<small>${fmtN(x.n)} annosta · tehty ${plDay(f.iso)} ${SLOT_N[f.slot]}</small></span></li>`;
+        const s=pl.s[f.key]||{};
+        const covers=f.covers.filter(c=>c.iso!==iso||c.slot!==slot).map(c=>`${plDay(c.iso)} ${SLOT_N[c.slot]}`);
+        const cost=plCostPer(r,f.v)*f.batch;
+        const tag=x.type==="cook"?`<span class="pn-tag ck">Kokkaa ${fmtN(f.batch)} annosta</span>`:"";
+        const meta=x.type==="cook"?`${covers.length?"riittää myös: "+covers.join(", ")+" · ":""}${eur1(cost)} · ${fmtDur(workOf(r)||r.min||0)}`:`${fmtN(x.n)} annosta · ${eur1(cost)} · ${fmtDur(workOf(r)||r.min||0)}`;
+        return`<li class="pn-row${x.type==="cook"?" ck":""}"><span class="pn-nm">${ml}${tag}${nm}<small>${meta}</small></span><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-key="${f.key}" data-kind="${f.kind}" aria-label="Vaihda: ${esc(r.name)}"${s.lk?" disabled":""}>${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="pick" data-key="${f.key}" data-kind="${f.kind}" aria-label="Valitse itse">${ico("list")}</button><button type="button" class="pn-ib" data-pa="lock" data-key="${f.key}" aria-pressed="${!!s.lk}" aria-label="${s.lk?"Poista lukitus":"Lukitse"}: ${esc(r.name)}">${ico(s.lk?"lock":"unlock")}</button></span></li>`;
+      };
+      const rows=row("a","Aamiainen",d.a)+row("l","Lounas",d.l)+row("p","Päivällinen",d.p)+(!d.l&&!we&&ln<=0?"":"")+(o.nd?`<li class="pn-row muted"><span class="pn-nm"><span class="pn-ml">Päivällinen</span>Ei kotona</span></li>`:"");
+      plan+=`<section class="pn-card pn-dayc"><h3 class="pn-dh">${plDate(iso)}</h3>${ctr}<ul class="pn-rows">${rows}</ul></section>`;
     }
     plan+=`<div class="actions pn-foot"><button type="button" class="go" data-pa="shop" style="width:100%">${ico("tlist")}<span>Lisää ostoslistalle</span></button></div>`;
-  }else if(pl.days.length){
-    plan=`<p class="note" style="margin:6px 4px">Valitse ateriat ja paina Tee suunnitelma.</p>`;
-  }else{
-    plan=`<p class="note" style="margin:6px 4px">Valitse päivät, joille haluat suunnitelman.</p>`;
-  }
+  }else plan=`<p class="note" style="margin:6px 4px">${pl.days.length?"Paina Tee suunnitelma.":"Valitse päivät, joille haluat suunnitelman."}</p>`;
   h.innerHTML=settings+days+plan;
 }
-const fmtN=n=>String(n).replace(".",",");
-function planGen(){
-  const pl=state.pl;
-  pl.s=PL.generate(plCands(),plCtx());
+function planGen(){plCandsMemo=null;PL.generate(plCands(),state.pl,state.hh);mutate();renderPlan();}
+function planAvoid(key){
+  const sch=plSched(),iso=key.split("|")[0],ids=new Set(),mains=new Set();
+  for(const f of sch.cooks)if(f.key!==key){if(Math.abs((PL.dateOf(f.iso)-PL.dateOf(iso))/864e5)<=2){ids.add(f.id);mains.add(f.main);}}
+  return{ids,mains};
+}
+function planSwap(key,kind){
+  const pl=state.pl,iso=key.split("|")[0],cur=pl.s[key];
+  const c=PL.pick(plCands(),pl,state.hh,iso,kind,planAvoid(key),Math.random,cur&&cur.id?[cur.id]:[]);
+  if(c)pl.s[key]=pl.veg&&c.vegV?{id:c.id,v:c.vegV}:{id:c.id};
   mutate();renderPlan();
 }
-function planSwap(key){
-  const pl=state.pl,[iso,meal]=key.split("|"),cur=pl.s[key];
-  const ex=cur&&cur.id?[cur.id]:[];
-  const c=PL.pick(plCands(),plCtx(),iso,meal,plUsed(key),meal==="p"?plPrevMains(iso):[],Math.random,ex);
-  if(c)pl.s[key]=pl.veg&&c.vegV?{id:c.id,v:c.vegV}:{id:c.id};else delete pl.s[key];
-  mutate();renderPlan();
-}
-function planPickOpen(key){
-  planPick={key,q:""};renderPick();$("pkdlg").showModal();
-}
+function planPickOpen(key,kind){planPick={key,kind,q:""};renderPick();$("pkdlg").showModal();}
 function renderPick(){
   if(!planPick)return;
-  const pl=state.pl,[iso,meal]=planPick.key.split("|");
-  const q=fold(planPick.q.trim());
-  let list=PL.ranked(plCands(),plCtx(),iso,meal,plUsed(planPick.key),meal==="p"?plPrevMains(iso):[]);
-  if(q){const all2=plCands().filter(c=>fzBest(q,[c.name])>=0);list=all2;}
+  const pl=state.pl,[iso,slot]=planPick.key.split("|"),q=fold(planPick.q.trim());
+  let list=q?plCands().filter(c=>fzBest(q,[c.name])>=0):PL.ranked(plCands(),pl,state.hh,iso,planPick.kind,planAvoid(planPick.key));
   const rows=list.slice(0,40).map(c=>`<li><button type="button" class="pn-pr" data-pp="${esc(c.id)}"><span>${esc(c.name)}</span><small>${eur1(c.cost)} / annos · ${fmtDur(c.work)}</small></button></li>`).join("");
-  $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${PL.MEAL_N[meal]}, ${plDate(iso)}</h2>
+  $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${SLOT_N[slot].charAt(0).toUpperCase()+SLOT_N[slot].slice(1)}, ${plDate(iso)}</h2>
     <input id="ppq" type="search" placeholder="Hae ruokaa" autocomplete="off" value="${esc(planPick.q)}" aria-label="Hae ruokaa">
-    <p class="note">${q?"Hakutulokset kaikista ruoista":"Sopivimmat ehdotukset ensin"}</p><ul class="pn-pl">${rows||`<li class="note">Ei osumia.</li>`}</ul>
-    ${meal==="l"&&pl.s[PL.addDays(iso,-1)+"|p"]?`<button type="button" class="cartbtn" data-pp="__lo">${ico("chef")}<span>Tähteet edellisen päivän päivällisestä</span></button>`:""}`;
+    <p class="note">${q?"Hakutulokset kaikista ruoista":"Sopivimmat ehdotukset ensin"}</p><ul class="pn-pl">${rows||`<li class="note">Ei osumia.</li>`}</ul>`;
 }
 $("pkbody").addEventListener("input",e=>{if(e.target.id==="ppq"&&planPick){planPick.q=e.target.value;const pos=e.target.selectionStart;renderPick();const i=$("ppq");i.focus();try{i.setSelectionRange(pos,pos);}catch(x){}}});
 $("pkbody").addEventListener("click",e=>{
   if(e.target.closest("[data-pp-x]")){$("pkdlg").close();return;}
   const b=e.target.closest("[data-pp]");if(!b||!planPick)return;
-  const id=b.dataset.pp,pl=state.pl;
-  if(id==="__lo")pl.s[planPick.key]={lo:1};
-  else{const r=byId(id);const vegV=pl.veg&&r&&!["v","y"].includes(mainOf(r))?((r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y")||{}).id:"";pl.s[planPick.key]=vegV?{id,v:vegV,lk:1}:{id,lk:1};}
+  const id=b.dataset.pp,pl=state.pl,r=byId(id);
+  const vegV=pl.veg&&r&&!["v","y"].includes(mainOf(r))?((r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y")||{}).id:"";
+  pl.s[planPick.key]=vegV?{id,v:vegV,lk:1}:{id,lk:1};
   $("pkdlg").close();mutate();renderPlan();
 });
 $("pkdlg").addEventListener("close",()=>{planPick=null;});
 function planShop(){
-  const pl=state.pl,items=PL.shoppingItems(pl,state.hh).map(e=>({id:e.id,v:e.v,n:Math.round(e.n*2)/2}));
+  const pl=state.pl,sch=plSched(),items=PL.shoppingItems(pl,state.hh,sch).map(e=>({id:e.id,v:e.v,n:Math.round(e.n*2)/2})).filter(e=>e.n>0);
   if(!items.length){flashToast("Suunnitelmassa ei ole ruokia.");return;}
   const ds=[...pl.days].sort(),a=PL.dateOf(ds[0]),b=PL.dateOf(ds[ds.length-1]);
   const l=newList();
@@ -3935,14 +3943,14 @@ $("planBody").addEventListener("click",e=>{
   if(a==="set"){planSet=!planSet;return renderPlan();}
   if(a==="open"){openDlg(b.dataset.id);return;}
   if(a==="gen")return planGen();
-  if(a==="swap")return planSwap(b.dataset.key);
-  if(a==="pick")return planPickOpen(b.dataset.key);
+  if(a==="swap")return planSwap(b.dataset.key,b.dataset.kind);
+  if(a==="pick")return planPickOpen(b.dataset.key,b.dataset.kind);
   if(a==="shop")return planShop();
   if(a==="lock"){const s=pl.s[b.dataset.key];if(s){if(s.lk)delete s.lk;else s.lk=1;}}
-  else if(a==="mem-add"){if(hh.m.length<8){let i=hh.m.length+1;while(hh.m.some(m=>m.id==="m"+i))i++;hh.m.push({id:"m"+i,n:"Jäsen "+(hh.m.length+1),c:false,w:["koti","koti","koti","koti","koti","koti","koti"]});}}
-  else if(a==="mem-rm"){const m=hh.m[+b.dataset.i];if(m&&hh.m.length>1){hh.m.splice(+b.dataset.i,1);for(const d of Object.keys(pl.ov))delete pl.ov[d][m.id];}}
-  else if(a==="mem-c"){const m=hh.m[+b.dataset.i];if(m)m.c=!m.c;}
-  else if(a==="ml"){const k=b.dataset.k;pl.ml=pl.ml.includes(k)?pl.ml.filter(x=>x!==k):PL_MEALS.filter(x=>x===k||pl.ml.includes(x));}
+  else if(a==="st"){const k=b.dataset.k,v=Math.max(0,Math.min(20,(hh[k]||0)+(+b.dataset.d)));hh[k]=Math.round(v*2)/2;if(k==="a"&&hh.ab>v+hh.c)hh.ab=v;}
+  else if(a==="abx"||a==="vbx"){const k=a==="abx"?"ab":"vb",id=b.dataset.id;pl[k]=pl[k].includes(id)?pl[k].filter(x=>x!==id):[...pl[k],id];}
+  else if(a==="mx")pl.mx=+b.dataset.k;
+  else if(a==="wb")pl.wb=!pl.wb;
   else if(a==="bm")pl.bm=b.dataset.k;
   else if(a==="wk")pl.wk=+b.dataset.k;
   else if(a==="veg")pl.veg=!pl.veg;
@@ -3951,28 +3959,27 @@ $("planBody").addEventListener("click",e=>{
     const k=b.dataset.k,t=todayLocal();
     if(k==="clr"){pl.days=[];pl.s={};pl.ov={};}
     else if(k==="3")pl.days=PL.nextDays(t,3);
-    else{let st=t;if(k==="mf"){while(PL.wdOf(st)!==0)st=PL.addDays(st,1);if(PL.wdOf(t)<5&&PL.wdOf(t)>0)st=t;pl.days=PL.nextDays(st,7).filter(d=>PL.wdOf(d)<5).slice(0,5);}else pl.days=PL.nextDays(t,7);}
+    else if(k==="mf"){let st=t;if(PL.wdOf(t)>=5)while(PL.wdOf(st)!==0)st=PL.addDays(st,1);pl.days=PL.nextDays(st,7).filter(d=>PL.wdOf(d)<5).slice(0,5-(PL.wdOf(st)));}
+    else pl.days=PL.nextDays(t,7);
   }
-  else if(a==="dt"){
-    const d=b.dataset.d,m=hh.m.find(x=>x.id===b.dataset.m);if(!m)return;
-    const cur=PL.typeOf(hh,pl,m,d).id,i=PL.DAYTYPES.findIndex(t=>t.id===cur),nx=PL.DAYTYPES[(i+1)%PL.DAYTYPES.length].id;
-    pl.ov[d]=pl.ov[d]||{};
-    if(nx===m.w[PL.wdOf(d)])delete pl.ov[d][m.id];else pl.ov[d][m.id]=nx;
-    if(!Object.keys(pl.ov[d]).length)delete pl.ov[d];
+  else if(a==="lu"||a==="nd"||a==="nc"){
+    const d=b.dataset.d,o=pl.ov[d]=pl.ov[d]||{};
+    if(a==="lu"){const v=Math.max(0,PL.lunchN(pl,hh,d)+(+b.dataset.k));const base=PL.isWeekend(d)?PL.everyone(hh):hh.lu;if(v===base)delete o.lu;else o.lu=v;}
+    else if(o[a])delete o[a];else o[a]=1;
+    if(!Object.keys(o).length)delete pl.ov[d];
   }
-  /* poistetut päivät pois suunnitelmasta */
-  for(const k of Object.keys(pl.s))if(!pl.days.includes(k.split("|")[0])||!pl.ml.includes(k.split("|")[1]))delete pl.s[k];
+  for(const k of Object.keys(pl.s))if(!pl.days.includes(k.split("|")[0]))delete pl.s[k];
   for(const d of Object.keys(pl.ov))if(!pl.days.includes(d))delete pl.ov[d];
+  /* päiväkohtaiset muutokset vaikuttavat kokkausvuoroihin: täydennetään puuttuvat ehdotukset */
+  if(Object.keys(pl.s).length&&pl.days.length&&!["set","abx","vbx","bm","wk"].includes(a)){plCandsMemo=null;PL.fill(plCands(),pl,hh);}
   mutate();renderPlan();
 });
 $("planBody").addEventListener("change",e=>{
-  const t=e.target,hh=state.hh;
-  if(t.dataset.pmW){const[i,j]=t.dataset.pmW.split("|").map(Number);if(hh.m[i]&&PL.DT[t.value]){hh.m[i].w[j]=t.value;mutate();renderPlan();}return;}
-  if(t.dataset.pmN!=null){const m=hh.m[+t.dataset.pmN];if(m){m.n=clip(t.value.trim(),20)||m.n;mutate();renderPlan();}return;}
+  const t=e.target;
   if(t.id==="pba"){const v=parseFloat(String(t.value).replace(",","."));state.pl.ba=v>0&&v<=10000?Math.round(v*100)/100:0;mutate();renderPlan();}
 });
 
-if(import.meta.env.DEV)window.__app={PL,plCands,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
+if(import.meta.env.DEV)window.__app={PL,plCands,plSched,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
 
 /* mobiilinäppäimistö: lisäysikkuna nostetaan näppäimistön yläpuolelle ja kohdistettu kenttä vieritetään näkyviin */
 if(window.visualViewport){

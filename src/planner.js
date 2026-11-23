@@ -1,39 +1,26 @@
-/* Viikkosuunnitelma: kotitalous, päivätyypit, annosmäärät ja ehdotusten valinta.
+/* Viikkosuunnitelma: kokkauskerrat, tähteet, annokset ja ehdotukset.
  * Moduulissa ei ole käyttöliittymää eikä riippuvuuksia sovelluksen tilaan, joten sen voi testata erikseen.
  *
- * Kotitalous (state.hh):  { m: [{ id, n: nimi, c: lapsi (½ annosta), w: [7 päivätyyppiä, ma–su] }] }
- * Suunnitelma (state.pl): { days: ["2026-11-24", …], ml: ["p", …], bm: "d" | "w" | "m", ba: €, wk: arjen
- *                           enimmäistyöaika min, veg, ov: { päivä: { jäsen: päivätyyppi } },
- *                           s: { "päivä|ateria": { id, v, lk } | { lo: 1 } } }
- *   lo = tähteet edellisen päivän päivällisestä, lk = lukittu */
+ * Periaatteet
+ *  - Samaa ruokaa ei syödä kahdesti samana päivänä.
+ *  - Kokattu ruoka riittää enintään kahdelle päivälle (lounas tai päivällinen kerran päivässä).
+ *    Hyvin säilyvä ruoka voi riittää vielä kolmannen päivän lounaaksi, jos asetus mx = 3.
+ *  - Viikonlopun päivälliset tehdään aina erikseen; ne voivat riittää seuraavan päivän lounaaksi.
+ *  - Kokattavassa satsissa on vähintään MIN_BATCH annosta.
+ *  - Arkiaamuina ei kokata: aamu- ja välipalat ovat viikon valikoima, jonka määrät lasketaan syöjistä.
+ *
+ * Kotitalous (state.hh): { a: aikuiset, c: lapset (½ annosta), lu: arkilounaat kotona tai eväinä / päivä,
+ *                          ab: arkiaamupalat kotona / päivä, vn: välipaloja tai iltapaloja / päivä }
+ * Suunnitelma (state.pl): { days, bm: "d" | "w" | "m", ba: €, wk: arjen työaika min (0 = ei rajaa), veg,
+ *                           mx: 2 | 3, wb: viikonloppuaamiainen kokataan, ab: [aamupalavalikoima],
+ *                           vb: [välipalavalikoima], ov: { päivä: { lu, nd, nc } },
+ *                           s: { "päivä|p" | "päivä|l" | "päivä|a": { id, v, lk } } } */
 
-export const MEALS = [
-  ["a", "Aamupala"],
-  ["l", "Lounas"],
-  ["v", "Välipala"],
-  ["p", "Päivällinen"],
-  ["i", "Iltapala"],
-];
-export const MEAL_N = Object.fromEntries(MEALS);
-
-/* päivätyypit: k = syö kotona, e = eväs mukaan, - = ei syö kotona */
-export const DAYTYPES = [
-  { id: "koti", n: "Kotona", s: "Kotona", m: { a: "k", l: "k", v: "k", p: "k", i: "k" } },
-  { id: "eta", n: "Etäpäivä", s: "Etä", m: { a: "k", l: "k", v: "k", p: "k", i: "k" } },
-  { id: "evas", n: "Eväät töihin", s: "Eväät", m: { a: "k", l: "e", v: "-", p: "k", i: "k" } },
-  { id: "ravintola", n: "Lounasravintola", s: "Ravintola", m: { a: "k", l: "-", v: "-", p: "k", i: "k" } },
-  { id: "ilta", n: "Iltavuoro", s: "Ilta", m: { a: "k", l: "k", v: "e", p: "-", i: "k" } },
-  { id: "pk", n: "Päiväkoti tai koulu", s: "Päiväkoti", m: { a: "-", l: "-", v: "-", p: "k", i: "k" } },
-  { id: "pois", n: "Poissa", s: "Poissa", m: { a: "-", l: "-", v: "-", p: "-", i: "-" } },
-];
-export const DT = Object.fromEntries(DAYTYPES.map((t) => [t.id, t]));
-
-/* aterioiden osuus päivän budjetista */
-const MEAL_W = { a: 0.15, l: 0.22, v: 0.08, p: 0.45, i: 0.1 };
+export const MIN_BATCH = 4;
 export const WEEKDAYS = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"];
 
-export const defaultHH = () => ({ m: [{ id: "m1", n: "Aikuinen", c: false, w: ["koti", "koti", "koti", "koti", "koti", "koti", "koti"] }] });
-export const defaultPlan = () => ({ days: [], ml: ["p"], bm: "d", ba: 0, wk: 45, veg: false, ov: {}, s: {} });
+export const defaultHH = () => ({ a: 2, c: 0, lu: 1, ab: 2, vn: 0 });
+export const defaultPlan = () => ({ days: [], bm: "d", ba: 0, wk: 45, veg: false, mx: 2, wb: true, ab: [], vb: [], ov: {}, s: {} });
 
 /* ---------------- päivämäärät ---------------- */
 export const isoOf = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -41,44 +28,29 @@ export const dateOf = (iso) => new Date(iso + "T12:00:00");
 export const addDays = (iso, n) => { const d = dateOf(iso); d.setDate(d.getDate() + n); return isoOf(d); };
 /* 0 = maanantai */
 export const wdOf = (iso) => (dateOf(iso).getDay() + 6) % 7;
-export const isWorkday = (iso) => wdOf(iso) < 5;
+export const isWeekend = (iso) => wdOf(iso) >= 5;
 export const nextDays = (from, n) => Array.from({ length: n }, (_, i) => addDays(from, i));
+const dayDiff = (a, b) => Math.round((dateOf(b) - dateOf(a)) / 864e5);
 
-/* ---------------- kotitalous ja annokset ---------------- */
-export function typeOf(hh, pl, m, iso) {
-  const o = pl.ov && pl.ov[iso] && pl.ov[iso][m.id];
-  return DT[o] || DT[m.w[wdOf(iso)]] || DT.koti;
+/* ---------------- syöjät ---------------- */
+export const everyone = (hh) => hh.a + hh.c * 0.5;
+const ovOf = (pl, iso) => (pl.ov && pl.ov[iso]) || {};
+export function lunchN(pl, hh, iso) {
+  const o = ovOf(pl, iso);
+  if (o.lu != null) return o.lu;
+  return isWeekend(iso) ? everyone(hh) : hh.lu;
 }
-/* annokset aterialle: aikuinen 1, lapsi ½; e (eväs) lasketaan mukaan */
-export function eaters(hh, pl, iso, meal) {
-  let n = 0;
-  const who = [];
-  for (const m of hh.m) {
-    const v = typeOf(hh, pl, m, iso).m[meal];
-    if (v === "k" || v === "e") { n += m.c ? 0.5 : 1; who.push({ m, v }); }
-  }
-  return { n, who };
-}
-const inPlan = (pl, iso, meal) => pl.days.includes(iso) && pl.ml.includes(meal);
-/* seuraavan päivän lounas syödään tämän päivän päivällisen tähteistä */
-export function leftoverFor(pl, hh, iso) {
-  const nx = addDays(iso, 1);
-  if (!inPlan(pl, nx, "l")) return 0;
-  const s = pl.s[nx + "|l"];
-  if (s && !s.lo) return 0;
-  return eaters(hh, pl, nx, "l").n;
-}
-/* lounas on tähteitä, jos edellisenä päivänä on suunniteltu päivällinen */
-export const lunchIsLeftover = (pl, iso) => {
-  const s = pl.s[iso + "|l"];
-  const pv = addDays(iso, -1);
-  return (!s || s.lo) && inPlan(pl, pv, "p") && !!(pl.s[pv + "|p"] && pl.s[pv + "|p"].id);
-};
-/* annokset, jotka tehdään: päivällisellä mukana seuraavan päivän lounaan tähteet */
-export function portions(pl, hh, iso, meal) {
-  const base = eaters(hh, pl, iso, meal).n;
-  if (meal === "p" && base > 0) return base + leftoverFor(pl, hh, iso);
-  return base;
+export const dinnerN = (pl, hh, iso) => (ovOf(pl, iso).nd ? 0 : everyone(hh));
+export const breakfastN = (pl, hh, iso) => (isWeekend(iso) ? everyone(hh) : hh.ab);
+export const snackN = (pl, hh) => hh.vn || 0;
+
+/* kuinka monena päivänä ruoka on hyvä syödä: keitot, padat, laatikot ja kastikkeet 3, kala ja pasta 2,
+ * pizza, hampurilaiset ja wokit 1 */
+export function keepDays(c) {
+  if (c.keep) return c.keep;
+  if (["pi", "ha", "wo"].includes(c.t)) return 1;
+  if (c.main === "f" || ["ps", "pn", "sa"].includes(c.t)) return 2;
+  return 3;
 }
 
 /* ---------------- budjetti ---------------- */
@@ -86,128 +58,193 @@ export function dayBudget(pl) {
   if (!(pl.ba > 0) || pl.bm === "m") return 0;
   return pl.bm === "w" ? pl.ba / 7 : pl.ba;
 }
-/* aterian tavoitehinta annosta kohden */
-export function targetPer(pl, hh, iso, meal) {
+/* lounaan ja päivällisen tavoitehinta annosta kohden: noin 75 % päivän budjetista */
+export function targetPer(pl, hh, iso) {
   if (!(pl.ba > 0)) return 0;
   if (pl.bm === "m") return pl.ba;
-  const sel = pl.ml.filter((m) => eaters(hh, pl, iso, m).n > 0);
-  const wsum = sel.reduce((a, m) => a + MEAL_W[m], 0) || 1;
-  let w = MEAL_W[meal] / wsum;
-  /* päivällisen budjettiin kuuluu seuraavan päivän tähdelounas */
-  if (meal === "p" && leftoverFor(pl, hh, iso) > 0) {
-    const nx = addDays(iso, 1), sel2 = pl.ml.filter((m) => eaters(hh, pl, nx, m).n > 0);
-    const w2 = sel2.reduce((a, m) => a + MEAL_W[m], 0) || 1;
-    w += MEAL_W.l / w2;
-  }
-  const n = portions(pl, hh, iso, meal) || 1;
-  return (dayBudget(pl) * w) / n;
+  const n = lunchN(pl, hh, iso) + dinnerN(pl, hh, iso) || everyone(hh) || 1;
+  return (dayBudget(pl) * 0.75) / n;
 }
 
-/* ---------------- ehdotukset ----------------
- * c = ehdokas: { id, name, pool: Set(aterian kohdat), main, veg, work, min, cost (€/annos), fav, pop,
- *                perus, jf, recent, eva (sopii eväiksi), vegV (kasvisversion id) } */
-function score(c, ctx, iso, meal, used, prev, rnd) {
-  const { pl, hh } = ctx;
-  const workday = isWorkday(iso);
+/* ---------------- ehdotusten pisteytys ----------------
+ * c = ehdokas: { id, name, t, pool: Set("p" päivällinen, "l" lounas, "q" nopea lounas, "a" aamiainen),
+ *                main, veg, vegV, work, min, cost (€/annos), fav, pop, jf, recent, keep } */
+function fits(c, pl, iso, kind) {
+  if (pl.veg && !c.veg) return false;
+  const we = isWeekend(iso), wk = pl.wk > 0 ? pl.wk : 999;
+  if (kind === "cook") {
+    if (!c.pool.has("p")) return false;
+    if (!we && (c.work > wk || c.min > wk + 90)) return false;
+    if (!we && c.jf) return false;
+  } else if (kind === "quick") {
+    if (!c.pool.has("q")) return false;
+  } else if (kind === "brunch") {
+    if (!c.pool.has("a") || c.work > 40) return false;
+  }
+  return true;
+}
+function score(c, pl, hh, iso, kind, avoid, rnd) {
   let s = rnd() * 1.2;
   if (c.fav) s += 1.2;
   if (c.pop) s += 0.4;
   if (c.recent) s -= 1;
-  const k = used.get(c.id) || 0;
-  if (meal === "p" || meal === "l") { if (k) return null; }
-  else { if (k >= 2) return null; s -= k * 0.8; }
-  if (meal === "p") {
-    if (prev[0] && prev[0] === c.main) s -= 1.6;
-    if (prev[1] && prev[1] === c.main) s -= 0.5;
-    if (c.jf && workday) return null;
-  }
-  if (meal === "l") {
-    const ev = eaters(hh, pl, iso, "l").who;
-    if (ev.length && ev.every((x) => x.v === "e") && !c.eva) s -= 1.2;
-  }
-  const t = targetPer(pl, hh, iso, meal);
-  if (t > 0 && c.cost > 0) {
-    if (pl.bm === "m" && c.cost > t) return null;
-    s += c.cost > t ? -(c.cost / t - 1) * 3 : (1 - c.cost / t) * 0.4;
+  if (kind === "cook") {
+    if (avoid.ids.has(c.id)) return null;
+    if (avoid.mains.has(c.main)) s -= 1.5;
+    /* ruokalajien vaihtelu: ei samaa lajia peräkkäin, toistot viikon sisällä vähentävät pisteitä */
+    if (avoid.types) { s -= (avoid.types.get(c.t) || 0) * 0.8; if (avoid.lastT && avoid.lastT === c.t) s -= 1.5; }
+    /* arkena hyvin säilyvät ruoat vähentävät kokkaamista */
+    if (!isWeekend(iso)) s += (Math.min(keepDays(c), pl.mx) - 1) * 0.5;
+    const t = targetPer(pl, hh, iso);
+    if (t > 0 && c.cost > 0) {
+      if (pl.bm === "m" && c.cost > t) return null;
+      s += c.cost > t ? -(c.cost / t - 1) * 3 : (1 - c.cost / t) * 0.4;
+    }
+  } else {
+    if (avoid.ids.has(c.id)) s -= 1.5;
+    if (kind === "quick" && c.perus) s += 1;
   }
   return s;
 }
-function fits(c, ctx, iso, meal) {
-  const { pl } = ctx;
-  if (!c.pool.has(meal)) return false;
-  if (pl.veg && !c.veg) return false;
-  const workday = isWorkday(iso);
-  if (meal === "p" || meal === "l") {
-    const wk = pl.wk > 0 ? pl.wk : 999;
-    const lim = meal === "l" ? Math.min(wk, 30) : wk;
-    if (workday && c.work > lim) return false;
-    if (workday && c.min > lim + 90) return false;
-  } else if (workday && c.work > 15) return false;
-  return true;
-}
-/* valitsee yhden ehdokkaan; exclude = id:t, joita ei saa valita (vaihda-painike) */
-export function pick(cands, ctx, iso, meal, used, prev, rnd = Math.random, exclude = []) {
+export function pick(cands, pl, hh, iso, kind, avoid, rnd = Math.random, exclude = []) {
   let best = null, bs = -Infinity;
   for (const c of cands) {
-    if (exclude.includes(c.id) || !fits(c, ctx, iso, meal)) continue;
-    const s = score(c, ctx, iso, meal, used, prev, rnd);
+    if (exclude.includes(c.id) || !fits(c, pl, iso, kind)) continue;
+    const s = score(c, pl, hh, iso, kind, avoid, rnd);
     if (s != null && s > bs) { bs = s; best = c; }
   }
   return best;
 }
-/* järjestetty ehdokaslista (Valitse itse) */
-export function ranked(cands, ctx, iso, meal, used, prev) {
+export function ranked(cands, pl, hh, iso, kind, avoid) {
   const out = [];
   for (const c of cands) {
-    if (!fits(c, ctx, iso, meal)) continue;
-    const s = score(c, ctx, iso, meal, new Map(), prev, () => 0.5);
-    if (s != null) out.push([s - (used.get(c.id) || 0) * 0.5, c]);
+    if (!fits(c, pl, iso, kind)) continue;
+    const s = score(c, pl, hh, iso, kind, avoid, () => 0.5);
+    if (s != null) out.push([s, c]);
   }
   return out.sort((a, b) => b[0] - a[0]).map((x) => x[1]);
 }
 
-/* tekee suunnitelman: lukitut säilyvät, muut valitaan uudelleen */
-export function generate(cands, ctx, rnd = Math.random) {
-  const { pl, hh } = ctx;
-  const byId = new Map(cands.map((c) => [c.id, c]));
+/* ---------------- aikataulu ----------------
+ * Käy päivät läpi järjestyksessä. Jokaiselle aterialle käytetään ensin aiemmin kokattua ruokaa, jos sitä
+ * saa vielä syödä eikä sitä ole syöty jo samana päivänä; muuten kokataan (päivällinen ja viikonlopun lounas)
+ * tai otetaan nopea lounas (arkilounas). pickFn(key, kind, iso, avoid) palauttaa ehdokkaan tai null.
+ * Tulos: { days: { iso: { l, p, a } }, cooks: [{ key, iso, slot, id, v, n, covers: [{ iso, slot, n }] }] } */
+export function schedule(pl, hh, byId, pickFn) {
   const days = [...pl.days].sort();
-  const s = {};
-  for (const [k, v] of Object.entries(pl.s)) if (v && v.lk && days.includes(k.split("|")[0])) s[k] = v;
-  const used = new Map();
-  for (const v of Object.values(s)) if (v.id) used.set(v.id, (used.get(v.id) || 0) + 1);
-  const mains = [];
-  pl.s = s;
+  const out = { days: {}, cooks: [] };
+  const active = [];
+  const recentMains = [];
   for (const iso of days) {
-    for (const [meal] of MEALS) {
-      if (!pl.ml.includes(meal)) continue;
-      const key = iso + "|" + meal;
-      if (s[key]) { if (meal === "p" && s[key].id) mains.push((byId.get(s[key].id) || {}).main); continue; }
-      if (eaters(hh, pl, iso, meal).n <= 0) continue;
-      if (meal === "l" && lunchIsLeftover(pl, iso)) { s[key] = { lo: 1 }; continue; }
-      const prev = meal === "p" ? [mains[mains.length - 1], mains[mains.length - 2]] : [];
-      const c = pick(cands, ctx, iso, meal, used, prev, rnd);
-      if (!c) continue;
-      s[key] = pl.veg && c.vegV ? { id: c.id, v: c.vegV } : { id: c.id };
-      used.set(c.id, (used.get(c.id) || 0) + 1);
-      if (meal === "p") mains.push(c.main);
+    const day = (out.days[iso] = {});
+    const usedToday = new Set();
+    const o = ovOf(pl, iso);
+    const alive = (f, slot) => {
+      const age = dayDiff(f.iso, iso);
+      if (age <= 0 || usedToday.has(f.id)) return false;
+      if (age < f.span) return true;
+      /* hyvin säilyvä ruoka kolmannen päivän lounaaksi */
+      return pl.mx >= 3 && f.span >= 2 && age === 2 && f.keep >= 3 && slot === "l";
+    };
+    const leftover = (slot) => {
+      const c = active.filter((f) => alive(f, slot)).sort((a, b) => a.iso.localeCompare(b.iso));
+      return c[0] || null;
+    };
+    const cook = (slot, n, kind) => {
+      const key = iso + "|" + slot;
+      const ck = out.cooks.filter((f) => f.kind === "cook");
+      const types = new Map();
+      for (const f of ck) types.set(f.t, (types.get(f.t) || 0) + 1);
+      const avoid = { ids: new Set(out.cooks.map((f) => f.id).concat([...usedToday])), mains: new Set(recentMains.slice(-2)), types, lastT: ck.length ? ck[ck.length - 1].t : "" };
+      const c = pickFn(key, kind, iso, avoid);
+      if (!c) return null;
+      const keep = keepDays(c);
+      const span = kind === "cook" ? Math.min(keep, pl.mx >= 3 ? 2 : pl.mx) : 1;
+      const f = { key, iso, slot, id: c.id, v: c.v || "", keep, span, n: 0, covers: [], main: c.main, t: c.t, kind };
+      out.cooks.push(f);
+      if (kind === "cook") { active.push(f); recentMains.push(c.main); }
+      return f;
+    };
+    const eat = (f, slot, n) => { f.covers.push({ iso, slot, n }); f.n += n; usedToday.add(f.id); };
+
+    /* lounas */
+    const ln = lunchN(pl, hh, iso);
+    if (ln > 0) {
+      const f = leftover("l");
+      if (f) { eat(f, "l", ln); day.l = { type: "lo", f, n: ln }; }
+      else if (isWeekend(iso) && !o.nc) { const g = cook("l", ln, "cook"); if (g) { eat(g, "l", ln); day.l = { type: "cook", f: g, n: ln }; } else day.l = { type: "none", n: ln }; }
+      else { const g = cook("l", ln, "quick"); if (g) { eat(g, "l", ln); day.l = { type: "quick", f: g, n: ln }; } else day.l = { type: "none", n: ln }; }
     }
+    /* päivällinen: viikonloppuna aina erikseen */
+    const dn = dinnerN(pl, hh, iso);
+    if (dn > 0) {
+      const f = isWeekend(iso) && !o.nc ? null : leftover("p");
+      if (f) { eat(f, "p", dn); day.p = { type: "lo", f, n: dn }; }
+      else if (o.nc) { const g = cook("p", dn, "quick"); if (g) { eat(g, "p", dn); day.p = { type: "quick", f: g, n: dn }; } else day.p = { type: "none", n: dn }; }
+      else { const g = cook("p", dn, "cook"); if (g) { eat(g, "p", dn); day.p = { type: "cook", f: g, n: dn }; } else day.p = { type: "none", n: dn }; }
+    }
+    /* viikonloppuaamiainen */
+    if (isWeekend(iso) && pl.wb && breakfastN(pl, hh, iso) > 0) {
+      const g = cook("a", breakfastN(pl, hh, iso), "brunch");
+      if (g) { eat(g, "a", breakfastN(pl, hh, iso)); day.a = { type: "cook", f: g, n: breakfastN(pl, hh, iso) }; }
+    }
+    /* vanhentuneet pois */
+    for (let i = active.length - 1; i >= 0; i--) if (dayDiff(active[i].iso, iso) >= Math.max(active[i].span, pl.mx >= 3 ? 3 : 0)) active.splice(i, 1);
   }
-  return s;
+  /* kokattavassa satsissa vähintään MIN_BATCH annosta */
+  for (const f of out.cooks) f.batch = f.kind === "cook" ? Math.max(MIN_BATCH, f.n) : f.n;
+  return out;
 }
 
-/* suunnitelman reseptit ostoslistalle: [{ id, v, n }] samat yhdistettynä */
-export function shoppingItems(pl, hh) {
-  const out = new Map();
-  for (const iso of pl.days) for (const [meal] of MEALS) {
-    if (!pl.ml.includes(meal)) continue;
-    const s = pl.s[iso + "|" + meal];
-    if (!s || !s.id) continue;
-    const n = portions(pl, hh, iso, meal);
-    if (n <= 0) continue;
-    const k = s.id + "|" + (s.v || "");
-    const e = out.get(k) || { id: s.id, v: s.v || "", n: 0 };
-    e.n += n;
-    out.set(k, e);
+/* tekee suunnitelman: lukitut säilyvät, muut valitaan uudelleen */
+export function generate(cands, pl, hh, rnd = Math.random) {
+  const keep = {};
+  for (const [k, v] of Object.entries(pl.s)) if (v && v.lk && pl.days.includes(k.split("|")[0])) keep[k] = v;
+  pl.s = keep;
+  return fill(cands, pl, hh, rnd);
+}
+/* täydentää puuttuvat valinnat ja poistaa ne, joita aikataulu ei enää käytä (lukitut säilyvät) */
+export function fill(cands, pl, hh, rnd = Math.random) {
+  const byId = new Map(cands.map((c) => [c.id, c]));
+  const used = new Set();
+  schedule(pl, hh, byId, (key, kind, iso, avoid) => {
+    used.add(key);
+    const cur = pl.s[key];
+    if (cur && byId.has(cur.id)) return { ...byId.get(cur.id), v: cur.v };
+    const c = pick(cands, pl, hh, iso, kind, avoid, rnd);
+    if (!c) return null;
+    pl.s[key] = pl.veg && c.vegV ? { id: c.id, v: c.vegV } : { id: c.id };
+    return { ...c, v: pl.s[key].v };
+  });
+  for (const k of Object.keys(pl.s)) if (!used.has(k) && !pl.s[k].lk) delete pl.s[k];
+  return pl.s;
+}
+/* aikataulu tallennetuista valinnoista (ei uusia valintoja) */
+export function current(cands, pl, hh) {
+  const byId = new Map(cands.map((c) => [c.id, c]));
+  return schedule(pl, hh, byId, (key) => {
+    const cur = pl.s[key];
+    return cur && byId.has(cur.id) ? { ...byId.get(cur.id), v: cur.v } : null;
+  });
+}
+
+/* aamu- ja välipalavalikoima: kokonaisannokset jaetaan valittujen kesken */
+export function stapleTotals(pl, hh, sch) {
+  let ab = 0, vb = 0;
+  for (const iso of pl.days) {
+    const brunch = sch.days[iso] && sch.days[iso].a;
+    if (!brunch) ab += breakfastN(pl, hh, iso);
+    vb += snackN(pl, hh);
   }
+  const share = (ids, n) => (ids.length && n > 0 ? ids.map((id) => ({ id, n: Math.round((n / ids.length) * 2) / 2 })) : []);
+  return { ab, vb, items: [...share(pl.ab, ab), ...share(pl.vb, vb)] };
+}
+
+/* ostoslistalle: [{ id, v, n }], samat yhdistettynä */
+export function shoppingItems(pl, hh, sch) {
+  const out = new Map();
+  const add = (id, v, n) => { if (!id || !(n > 0)) return; const k = id + "|" + (v || ""); const e = out.get(k) || { id, v: v || "", n: 0 }; e.n += n; out.set(k, e); };
+  for (const f of sch.cooks) add(f.id, f.v, f.batch);
+  for (const x of stapleTotals(pl, hh, sch).items) add(x.id, "", x.n);
   return [...out.values()];
 }
