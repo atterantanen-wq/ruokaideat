@@ -96,7 +96,7 @@ export default [
     src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/kolmen-aineksen-valipalapatukat/4cOYAxVF6e8V1EisicWXyx"], ["Valio", "https://www.valio.fi/reseptit/itse-tehdyt-valipalapatukat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/valipalapatukat/"]],
   },
   {
-    n: "Hummus ja kasvistikut", m: "y", t: "vp", min: 15, w: 15, sv: 4, ml: ["v", "i", "e"], aka: ["Hummus"],
+    n: "Hummus ja kasvistikut", m: "y", t: "vp", min: 15, w: 15, sv: 4, ml: ["v", "i"], aka: ["Hummus"],
     d: "Kikherneistä ja seesamitahnasta soseutettu tahna kasvistikkujen dipiksi. Säilyy jääkaapissa muutaman päivän.",
     ing: ["kikherneet 1 prk", "tahini 2 rkl", "sitruuna 0.5 kpl", "oliiviöljy 2 rkl", "valkosipulinkynsi 1 kpl", "juustokumina 0.5 tl", "suola 0.5 tl", "# Tarjoiluun", "porkkana 3 kpl", "kurkku 0.5 kpl", "paprika 1 kpl"],
     steps: [

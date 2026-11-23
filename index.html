@@ -20,6 +20,7 @@
 </header>
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" type="button" data-tab="ideas" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg><span class="lb">Ideat</span></button>
+    <button class="tab" role="tab" type="button" data-tab="plan" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span class="lb">Viikko</span></button>
     <button class="tab" role="tab" type="button" data-tab="add" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span class="lb">Lisää ruoka</span></button>
     <button class="tab" role="tab" type="button" data-tab="cart" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L6.8 5M3.5 12l1.2 1.2L6.8 11M3.5 18l1.2 1.2L6.8 17"/></svg><span class="lb">Ostoslista<span class="badge" id="badge"></span></span></button>
   </nav>
@@ -47,6 +48,7 @@
   <div class="grid" id="list"></div>
   </div>
 
+  <section id="v-plan" hidden><div id="planBody"></div></section>
   <section id="v-add" hidden>
     <div id="newBody"></div>
     <p class="note" style="margin-top:14px">Valmiin ruoan voi kopioida omaksi versioksi ruoan ikkunasta.</p>
@@ -107,6 +109,7 @@
   <dialog id="mdlg"><div class="dl" id="mbody"></div></dialog>
   <dialog id="sdlg" aria-label="Kauppa"><div class="dl" id="sbody"></div></dialog>
   <dialog id="adlg" aria-label="Lisää ostoslistalle"><div class="dl" id="abody"></div></dialog>
+  <dialog id="pkdlg" aria-label="Valitse ruoka"><div class="dl" id="pkbody"></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
 </main>
 

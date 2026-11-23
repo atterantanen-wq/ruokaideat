@@ -31,6 +31,7 @@ public/favicon.svg
 src/
   main.js                  sovelluslogiikka (tila, haku, ruokalista, ostoslistat, rekisteri, hinnat, kokkausnäkymä)
   recipes.js               reseptikirjaston muunnos sekä versioiden ja muunnelmien käsittely
+  planner.js               viikkosuunnitelma: kotitalous, päivätyypit, annokset, budjetti ja ehdotukset
   styles/main.css          tyylit, vaalea ja tumma teema
   data/
     library/*.js           reseptikirjasto (arki, keitot, juhla, kasvis, aamu, leivonta, lisukkeet)

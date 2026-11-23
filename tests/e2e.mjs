@@ -98,7 +98,7 @@ test("valittu versio menee ostoslistalle", async () => {
 
 test("kokkausnäkymä aukeaa", async () => {
   await openCard("Pizza");
-  await click('#dlg [data-acc="steps"]');
+  if (!(await page.$("#dlg [data-cook]"))) await click('#dlg [data-acc="steps"]');
   await click("#dlg [data-cook]");
   await wait(300);
   const t = await page.evaluate(() => document.getElementById("kdlg").innerText);
@@ -172,6 +172,49 @@ test("leivonnaisissa hinta ja määrä erinä", async () => {
   ok(/€ \/ erä/.test(meta), "kortin hinta ei ole erälle: " + meta);
   ok(/yön yli/.test(meta), "kortissa ei näy lepoaikaa: " + meta);
   await closeAll();
+});
+
+test("viikkosuunnitelma: annokset, tähteet, lukitus ja ostoslista", async () => {
+  await fresh();
+  await click('.tab[data-tab="plan"]'); await wait(300);
+  /* kaksi aikuista ja lapsi: toinen eväät maanantaina, lapsi päiväkodissa */
+  await page.evaluate(() => {
+    const s = window.__app.state;
+    s.hh.m = [
+      { id: "m1", n: "A", c: false, w: ["koti", "koti", "koti", "koti", "koti", "koti", "koti"] },
+      { id: "m2", n: "B", c: false, w: ["evas", "evas", "evas", "evas", "evas", "koti", "koti"] },
+      { id: "m3", n: "L", c: true, w: ["pk", "pk", "pk", "pk", "pk", "koti", "koti"] },
+    ];
+  });
+  await page.evaluate(() => window.__app.state.pl.ml = ["p"]);
+  if (!(await page.$('[data-pa="ml"]'))) await click('[data-pa="set"]');
+  await wait(100);
+  await click('[data-pa="ml"][data-k="l"]');
+  await click('[data-pa="q"][data-k="3"]'); await wait(100);
+  await click('[data-pa="gen"]'); await wait(400);
+  const r = await page.evaluate(() => {
+    const A = window.__app, s = A.state, d = s.pl.days;
+    const lunch2 = s.pl.s[d[1] + "|l"], din1 = s.pl.s[d[0] + "|p"];
+    return { lo: !!(lunch2 && lunch2.lo), din: !!(din1 && din1.id), n: A.PL.portions(s.pl, s.hh, d[0], "p"), rows: document.querySelectorAll(".pn-row").length };
+  });
+  ok(r.din, "ensimmäiselle päivälle ei tullut päivällistä");
+  ok(r.lo, "toisen päivän lounas ei ole tähteitä");
+  ok(r.n >= 2.5, "päivällisen annokset: " + r.n);
+  ok(r.rows >= 6, "rivejä vain " + r.rows);
+  const key = await page.$eval('[data-pa="lock"]', (b) => b.dataset.key);
+  await click(`[data-pa="lock"][data-key="${key}"]`);
+  const before = await page.evaluate((k) => window.__app.state.pl.s[k].id, key);
+  await click('[data-pa="gen"]'); await wait(300);
+  const after = await page.evaluate((k) => window.__app.state.pl.s[k].id, key);
+  ok(before === after, "lukittu ruoka vaihtui");
+  await click('[data-pa="shop"]'); await wait(500);
+  const l = await page.evaluate(() => { const s = window.__app.state; const l = s.lists[s.lists.length - 1]; return { n: (l.pl || []).length, name: l.name }; });
+  ok(l.n >= 2 && /Suunnitelma/.test(l.name), "ostoslistalle ei tullut suunnitelmaa");
+  await click(".lcard"); await wait(300);
+  const cart = await page.evaluate(() => document.querySelector("#v-cart").innerText);
+  ok(/tuotetta/.test(cart), "ostoslista on tyhjä");
+  await page.evaluate(() => { const b = document.querySelector(".lbar .back"); b && b.click(); });
+  await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
 /* ---------------- ajo ---------------- */

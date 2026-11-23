@@ -1,6 +1,7 @@
 import "./styles/main.css";
 import {LIB} from "./data/library/index.js";
 import {fromLib,applySel,selOf,optLines} from "./recipes.js";
+import * as PL from "./planner.js";
 import {ING_RAW} from "./data/ingredients.js";
 import {STORE_P,STORE_L,STORE_K,STORE_KS,STORE_S} from "./data/stores.js";
 import {LOGO} from "./data/logos.js";
@@ -644,7 +645,7 @@ function aliasState(o){
   });
   return o;
 }
-let state=aliasState({custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2});
+let state=aliasState({custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,hh:PL.defaultHH(),pl:PL.defaultPlan()});
 let touched=false,remote=null,saving=false,dirty=false;
 
 function cleanRec(c){
@@ -667,7 +668,7 @@ function cleanRec(c){
 }
 function cleanState(x){return aliasState(cleanState0(x));}
 function cleanState0(x){
-  const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2};
+  const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,hh:PL.defaultHH(),pl:PL.defaultPlan()};
   if(x&&x.sp===true)o.sp=true;
   if(x&&x.rv===true)o.rv=true;
   if(x&&(x.th==="light"||x.th==="dark"))o.th=x.th;
@@ -732,7 +733,8 @@ function cleanState0(x){
       if(Array.isArray(l.cart)&&l.cart.includes("b68")&&!xs.some(y=>y.k==="leipä"))xs.push({k:"leipä",q:""});
       const adj={};
       if(l.adj&&typeof l.adj==="object")for(const k of Object.keys(l.adj).slice(0,200)){const n=parseInt(l.adj[k]);if(n!==0&&n>-99&&n<100&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))adj[k]=n;}
-      o.lists.push({id:l.id,name:nm,d,cart:cc(l.cart),checked:kk(l.checked),have:kk(Array.isArray(l.have)?l.have:x.have),x:xs,adj,md:(l.md==="k"||l.md==="t")?l.md:"",store:(typeof l.store==="string"&&stOk(l.store))?l.store:(l.store===undefined?o.store:"")});
+      const plx=Array.isArray(l.pl)?l.pl.filter(e=>e&&typeof e.id==="string"&&ids.has(e.id)&&+e.n>0&&+e.n<=200).slice(0,80).map(e=>({id:e.id,v:typeof e.v==="string"?clip(e.v,30):"",n:Math.round(+e.n*2)/2})):[];
+      o.lists.push({id:l.id,name:nm,d,pl:plx,cart:cc(l.cart),checked:kk(l.checked),have:kk(Array.isArray(l.have)?l.have:x.have),x:xs,adj,md:(l.md==="k"||l.md==="t")?l.md:"",store:(typeof l.store==="string"&&stOk(l.store))?l.store:(l.store===undefined?o.store:"")});
     }
   }else if(Array.isArray(x.cart)&&x.cart.length){
     const d=todayLocal();
@@ -803,6 +805,19 @@ function cleanState0(x){
     const e=ingClean(k,v,false,true);if(e)o.ix[k]=e;
   }
   if(x.xh&&typeof x.xh==="object")for(const k of Object.keys(x.xh).slice(0,200)){const n=parseInt(x.xh[k]);if(n>0&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))o.xh[k]=Math.min(n,9999);}
+  /* kotitalous ja viikkosuunnitelma */
+  const okIso=v=>typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v);
+  if(x.hh&&Array.isArray(x.hh.m)){const m=[];for(const y of x.hh.m.slice(0,8)){if(!y||typeof y.id!=="string"||!/^m[a-z0-9]{1,12}$/.test(y.id)||m.some(z=>z.id===y.id))continue;const w=Array.isArray(y.w)?y.w.slice(0,7).map(t=>PL.DT[t]?t:"koti"):[];while(w.length<7)w.push("koti");m.push({id:y.id,n:clip(String(y.n||""),20).trim()||"Jäsen",c:!!y.c,w});}if(m.length)o.hh={m};}
+  if(x.pl&&typeof x.pl==="object"){const p=x.pl,q=o.pl;
+    if(Array.isArray(p.days))q.days=[...new Set(p.days.filter(okIso))].sort().slice(0,14);
+    if(Array.isArray(p.ml)){const ml=PL.MEALS.map(m=>m[0]).filter(k=>p.ml.includes(k));if(ml.length)q.ml=ml;}
+    if(["d","w","m"].includes(p.bm))q.bm=p.bm;
+    {const ba=+p.ba;if(ba>0&&ba<=10000)q.ba=Math.round(ba*100)/100;}
+    if([0,20,30,45,60].includes(+p.wk))q.wk=+p.wk;
+    q.veg=p.veg===true;
+    if(p.ov&&typeof p.ov==="object")for(const d of Object.keys(p.ov)){if(!q.days.includes(d)||!p.ov[d]||typeof p.ov[d]!=="object")continue;const e={};for(const k of Object.keys(p.ov[d]))if(o.hh.m.some(z=>z.id===k)&&PL.DT[p.ov[d][k]])e[k]=p.ov[d][k];if(Object.keys(e).length)q.ov[d]=e;}
+    if(p.s&&typeof p.s==="object")for(const k of Object.keys(p.s)){const[d,m]=k.split("|");if(!q.days.includes(d)||!q.ml.includes(m))continue;const v=p.s[k];if(!v||typeof v!=="object")continue;if(v.lo){q.s[k]={lo:1};continue;}if(typeof v.id==="string"&&ids.has(v.id)){const e={id:v.id};if(typeof v.v==="string"&&v.v)e.v=clip(v.v,30);if(v.lk)e.lk=1;q.s[k]=e;}}
+  }
   return o;
 }
 function lsLoad(){try{const v=localStorage.getItem(LS);return v?JSON.parse(v):null;}catch(e){return null;}}
@@ -816,7 +831,7 @@ async function flush(){
 function persist(){lsSave();if(!remote)return;dirty=true;if(!saving)flush();}
 function applyTheme(){const t=state.th||"auto",d=t==="dark"||(t==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);document.documentElement.dataset.theme=d?"dark":"light";document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.th===(state.th||"auto")));applyLay();}
 try{matchMedia("(prefers-color-scheme:dark)").addEventListener("change",applyTheme);}catch(e){}
-const BAR={ideas:"Mitä tänään syödään?",add:"Lisää oma ruoka",cart:"Ostoslistat",reg:"Ainesosarekisteri"};
+const BAR={plan:"Viikkosuunnitelma",ideas:"Mitä tänään syödään?",add:"Lisää oma ruoka",cart:"Ostoslistat",reg:"Ainesosarekisteri"};
 function setBar(n,t){document.body.dataset.view=n;$("ttl").textContent=t||BAR[n];}
 function mutate(){touched=true;persist();try{updBadge();}catch(e){}}
 
@@ -1423,11 +1438,13 @@ function renderIdeas(){
   uiEdit();renderSd();
 }
 /* ---------- ostoslista ---------- */
-function shopping(cart){
+function shopping(cart,extra){
   const map=new Map();
-  for(const id of (cart||state.cart)){
-    const r=byId(id);if(!r)continue;
-    for(const line of ingOf(r)){
+  const src=[];
+  for(const id of (cart||state.cart)){const r=byId(id);if(r)src.push([r,ingOf(r)]);}
+  for(const x of extra||[])src.push([x.r,x.lines]);
+  for(const [r,lines] of src){
+    for(const line of lines){
       const p=parseIng(line);
       if(p.key==="vesi"||p.key==="vettä")continue;
       const ck=state.ing[p.key]||PR[p.key]||!CIDX.has(p.key)?p.key:CIDX.get(p.key).key;
@@ -1631,8 +1648,6 @@ PV("lammas",22.2,"Karitsan paisti (2 tuotetta, 20,39–23,99 €/kg)","");
 PV("kaurakerma",3.96,"Kaurakerma ruoanvalmistukseen (Oatly iMat 13 %)","Vain yksi maustamaton tuote.");
 PV("ansjovis",34.1,"Anjovisfileet (2 tuotetta, 26,38–41,85 €/kg)","");
 PV("juuriselleri",3.89,"Juuriselleri","Vain yksi tuote.");
-PV("tilli",57.7,"Tilli, ruukku tai pussi (3 tuotetta, 1,28–2,48 € / kpl, noin 30 g)","");
-PV("persilja",68.3,"Persilja, ruukku tai pussi (7 tuotetta, 1,28–2,48 € / kpl, noin 30 g)","");
 PV("minttu",90.4,"Minttu, ruukku (4 tuotetta, 1,48–2,48 € / kpl, noin 25 g)","");
 const DEPS=["Hedelmät ja vihannekset", "Leivät ja leivonnaiset", "Pasta, riisi ja viljat", "Leivonta", "Säilykkeet", "Hillot ja levitteet", "Mausteet ja liemet", "Öljyt, kastikkeet ja texmex", "Makeiset ja naposteltavat", "Juomat", "Tuore liha", "Leikkeleet ja makkarat", "Kala ja merenelävät", "Maito, munat ja rasvat", "Juustot ja tofu", "Valmisruoka", "Pakasteet", "Koti ja hygienia", "Muut"];
 const DEPMAP={"hedelmat-ja-vihannekset":0,"hedelmat-ja-vihannekset-1":0,"leivat-ja-leivonnaiset":1,"pastat-riisit-ja-nuudelit":2,"kuivatuotteet-ja-leivonta":3,"hillot-ja-sailykkeet":4,"oljyt-maustaminen-ja-kastikkeet":7,"texmex-ja-maailman-makuja":7,"karkit-suklaat-ja-keksit":8,"snacksit":8,"kahvit-teet-ja-mehut":9,"alkoholi-ja-virvoitusjuomat":9,"liha-ja-kasviproteiinit":10,"liha-ja-kasviproteiinit-1":10,"kala-ja-merenelavat":12,"maito-munat-ja-rasvat":13,"juustot-tofut-ja-kasvipohjaiset":14,"valmisruoka":15,"pakasteet":16,"kodinhoito-ja-taloustarvikkeet":17,"kosmetiikka-ja-hygienia":17,"lapset":17,"lemmikit":17,"keittio-ja-kattaus":17};
@@ -1809,8 +1824,10 @@ function deptOf(key){
   if(u){const s=u.split("/"),d=DEPSUB[s[1]]!=null?DEPSUB[s[1]]:DEPMAP[s[0]];if(d!=null)return d;}
   return pantryHit(key)?6:18;
 }
+/* viikkosuunnitelmasta tulleet reseptit: oma annosmäärä ja versio */
+function plLines(l){const o=[];for(const e of (l.pl||[])){const r=byId(e.id);if(r)o.push({r,lines:ingFor(r,e.n,e.v)});}return o;}
 function listItems(l){
-  const items=shopping(l.cart),map=new Map(items.map(e=>[e.key,e]));
+  const items=shopping(l.cart,plLines(l)),map=new Map(items.map(e=>[e.key,e]));
   for(const it of (l.x||[])){
     let e=map.get(it.k);
     if(!e){e={key:it.k,name:it.k.charAt(0).toUpperCase()+it.k.slice(1),amts:new Map(),from:[],open:false,extra:true,per:new Map()};map.set(it.k,e);items.push(e);}
@@ -1975,7 +1992,7 @@ function menuHtml(l){
   return`<button type="button" class="dx" data-lmclose aria-label="Sulje">${ico("x")}</button><h2 class="dh" style="font-size:1.25rem">${esc(l.name)}</h2>`+
     it("rename","Nimeä uudelleen")+it("copy","Tee kopio uudeksi listaksi")+
     it("all","Merkitse kaikki kerätyiksi","",!st.act.length||!st.left)+it("none","Merkitse kaikki keräämättömiksi","",!anyCk)+
-    it("empty",mArm==="empty"?"Varmista: tyhjennä lista":"Tyhjennä lista","err",!l.cart.length&&!(l.x||[]).length)+
+    it("empty",mArm==="empty"?"Varmista: tyhjennä lista":"Tyhjennä lista","err",!l.cart.length&&!(l.x||[]).length&&!(l.pl||[]).length)+
     it("del",mArm==="del"?"Varmista: poista lista":"Poista lista","err")+`<div style="height:22px"></div>`;
 }
 function openMenu(lid){
@@ -2005,7 +2022,7 @@ $("mdlg").addEventListener("click",e=>{
   }
   if(a==="all"){l.checked=listStats(l).act.map(e=>e.key);mutate();renderCart();return;}
   if(a==="none"){l.checked=[];mutate();renderCart();return;}
-  if(a==="empty"){l.cart=[];l.checked=[];l.have=[];l.x=[];l.adj={};mutate();refreshCart();return;}
+  if(a==="empty"){l.cart=[];l.pl=[];l.checked=[];l.have=[];l.x=[];l.adj={};mutate();refreshCart();return;}
   if(a==="del"){
     state.lists=state.lists.filter(q=>q!==l);
     if(state.act===l.id)state.act=state.lists.length?state.lists[state.lists.length-1].id:"";
@@ -2404,7 +2421,7 @@ function renderCart(){
   const head=`<div class="lbar"><button type="button" class="back" data-lst="back" aria-label="Takaisin ostoslistoihin">${ico("chev")}</button><div class="lbt"><h2 class="lbn">${esc(l.name)}</h2></div><button type="button" class="dots wah" data-act="copy" aria-label="Kopioi lista WhatsAppiin">${ico("copy")}</button><button type="button" class="dots" data-lst="menu" data-lid="${esc(l.id)}" aria-haspopup="dialog" aria-label="Listan valikko">${ico("dots")}</button></div>`+rn;
   const stb0=()=>{const stx=listStats(l),n=stx.act.length,pr=stx.tot>0?(stx.miss?"väh. ":"")+eur(stx.tot):"";return`<button type="button" class="scard" data-st="open" aria-haspopup="dialog" aria-label="Kauppa: ${esc(storeName(l.store))}. Vaihda kauppa"><span class="sl2">${lg(typeOf(l.store))}<b>${LOGO[typeOf(l.store)]?"":"Kauppa: "}${esc(storeName(l.store)).replace(/-/g,"\u2011")}</b></span>${n?`<span class="sr2">${pr?`<b>${pr}</b>`:""}<span>${n} ${n===1?"tuote":"tuotetta"}</span></span>`:""}</button>`;};
   const waBtn=`<button type="button" class="wa" data-act="copy">${ico("copy")}<span>Kopioi lista WhatsAppiin</span></button>`;
-  if(!l.cart.length&&!(l.x||[]).length){
+  if(!l.cart.length&&!(l.x||[]).length&&!(l.pl||[]).length){
     body.innerHTML=head+`<p class="note">Lista on tyhjä. Paina ruoan kohdalla Lisää ostoslistalle, niin ainekset kerääntyvät tähän. Voit valita useita ruokia, jolloin samat tuotteet lasketaan yhteen.</p>`+`<div class="actions"><button class="go" type="button" data-tab-go="ideas">Selaa ruokaideoita</button></div>`+xBar();
     return;
   }
@@ -2741,12 +2758,13 @@ function showTab(n,keep){
   $("abx").innerHTML="";
   if(n==="cart")viewId=null;
   document.body.classList.remove("inlist");
-  for(const k of ["ideas","add","cart","reg"])$("v-"+k).hidden=k!==n;
+  for(const k of ["ideas","plan","add","cart","reg"])$("v-"+k).hidden=k!==n;
   {const vv=$("v-"+n);vv.classList.remove("view-in");void vv.offsetWidth;vv.classList.add("view-in");}
   const hl=n==="reg"?(regS.back||"add"):n;
   tabBtns.forEach(b=>{const on=b.dataset.tab===hl;b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1;});
   if(n==="cart")renderCart();
   if(n==="reg")renderReg();
+  if(n==="plan")renderPlan();
   renderNewHost();
   window.scrollTo(0,keep&&n==="ideas"?(tabScroll.ideas||0):0);
 }
@@ -3741,7 +3759,220 @@ buildChips();showTab("ideas");
 renderIdeas();refreshCart();
 startRemote(3);
 /* kehitystila: testiskriptien apu (ei mukana tuotantoversiossa) */
-if(import.meta.env.DEV)window.__app={R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
+
+/* ---------- viikkosuunnitelma ---------- */
+Object.assign(IC,{
+  cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  unlock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/>',
+  shuffle:'<path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M20 20l-5-5M4 4l5 5"/>'
+});
+let planSet=null,planPick=null;
+const PL_MEALS=PL.MEALS.map(m=>m[0]);
+const plDate=iso=>{const d=PL.dateOf(iso);return PL.WEEKDAYS[PL.wdOf(iso)]+" "+d.getDate()+"."+(d.getMonth()+1)+".";};
+/* reseptin raaka-ainerivit valitulla annosmäärällä ja versiolla */
+function ingFor(r,n,v){
+  const sel=state.tv[r.id]||{};
+  const a=hasOpt(r)?applySel(r,{v:v||sel.v,t:sel.t||[]},keyOfLine).ing:r.ing;
+  const f=n/servOf(r);
+  return f===1?a:a.map(l=>scaleLine(l,f));
+}
+/* koko reseptin hinta annosta kohden (pienet ainekset karsitaan koko reseptin tasolla) */
+const plCostMemo=new Map();
+function plCostPer(r,v){
+  const k=r.id+"|"+(v||"")+"|"+JSON.stringify(state.tv[r.id]||{});
+  if(plCostMemo.has(k))return plCostMemo.get(k);
+  let sum=0;
+  for(const line of ingFor(r,servOf(r),v)){const p=parseIng(line);if(p.v==null)continue;const x=isBatch(r)?costBake(p.key,p.fam,p.v):costOf(p.key,p.fam,p.v);if(x.t==="ok")sum+=x.c;}
+  const per=sum/(servOf(r)||1);plCostMemo.set(k,per);return per;
+}
+function plCands(){
+  const recent=new Set(),lim=PL.addDays(todayLocal(),-14);
+  for(const l of state.lists)if(l.d>=lim){l.cart.forEach(i=>recent.add(i));(l.pl||[]).forEach(e=>recent.add(e.id));}
+  const out=[];
+  for(const r of all()){
+    if(r.t==="li"||r.t==="le"||r.t==="ja"||r.t==="al"||r.fe||isBatch(r)||!r.ing.length)continue;
+    const pool=new Set();
+    if(r.ml&&r.ml.length){for(const x of r.ml)if("alpvi".includes(x))pool.add(x);}
+    else if(MEAL_MAIN.has(r.t)){pool.add("p");if((workOf(r)||r.min)<=30||r.t==="ke"||r.t==="sa")pool.add("l");}
+    else if(r.t==="am"||r.t==="pu"){pool.add("a");pool.add("i");}
+    else if(r.t==="vp"){pool.add("v");pool.add("i");}
+    if(!pool.size)continue;
+    const vegV=(r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y");
+    const veg=["v","y"].includes(mainOf(r));
+    out.push({id:r.id,name:r.name,pool,main:mainOf(r),veg:veg||!!vegV,vegV:veg?"":(vegV?vegV.id:""),work:workOf(r)||r.min||0,min:r.min||0,
+      cost:plCostPer(r,""),fav:isFav(r.id),pop:isPop(r),perus:!!r.perus,jf:!!r.jf,recent:recent.has(r.id),eva:(r.ml||[]).includes("e")});
+  }
+  return out;
+}
+const plCtx=()=>({pl:state.pl,hh:state.hh});
+function plUsed(skip){const u=new Map();for(const[k,v]of Object.entries(state.pl.s))if(v&&v.id&&k!==skip)u.set(v.id,(u.get(v.id)||0)+1);return u;}
+function plPrevMains(iso){const o=[];for(const d of [PL.addDays(iso,-1),PL.addDays(iso,-2)]){const s=state.pl.s[d+"|p"];const r=s&&s.id&&byId(s.id);o.push(r?mainOf(r):undefined);}return o;}
+/* yhteenveto: hinta, budjetti ja työaika */
+function plSummary(){
+  const pl=state.pl,hh=state.hh;let cost=0,work=0,meals=0;
+  for(const iso of pl.days)for(const m of PL_MEALS){
+    if(!pl.ml.includes(m))continue;const s=pl.s[iso+"|"+m];if(!s||!s.id)continue;
+    const r=byId(s.id);if(!r)continue;const n=PL.portions(pl,hh,iso,m);if(n<=0)continue;
+    cost+=plCostPer(r,s.v)*n;work+=workOf(r)||r.min||0;meals++;
+  }
+  const bud=pl.bm==="m"||!(pl.ba>0)?0:(pl.bm==="w"?pl.ba/7:pl.ba)*pl.days.length;
+  return{cost,work,meals,bud};
+}
+function renderPlan(){
+  const h=$("planBody");if(!h)return;
+  plCostMemo.clear();
+  const pl=state.pl,hh=state.hh;
+  if(planSet==null)planSet=!pl.days.length;
+  const today=todayLocal(),next=PL.nextDays(today,14);
+  /* asetukset */
+  const mem=hh.m.map((m,i)=>`<div class="pn-mem"><div class="pn-mh"><input type="text" maxlength="20" value="${esc(m.n)}" data-pm-n="${i}" aria-label="Jäsenen nimi"><button type="button" class="chip" data-pa="mem-c" data-i="${i}" aria-pressed="${m.c}">${m.c?ico("check"):""}Lapsi (½ annosta)</button>${hh.m.length>1?`<button type="button" class="pn-ib" data-pa="mem-rm" data-i="${i}" aria-label="Poista ${esc(m.n)}">${ico("x")}</button>`:""}</div>
+    <div class="pn-week">${PL.WEEKDAYS.map((wd,j)=>`<label><span>${wd}</span><select data-pm-w="${i}|${j}" aria-label="${esc(m.n)}, ${wd}">${PL.DAYTYPES.map(t=>`<option value="${t.id}"${m.w[j]===t.id?" selected":""}>${esc(t.s)}</option>`).join("")}</select></label>`).join("")}</div></div>`).join("");
+  const seg=(k,opts,cur)=>`<div class="pn-seg" role="group">${opts.map(([v,t])=>`<button type="button" data-pa="${k}" data-k="${v}" aria-pressed="${String(cur)===String(v)}">${t}</button>`).join("")}</div>`;
+  const budHint=pl.ba>0?(pl.bm==="d"?`noin ${eur1(pl.ba*7)} / viikko`:pl.bm==="w"?`noin ${eur1(pl.ba/7)} / päivä`:"aterian enimmäishinta annosta kohden"):"ei budjettia";
+  const settings=`<section class="pn-card pn-set"><button type="button" class="pn-sh" data-pa="set" aria-expanded="${planSet}">${ico("users")}<span>Kotitalous ja asetukset</span>${ico(planSet?"up":"down")}</button>${planSet?`
+    <h3 class="pn-h">Kotitalous</h3><p class="note">Valitse kullekin perusviikko. Yksittäisen päivän voi vaihtaa suunnitelmassa nimeä napauttamalla.</p>${mem}
+    <button type="button" class="cartbtn" data-pa="mem-add">${ico("plus")}<span>Lisää jäsen</span></button>
+    <h3 class="pn-h">Ateriat</h3><div class="chips">${PL.MEALS.map(([k,n])=>`<button type="button" class="chip" data-pa="ml" data-k="${k}" aria-pressed="${pl.ml.includes(k)}">${pl.ml.includes(k)?ico("check"):""}${n}</button>`).join("")}</div>
+    <p class="note">Päivällisestä tehdään aina myös seuraavan päivän lounaan tähteet, jos lounas on mukana.</p>
+    <h3 class="pn-h">Budjetti</h3>${seg("bm",[["d","€ / päivä"],["w","€ / viikko"],["m","€ / annos"]],pl.bm)}
+    <div class="pn-bud"><input id="pba" type="number" inputmode="decimal" min="0" step="1" value="${pl.ba>0?pl.ba:""}" placeholder="esim. ${pl.bm==="w"?"150":pl.bm==="m"?"3":"25"}" aria-label="Budjetti euroina"><span>€</span><small>${esc(budHint)}</small></div>
+    <h3 class="pn-h">Arjen työaika enintään</h3>${seg("wk",[[20,"20 min"],[30,"30 min"],[45,"45 min"],[60,"60 min"],[0,"Ei rajaa"]],pl.wk)}
+    <h3 class="pn-h">Ruokavalio</h3><div class="chips"><button type="button" class="chip" data-pa="veg" aria-pressed="${pl.veg}">${pl.veg?ico("check"):""}Vain kasvisruokia</button></div>`:""}</section>`;
+  /* päivät */
+  const days=`<section class="pn-card"><h3 class="pn-h" style="margin-top:0">Päivät</h3><div class="pn-days">${next.map(d=>`<button type="button" class="pn-day" data-pa="day" data-d="${d}" aria-pressed="${pl.days.includes(d)}"><small>${PL.WEEKDAYS[PL.wdOf(d)]}</small>${PL.dateOf(d).getDate()}.${PL.dateOf(d).getMonth()+1}.</button>`).join("")}</div>
+    <div class="chips" style="margin-top:8px">${[["mf","Ma–Pe"],["wk","Koko viikko"],["3","3 päivää"],["clr","Tyhjennä"]].map(([k,t])=>`<button type="button" class="chip sdm" data-pa="q" data-k="${k}">${t}</button>`).join("")}</div>
+    <div class="actions" style="margin-top:12px"><button type="button" class="go" data-pa="gen"${pl.days.length&&pl.ml.length?"":" disabled"}>${ico("shuffle")}<span>${Object.keys(pl.s).length?"Tee uudet ehdotukset":"Tee suunnitelma"}</span></button></div>
+    ${Object.values(pl.s).some(v=>v.lk)?`<p class="note">Lukitut ruoat säilyvät, kun ehdotukset tehdään uudelleen.</p>`:""}</section>`;
+  /* suunnitelma */
+  const has=Object.keys(pl.s).length&&pl.days.length;
+  let plan="";
+  if(has){
+    const sm=plSummary();
+    const over=sm.bud>0&&sm.cost>sm.bud;
+    plan+=`<section class="pn-card pn-sum"><div class="pn-sr"><span>Arvioitu hinta</span><b>${eur1(sm.cost)}</b></div>${sm.bud>0?`<div class="pn-sr"><span>Budjetti ${pl.days.length} päivälle</span><b>${eur1(sm.bud)}</b></div><div class="pn-bar${over?" over":""}"><i style="width:${Math.min(100,Math.round(sm.cost/sm.bud*100))}%"></i></div>${over?`<p class="note err">Budjetti ylittyy ${eur1(sm.cost-sm.bud)}. Vaihda kalleimpia ruokia tai lukitse ne, jotka haluat pitää.</p>`:""}`:""}<p class="note">${sm.meals} ateriaa · työtä yhteensä noin ${fmtDur(sm.work)}. Hinta lasketaan annoksista; ostoslistan pakkaushinnat voivat olla suuremmat.</p></section>`;
+    for(const iso of [...pl.days].sort()){
+      const chips=hh.m.map(m=>{const t=PL.typeOf(hh,pl,m,iso);const ov=pl.ov[iso]&&pl.ov[iso][m.id];return`<button type="button" class="pn-who${ov?" ov":""}" data-pa="dt" data-d="${iso}" data-m="${esc(m.id)}" aria-label="${esc(m.n)}: ${esc(t.n)}, vaihda">${esc(m.n)}: ${esc(t.s)}</button>`;}).join("");
+      const rows=PL.MEALS.filter(([k])=>pl.ml.includes(k)).map(([k,mn])=>{
+        const key=iso+"|"+k,s=pl.s[key],n=PL.portions(pl,hh,iso,k),eat=PL.eaters(hh,pl,iso,k);
+        const lab="";const ml=`<span class="pn-ml">${mn}</span>`;
+        if(n<=0)return`<li class="pn-row muted">${lab}<span class="pn-nm">${ml}Ei kotona</span></li>`;
+        const evas=eat.who.filter(x=>x.v==="e").map(x=>x.m.n);
+        const evTxt=evas.length?` · eväs: ${esc(evas.join(", "))}`:"";
+        if(s&&s.lo){
+          const p=pl.s[PL.addDays(iso,-1)+"|p"],r=p&&p.id&&byId(p.id);
+          return`<li class="pn-row">${lab}<span class="pn-nm">${ml}<b>Tähteet</b>${r?": "+esc(r.name):""}<small>${fmtN(n)} annosta${evTxt}</small></span><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-key="${key}" aria-label="Tee lounaaksi oma ruoka">${ico("shuffle")}</button></span></li>`;
+        }
+        if(!s||!s.id)return`<li class="pn-row">${lab}<span class="pn-nm muted">${ml}Ei sopivaa ehdotusta</span><span class="pn-act"><button type="button" class="pn-ib" data-pa="pick" data-key="${key}" aria-label="Valitse itse">${ico("list")}</button></span></li>`;
+        const r=byId(s.id);if(!r)return"";
+        const ver=s.v&&(r.vs||[]).find(v=>v.id===s.v);
+        const lo=k==="p"?PL.leftoverFor(pl,hh,iso):0;
+        const c=plCostPer(r,s.v)*n;
+        return`<li class="pn-row">${lab}<span class="pn-nm">${ml}<button type="button" class="lk" data-pa="open" data-id="${esc(r.id)}">${esc(r.name)}${ver?" – "+esc(ver.n):""}</button><small>${fmtN(n)} annosta${lo?` (+ ${fmtN(lo)} lounaaksi)`:""}${evTxt} · ${eur1(c)} · ${fmtDur(workOf(r)||r.min||0)}</small></span><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-key="${key}" aria-label="Vaihda: ${esc(r.name)}"${s.lk?" disabled":""}>${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="pick" data-key="${key}" aria-label="Valitse itse">${ico("list")}</button><button type="button" class="pn-ib lk2b" data-pa="lock" data-key="${key}" aria-pressed="${!!s.lk}" aria-label="${s.lk?"Poista lukitus":"Lukitse"}: ${esc(r.name)}">${ico(s.lk?"lock":"unlock")}</button></span></li>`;
+      }).join("");
+      plan+=`<section class="pn-card pn-dayc"><h3 class="pn-dh">${plDate(iso)}</h3><div class="pn-whos">${chips}</div><ul class="pn-rows">${rows}</ul></section>`;
+    }
+    plan+=`<div class="actions pn-foot"><button type="button" class="go" data-pa="shop" style="width:100%">${ico("tlist")}<span>Lisää ostoslistalle</span></button></div>`;
+  }else if(pl.days.length){
+    plan=`<p class="note" style="margin:6px 4px">Valitse ateriat ja paina Tee suunnitelma.</p>`;
+  }else{
+    plan=`<p class="note" style="margin:6px 4px">Valitse päivät, joille haluat suunnitelman.</p>`;
+  }
+  h.innerHTML=settings+days+plan;
+}
+const fmtN=n=>String(n).replace(".",",");
+function planGen(){
+  const pl=state.pl;
+  pl.s=PL.generate(plCands(),plCtx());
+  mutate();renderPlan();
+}
+function planSwap(key){
+  const pl=state.pl,[iso,meal]=key.split("|"),cur=pl.s[key];
+  const ex=cur&&cur.id?[cur.id]:[];
+  const c=PL.pick(plCands(),plCtx(),iso,meal,plUsed(key),meal==="p"?plPrevMains(iso):[],Math.random,ex);
+  if(c)pl.s[key]=pl.veg&&c.vegV?{id:c.id,v:c.vegV}:{id:c.id};else delete pl.s[key];
+  mutate();renderPlan();
+}
+function planPickOpen(key){
+  planPick={key,q:""};renderPick();$("pkdlg").showModal();
+}
+function renderPick(){
+  if(!planPick)return;
+  const pl=state.pl,[iso,meal]=planPick.key.split("|");
+  const q=fold(planPick.q.trim());
+  let list=PL.ranked(plCands(),plCtx(),iso,meal,plUsed(planPick.key),meal==="p"?plPrevMains(iso):[]);
+  if(q){const all2=plCands().filter(c=>fzBest(q,[c.name])>=0);list=all2;}
+  const rows=list.slice(0,40).map(c=>`<li><button type="button" class="pn-pr" data-pp="${esc(c.id)}"><span>${esc(c.name)}</span><small>${eur1(c.cost)} / annos · ${fmtDur(c.work)}</small></button></li>`).join("");
+  $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${PL.MEAL_N[meal]}, ${plDate(iso)}</h2>
+    <input id="ppq" type="search" placeholder="Hae ruokaa" autocomplete="off" value="${esc(planPick.q)}" aria-label="Hae ruokaa">
+    <p class="note">${q?"Hakutulokset kaikista ruoista":"Sopivimmat ehdotukset ensin"}</p><ul class="pn-pl">${rows||`<li class="note">Ei osumia.</li>`}</ul>
+    ${meal==="l"&&pl.s[PL.addDays(iso,-1)+"|p"]?`<button type="button" class="cartbtn" data-pp="__lo">${ico("chef")}<span>Tähteet edellisen päivän päivällisestä</span></button>`:""}`;
+}
+$("pkbody").addEventListener("input",e=>{if(e.target.id==="ppq"&&planPick){planPick.q=e.target.value;const pos=e.target.selectionStart;renderPick();const i=$("ppq");i.focus();try{i.setSelectionRange(pos,pos);}catch(x){}}});
+$("pkbody").addEventListener("click",e=>{
+  if(e.target.closest("[data-pp-x]")){$("pkdlg").close();return;}
+  const b=e.target.closest("[data-pp]");if(!b||!planPick)return;
+  const id=b.dataset.pp,pl=state.pl;
+  if(id==="__lo")pl.s[planPick.key]={lo:1};
+  else{const r=byId(id);const vegV=pl.veg&&r&&!["v","y"].includes(mainOf(r))?((r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y")||{}).id:"";pl.s[planPick.key]=vegV?{id,v:vegV,lk:1}:{id,lk:1};}
+  $("pkdlg").close();mutate();renderPlan();
+});
+$("pkdlg").addEventListener("close",()=>{planPick=null;});
+function planShop(){
+  const pl=state.pl,items=PL.shoppingItems(pl,state.hh).map(e=>({id:e.id,v:e.v,n:Math.round(e.n*2)/2}));
+  if(!items.length){flashToast("Suunnitelmassa ei ole ruokia.");return;}
+  const ds=[...pl.days].sort(),a=PL.dateOf(ds[0]),b=PL.dateOf(ds[ds.length-1]);
+  const l=newList();
+  l.name=clip(`Suunnitelma ${a.getDate()}.${a.getMonth()+1}.–${b.getDate()}.${b.getMonth()+1}.`,40);
+  l.pl=items;
+  mutate();
+  flashToast(`<span>Lisätty ostoslistalle <b>${esc(l.name)}</b></span>`);
+  showTab("cart");
+}
+$("planBody").addEventListener("click",e=>{
+  const b=e.target.closest("[data-pa]");if(!b)return;
+  const a=b.dataset.pa,pl=state.pl,hh=state.hh;
+  if(a==="set"){planSet=!planSet;return renderPlan();}
+  if(a==="open"){openDlg(b.dataset.id);return;}
+  if(a==="gen")return planGen();
+  if(a==="swap")return planSwap(b.dataset.key);
+  if(a==="pick")return planPickOpen(b.dataset.key);
+  if(a==="shop")return planShop();
+  if(a==="lock"){const s=pl.s[b.dataset.key];if(s){if(s.lk)delete s.lk;else s.lk=1;}}
+  else if(a==="mem-add"){if(hh.m.length<8){let i=hh.m.length+1;while(hh.m.some(m=>m.id==="m"+i))i++;hh.m.push({id:"m"+i,n:"Jäsen "+(hh.m.length+1),c:false,w:["koti","koti","koti","koti","koti","koti","koti"]});}}
+  else if(a==="mem-rm"){const m=hh.m[+b.dataset.i];if(m&&hh.m.length>1){hh.m.splice(+b.dataset.i,1);for(const d of Object.keys(pl.ov))delete pl.ov[d][m.id];}}
+  else if(a==="mem-c"){const m=hh.m[+b.dataset.i];if(m)m.c=!m.c;}
+  else if(a==="ml"){const k=b.dataset.k;pl.ml=pl.ml.includes(k)?pl.ml.filter(x=>x!==k):PL_MEALS.filter(x=>x===k||pl.ml.includes(x));}
+  else if(a==="bm")pl.bm=b.dataset.k;
+  else if(a==="wk")pl.wk=+b.dataset.k;
+  else if(a==="veg")pl.veg=!pl.veg;
+  else if(a==="day"){const d=b.dataset.d;pl.days=pl.days.includes(d)?pl.days.filter(x=>x!==d):[...pl.days,d].sort();}
+  else if(a==="q"){
+    const k=b.dataset.k,t=todayLocal();
+    if(k==="clr"){pl.days=[];pl.s={};pl.ov={};}
+    else if(k==="3")pl.days=PL.nextDays(t,3);
+    else{let st=t;if(k==="mf"){while(PL.wdOf(st)!==0)st=PL.addDays(st,1);if(PL.wdOf(t)<5&&PL.wdOf(t)>0)st=t;pl.days=PL.nextDays(st,7).filter(d=>PL.wdOf(d)<5).slice(0,5);}else pl.days=PL.nextDays(t,7);}
+  }
+  else if(a==="dt"){
+    const d=b.dataset.d,m=hh.m.find(x=>x.id===b.dataset.m);if(!m)return;
+    const cur=PL.typeOf(hh,pl,m,d).id,i=PL.DAYTYPES.findIndex(t=>t.id===cur),nx=PL.DAYTYPES[(i+1)%PL.DAYTYPES.length].id;
+    pl.ov[d]=pl.ov[d]||{};
+    if(nx===m.w[PL.wdOf(d)])delete pl.ov[d][m.id];else pl.ov[d][m.id]=nx;
+    if(!Object.keys(pl.ov[d]).length)delete pl.ov[d];
+  }
+  /* poistetut päivät pois suunnitelmasta */
+  for(const k of Object.keys(pl.s))if(!pl.days.includes(k.split("|")[0])||!pl.ml.includes(k.split("|")[1]))delete pl.s[k];
+  for(const d of Object.keys(pl.ov))if(!pl.days.includes(d))delete pl.ov[d];
+  mutate();renderPlan();
+});
+$("planBody").addEventListener("change",e=>{
+  const t=e.target,hh=state.hh;
+  if(t.dataset.pmW){const[i,j]=t.dataset.pmW.split("|").map(Number);if(hh.m[i]&&PL.DT[t.value]){hh.m[i].w[j]=t.value;mutate();renderPlan();}return;}
+  if(t.dataset.pmN!=null){const m=hh.m[+t.dataset.pmN];if(m){m.n=clip(t.value.trim(),20)||m.n;mutate();renderPlan();}return;}
+  if(t.id==="pba"){const v=parseFloat(String(t.value).replace(",","."));state.pl.ba=v>0&&v<=10000?Math.round(v*100)/100:0;mutate();renderPlan();}
+});
+
+if(import.meta.env.DEV)window.__app={PL,plCands,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
 
 /* mobiilinäppäimistö: lisäysikkuna nostetaan näppäimistön yläpuolelle ja kohdistettu kenttä vieritetään näkyviin */
 if(window.visualViewport){
