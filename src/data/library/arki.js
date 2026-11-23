@@ -21,7 +21,7 @@ export default [
     tw: [
       { id: "liemi", n: "Lihaliemellä", d: "Korvaa vesi miedolla lihaliemellä, jolloin liemestä tulee täyteläisempi.", rm: ["vesi"], add: ["vesi 7 dl", "liemikuutio 1 kpl"], step: {"3": "Irrota pannun pohjaan jääneet paistojäämät: kaada pannulle pari desiä vettä, kuumenna ja raaputa pohja puhtaaksi lastalla. Liuota liemikuutio loppuun veteen. Lisää nesteet pataan niin, että pinta on lihojen tasalla."} },
     ],
-    src: [["Martat", "https://www.martat.fi/reseptit/karjalanpaisti/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/113651/Karjalanpaisti/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/karjalanpaisti/recipe-2291"], ["Valio", "https://www.valio.fi/reseptit/karjalanpaisti/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/karjalanpaisti/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/113651/Karjalanpaisti/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/karjalanpaisti/recipe-2291"], ["Valio", "https://www.valio.fi/reseptit/karjalanpaisti/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/karjalanpaisti/"]],
   },
   {
     n: "Jauhelihakastike", m: "j", t: "pn", min: 25, w: 25, sv: 4, pop: true,
@@ -137,7 +137,7 @@ export default [
     tw: [
       { id: "kasvis", n: "Puolet kasviksia", d: "Korvaa puolet jauhelihasta raastetulla porkkanalla ja kesäkurpitsalla.", rm: ["jauheliha"], add: ["jauheliha 200 g", "porkkana 2 kpl", "kesäkurpitsa 1 kpl"], step: {"0": "Silppua sipulit ja valkosipuli. Raasta porkkanat ja kesäkurpitsa. Ruskista jauheliha öljyssä, lisää sipulit loppuvaiheessa ja kuullota raasteita vielä muutama minuutti."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/lasagne/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/lasagne/recipe-23860"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/83331/Lasagne/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/lasagne/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/lasagne/recipe-23860"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/83331/Lasagne/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/lasagne/"]],
   },
   {
     n: "Makaronilaatikko", m: "j", t: "ki", min: 75, w: 20, sv: 4, pop: true,

@@ -22,7 +22,7 @@ export default [
       { id: "kirjolohi", n: "Kirjolohesta", d: "Kirjolohi on lohta edullisempi ja sopii keittoon yhtä hyvin.", rm: ["lohifile"], add: ["kirjolohifile 500 g"], step: {"3": "Irrota kirjolohesta nahka, nypi ruodot pois ja leikkaa liha isoiksi kuutioiksi."} },
       { id: "maidoton", n: "Maidoton", d: "Käytä ruokakerman tilalla kaurakermaa ja voin tilalla rypsiöljyä.", rm: ["ruokakerma", "voi"], add: ["kaurakerma 2 dl", "rypsiöljy 1 rkl"], step: {"1": "Kuumenna öljy kattilan pohjalla. Pehmennä sipulia ja purjoa siinä hetki ruskistamatta.", "4": "Lisää kaurakerma ja kalakuutiot. Pidä keitto juuri ja juuri kiehumapisteen alapuolella 4–5 minuuttia. Kova kiehuminen tekee lohesta kuivaa."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/lohikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/herkullinen-kermainen-lohikeitto/recipe-823"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/209622/Lohikeitto/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/lohikeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/herkullinen-kermainen-lohikeitto/recipe-823"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/209622/Lohikeitto/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/lohikeitto/"]],
   },
   {
     n: "Kasvissosekeitto", m: "v", t: "ke", min: 35, w: 15, sv: 4, pop: true,

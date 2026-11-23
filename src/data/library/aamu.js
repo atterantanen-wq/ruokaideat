@@ -85,7 +85,7 @@ export default [
       { id: "omena", n: "Omenapannukakku", d: "Ripottele taikinan päälle kahden omenan lohkot ja kanelisokeria ennen paistamista.", add: ["omena 2 kpl", "kaneli 1 tl"], step: {"2": "Lämmitä uuni 225 asteeseen. Kostuta uunipannu vedellä ja painele leivinpaperi sen päälle. Sekoita taikina ja kaada pannulle. Asettele pinnalle omenalohkot ja ripottele kanelia."} },
       { id: "pekoni", n: "Pekonipannukakku", d: "Jätä sokeri pois ja lisää pinnalle 150 g paistettua pekonia.", rm: ["sokeri"], add: ["pekoni 150 g"], m: "p", step: {"0": "Sekoita munat ja maito kulhossa. Vispaa sekaan vehnäjauhot ja suola sileäksi ja sekoita lopuksi mukaan sulatettu voi.", "2": "Lämmitä uuni 225 asteeseen ja paista pekoni pannulla rapeaksi. Kostuta uunipannu vedellä ja painele leivinpaperi sen päälle. Sekoita taikina, kaada pannulle ja ripottele pekoni pinnalle."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/pannukakku/"], ["Martat", "https://www.martat.fi/reseptit/pannukakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/paras-pannukakku/recipe-1828"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/36831/Pannukakku/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/pannukakku/"], ["Martat", "https://www.martat.fi/reseptit/pannukakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/paras-pannukakku/recipe-1828"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/36831/Pannukakku/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/paras-pannukakku/"]],
   },
   {
     n: "Letut", m: "v", t: "am", min: 45, w: 35, sv: 4, pop: true,
@@ -104,10 +104,10 @@ export default [
     tw: [
       { id: "kaura", n: "Kauramaidolla", d: "Käytä maidon tilalla kaurajuomaa ja voin tilalla öljyä.", rm: ["maito", "voi"], add: ["kauramaito 6 dl", "rypsiöljy 2 rkl"], step: {"0": "Sekoita munat kulhossa tasaisiksi. Lisää noin puolet kaurajuomasta, sokeri ja suola.", "1": "Vispaa jauhot joukkoon sileäksi ennen kuin lisäät loput kaurajuomasta. Näin taikinaan ei jää paakkuja.", "2": "Sekoita mukaan öljy ja anna taikinan levätä puoli tuntia."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/letut/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3735/Letut/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/letut/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3735/Letut/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/letut-raiskaleet-latyt-ohukaiset/"]],
   },
   {
-    n: "Amerikkalaiset pannukakut", m: "v", t: "am", min: 70, w: 25, sv: 4,
+    n: "Amerikkalaiset pannukakut", m: "v", t: "am", min: 70, w: 25, sv: 4, pop: true,
     d: "Paksut ja pörröiset pannukakut, joissa jogurtti ja leivinjauhe tekevät rakenteesta kuohkean.",
     ing: ["vehnäjauho 4 dl", "leivinjauhe 1 rkl", "sokeri 1 rkl", "suola 0.5 tl", "kananmuna 1 kpl", "turkkilainen jogurtti 4 dl", "maito 1 dl", "voi 3 rkl"],
     steps: [
@@ -122,7 +122,7 @@ export default [
       { id: "mustikka", n: "Mustikoilla", d: "Ripottele mustikoita taikinan päälle pannulla ennen kääntämistä.", add: ["mustikka 125 g"], step: {"3": "Paista keskilämmöllä lettupannulla tai paistinpannulla noin 1 dl:n kokoisia pannukakkuja. Ripottele pinnalle mustikoita ja käännä, kun pinnalle nousee kuplia."} },
       { id: "suklaa", n: "Suklaalla", d: "Sekoita taikinaan 1 dl rouhittua tummaa suklaata.", add: ["tumma suklaa 50 g"], step: {"1": "Kaada nesteet kuivien aineiden päälle, lisää rouhittu suklaa ja sekoita vain sen verran, että jauhot kostuvat. Pieni paakkuisuus kuuluu asiaan."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/amerikkalaiset-pannukakut/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/amerikkalaiset-pannukakut/5TJlCm38a4ILl6xKdMjTKu"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3461/Amerikkalaiset%20pannukakut/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/amerikkalaiset-pannukakut/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/amerikkalaiset-pannukakut/5TJlCm38a4ILl6xKdMjTKu"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/3461/Amerikkalaiset%20pannukakut/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/amerikkalaiset-pannukakut/"]],
   },
   {
     n: "Munakas", m: "e", mo: "e", t: "am", min: 10, w: 10, sv: 2,
@@ -159,7 +159,7 @@ export default [
     tw: [
       { id: "graham", n: "Grahamjauhoilla", d: "Korvaa kaurahiutaleet 5 dl:lla grahamjauhoja ja vähennä vehnäjauhoja 2 dl.", rm: ["kaurahiutaleet", "vehnäjauho"], add: ["grahamjauho 5 dl", "vehnäjauho 6 dl"], step: {"1": "Lisää grahamjauhot ja anna niiden turvota hetki. Alusta vehnäjauhot vähitellen joukkoon ja vaivaa öljy taikinaan viimeisenä.", "4": "Voitele sämpylät halutessasi maidolla. Paista uunin keskiosassa noin 15 minuuttia."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/sampylat/"], ["Martat", "https://www.martat.fi/reseptit/sampylat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-sampylat/1zQ6j481TjEzaYBNLYhT6O"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/104817/S%C3%A4mpyl%C3%A4t/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/sampylat/"], ["Martat", "https://www.martat.fi/reseptit/sampylat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-sampylat/1zQ6j481TjEzaYBNLYhT6O"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/104817/S%C3%A4mpyl%C3%A4t/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/sampylat/"]],
   },
   {
     n: "Karjalanpiirakat", m: "v", t: "le", min: 120, w: 75, sv: 24, pop: true,
@@ -179,7 +179,7 @@ export default [
     tw: [
       { id: "peruna", n: "Perunatäytteellä", d: "Täytä piirakat perunasoseella riisipuuron sijaan.", rm: ["puuroriisi", "vesi 3 dl"], add: ["peruna 800 g", "voi 30 g"], step: { 0: "Keitä kuoritut perunat kypsiksi ja survo ne soseeksi lämmitetyn maidon ja voin kanssa. Mausta suolalla ja jäähdytä." } },
     ],
-    src: [["Martat", "https://www.martat.fi/reseptit/karjalanpiirakat/"], ["Valio", "https://www.valio.fi/reseptit/karjalanpiirakat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-karjalanpiirakat/52u8KbDEVyhxpJJxjZ8mkt"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/123616/Karjalanpiirakat/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/karjalanpiirakat/"], ["Valio", "https://www.valio.fi/reseptit/karjalanpiirakat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-karjalanpiirakat/52u8KbDEVyhxpJJxjZ8mkt"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/123616/Karjalanpiirakat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/karjalanpiirakat/"]],
   },
   {
     n: "Lämpimät voileivät", m: "p", t: "ha", min: 15, w: 10, sv: 4,

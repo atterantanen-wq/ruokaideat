@@ -17,7 +17,7 @@ export default [
     tw: [
       { id: "maidoton", n: "Maidoton", d: "Käytä kerman tilalla kaurakermaa ja voin tilalla margariinia.", rm: ["kuohukerma", "voi"], add: ["kaurakerma 2 dl", "margariini 2 rkl"], step: {"2": "Survo lantut sileäksi soseeksi ja anna jäähtyä haaleaksi. Sekoita samalla korppujauho kaurakerman joukkoon turpoamaan.", "4": "Lämmitä uuni 175 asteeseen. Levitä massa rasvattuun vuokaan, piirrä pintaan lusikalla kuvioita, ripottele päälle hieman korppujauhoa ja lisää margariininokareet."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/lanttulaatikko/"], ["Martat", "https://www.martat.fi/reseptit/lanttulaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-lanttulaatikko/recipe-3926"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/37662/Lanttulaatikko/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/lanttulaatikko/"], ["Martat", "https://www.martat.fi/reseptit/lanttulaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-lanttulaatikko/recipe-3926"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/37662/Lanttulaatikko/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/lanttulaatikko/"]],
   },
   {
     n: "Imelletty perunalaatikko", m: "v", t: "uu", min: 480, w: 30, sv: 10, fe: "jo", jf: true, pop: true,
@@ -90,7 +90,7 @@ export default [
     ],
     serve: "Tarjoa vapun munkkien tai tippaleipien kanssa.",
     tips: ["Hiivaa tarvitaan todella vähän, herneen kokoinen pala. Liika hiiva tekee simasta oluen makuista.", "Muovipullot kestävät käymisen paineen lasipulloja paremmin."],
-    src: [["Martat", "https://www.martat.fi/reseptit/sima/"], ["Valio", "https://www.valio.fi/reseptit/sima/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/sima/recipe-2548"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/138944/Sima/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/sima/"], ["Valio", "https://www.valio.fi/reseptit/sima/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/sima/recipe-2548"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/138944/Sima/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/sima/"]],
   },
   {
     n: "Porkkanalaatikko", m: "v", t: "uu", min: 90, w: 30, sv: 8, fe: "jo", jf: true, pop: true,
@@ -145,7 +145,7 @@ export default [
     tw: [
       { id: "silli", n: "Sillin kanssa", d: "Lisää kuutioiden joukkoon 150 g pieneksi pilkottua sillifileetä.", add: ["silli 150 g"], m: "f", step: {"1": "Kuori juurekset. Kuutioi ne, kurkut, omena, sipuli ja silli pieniksi, suunnilleen saman kokoisiksi kuutioiksi."} },
     ],
-    src: [["Martat", "https://www.martat.fi/reseptit/rosolli/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/rosolli/recipe-3927"], ["Valio", "https://www.valio.fi/reseptit/rosolli/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/190217/Rosolli/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/rosolli/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/rosolli/recipe-3927"], ["Valio", "https://www.valio.fi/reseptit/rosolli/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/190217/Rosolli/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/rosolli/"]],
   },
   {
     n: "Graavilohi", m: "f", t: "al", min: 1460, w: 15, sv: 10, fe: "jo", jf: true,
@@ -177,7 +177,7 @@ export default [
       "Käännä pasha tarjoiluvadille ja koristele hedelmillä.",
     ],
     tips: ["Kuumennus tekee pashasta kiinteän ja säilyvän. Raakapasha onnistuu ilman kuumennusta, mutta se pitää syödä parissa päivässä."],
-    src: [["Martat", "https://www.martat.fi/reseptit/perinteinen-pasha/"], ["Valio", "https://www.valio.fi/reseptit/pasha/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-pasha/recipe-1647"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/13219/Pasha/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/perinteinen-pasha/"], ["Valio", "https://www.valio.fi/reseptit/pasha/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-pasha/recipe-1647"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/13219/Pasha/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/pasha-kakku/"]],
   },
   {
     n: "Joulukinkku", m: "p", t: "uu", min: 600, w: 30, sv: 20, fe: "jo", jf: true,
@@ -209,7 +209,7 @@ export default [
     ],
     serve: "Tarjoa siman kanssa.",
     tips: ["Ilman muottia tippaleivät leviävät helposti. Reikäkauhalla voi koota taikinaa paistumisen alussa."],
-    src: [["Martat", "https://www.martat.fi/reseptit/tippaleivat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tippaleivat/2yKXK3SNXdEvF6ECoACHwK"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/139979/Tippaleiv%C3%A4t/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/tippaleivat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tippaleivat/2yKXK3SNXdEvF6ECoACHwK"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/139979/Tippaleiv%C3%A4t/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/tippaleivat/"]],
   },
   {
     n: "Lammaspaisti", m: "n", mo: "n", t: "uu", min: 180, w: 25, sv: 8, fe: "pa", jf: true,

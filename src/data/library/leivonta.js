@@ -13,7 +13,7 @@ export default [
       "Lisää aluksi vain noin puolet jauhoista ja vatkaa puuromaista seosta voimakkaasti minuutin ajan. Tämä kehittää pullalle kuohkean rakenteen.",
       "Alusta jäljelle jääneet jauhot vähitellen taikinaan. Lopuksi vaivaa joukkoon sulatettu, haalea rasva. Taikina on valmis, kun pinta kiiltää eikä taikina enää tartu kulhoon.",
       "Peitä kulho liinalla ja anna taikinan kasvaa lämpimässä kaksinkertaiseksi, noin 40 minuuttia.",
-      "Jaa taikina kahteen osaan. Kauli kumpikin noin 30 × 60 cm:n suorakaiteeksi. Sivele pinnalle pehmeä voi ja ripota sokeri ja kaneli tasaisesti.",
+      "Kauli taikina kahtena eränä noin 30 × 60 cm:n levyiksi. Sivele pinnalle pehmeä voi ja ripota sokeri ja kaneli tasaisesti.",
       "Kierrä levy pitkältä sivulta tiukaksi rullaksi. Paloittele rulla vuoroin vinoon kumpaankin suuntaan, jolloin syntyy kolmion mallisia paloja.",
       "Aseta palat leveä puoli alaspäin leivinpaperille. Painele kapeaa yläreunaa kahdella sormella syvälle, kunnes kerrokset levähtävät sivuille.",
       "Kohota peitettynä noin 30 minuuttia. Kuumenna sillä välin uuni 225 asteeseen.",
@@ -26,7 +26,7 @@ export default [
     tw: [
       { id: "manteli", n: "Mantelirouhe pinnalle", d: "Käytä raesokerin tilalla mantelirouhetta.", rm: ["raesokeri"], add: ["mantelirouhe 0.5 dl"], step: {"8": "Sivele puustien pintaan munaa ja sirottele päälle mantelirouhetta. Paista uunin keskitasolla 9–12 minuuttia, kunnes ne ovat kauniin ruskeita."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/korvapuustit/"]],
   },
   {
     n: "Mustikkapiirakka", m: "v", t: "le", min: 45, w: 15, sv: 8, pop: true,
@@ -63,7 +63,7 @@ export default [
     tw: [
       { id: "nonparellit", n: "Nonparelleilla", d: "Koristele kookoshiutaleiden tilalla nonparelleilla.", rm: ["kookoshiutale"], add: ["nonparellit 0.5 dl"], step: {"6": "Levitä kuorrute jäähtyneelle pohjalle, ripottele nonparellit pinnalle ja leikkaa paloiksi, kun kuorrute on jähmettynyt."} },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/mokkapalat/"], ["Martat", "https://www.martat.fi/reseptit/mokkapalat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/mokkapalat/recipe-4470"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/888/Mokkapalat/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/mokkapalat/"], ["Martat", "https://www.martat.fi/reseptit/mokkapalat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/mokkapalat/recipe-4470"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/888/Mokkapalat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/mokkapalat/"]],
   },
   {
     n: "Suklaakakku", m: "v", t: "le", min: 60, w: 20, sv: 10, pop: true,
@@ -80,7 +80,7 @@ export default [
     serve: "Tarjoa kermavaahdon ja vadelmien kanssa.",
     extras: ["kuohukerma", "vadelma"],
     tips: ["Kakku on parhaimmillaan seuraavana päivänä, kun rakenne on tasaantunut."],
-    src: [["Valio", "https://www.valio.fi/reseptit/mutakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-suklaakakku/5r49jRe4luXRwF81Wfipzh"], ["Martat", "https://www.martat.fi/reseptit/vegaaninen-suklaakakku/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/22547/Mutakakku/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/mutakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-suklaakakku/5r49jRe4luXRwF81Wfipzh"], ["Martat", "https://www.martat.fi/reseptit/vegaaninen-suklaakakku/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/22547/Mutakakku/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/suklaakakku/"]],
   },
   {
     n: "Pulla", m: "v", t: "le", min: 120, w: 40, sv: 30, pop: true,
@@ -98,7 +98,7 @@ export default [
       { id: "pikku", n: "Pikkupullat", step: { 3: "Jaa taikina noin 30 osaan ja pyöritä pöytää vasten sileiksi pulliksi. Nosta pelleille väljästi ja kohota noin 30 minuuttia. Lämmitä uuni 225 asteeseen.", 4: "Voitele pullat munalla, ripottele raesokeri ja paista uunin keskellä 10–12 minuuttia." } },
       { id: "pitko", n: "Pullapitko", step: { 3: "Jaa taikina kahteen osaan ja kumpikin kolmeen palaan. Pyöritä palat pitkiksi tangoiksi ja punonnoksi kolmesta tangosta. Kohota noin 30 minuuttia. Lämmitä uuni 200 asteeseen.", 4: "Voitele pitkot munalla, ripottele raesokeri ja paista uunin alaosassa noin 20–25 minuuttia." } },
     ],
-    src: [["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/pulla/"]],
   },
   {
     n: "Mansikkakakku", m: "v", t: "le", min: 90, w: 45, sv: 12, fe: "ju",
@@ -117,7 +117,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/mansikkakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-mansikkakakku/recipe-2169"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/154687/Mansikkakakku/"]],
   },
   {
-    n: "Voisilmäpullat", m: "v", t: "le", min: 120, w: 40, sv: 16,
+    n: "Voisilmäpullat", m: "v", t: "le", min: 120, w: 40, sv: 16, pop: true,
     d: "Pehmeät pullat, joiden keskelle painetaan syvä kuoppa ja täytetään voilla ja sokerilla. Uunissa täyte sulaa kiiltäväksi silmäksi.",
     ing: ["maito 2.5 dl", "hiiva 25 g", "kananmuna 1 kpl", "sokeri 1 dl", "suola 0.5 tl", "kardemumma 1.5 tl", "vehnäjauho 8 dl", "voi 75 g", "# Täyte", "voi 75 g", "sokeri 0.5 dl", "# Voiteluun", "kananmuna 1 kpl"],
     steps: [
@@ -129,7 +129,7 @@ export default [
       "Paista uunin keskellä noin 10 minuuttia, kunnes pullat ovat kullanruskeita.",
     ],
     tips: ["Kuopan pitää olla syvä, muuten pulla kohoaa uunissa umpeen ja voi valuu pellille."],
-    src: [["Valio", "https://www.valio.fi/reseptit/voisilmapullat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/voisilmapullat/58eWwgOcyTBcs0s50bZGJr"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108093/Voisilm%C3%A4pullat/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/voisilmapullat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/voisilmapullat/58eWwgOcyTBcs0s50bZGJr"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108093/Voisilm%C3%A4pullat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/voisilmapullat/"]],
   },
   {
     n: "Kaurakeksit", m: "v", t: "le", min: 30, w: 15, sv: 20, pop: true,
@@ -206,7 +206,7 @@ export default [
       "Vatkaa huoneenlämpöinen tuorejuusto, voi, tomusokeri ja vaniljasokeri sileäksi. Raasta mukaan appelsiinin kuori. Levitä kuorrute jäähtyneen kakun pinnalle.",
     ],
     tips: ["Kakku pysyy mehevänä jääkaapissa useita päiviä."],
-    src: [["Valio", "https://www.valio.fi/reseptit/porkkanakakku/"], ["Martat", "https://www.martat.fi/reseptit/porkkanakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-porkkanakakku/recipe-1192"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/58986/Porkkanakakku/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/porkkanakakku/"], ["Martat", "https://www.martat.fi/reseptit/porkkanakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-porkkanakakku/recipe-1192"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/58986/Porkkanakakku/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/porkkanakakku-carrot-cake/"]],
   },
   {
     n: "Kääretorttu", m: "v", t: "le", min: 40, w: 25, sv: 12, pop: true,
@@ -256,7 +256,7 @@ export default [
       { id: "hillo", n: "Hillo", add: ["puolukkahillo 2 dl"] },
       { id: "manteli", n: "Mantelimassa", add: ["mantelijauhe 200 g"], ins: [[3, "Sekoita mantelijauhe, kolme ruokalusikallista sokeria ja tilkka maitoa tahnaksi."]] },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/laskiaispullat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-laskiaispullat/fmh-recipe-1163"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108095/Laskiaispullat/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/laskiaispullat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-laskiaispullat/fmh-recipe-1163"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108095/Laskiaispullat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/laskiaispullat/"]],
   },
   {
     n: "Täytekakku", m: "v", t: "le", min: 120, w: 50, sv: 12, jf: true,
@@ -286,7 +286,7 @@ export default [
       "Paista noin 10 minuuttia. Keksit saavat jäädä keskeltä pehmeiksi, ne kovettuvat jäähtyessään.",
     ],
     tips: ["Taikinan voi pakastaa palloina ja paistaa sitä mukaa, kun keksejä tarvitaan."],
-    src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/233748/Suklaakeksit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-suklaakeksit/5aPXP9f3J7aTEXnTLoEx3L"]],
+    src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/233748/Suklaakeksit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helpot-suklaakeksit/5aPXP9f3J7aTEXnTLoEx3L"], ["Kinuskikissa", "https://www.kinuskikissa.fi/pehmeat-suklaakeksit/"]],
   },
   {
     n: "Joulutortut", m: "v", t: "le", min: 40, w: 25, sv: 20, fe: "jo",
@@ -303,7 +303,7 @@ export default [
     tw: [
       { id: "omena", n: "Omenahillolla", d: "Käytä luumun sijaan omena- tai omena-kanelihilloa.", rm: ["luumumarmeladi"], add: ["omenahillo 300 g"], step: {"2": "Nosta lusikallinen omenahilloa neliön keskelle. Käännä vuorotellen joka toisen kolmion kärki keskustaan ja painele kärjet kiinni toisiinsa, jolloin syntyy tähti.", "3": "Voitele tortut vatkatulla munalla. Paista uunin keskellä 10–12 minuuttia, kunnes ne ovat kohonneet ja kullanruskeita."} },
     ],
-    src: [["Martat", "https://www.martat.fi/reseptit/joulutortut/"], ["Valio", "https://www.valio.fi/reseptit/joulutortut/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/50477/Parhaat%20joulutortut/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/joulutortut/"], ["Valio", "https://www.valio.fi/reseptit/joulutortut/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/50477/Parhaat%20joulutortut/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/joulutortut/"]],
   },
   {
     n: "Pannacotta", m: "v", t: "ja", min: 300, w: 20, sv: 6,
@@ -317,7 +317,7 @@ export default [
       "Kastiketta varten kuumenna vadelmat ja sokeri, kunnes marjat hajoavat. Mausta limen mehulla ja jäähdytä. Nosta kastike pannacottan päälle ennen tarjoilua.",
     ],
     tips: ["Jos haluat kumota pannacottan lautaselle, upota muotti hetkeksi kuumaan veteen."],
-    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/pannacotta/recipe-4511"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/229814/Helppo%20pannacotta/"]],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/pannacotta/recipe-4511"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/229814/Helppo%20pannacotta/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/pannacotta/"]],
   },
   {
     n: "Pavlova", m: "v", t: "ja", min: 150, w: 30, sv: 10, jf: true,
@@ -393,6 +393,6 @@ export default [
       "Paista pellillinen kerrallaan uunin keskiosassa noin 5–7 minuuttia. Piparit kovettuvat jäähtyessään.",
     ],
     tips: ["Kuorrutteeseen sekoita valkuainen ja tomusokeri pursotettavaksi tahnaksi.", "Valmista piparkakkumaustetta voi käyttää yksittäisten mausteiden tilalla, noin 3 rkl.", "Taikina säilyy jääkaapissa noin viikon ja pakastimessa kuukausia."],
-    src: [["Valio", "https://www.valio.fi/reseptit/piparkakkutaikina/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/piparkakut/recipe-894"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/91420/Piparkakut/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/piparkakkutaikina/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/piparkakut/recipe-894"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/91420/Piparkakut/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/piparkakkutaikina/"]],
   },
 ];

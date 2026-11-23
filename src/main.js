@@ -2594,7 +2594,7 @@ function pfAct0(x){
   }
 }
 const dlg=$("dlg");let openId=null,delAsk=false,edit=null,dlgList="";
-const SRCN={"yhteishyva.fi":"Yhteishyvä","kotikokki.fi":"Kotikokki","k-ruoka.fi":"K-Ruoka","valio.fi":"Valio","soppa365.fi":"Soppa365","reseptit.fi":"Reseptit.fi","hellapoliisi.fi":"Hellapoliisi","kauppalehti.fi":"Kauppalehti"};
+const SRCN={"yhteishyva.fi":"Yhteishyvä","kotikokki.fi":"Kotikokki","k-ruoka.fi":"K-Ruoka","valio.fi":"Valio","soppa365.fi":"Soppa365","reseptit.fi":"Reseptit.fi","hellapoliisi.fi":"Hellapoliisi","kauppalehti.fi":"Kauppalehti","kotikokki.net":"Kotikokki","martat.fi":"Martat","kinuskikissa.fi":"Kinuskikissa"};
 function srcHtml(r,url){
   const h=url?host(url):"";
   const nm=h?(SRCN[h]||h):"";
