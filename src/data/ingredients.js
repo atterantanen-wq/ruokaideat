@@ -158,7 +158,7 @@ worcestershirekastike|worcester|7||||1||
 suolakurkku|suolakurkut,kurkkusäilyke,marinoitu kurkku|4||,,,100,,|20,0.7,0.1,0,3,2.3||348|maustekurkku, sokerisuolattu
 kaprikset|kapris|4||||1||
 tartarkastike|tartar|7||100,15,,,150,|522,2.3,56.5,4.5,2.9,0.8||5006|kylmä kastike, tartarkastike, majoneesipohjainen
-puolukkahillo|puolukkahilloa,puolukkasose,hillo,mansikkahillo,karpalohillo,puolukka hillo|5||115,17,5.5,,300,|137,0.2,0.2,0,32.7,0||31457|puolukkahillo
+puolukkahillo|puolukkahilloa,puolukkasose,hillo,karpalohillo,puolukka hillo|5||115,17,5.5,,300,|137,0.2,0.2,0,32.7,0||31457|puolukkahillo
 sinappi|sinappia,dijon,täysjyväsinappi|7||110,16,5,,,|131,4.4,6,0.1,14.1,3||28|sinappi
 majoneesi|majoneesia,aioli|7||95,14,4.5,,,|723,1.1,80.8,5,1,0.8||30925|majoneesi, rasvaa 80 %
 kasvisliemikuutio|kasvisliemi kuutio,kasvisliemi|6||,,,11,,|305,9.5,23.5,9.5,13.5,45.4||29008|kasvisliemikuutio
@@ -297,6 +297,7 @@ mascarpone|mascarponejuusto|14||100,15,,,250,|420,4.6,44,29,3.5,0.08||||
 savoiardi|savoiardikeksit,naisensormet,ladyfingers|8||,,,10,,|390,8,4,1.3,80,0.4||||
 luumumarmeladi|luumusose,aprikoosimarmeladi,marmeladi|5||120,18,6,,300,|220,0.5,0.1,0,55,0||||
 omenahillo|omenasose,omena-kanelihillo|5||115,17,6,,300,|180,0.3,0.1,0,44,0||||
+mansikkahillo|mansikkahilloa,vadelmahillo,marjahillo|5||115,17,6,,300,|160,0.4,0.1,0,39,0||||
 bbq-kastike|barbeque-kastike,grillikastike|7||110,17,5.5,,,|170,1,0.5,0.1,40,2.2||||
 kaurakerma|kaurakermaa,kaurakasvirasvasekoite|13||100,15,5,,,|150,1,14,1.2,6,0.1||||
 grahamjauho|grahamjauhoja,täysjyvävehnäjauho|3||60,9,3,,,|340,12,2.3,0.4,64,0||||

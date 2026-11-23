@@ -163,7 +163,7 @@ export default [
   },
   {
     n: "Kalakeitto", m: "f", t: "ke", min: 35, w: 15, sv: 4,
-    d: "Maitopohjainen kalakeitto juureksista ja vaaleasta kalasta. Edullinen arkiversio lohikeitosta.",
+    d: "Kalakeitto juureksista ja vaaleasta kalasta maitoon, kermaan tai kirkkaaseen liemeen. Edullinen arkiversio lohikeitosta.",
     ing: ["valkoinen kalafile 400 g", "peruna 600 g", "porkkana 1 kpl", "sipuli 1 kpl", "purjo 50 g", "voi 1 rkl", "vesi 7 dl", "kalaliemikuutio 1 kpl", "maustepippuri 8 kpl", "maito 3 dl", "sitruunapippuri 1 tl", "suola 0.5 tl", "tilli 0.5 nippu"],
     steps: [
       "Kuutioi kuoritut perunat ja porkkana. Silppua sipuli ja viipaloi purjo ohuiksi renkaiksi.",
@@ -178,9 +178,14 @@ export default [
     tips: ["Seiti, turska, kuha ja ahven sopivat kaikki. Sekoita kahta kalaa, jos haluat monipuolisemman maun."],
     tw: [
       { id: "curry", n: "Curry-riisikeitto", d: "Korvaa perunat 1½ dl:lla riisiä ja kuullota sipulin kanssa 1 tl currya.", rm: ["peruna"], add: ["riisi 1.5 dl", "curry 1 tl"], step: {"0": "Kuutioi kuorittu porkkana. Silppua sipuli ja viipaloi purjo ohuiksi renkaiksi.", "1": "Pehmennä sipulia, purjoa ja currya voissa kattilan pohjalla pari minuuttia. Lisää vesi, liemikuutio, maustepippurit, riisi ja porkkana.", "2": "Keitä kansi päällä noin 15 minuuttia, kunnes riisi on lähes kypsää."} },
-      { id: "kerma", n: "Kermaisempi", d: "Käytä maidon tilalla ruokakermaa.", rm: ["maito"], add: ["ruokakerma 2 dl"], step: {"4": "Kaada ruokakerma keittoon ja lisää kalapalat ja sitruunapippuri. Hauduta hiljaisella lämmöllä 5 minuuttia niin, ettei keitto kiehu rajusti."} },
     ],
-    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-kalakeitto/recipe-1682"], ["Valio", "https://www.valio.fi/reseptit/maukas-kalakeitto/"], ["Martat", "https://www.martat.fi/reseptit/curry-kalakeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/46501/Kalakeitto/"]],
+    vh: "Liemeen",
+    vs: [
+      { id: "maito", n: "Maitopohjainen" },
+      { id: "kerma", n: "Kermainen", rm: ["maito"], add: ["ruokakerma 2 dl"], step: { 4: "Kaada ruokakerma keittoon ja lisää kalapalat ja sitruunapippuri. Hauduta hiljaisella lämmöllä 5 minuuttia niin, ettei keitto kiehu rajusti." } },
+      { id: "kirkas", n: "Kirkas", rm: ["maito"], add: ["vesi 2 dl"], step: { 1: "Pehmennä sipulia ja purjoa voissa kattilan pohjalla pari minuuttia. Lisää kaikki vesi, liemikuutio, maustepippurit, perunat ja porkkana.", 4: "Lisää kalapalat ja sitruunapippuri kiehuvaan liemeen ja nosta kattila pois levyltä. Anna kalan kypsyä kannen alla noin 7 minuuttia." } },
+    ],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-kalakeitto/recipe-1682"], ["Valio", "https://www.valio.fi/reseptit/maukas-kalakeitto/"], ["Martat", "https://www.martat.fi/reseptit/curry-kalakeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/46501/Kalakeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kermainen-kalakeitto/fmh-recipe-1141"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kirkas-kalakeitto/fmh-recipe-1143"]],
   },
   {
     n: "Linssikeitto", m: "y", t: "ke", min: 45, w: 15, sv: 6,

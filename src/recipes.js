@@ -20,6 +20,7 @@
  *   vh     version ainesten otsikko (oletus "Täytteet")
  *   src    lähteet [[nimi, url], ...]
  *   pop    suosittu (näkyy "Suosittu"-merkintänä)
+ *   aka    muut nimet, joilla resepti löytyy haulla (esim. vanha nimi)
  *   wd, fe, jf, kq, mo  kuten ennenkin (maailmalta, juhlapyhä, juhlaruoka, airfryer/grilli, pääraaka-aine käsin)
  */
 
@@ -78,6 +79,7 @@ export function fromLib(e) {
     vs: cleanList(e.vs),
     src: e.src || [],
     vh: e.vh || "",
+    aka: e.aka || [],
   };
 }
 

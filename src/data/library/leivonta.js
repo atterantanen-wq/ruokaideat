@@ -29,7 +29,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/korvapuustit/"]],
   },
   {
-    n: "Mustikkapiirakka", m: "v", t: "le", min: 45, w: 15, sv: 8, pop: true,
+    n: "Pehmeä mustikkapiirakka", m: "v", t: "le", min: 45, w: 15, sv: 8, pop: true, aka: ["Mustikkapiirakka"],
     d: "Mehevä sokerikakkupohja, jonka päälle ripotellaan reilusti mustikoita. Helpoin tapa käyttää metsän tai pakastimen marjat.",
     ing: ["kananmuna 2 kpl", "sokeri 1.5 dl", "vaniljasokeri 2 tl", "vehnäjauho 3 dl", "leivinjauhe 1.5 tl", "voi 125 g", "maito 1 dl", "mustikka 300 g"],
     steps: [
@@ -45,6 +45,26 @@ export default [
       { id: "muru", n: "Murupinnalla", d: "Nypi 100 g voista, 1 dl sokerista ja 2 dl jauhoista muru ja ripottele marjojen päälle.", add: ["voi 100 g", "sokeri 1 dl", "vehnäjauho 2 dl"], step: {"3": "Tasoita taikina vuokaan ja peitä pinta mustikoilla. Nypi voista, sokerista ja jauhoista murua ja ripottele se marjojen päälle."} },
     ],
     src: [["Valio", "https://www.valio.fi/reseptit/mustikkapiirakka/"], ["Martat", "https://www.martat.fi/reseptit/mustikkapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-mustikkapiirakka/recipe-688"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/27357/Mustikkapiirakka/"]],
+  },
+  {
+    n: "Murotaikinainen mustikkapiirakka", m: "v", t: "le", min: 75, w: 25, sv: 12, pop: true, aka: ["Mustikkapiirakka", "Mustikkapiiras"],
+    d: "Rapea murotaikinapohja, runsaasti mustikoita ja kermaviilitäyte, joka hyytyy uunissa. Mummolan kahvipöydän klassikko.",
+    ing: ["# Pohja", "voi 150 g", "sokeri 1 dl", "kananmuna 1 kpl", "vehnäjauho 3.5 dl", "leivinjauhe 1 tl", "# Täyte", "mustikka 500 g", "perunajauho 1 rkl", "sokeri 0.75 dl", "kermaviili 200 g", "kananmuna 2 kpl", "vaniljasokeri 2 tl"],
+    steps: [
+      "Lämmitä uuni 200 asteeseen. Voitele noin 26-senttinen piirakkavuoka.",
+      "Vatkaa pehmeä voi ja sokeri kuohkeaksi ja sekoita muna joukkoon. Lisää jauhot, joihin on sekoitettu leivinjauhe, ja sekoita nopeasti tasaiseksi.",
+      "Painele taikina jauhotetuin sormin vuokaan niin, että se nousee myös reunoille. Tee pohjaan haarukalla reikiä ja paista sitä ensin yksinään noin 10 minuuttia.",
+      "Kääntele mustikat perunajauhoissa ja levitä ne esipaistetulle pohjalle.",
+      "Vatkaa kermaviili, munat, sokeri ja vaniljasokeri tasaiseksi ja kaada seos marjojen päälle.",
+      "Paista uunin alaosassa noin 25 minuuttia, kunnes täyte on hyytynyt. Anna jäähtyä ennen leikkaamista, niin täyte asettuu.",
+    ],
+    serve: "Tarjoa haaleana vaniljajäätelön kanssa.",
+    tips: ["Pakastemustikoita ei tarvitse sulattaa. Perunajauho sitoo niistä irtoavan mehun.", "Kermaviilin tilalle käy maustamaton tuorejuusto, jolloin täytteestä tulee tiiviimpi."],
+    vs: [
+      { id: "kermaviili", n: "Kermaviilitäyte" },
+      { id: "ristikko", n: "Ristikkopiirakka", rm: ["kermaviili", "kananmuna 2 kpl", "vaniljasokeri"], step: { 2: "Ota taikinasta noin neljännes sivuun. Painele loput jauhotetuin sormin vuokaan pohjaksi ja reunoiksi.", 3: "Kääntele mustikat sokerin ja perunajauhojen seoksessa ja levitä ne pohjalle.", 4: "Kauli sivuun otettu taikina jauhotetulla alustalla ohueksi, leikkaa siitä kapeita nauhoja ja asettele ne ristikoksi marjojen päälle.", 5: "Paista uunin alaosassa noin 30 minuuttia, kunnes ristikko on kullanruskea ja marjamehu kuplii reunoilla." } },
+    ],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/herkullinen-mustikkapiirakka-muropohjalla/61x9ouRDlaqMLHU1NqwNI1"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-mustikkapiiras/recipe-3906"], ["Kinuskikissa", "https://www.kinuskikissa.fi/mustikkapiirakka/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/maailman-paras-mustikkapiirakka/"]],
   },
   {
     n: "Mokkapalat", m: "v", t: "le", min: 50, w: 25, sv: 24, pop: true,
@@ -66,7 +86,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/mokkapalat/"], ["Martat", "https://www.martat.fi/reseptit/mokkapalat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/mokkapalat/recipe-4470"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/888/Mokkapalat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/mokkapalat/"]],
   },
   {
-    n: "Suklaakakku", m: "v", t: "le", min: 60, w: 20, sv: 10, pop: true,
+    n: "Mutakakku", m: "v", t: "le", min: 60, w: 20, sv: 10, pop: true, aka: ["Suklaakakku"],
     d: "Tiivis ja kostea mutakakku, jossa sulaa suklaata ja voita. Pinta halkeilee kauniisti, sisus jää pehmeäksi.",
     ing: ["voi 150 g", "tumma suklaa 150 g", "kaakao 2 rkl", "sokeri 1.5 dl", "kananmuna 3 kpl", "vehnäjauho 2 dl", "leivinjauhe 0.5 tl", "vaniljasokeri 2 tl", "suola 1 ripaus"],
     steps: [
@@ -80,7 +100,7 @@ export default [
     serve: "Tarjoa kermavaahdon ja vadelmien kanssa.",
     extras: ["kuohukerma", "vadelma"],
     tips: ["Kakku on parhaimmillaan seuraavana päivänä, kun rakenne on tasaantunut."],
-    src: [["Valio", "https://www.valio.fi/reseptit/mutakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-suklaakakku/5r49jRe4luXRwF81Wfipzh"], ["Martat", "https://www.martat.fi/reseptit/vegaaninen-suklaakakku/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/22547/Mutakakku/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/suklaakakku/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/mutakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-suklaakakku/5r49jRe4luXRwF81Wfipzh"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/22547/Mutakakku/"]],
   },
   {
     n: "Pulla", m: "v", t: "le", min: 120, w: 40, sv: 30, pop: true,
@@ -99,22 +119,6 @@ export default [
       { id: "pitko", n: "Pullapitko", step: { 3: "Jaa taikina kahteen osaan ja kumpikin kolmeen palaan. Pyöritä palat pitkiksi tangoiksi ja punonnoksi kolmesta tangosta. Kohota noin 30 minuuttia. Lämmitä uuni 200 asteeseen.", 4: "Voitele pitkot munalla, ripottele raesokeri ja paista uunin alaosassa noin 20–25 minuuttia." } },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/korvapuustit/"], ["Valio", "https://www.valio.fi/reseptit/korvapuustit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-korvapuustit/recipe-22749"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/1292/korvapuustit/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/pulla/"]],
-  },
-  {
-    n: "Mansikkakakku", m: "v", t: "le", min: 90, w: 45, sv: 12, fe: "ju",
-    d: "Kesän juhlakakku: kevyt sokerikakkupohja, mansikka-kermatäyte ja tuoreet mansikat pinnalla.",
-    ing: ["# Pohja", "kananmuna 4 kpl", "sokeri 1.5 dl", "vehnäjauho 1 dl", "perunajauho 1 dl", "leivinjauhe 1 tl", "# Kostutus", "maito 1 dl", "vaniljasokeri 1 tl", "# Täyte ja pinta", "kuohukerma 5 dl", "sokeri 2 rkl", "vaniljasokeri 2 tl", "mansikka 750 g"],
-    steps: [
-      "Lämmitä uuni 175 asteeseen. Voitele vuoka (noin 23 cm) ja ripottele siihen korppujauhoa.",
-      "Vatkaa munat (huoneenlämpöisinä) ja sokeri vaaleaksi, paksuksi vaahdoksi, jossa vatkaimen jälki näkyy.",
-      "Siivilöi jauhot ja leivinjauhe vaahtoon ja kääntele varovasti nuolijalla, jotta ilmaa ei katoa.",
-      "Kaada vuokaan ja paista alatasolla noin 40 minuuttia. Kumoa ja anna jäähtyä kokonaan.",
-      "Halkaise pohja kolmeksi levyksi ja kostuta ne vaniljamaidolla.",
-      "Vaahdota kerma sokerin ja vaniljasokerin kanssa. Sekoita noin kolmasosaan kermasta murskattuja mansikoita ja levitä se levyjen väliin.",
-      "Peitä kakku lopulla kermavaahdolla ja koristele mansikoilla. Anna maustua jääkaapissa muutama tunti.",
-    ],
-    tips: ["Pohjan voi leipoa edellisenä päivänä. Kostutettu kakku maistuu parhaalta muutaman tunnin tekeytymisen jälkeen."],
-    src: [["Valio", "https://www.valio.fi/reseptit/mansikkakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-mansikkakakku/recipe-2169"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/154687/Mansikkakakku/"]],
   },
   {
     n: "Voisilmäpullat", m: "v", t: "le", min: 120, w: 40, sv: 16, pop: true,
@@ -146,7 +150,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/kaurakeksit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kaurakeksit/4ZNHampuBrU7ioO8kpepiz"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/9649/Kaurakeksit/"]],
   },
   {
-    n: "Raparperipiirakka", m: "v", t: "le", min: 60, w: 25, sv: 10,
+    n: "Raparperi-kermaviilipiirakka", m: "v", t: "le", min: 60, w: 25, sv: 10, aka: ["Raparperipiirakka"],
     d: "Kesän ensimmäinen piirakka: murea pohja, raparperit ja kermaviilitäyte, joka hyytyy uunissa.",
     ing: ["# Pohja", "voi 150 g", "sokeri 1 dl", "kananmuna 1 kpl", "vehnäjauho 2 dl", "perunajauho 1 dl", "leivinjauhe 1 tl", "# Täyte", "raparperi 400 g", "kermaviili 200 g", "kananmuna 1 kpl", "sokeri 1 dl", "vaniljasokeri 2 tl"],
     steps: [
@@ -162,8 +166,8 @@ export default [
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/31349/Raparperipiirakka/"], ["Valio", "https://www.valio.fi/reseptit/raparperipiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/raparperipiirakka/recipe-4120"]],
   },
   {
-    n: "Banaanikakku", m: "v", t: "le", min: 70, w: 15, sv: 12, pop: true,
-    d: "Mehevä leipävuoassa paistettu kakku ylikypsistä banaaneista. Kaneli ja pähkinät sopivat siihen hyvin.",
+    n: "Banaanileipä", m: "v", t: "le", min: 70, w: 15, sv: 12, pop: true, aka: ["Banaanikakku"],
+    d: "Mehevä leipävuoassa paistettu banaanileipä ylikypsistä banaaneista. Kaneli ja pähkinät sopivat siihen hyvin.",
     ing: ["banaani 3 kpl", "kananmuna 2 kpl", "fariinisokeri 1.5 dl", "voi 100 g", "turkkilainen jogurtti 1 dl", "vehnäjauho 4 dl", "leivinjauhe 2 tl", "kaneli 1 tl", "suola 1 ripaus", "pähkinät 1 dl"],
     steps: [
       "Lämmitä uuni 175 asteeseen ja vuoraa leipävuoka leivinpaperilla.",
@@ -179,7 +183,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/banaanileipa/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-banaanikakku/recipe-2242"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/4830/Banaanikakku/"]],
   },
   {
-    n: "Omenapiirakka", m: "v", t: "le", min: 45, w: 20, sv: 16, pop: true,
+    n: "Pehmeä omenapiirakka", m: "v", t: "le", min: 45, w: 20, sv: 16, pop: true, aka: ["Omenapiirakka"],
     d: "Uunipannullinen pehmeää kermaviilipiirakkaa omenalohkoilla ja kanelisokerilla. Syksyn omenasadolle paras käyttö.",
     ing: ["voi 200 g", "sokeri 2.5 dl", "kananmuna 3 kpl", "kermaviili 200 g", "vehnäjauho 5 dl", "leivinjauhe 2 tl", "omena 800 g", "sokeri 2 rkl", "kaneli 1 rkl"],
     steps: [
@@ -192,6 +196,28 @@ export default [
     serve: "Tarjoa lämpimänä vaniljajäätelön kanssa.",
     tips: ["Happamat syysomenat, kuten Antonovka, antavat piirakalle parhaan maun."],
     src: [["Valio", "https://www.valio.fi/reseptit/omenapiirakka/"], ["Martat", "https://www.martat.fi/reseptit/omenapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/helppo-omenapiirakka/recipe-4572"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/14200/Omenapiirakka/"]],
+  },
+  {
+    n: "Murotaikinainen omenapiirakka", m: "v", t: "le", min: 70, w: 30, sv: 10, pop: true, aka: ["Omenapiirakka", "Omenapiiras"],
+    d: "Ohut ja rapea murotaikinakuori, jonka päällä omenaviipaleet ja kanelisokeri. Omenan maku pääsee esiin.",
+    ing: ["# Pohja", "vehnäjauho 4 dl", "voi 125 g", "sokeri 2 rkl", "suola 1 ripaus", "vesi 0.5 dl", "# Täyte", "omena 600 g", "sokeri 0.5 dl", "kaneli 1 tl"],
+    steps: [
+      "Nypi kylmä voi ja jauhot sormin murumaiseksi. Lisää sokeri, suola ja kylmä vesi ja kokoa taikina nopeasti palloksi. Älä vaivaa, niin pohjasta tulee murea.",
+      "Kääri taikina kelmuun ja anna levätä jääkaapissa ainakin puoli tuntia.",
+      "Lämmitä uuni 225 asteeseen. Kauli taikina jauhotetulla alustalla ohueksi ja siirrä se kaulimen avulla voideltuun piirakkavuokaan. Painele reunat kiinni vuokaan.",
+      "Poista omenoista siemenkodat ja viipaloi ne ohuiksi lohkoiksi. Asettele lohkot limittäin tiiviisti pohjan päälle.",
+      "Sekoita sokeri ja kaneli ja ripottele omenoiden päälle.",
+      "Paista uunin keskiosassa noin 25 minuuttia, kunnes reunat ovat kullanruskeat ja omenat pehmenneet.",
+    ],
+    serve: "Tarjoa lämpimänä vaniljakastikkeen tai -jäätelön kanssa.",
+    extras: ["vaniljakastike"],
+    tips: ["Happamat syysomenat pitävät muotonsa uunissa. Makeiden omenoiden kanssa sokeria voi vähentää."],
+    vs: [
+      { id: "avoin", n: "Avoin" },
+      { id: "muru", n: "Murupinnalla", add: ["voi 75 g", "sokeri 0.5 dl", "vehnäjauho 1.5 dl"], step: { 4: "Sekoita sokeri ja kaneli ja ripottele omenoiden päälle. Nypi murupinnan voista, sokerista ja jauhoista muruseos ja levitä se omenoiden peitoksi.", 5: "Laske lämpö 200 asteeseen ja paista uunin alaosassa noin 35 minuuttia, kunnes murupinta on kullanruskea." } },
+    ],
+    vh: "Murupinta",
+    src: [["Kinuskikissa", "https://www.kinuskikissa.fi/omenapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/omena-muropiiras/recipe-3051"], ["Valio", "https://www.valio.fi/reseptit/maailman-paras-omenapiirakka/"]],
   },
   {
     n: "Porkkanakakku", m: "v", t: "le", min: 80, w: 25, sv: 12, pop: true,
@@ -210,8 +236,8 @@ export default [
   },
   {
     n: "Kääretorttu", m: "v", t: "le", min: 40, w: 25, sv: 12, pop: true,
-    d: "Ohut ja kuohkea pohja rullataan hillon tai marjarahkan ympärille. Valmistuu alle tunnissa.",
-    ing: ["kananmuna 4 kpl", "sokeri 1.5 dl", "vehnäjauho 0.75 dl", "perunajauho 0.75 dl", "leivinjauhe 1 tl", "sokeri 2 rkl", "puolukkahillo 2 dl"],
+    d: "Ohut ja kuohkea pohja rullataan hillon, kermavaahdon tai marjarahkan ympärille. Valmistuu alle tunnissa.",
+    ing: ["kananmuna 4 kpl", "sokeri 1.5 dl", "vehnäjauho 0.75 dl", "perunajauho 0.75 dl", "leivinjauhe 1 tl", "sokeri 2 rkl"],
     steps: [
       "Kuumenna uuni 225-asteiseksi. Peitä uunipannu leivinpaperilla.",
       "Vaahdota munia ja sokeria niin pitkään, että vatkaimesta valuva nauha jää hetkeksi näkyviin pinnalle.",
@@ -221,13 +247,16 @@ export default [
       "Levitä hillo levylle ja kääri se pitkältä sivulta tiiviiksi rullaksi paperin avulla. Anna jäähtyä saumapuoli alaspäin.",
     ],
     tips: ["Kääri levy vielä lämpimänä, niin se ei halkeile."],
-    tw: [
-      { id: "rahka", n: "Marjarahkatäytteellä", d: "Täytä hillon tilalla vaahdotetun kerman, rahkan ja marjojen seoksella. Kääri levy ensin tyhjänä ja täytä jäähtyneenä.", rm: ["puolukkahillo"], add: ["kuohukerma 2 dl", "maitorahka 250 g", "pakastemansikka 2 dl", "vaniljasokeri 1 tl"], step: {"5": "Kääri lämmin levy pitkältä sivulta rullaksi paperin avulla ja anna jäähtyä. Vaahdota kerma, sekoita joukkoon rahka, vaniljasokeri ja sulaneet mansikat. Avaa rulla, levitä täyte ja kääri uudelleen."} },
+    vh: "Täyte",
+    vs: [
+      { id: "hillo", n: "Hillo", add: ["mansikkahillo 2 dl"] },
+      { id: "suklaa", n: "Suklaa", add: ["kaakao 3 rkl", "kuohukerma 2 dl", "vaniljasokeri 1 tl", "mansikkahillo 1 dl"], step: { 2: "Sekoita jauhot, kaakao ja leivinjauhe ja siivilöi ne vaahtoon. Kääntele nuolijalla kevyesti, jotta vaahto ei laskeudu.", 5: "Kääri lämmin levy pitkältä sivulta rullaksi paperin avulla ja anna jäähtyä. Vatkaa kerma ja vaniljasokeri vaahdoksi. Avaa rulla, levitä pinnalle hillo ja kermavaahto ja kääri uudelleen." } },
+      { id: "rahka", n: "Marjarahka", add: ["kuohukerma 2 dl", "maitorahka 250 g", "pakastemansikka 2 dl", "vaniljasokeri 1 tl"], step: { 5: "Kääri lämmin levy pitkältä sivulta rullaksi paperin avulla ja anna jäähtyä. Vaahdota kerma, sekoita joukkoon rahka, vaniljasokeri ja sulaneet mansikat. Avaa rulla, levitä täyte ja kääri uudelleen." } },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/kaaretorttu/"], ["Martat", "https://www.martat.fi/reseptit/kaaretorttu/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/gluteeniton-kaaretorttu/recipe-575"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/70350/K%C3%A4%C3%A4retorttu/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/kaaretorttu/"], ["Martat", "https://www.martat.fi/reseptit/kaaretorttu/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/70350/K%C3%A4%C3%A4retorttu/"], ["Valio", "https://www.valio.fi/reseptit/suklaakaaretorttu/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/7997/K%C3%A4%C3%A4retorttu/"]],
   },
   {
-    n: "Rahkapiirakka", m: "v", t: "le", min: 100, w: 35, sv: 16,
+    n: "Pullapohjainen rahkapiirakka", m: "v", t: "le", min: 100, w: 35, sv: 16, aka: ["Rahkapiirakka"],
     d: "Pellillinen pullapohjaista rahkapiirakkaa, jonka täyte on sitruunainen ja kermainen.",
     ing: ["# Pohja", "maito 3 dl", "hiiva 25 g", "sokeri 1 dl", "suola 0.5 tl", "kardemumma 2 tl", "kananmuna 1 kpl", "vehnäjauho 8 dl", "voi 75 g", "# Täyte", "maitorahka 500 g", "kananmuna 2 kpl", "kuohukerma 2 dl", "sokeri 1.5 dl", "vaniljasokeri 2 tl", "sitruuna 1 kpl"],
     steps: [
@@ -237,8 +266,24 @@ export default [
       "Kaada täyte kohonneen pohjan päälle ja paista uunin alaosassa noin 30 minuuttia, kunnes täyte on hyytynyt ja saanut väriä.",
     ],
     serve: "Tarjoa marjojen tai hillon kanssa.",
-    tips: ["Murotaikinapohja on nopeampi vaihtoehto pullapohjalle. Silloin piirakka paistetaan isossa piirakkavuoassa."],
-    src: [["Valio", "https://www.valio.fi/reseptit/rahkapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/rahkapiirakka/recipe-4026"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/51043/Rahkapiirakka/"]],
+    tips: ["Kiireessä tee murotaikinainen rahkapiirakka: sen pohjaa ei tarvitse kohottaa."],
+    src: [["Valio", "https://www.valio.fi/reseptit/rahkapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/rahkapiirakka/recipe-4026"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/rahkapiirakka-lapsuuden-tapaan/fmh-recipe-1349"]],
+  },
+  {
+    n: "Murotaikinainen rahkapiirakka", m: "v", t: "le", min: 70, w: 20, sv: 12, aka: ["Rahkapiirakka", "Rahkapiiras"],
+    d: "Nopea rahkapiirakka ilman hiivaa: murea pohja ja sitruunainen rahkatäyte. Pohjaa ei tarvitse kohottaa.",
+    ing: ["# Pohja", "voi 125 g", "sokeri 0.5 dl", "kananmuna 1 kpl", "vehnäjauho 3.5 dl", "leivinjauhe 1 tl", "# Täyte", "maitorahka 500 g", "kuohukerma 2 dl", "kananmuna 3 kpl", "sokeri 1.5 dl", "vaniljasokeri 2 tl", "sitruuna 1 kpl"],
+    steps: [
+      "Lämmitä uuni 200 asteeseen ja voitele piirakkavuoka, halkaisija noin 26 cm.",
+      "Vatkaa pehmeä voi ja sokeri vaaleaksi ja sekoita muna joukkoon. Lisää jauhot ja leivinjauhe ja sekoita tasaiseksi taikinaksi.",
+      "Painele taikina vuoan pohjalle ja nosta reunoille korkea reunus, jotta täyte mahtuu.",
+      "Raasta sitruunan kuori ja purista mehu. Vatkaa rahka, kerma, munat, sokerit, kuori ja mehu tasaiseksi.",
+      "Kaada täyte pohjalle ja paista uunin alaosassa noin 40 minuuttia, kunnes täyte on hyytynyt ja pinta saanut väriä.",
+      "Anna jäähtyä vuoassa. Täyte kiinteytyy jäähtyessään.",
+    ],
+    serve: "Tarjoa marjojen tai marjakeiton kanssa.",
+    tips: ["Täytteeseen voi lisätä kourallisen rusinoita tai valutettuja säilykehedelmiä."],
+    src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/51043/Rahkapiirakka/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/rahkapiirakka/"]],
   },
   {
     n: "Laskiaispullat", m: "v", t: "le", min: 120, w: 45, sv: 20, fe: "",
@@ -259,20 +304,27 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/laskiaispullat/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteiset-laskiaispullat/fmh-recipe-1163"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/108095/Laskiaispullat/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/laskiaispullat/"]],
   },
   {
-    n: "Täytekakku", m: "v", t: "le", min: 120, w: 50, sv: 12, jf: true,
-    d: "Juhlien perinteinen kermakakku: kuohkea sokerikakkupohja, marjatäyte ja kermavaahtopinta.",
-    ing: ["# Pohja", "kananmuna 4 kpl", "sokeri 1.5 dl", "vehnäjauho 1 dl", "perunajauho 1 dl", "leivinjauhe 1 tl", "# Kostutus", "maito 1.5 dl", "# Täyte ja pinta", "kuohukerma 6 dl", "sokeri 3 rkl", "vaniljasokeri 2 tl", "pakastemansikka 400 g", "maitorahka 250 g"],
+    n: "Täytekakku", m: "v", t: "le", min: 360, w: 60, sv: 12, jf: true, fe: "ju", aka: ["Mansikkakakku", "Mansikkatäytekakku", "Kermakakku"],
+    d: "Juhlien kermakakku kuohkeasta sokerikakkupohjasta. Täytteeksi tuoreet mansikat, marjarahka tai vaniljakreemi ja hillo.",
+    ing: ["# Pohja", "kananmuna 4 kpl", "sokeri 1.5 dl", "vehnäjauho 1 dl", "perunajauho 1 dl", "leivinjauhe 1 tl", "# Kostutus", "maito 1.5 dl", "vaniljasokeri 1 tl", "# Kermavaahto", "kuohukerma 5 dl", "sokeri 2 rkl", "vaniljasokeri 2 tl"],
     steps: [
-      "Lämmitä uuni 175 asteeseen. Voitele ja korppujauhota irtopohjavuoka.",
-      "Vatkaa munat ja sokeri vaaleaksi ja kestäväksi vaahdoksi. Siivilöi jauhot ja leivinjauhe joukkoon ja kääntele varovasti.",
-      "Paista uunin alaosassa noin 40 minuuttia. Kumoa pohja ritilälle ja anna jäähtyä hyvin, mieluiten yön yli.",
-      "Leikkaa pohja kolmeksi levyksi. Kostuta levyt maidolla, johon voit sekoittaa vähän marjamehua.",
-      "Vaahdota kerma sokerin ja vaniljasokerin kanssa. Sekoita kolmannes vaahdosta rahkaan ja sulaneisiin, murskattuihin marjoihin.",
-      "Kokoa kakku vuorotellen levyistä ja marjarahkasta. Kuorruta pinta ja reunat lopulla kermavaahdolla ja koristele.",
-      "Anna tekeytyä jääkaapissa vähintään 4 tuntia.",
+      "Lämmitä uuni 175 asteeseen. Voitele ja jauhota irtopohjavuoka, halkaisija noin 24 cm.",
+      "Vatkaa sokeri ja huoneenlämpöiset munat vaaleaksi ja niin paksuksi vaahdoksi, että vatkaimen jälki jää näkyviin.",
+      "Siivilöi jauhot ja leivinjauhe vaahtoon ja kääntele nuolijalla varovasti, ettei ilma karkaa.",
+      "Paista uunin alaosassa noin 40 minuuttia. Kumoa pohja ritilälle ja anna jäähtyä kokonaan, mieluiten edellisestä päivästä.",
+      "Leikkaa pohja kolmeksi levyksi ja kostuta ne vaniljalla maustetulla maidolla.",
+      "Vaahdota kerma sokerin ja vaniljasokerin kanssa.",
+      "Levitä täyte levyjen väliin ja kuorruta kakku lopulla kermavaahdolla.",
+      "Anna tekeytyä jääkaapissa vähintään 4 tuntia ennen tarjoilua.",
     ],
-    tips: ["Liivatetta täytteessä ei tarvita, kun rahka sitoo marjat. Rahka myös keventää täytettä."],
-    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/taytekakku/recipe-1267"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/143293/T%C3%A4ytekakku/"], ["Valio", "https://www.valio.fi/reseptit/vegaaninen-taytekakku/"]],
+    tips: ["Pohjan voi leipoa jo edellisenä päivänä, jolloin se on helpompi leikata.", "Kostuta reunat ja kansi hieman runsaammin kuin keskiosa, sillä ne kuivuvat helpoimmin."],
+    vh: "Täyte",
+    vs: [
+      { id: "mansikka", n: "Mansikka-kerma", add: ["mansikka 750 g"], step: { 6: "Murskaa noin kolmasosa mansikoista ja sekoita ne kolmasosaan kermavaahdosta. Levitä seos levyjen väliin. Kuorruta kakku lopulla kermavaahdolla ja koristele lopuilla mansikoilla." } },
+      { id: "rahka", n: "Marjarahka", add: ["maitorahka 250 g", "pakastemansikka 400 g"], step: { 6: "Sekoita kolmasosa kermavaahdosta rahkaan ja sulaneisiin, murskattuihin marjoihin ja levitä seos levyjen väliin. Kuorruta pinta ja reunat lopulla kermavaahdolla." } },
+      { id: "vanilja", n: "Vaniljakreemi ja hillo", add: ["maito 2 dl", "kananmuna 1 kpl", "perunajauho 2 rkl", "sokeri 1 rkl", "vaniljasokeri 1 tl", "mansikkahillo 1.5 dl", "mansikka 250 g"], ins: [[3, "Vispaa kattilassa maito, muna, perunajauho ja sokeri. Kuumenna ja hämmennä jatkuvasti, kunnes kreemi sakenee. Älä anna sen kiehua. Mausta vaniljasokerilla ja jäähdytä kelmun alla."]], step: { 6: "Levitä alimmalle levylle hillo ja keskimmäiselle vaniljakreemi. Kuorruta kakku kermavaahdolla ja koristele mansikoilla." } },
+    ],
+    src: [["Valio", "https://www.valio.fi/reseptit/mansikkakakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-mansikkakakku/recipe-2169"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/taytekakku/recipe-1267"], ["Valio", "https://www.valio.fi/reseptit/helppo-rahkataytekakku/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/marjainen-taytekakku/recipe-3584"]],
   },
   {
     n: "Suklaakeksit", m: "v", t: "le", min: 30, w: 15, sv: 24,

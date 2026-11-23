@@ -356,7 +356,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/tacopiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/tacopiirakka/recipe-837"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/293865/Tacopiirakka/"]],
   },
   {
-    n: "Jauhelihapiirakka", m: "j", t: "uu", min: 70, w: 30, sv: 8,
+    n: "Lehtitaikinainen jauhelihapiirakka", m: "j", t: "uu", min: 70, w: 30, sv: 8, aka: ["Jauhelihapiirakka", "Lihapiirakka"],
     d: "Lehtitaikinaan kääritty mehevä jauheliha-riisi-munatäyte. Pellillinen ruokaisaa piirakkaa juhliin tai eväiksi.",
     ing: ["lehtitaikina 600 g", "jauheliha 500 g", "sipuli 1 kpl", "riisi 1.5 dl", "kananmuna 3 kpl", "suola 1 tl", "valkopippuri 0.5 tl", "kananmuna 1 kpl"],
     steps: [
@@ -368,7 +368,23 @@ export default [
     ],
     serve: "Tarjoa salaatin tai lihaliemen kanssa.",
     sides: ["k-vihersalaatti"],
-    src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/224818/Jauhelihapiirakka/"], ["Valio", "https://www.valio.fi/reseptit/jauhelihapiirakka/"]],
+    src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/224818/Jauhelihapiirakka/"]],
+  },
+  {
+    n: "Jauheliha-juustopiirakka", m: "j", t: "uu", min: 60, w: 25, sv: 6, aka: ["Jauhelihapiirakka", "Jauhelihapiiras"],
+    d: "Murea piirakkapohja, mausteinen jauheliha-paprikatäyte ja juustoinen munamaito. Arkipiiras, joka maistuu myös kylmänä eväänä.",
+    ing: ["# Pohja", "voi 100 g", "vehnäjauho 3 dl", "leivinjauhe 1 tl", "maito 1 dl", "# Täyte", "jauheliha 400 g", "sipuli 1 kpl", "paprika 1 kpl", "valkosipulinkynsi 1 kpl", "suola 1 tl", "mustapippuri 0.5 tl", "oregano 1 tl", "# Pinnalle", "ruokakerma 2 dl", "kananmuna 2 kpl", "juustoraaste 150 g"],
+    steps: [
+      "Sulata voi ja anna sen jäähtyä hetki. Lisää maito ja leivinjauheella sekoitetut jauhot ja kokoa taikina muutamalla nopealla vedolla.",
+      "Taputtele taikina jauhotetuin sormin voidellun piirasvuoan (noin 26 cm) pohjalle ja reunoille. Nosta vuoka jääkaappiin täytteen valmistuksen ajaksi.",
+      "Lämmitä uuni 200 asteeseen. Ruskista jauheliha pannulla. Lisää silputtu sipuli ja valkosipuli sekä kuutioitu paprika ja paista, kunnes sipuli pehmenee. Mausta suolalla, pippurilla ja oreganolla.",
+      "Levitä täyte pohjalle. Vatkaa kerma ja munat ja sekoita joukkoon puolet juustoraasteesta. Kaada seos täytteen päälle ja ripottele loput juustot pinnalle.",
+      "Paista uunin alaosassa noin 30 minuuttia, kunnes munamaito on hyytynyt ja pinta kullanruskea.",
+    ],
+    serve: "Tarjoa vihersalaatin kanssa.",
+    sides: ["k-vihersalaatti"],
+    tips: ["Anna piirakan vetäytyä 10 minuuttia ennen leikkaamista, niin palat pysyvät koossa."],
+    src: [["Valio", "https://www.valio.fi/reseptit/jauhelihapiiras/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/jauhelihapiirakka/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/jauhelihapiiras/recipe-2671"]],
   },
   {
     n: "Spagetti bolognese", m: "j", t: "ps", min: 60, w: 20, sv: 4, wd: "it", pop: true,

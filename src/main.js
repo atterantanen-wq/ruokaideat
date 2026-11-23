@@ -1,7 +1,6 @@
 import "./styles/main.css";
 import {LIB} from "./data/library/index.js";
 import {fromLib,applySel,selOf,optLines} from "./recipes.js";
-import {migrateLegacy} from "./migrate.js";
 import {ING_RAW} from "./data/ingredients.js";
 import {STORE_P,STORE_L,STORE_K,STORE_KS,STORE_S} from "./data/stores.js";
 import {LOGO} from "./data/logos.js";
@@ -666,7 +665,7 @@ function cleanRec(c){
     extras:Array.isArray(c.extras)?[...new Set(c.extras.filter(v=>typeof v==="string"&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(v)).map(v=>v.toLowerCase()))].slice(0,8):[],
     src:Array.isArray(c.src)?c.src.filter(v=>Array.isArray(v)&&typeof v[0]==="string"&&safeUrl(v[1])).slice(0,6).map(v=>[clip(v[0],40),safeUrl(v[1])]):[]};
 }
-function cleanState(x){return aliasState(cleanState0(migrateLegacy(x,R)));}
+function cleanState(x){return aliasState(cleanState0(x));}
 function cleanState0(x){
   const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2};
   if(x&&x.sp===true)o.sp=true;
@@ -704,7 +703,7 @@ function cleanState0(x){
     if(!rid.has(k))continue;
     const f=cleanRec(x.over[k]);if(f){delete f.d;delete f.url;o.over[k]=f;}
   }
-  const ids=new Set([...rid].filter(i=>!o.hidden.includes(i)&&!RETIRED.has(i)).concat(o.custom.map(c=>c.id)));
+  const ids=new Set([...rid].filter(i=>!o.hidden.includes(i)).concat(o.custom.map(c=>c.id)));
   /* leivonnaisissa määrä on erä (½, 1 tai 2 erää kappaleina), muissa annosmäärä 2–10 */
   const recOf=k=>R.find(z=>z.id===k)||o.custom.find(z=>z.id===k);
   if(x.pv&&typeof x.pv==="object")for(const k of Object.keys(x.pv)){const n=parseInt(x.pv[k]);if(!ids.has(k))continue;const r=recOf(k);
@@ -843,8 +842,7 @@ function startRemote(tries){
 
 /* ---------- ruokalista ---------- */
 const ov=r=>state.over[r.id]?{...r,...state.over[r.id]}:r;
-const RETIRED=new Set(["b68"]);
-const all=()=>R.filter(r=>!state.hidden.includes(r.id)&&!RETIRED.has(r.id)).map(ov).concat(state.custom);
+const all=()=>R.filter(r=>!state.hidden.includes(r.id)).map(ov).concat(state.custom);
 const byId=id=>all().find(r=>r.id===id);
 const inCart=id=>state.cart.includes(id);
 /* ---------- automaattiset tägit ---------- */
@@ -1122,6 +1120,8 @@ function qIngs(r){
   if(!v){v=r.ing.map(l=>parseIng(l).key.replace(/kananmun\w*/g,"muna"));if(qIngCache.size>800)qIngCache.clear();qIngCache.set(k,v);}
   return v;
 }
+/* nimet hakua varten: reseptin nimi, muut nimet ja versioiden nimet */
+const qNames=r=>[r.name,...(r.aka||[]),...((r.vs||[]).length>1?r.vs.flatMap(v=>[v.n,v.n+" "+r.name]):[])];
 /* versioiden ja muunnelmien tuomat ainekset: [avain, versio/muunnelma] */
 const qOptCache=new Map();
 function qOptRows(r){
@@ -1135,7 +1135,12 @@ function qOpts(r,ts){
   const out=[];
   for(const t0 of ts){
     const t=t0.replace(/kananmu\w*/g,"muna"),ok=v=>v>=0&&(v<=2||t.length>=5);
-    if(ok(fzBest(t,[r.name]))||ok(fzBest(t,qIngs(r))))continue;
+    /* versio nimeltä (esim. "kirkas kalakeitto") */
+    if(!ok(fzBest(t,[r.name,...(r.aka||[])]))&&(r.vs||[]).length>1){
+      const v=r.vs.find(v=>ok(fzBest(t,[v.n,v.n+" "+r.name])));
+      if(v){if(!out.includes(v))out.push(v);continue;}
+    }
+    if(ok(fzBest(t,qNames(r)))||ok(fzBest(t,qIngs(r))))continue;
     const hit=qOptRows(r).find(([k])=>ok(fzScore(t,fold(k))));
     if(hit&&!out.includes(hit[1]))out.push(hit[1]);
   }
@@ -1148,7 +1153,7 @@ function qHit(r,ts0){
   for(const t0 of ts){
     const t=t0.replace(/kananmu\w*/g,"muna");
     const ok=v=>v>=0&&(v<=2||t.length>=5);
-    const n=fzBest(t,[r.name]);
+    const n=fzBest(t,qNames(r));
     if(ok(n)){best=Math.max(best,n);continue;}
     const g=fzBest(t,qIngs(r));
     if(ok(g)){best=Math.max(best,100+g);continue;}
@@ -1244,7 +1249,7 @@ function hkWhy(r,ts){
   const out=[];
   for(const t0 of ts){
     const t=t0.replace(/kananmu\w*/g,"muna");
-    if(hkOk(t,fzBest(t,[r.name])))continue;
+    if(hkOk(t,fzBest(t,qNames(r))))continue;
     for(const l of r.ing){
       const k=parseIng(l).key;
       if(hkOk(t,fzScore(t,fold(k.replace(/kananmun\w*/g,"muna"))))){if(!out.includes(k))out.push(k);break;}
@@ -1563,6 +1568,7 @@ PA("mascarpone",12,"kg","Mascarpone");
 PA("savoiardi",13,"kg","Savoiardi-keksit");
 PA("luumumarmeladi",8,"kg","Luumumarmeladi");
 PA("omenahillo",6,"kg","Omenahillo");
+PA("mansikkahillo",7,"kg","Mansikkahillo");
 PA("bbq-kastike",7,"kg","BBQ-kastike");
 PA("kaurakerma",4.6,"l","Kaurakerma ruoanvalmistukseen");
 PA("grahamjauho",1.7,"kg","Grahamjauho");

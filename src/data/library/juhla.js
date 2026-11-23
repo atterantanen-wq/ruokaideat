@@ -112,8 +112,8 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/porkkanalaatikko/"], ["Martat", "https://www.martat.fi/reseptit/porkkanalaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-porkkanalaatikko/recipe-3925"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/102916/Porkkanalaatikko/"]],
   },
   {
-    n: "Munkit", m: "v", t: "le", min: 150, w: 60, sv: 30, fe: "va",
-    d: "Vapun rinkelimunkit kardemummaisesta pullataikinasta, öljyssä paistettuina ja sokerissa pyöriteltyinä.",
+    n: "Munkit", m: "v", t: "le", min: 150, w: 60, sv: 30, fe: "va", aka: ["Rinkelimunkit", "Hillomunkit", "Berliininmunkit"],
+    d: "Vapun munkit kardemummaisesta pullataikinasta, öljyssä paistettuina ja sokerissa pyöriteltyinä. Rinkeleinä tai hillolla täytettyinä.",
     ing: ["maito 5 dl", "hiiva 50 g", "kananmuna 2 kpl", "sokeri 2 dl", "suola 1.5 tl", "kardemumma 1 rkl", "vehnäjauho 15 dl", "voi 150 g", "rypsiöljy 1 l", "sokeri 2 dl"],
     steps: [
       "Liuota hiiva noin 37-asteiseen maitoon. Lisää kananmunat ja vatkaa joukkoon kardemumma, sokeri ja suola.",
@@ -125,10 +125,12 @@ export default [
     ],
     serve: "Tarjoa siman kanssa.",
     tips: ["Liian kuumassa öljyssä munkit tummuvat pinnalta ennen kuin sisus kypsyy. Säädä lämpöä erien välillä."],
-    tw: [
-      { id: "hillo", n: "Hillomunkit", d: "Tee reiättömiä palloja ja pursota paistettujen munkkien sisään vadelma- tai omenahilloa.", add: ["puolukkahillo 2 dl"], step: {"3": "Jaa taikina noin 30 palaan ja pyöritä palloiksi. Anna pallojen kohota leivinpaperilla vielä parikymmentä minuuttia."}, ins: [[5, "Kun munkit ovat jäähtyneet, tee kylkeen pieni reikä ja pursota sisään hilloa."]] },
+    vh: "Täyte",
+    vs: [
+      { id: "rinkeli", n: "Rinkelimunkit" },
+      { id: "hillo", n: "Hillomunkit", add: ["mansikkahillo 2 dl"], step: { 3: "Jaa taikina noin 30 palaan ja pyöritä palloiksi. Anna pallojen kohota leivinpaperilla vielä parikymmentä minuuttia." }, ins: [[5, "Kun munkit ovat jäähtyneet, tee kylkeen pieni reikä ja pursota sisään hilloa."]] },
     ],
-    src: [["Valio", "https://www.valio.fi/reseptit/munkit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/munkit/recipe-2213"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/124855/Munkit/"]],
+    src: [["Valio", "https://www.valio.fi/reseptit/munkit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/munkit/recipe-2213"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/124855/Munkit/"], ["Valio", "https://www.valio.fi/reseptit/berliininmunkit/"]],
   },
   {
     n: "Rosolli", m: "v", t: "sa", min: 60, w: 30, sv: 8, fe: "jo", jf: true,
