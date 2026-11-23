@@ -213,7 +213,7 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   if (sdb) await sdb.click();
   await click('#pkbody [data-pp-x]'); await wait(150);
   const e = await page.evaluate((i) => window.__app.state.pl.items[i], tw);
-  ok(e.t.length === 1 && e.n === 5, "muokkaus ei tallentunut: " + JSON.stringify(e));
+  ok(e.t.length === 1 && e.n >= 5, "muokkaus ei tallentunut: " + JSON.stringify(e));
   ok(!sdk || e.sd.includes(sdk), "lisuke ei tallentunut");
   if (tw !== 2) await click(`[data-pa="lock"][data-i="${tw}"]`);
   /* lukitus säilyy uusissa ehdotuksissa */

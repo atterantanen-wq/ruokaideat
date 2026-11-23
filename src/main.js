@@ -3818,10 +3818,39 @@ const sdParse=s=>{const[id,v]=String(s).split(":");return{id,v:v||""};};
 function sdName(s){const{id,v}=sdParse(s),r=byId(id);if(!r)return"";const ver=v&&(r.vs||[]).find((x,j)=>j>0&&x.id===v);return r.name+(ver?" – "+ver.n:"");}
 /* ruoan oletusvalinnat: ensimmäinen suositeltu lisuke */
 function plDefaults(it){
-  const r=byId(it.id);it.t=[];it.px=[];it.sd=[];
-  if(r&&(r.sides||[]).length){const s=r.sides.find(x=>byId(sdParse(x).id));if(s)it.sd=[s];}
+  const r=byId(it.id);it.t=[];it.px=[];it.sd=[];if(!r)return;
+  /* lisuke: reseptin oma ehdotus, muuten ruokakortin ensimmäinen ehdotus */
+  const own=(r.sides||[]).find(x=>byId(sdParse(x).id));
+  if(own)it.sd=[own];
+  else{const g=sideSug(r),x=g&&[...g.out.c,...g.out.v].find(y=>y.t==="r");if(x)it.sd=[x.id+(x.ver?":"+x.ver:"")];}
+  /* valmis tuote: reseptin ensimmäinen, keittoon leipä */
+  const ex=(r.extras||[]).map(k=>String(k).toLowerCase()).find(k=>vkOk(k));
+  if(ex)it.px=[ex];else if(r.t==="ke")it.px=["ruisleipä"];
 }
-const plN=it=>it.n>0?it.n:state.pl.sv;
+/* annokset: vähintään valittu määrä; pakkauskokojen mukaan enintään 3 enemmän, jos pakkauksia jää silloin vähemmän vajaaksi */
+const plNMemo=new Map();
+function packWaste(r,v,t,n){
+  let w=0;
+  for(const line of ingFor(r,n,v,t)){
+    const p=parseIng(line);if(p.v==null||isSkip(p.key)||pantryHit(p.key))continue;
+    const pk=packOf(p.key);if(!pk)continue;
+    const x=toBase(p.key,p.fam,p.v,pk[1]);if(!(x>0))continue;
+    const c=costOf(p.key,p.fam,p.v);if(c.t!=="ok")continue;
+    const left=Math.ceil(x/pk[0]-1e-6)*pk[0]-x;w+=left*c.c/x;
+  }
+  return w;
+}
+function autoN(it){
+  const N=state.pl.sv,r=byId(it.id);if(!r)return N;
+  const k=it.id+"|"+(it.v||"")+"|"+(it.t||[]).join(",")+"|"+N;
+  if(plNMemo.has(k))return plNMemo.get(k);
+  let best=N,bw=packWaste(r,it.v,it.t||[],N);
+  /* lisäannos kannattaa vain, jos se vähentää hukkaa selvästi (yli 1 € ja 25 % per lisäannos) */
+  const w0=bw;
+  for(let n=N+1;n<=Math.min(N+3,20);n++){const w=packWaste(r,it.v,it.t||[],n),d=n-N;if(w0-w>1*d&&w<w0*(1-0.25*d)&&w<bw){best=n;bw=w;}}
+  plNMemo.set(k,best);return best;
+}
+const plN=it=>it.n>0?it.n:autoN(it);
 function plItemCost(it){
   const r=byId(it.id);if(!r)return 0;const n=plN(it);
   let c=plCostPer(r,it.v,it.t||[])*n;
@@ -3844,22 +3873,18 @@ function rowChips(it,i){
   const tg=it.tg.length?it.tg.map(t=>PL.TAG_N[t]).join(", "):"Mikä tahansa";
   const out=[`<button type="button" class="pn-tg pn-tsum" data-pa="edit" data-i="${i}" aria-label="Muokkaa ruokaa ${i+1}: ${esc(tg)}">${esc(tg)} ▾</button>`];
   for(const s of it.sd||[])out.push(`<button type="button" class="pn-tg on" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="true">${ico("check")}${esc(sdName(s))}<span class="pn-pc">${sdPrice(s,plN(it))}</span></button>`);
-  for(const k of it.px||[])out.push(`<button type="button" class="pn-tg on" data-pa="px" data-i="${i}" data-k="${esc(k)}" aria-pressed="true">${ico("check")}${esc(capF(k))}</button>`);
-  for(const t of it.t||[]){const m=(r.tw||[]).find(x=>x.id===t);if(m)out.push(`<button type="button" class="pn-tg tw" data-pa="edit" data-i="${i}">${esc(m.n)}</button>`);}
+  for(const k of (it.px||[]).filter(k=>!vkOn(k)))out.push(`<button type="button" class="pn-tg on" data-pa="px" data-i="${i}" data-k="${esc(k)}" aria-pressed="true">${ico("check")}${esc(capF(k))}</button>`);
+  for(const t of it.t||[]){const m=(r.tw||[]).find(x=>x.id===t);if(m)out.push(`<button type="button" class="pn-tg tw" data-pa="edit" data-i="${i}" data-to="tw">${esc(m.n)}</button>`);}
+  if(!(it.t||[]).length&&(r.tw||[]).length)out.push(`<button type="button" class="pn-tg pn-twh" data-pa="edit" data-i="${i}" data-to="tw">${r.tw.length===1?"1 muunnelma":r.tw.length+" muunnelmaa"}</button>`);
   if(!(it.sd||[]).length){const g=sideSug(r);const x=g&&[...g.out.c,...g.out.v].find(y=>y.t==="r");if(x){const s=x.id+(x.ver?":"+x.ver:"");out.push(`<button type="button" class="pn-tg" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="false">${ico("plus")}${esc(sdName(s))}<span class="pn-pc">${sdPrice(s,plN(it))}</span></button>`);}}
   return`<div class="pn-tags">${out.join("")}</div>`;
 }
 function renderPlan(){
   const h=$("planBody");if(!h)return;
-  plCostMemo.clear();plCandsMemo=null;
+  plCostMemo.clear();plNMemo.clear();plCandsMemo=null;
   const pl=state.pl;
   if(!pl.items.length||pl.items.length!==pl.n){PL.fill(plCands(),pl);for(const it of pl.items)if(!it.sd)plDefaults(it);persist();}
   const tot=plTotals(),over=pl.ba>0&&tot.food+tot.extra>pl.ba;
-  /* vaihtelu */
-  const cs=pl.items.map(it=>plCands().find(c=>c.id===it.id)).filter(Boolean);
-  const nf=cs.filter(c=>c.main==="f").length,nv=cs.filter(c=>["v","y"].includes(c.main)).length;
-  const work=pl.items.reduce((a,it)=>{const r=byId(it.id);return a+(r?workOf(r)||r.min||0:0);},0);
-  const varTxt=[`${pl.items.length} ruokaa`,nf?`${nf} kala`:"",nv?`${nv} kasvis`:"",work?`työtä noin ${fmtDur(work)}`:""].filter(Boolean).join(" · ");
   const rows=pl.items.map((it,i)=>{
     const r=it.id&&byId(it.id);
     const ver=r&&it.v&&(r.vs||[]).find(v=>v.id===it.v);
@@ -3875,20 +3900,20 @@ function renderPlan(){
     <p class="note">Määrä on annoksia. Lisää napauttamalla:</p><div class="chips">${snacks.filter(r=>!pl.sn[r.id]).map(r=>`<button type="button" class="chip" data-pa="sn" data-id="${esc(r.id)}" data-d="1">${ico("plus")}${esc(r.name)}</button>`).join("")}</div>`;
   const bkSum=pl.bk.filter(id=>byId(id)).map(id=>esc(byId(id).name)).join(" · ")||"ei valittu";
   const bkInner=`<div class="chips">${bakes.slice(0,24).map(r=>`<button type="button" class="chip" data-pa="bk" data-id="${esc(r.id)}" aria-pressed="${pl.bk.includes(r.id)}">${pl.bk.includes(r.id)?ico("check"):""}${esc(r.name)}</button>`).join("")}</div><p class="note">Leivonnaisista tulee ostoslistalle yhden erän ainekset.</p>`;
-  const vk=state.vk,vkOn=vk.filter(k=>!pl.vo.includes(k));
-  const vkSum=vk.length?vkOn.map(k=>esc(capF(k))).join(" · ")||"kaikki pois tältä kerralta":"ei vakio-ostoksia";
-  const vkInner=`${vk.length?`<p class="note">Napauta pois, jos et tarvitse tällä kertaa.</p><div class="chips">${vk.map(k=>`<button type="button" class="chip" data-pa="vo" data-k="${esc(k)}" aria-pressed="${!pl.vo.includes(k)}">${!pl.vo.includes(k)?ico("check"):""}${esc(capF(k))}</button>`).join("")}</div>`:""}
+  const vk=state.vk,vkA=vk.filter(k=>!pl.vo.includes(k));
+  const fpx=[...new Set(pl.items.flatMap(it=>(it.px||[]).filter(k=>!vkA.includes(k))))];
+  const vkSum=[...vkA,...fpx].map(k=>esc(capF(k))).join(" · ")||(vk.length?"kaikki pois tältä kerralta":"ei vakio-ostoksia");
+  const vkInner=`${fpx.length?`<p class="note">Ruokien tuotteet:</p><div class="chips">${fpx.map(k=>`<button type="button" class="chip" data-pa="pxall" data-k="${esc(k)}" aria-pressed="true">${ico("check")}${esc(capF(k))}</button>`).join("")}</div>`:""}${vk.length?`<p class="note">Napauta pois, jos et tarvitse tällä kertaa.</p><div class="chips">${vk.map(k=>`<button type="button" class="chip" data-pa="vo" data-k="${esc(k)}" aria-pressed="${!pl.vo.includes(k)}">${!pl.vo.includes(k)?ico("check"):""}${esc(capF(k))}</button>`).join("")}</div>`:""}
     <div class="xrow" style="margin-top:10px"><input id="vkin" type="text" maxlength="40" placeholder="Lisää vakio-ostos, esim. maito" autocomplete="off" aria-label="Lisää vakio-ostos"><button type="button" class="go" data-pa="vkadd" style="min-height:44px;padding:0 18px">Lisää</button></div>
     <div class="chips" style="margin-top:8px">${VK_SUG.filter(k=>!vk.includes(k)).map(k=>`<button type="button" class="chip sdm" data-pa="vkq" data-k="${esc(k)}">${ico("plus")}${esc(capF(k))}</button>`).join("")}</div>
     ${vk.length?`<p class="note">Poista vakio kokonaan: <span class="pn-rmv">${vk.map(k=>`<button type="button" class="lk" data-pa="vkrm" data-k="${esc(k)}">${esc(capF(k))}</button>`).join(", ")}</span></p>`:""}`;
   h.innerHTML=`<section class="pn-card"><div class="pn-ctl"><div class="pn-step"><span>Ruokia</span><div><button type="button" class="pn-ib sm" data-pa="n" data-d="-1" aria-label="Vähemmän ruokia"${pl.n<=1?" disabled":""}>${ico("minus")}</button><b>${pl.n}</b><button type="button" class="pn-ib sm" data-pa="n" data-d="1" aria-label="Enemmän ruokia"${pl.n>=10?" disabled":""}>${ico("plus")}</button></div></div>
-      <div class="pn-step"><span>Annoksia ruokaa kohden</span><div><button type="button" class="pn-ib sm" data-pa="sv" data-d="-1" aria-label="Vähemmän annoksia"${pl.sv<=2?" disabled":""}>${ico("minus")}</button><b>${pl.sv}</b><button type="button" class="pn-ib sm" data-pa="sv" data-d="1" aria-label="Enemmän annoksia"${pl.sv>=16?" disabled":""}>${ico("plus")}</button></div></div></div>
-      <p class="note pn-var">${esc(varTxt)}</p>
+      <div class="pn-step"><span>Annoksia vähintään</span><div><button type="button" class="pn-ib sm" data-pa="sv" data-d="-1" aria-label="Vähemmän annoksia"${pl.sv<=2?" disabled":""}>${ico("minus")}</button><b>${pl.sv}</b><button type="button" class="pn-ib sm" data-pa="sv" data-d="1" aria-label="Enemmän annoksia"${pl.sv>=16?" disabled":""}>${ico("plus")}</button></div></div></div>
       <ol class="pn-list">${rows}</ol>
       <div class="actions" style="margin-top:10px"><button type="button" class="cartbtn" data-pa="all">${ico("shuffle")}<span>Uudet ehdotukset</span></button></div>
       ${pl.items.some(x=>x.lk)?`<p class="note">Lukitut ruoat säilyvät.</p>`:`<p class="note">Muokkaa ruokaa napauttamalla sen nimeä: versiot, muunnelmat, lisukkeet ja annokset.</p>`}</section>
     <section class="pn-card"><h3 class="pn-h" style="margin-top:0">Lisäksi kaupasta</h3>
-      ${sec("sn","Aamu- ja välipalat",snSum,snInner)}${sec("bk","Leivonta",bkSum,bkInner)}${sec("vk","Vakiot",vkSum,vkInner)}</section>
+      ${sec("sn","Aamu- ja välipalat",snSum,snInner)}${sec("bk","Leivonta",bkSum,bkInner)}${sec("vk","Vakiot ja tuotteet",vkSum,vkInner)}</section>
     <section class="pn-card pn-sum"><div class="pn-sr"><span>Ruoat ja lisukkeet</span><b>${eur1(tot.food)}</b></div>${tot.extra>0?`<div class="pn-sr"><span>Aamu- ja välipalat, leivonta</span><b>${eur1(tot.extra)}</b></div>`:""}
       <div class="pn-bud"><label for="pba">Budjetti</label><input id="pba" type="number" inputmode="decimal" min="0" step="1" value="${pl.ba>0?pl.ba:""}" placeholder="ei" aria-label="Budjetti euroina"><span>€</span></div>
       ${pl.ba>0?`<div class="pn-bar${over?" over":""}"><i style="width:${Math.min(100,Math.round((tot.food+tot.extra)/pl.ba*100))}%"></i></div>${over?`<p class="note err">Budjetti ylittyy ${eur1(tot.food+tot.extra-pl.ba)}. Valitse Edullinen tai vaihda kalleimpia ruokia.</p>`:""}`:""}
@@ -3918,7 +3943,7 @@ function renderEditPl(){
   let body=`<h3 class="pn-h">Millainen ruoka</h3><div class="chips">${PL.TAGS.map(([k,n])=>chip("tg",k,it.tg.includes(k),n)).join("")}</div>`;
   if(r){
     if((r.vs||[]).length)body+=`<h3 class="pn-h">Versio</h3><div class="chips">${r.vs.map((v,j)=>chip("v",v.id,(it.v||r.vs[0].id)===v.id,v.n)).join("")}</div>`;
-    if((r.tw||[]).length)body+=`<h3 class="pn-h">Muunnelmat</h3><div class="pn-tws">${r.tw.map(m=>`<button type="button" class="pn-twb" data-pe="t" data-k="${esc(m.id)}" aria-pressed="${(it.t||[]).includes(m.id)}"><b>${(it.t||[]).includes(m.id)?ico("check"):""}${esc(m.n)}</b>${m.d?`<small>${esc(m.d)}</small>`:""}</button>`).join("")}</div>`;
+    if((r.tw||[]).length)body+=`<h3 class="pn-h" id="pe-tw">Muunnelmat</h3><div class="pn-tws">${r.tw.map(m=>`<button type="button" class="pn-twb" data-pe="t" data-k="${esc(m.id)}" aria-pressed="${(it.t||[]).includes(m.id)}"><b>${(it.t||[]).includes(m.id)?ico("check"):""}${esc(m.n)}${twFits(m,it.tg)&&!(it.t||[]).includes(m.id)?`<span class="pn-fit">Sopii: ${esc(it.tg.filter(t=>"kve".includes(t)).map(t=>PL.TAG_N[t]).join(", "))}</span>`:""}</b>${m.d?`<small>${esc(m.d)}</small>`:""}</button>`).join("")}</div>`;
     /* lisukkeet: suositellut ensin, sitten muut lisukkeet ja niiden versiot */
     /* sama lisuke vain kerran: suositeltu versio ensin, muut lisukkeet perusversiona */
     const g=sideSug(r),seen=new Set(),sides=[];
@@ -3932,8 +3957,8 @@ function renderEditPl(){
       body+=`<p class="note" style="margin:10px 0 2px">${esc(x.name)}</p><div class="chips">${x.vs.map((w,j)=>chip("sdv",id+":"+w.id,(v||x.vs[0].id)===w.id,w.n,"",sdPrice(id+":"+w.id,plN(it)))).join("")}</div>`;}
     const prods=g?[...g.out.c,...g.out.v,...g.out.o].filter(x=>x.t==="p"):[];
     const pk=[...new Set([...prods.map(x=>x.id),...(it.px||[])])].slice(0,8);
-    if(pk.length)body+=`<h3 class="pn-h">Lisäksi kaupasta</h3><div class="chips">${pk.map(k=>chip("px",k,(it.px||[]).includes(k),capF(k))).join("")}</div>`;
-    body+=`<h3 class="pn-h">Annokset</h3><div class="pn-step"><span>${it.n>0?"Tälle ruoalle":"Kuten muille ("+pl.sv+")"}</span><div><button type="button" class="pn-ib sm" data-pe="n" data-k="-1" aria-label="Vähemmän annoksia"${plN(it)<=1?" disabled":""}>${ico("minus")}</button><b>${plN(it)}</b><button type="button" class="pn-ib sm" data-pe="n" data-k="1" aria-label="Enemmän annoksia">${ico("plus")}</button></div></div>`;
+    if(pk.length)body+=`<h3 class="pn-h">Lisäksi kaupasta</h3><div class="chips">${pk.map(k=>vkOn(k)?chip("pxv",k,true,capF(k)+" (vakio)"):chip("px",k,(it.px||[]).includes(k),capF(k))).join("")}</div>`;
+    body+=`<h3 class="pn-h">Annokset</h3><div class="pn-step"><span>${it.n>0?"Tälle ruoalle":plN(it)>pl.sv?`Vähintään ${pl.sv}, pakkauskokojen takia ${plN(it)}`:"Kuten muille"}</span><div><button type="button" class="pn-ib sm" data-pe="n" data-k="-1" aria-label="Vähemmän annoksia"${plN(it)<=1?" disabled":""}>${ico("minus")}</button><b>${plN(it)}</b><button type="button" class="pn-ib sm" data-pe="n" data-k="1" aria-label="Enemmän annoksia">${ico("plus")}</button></div></div>`;
   }
   const ver=r&&it.v&&(r.vs||[]).find(v=>v.id===it.v);
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${r?esc(r.name)+(ver?" – "+esc(ver.n):""):"Ruoka "+(i+1)}</h2>
@@ -3943,7 +3968,11 @@ function renderEditPl(){
     <div class="actions" style="margin:6px 0 0"><button type="button" class="cartbtn" data-pe="swap" data-k="1"${it.lk?" disabled":""}>${ico("shuffle")}<span>Vaihda ruoka</span></button><button type="button" class="cartbtn" data-pe="pick" data-k="1">${ico("search")}<span>Valitse itse</span></button></div>
     ${body}<div class="actions"><button type="button" class="go" data-pp-x="1" style="width:100%">Valmis</button></div>`;
 }
-function planEditOpen(i){planEdit={i,allSd:false};planPick=null;planChk=null;renderEditPl();$("pkdlg").showModal();}
+function planEditOpen(i,to){planEdit={i,allSd:false};planPick=null;planChk=null;renderEditPl();$("pkdlg").showModal();
+  const h=to&&$("pkbody").querySelector("#pe-"+to);if(h)h.scrollIntoView({block:"start"});}
+const vkOn=k=>state.vk.includes(k)&&!state.pl.vo.includes(k);
+/* muunnelma sopii valittuun siruun */
+const twFits=(m,tg)=>(tg.includes("k")&&/kevye|kevyt/i.test(m.n+" "+(m.d||"")))||(tg.includes("v")&&(m.m==="v"||/kasvis/i.test(m.n)))||(tg.includes("e")&&/edullis|halvem/i.test(m.n+" "+(m.d||"")));
 /* ---------- valitse itse ---------- */
 function planPickOpen(i){planPick={i,q:""};planEdit=null;planChk=null;renderPick();if(!$("pkdlg").open)$("pkdlg").showModal();}
 function renderPick(){
@@ -4026,8 +4055,9 @@ $("pkbody").addEventListener("click",e=>{
   else if(a==="t"){const tw=(r.tw||[]).find(m=>m.id===k);if(!tw)return;const cur=it.t||[];it.t=cur.includes(k)?cur.filter(z=>z!==k):[...cur.filter(z=>{const o=(r.tw||[]).find(m=>m.id===z);return!(o&&((tw.g&&o.g===tw.g)||(o.rm||[]).some(q=>(tw.rm||[]).includes(q))));}),k];}
   else if(a==="sd"){const cur=it.sd||[],id=sdParse(k).id;it.sd=cur.includes(k)?cur.filter(z=>z!==k):[...cur.filter(z=>sdParse(z).id!==id),k];}
   else if(a==="sdv"){const id=sdParse(k).id,x=byId(id),nv=x&&x.vs[0].id===sdParse(k).v?id:k;it.sd=(it.sd||[]).map(z=>sdParse(z).id===id?nv:z);}
+  else if(a==="pxv"){pl.vo=[...pl.vo,k];it.px=(it.px||[]).filter(z=>z!==k);}
   else if(a==="px"){const cur=it.px||[];it.px=cur.includes(k)?cur.filter(z=>z!==k):[...cur,k];}
-  else if(a==="n"){const v=Math.max(1,Math.min(20,plN(it)+(+k)));it.n=v===pl.sv?0:v;}
+  else if(a==="n"){const v=Math.max(1,Math.min(20,plN(it)+(+k)));it.n=0;it.n=v===autoN(it)?0:v;}
   mutate();renderPlan();renderEditPl();
 });
 $("pkdlg").addEventListener("close",()=>{if($("pkdlg").open)return;planPick=null;planEdit=null;planChk=null;});
@@ -4035,7 +4065,7 @@ const vkOk=k=>/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,39}$/i.test(k);
 $("planBody").addEventListener("click",e=>{
   const b=e.target.closest("[data-pa]");if(!b)return;
   const a=b.dataset.pa,pl=state.pl,i=+b.dataset.i;
-  if(a==="edit")return planEditOpen(i);
+  if(a==="edit")return planEditOpen(i,b.dataset.to);
   if(a==="pick")return planPickOpen(i);
   if(a==="shop")return planChkOpen();
   if(a==="xo"){planOpen[b.dataset.k]=!planOpen[b.dataset.k];return renderPlan();}
@@ -4046,6 +4076,7 @@ $("planBody").addEventListener("click",e=>{
   else if(a==="lock"){const it=pl.items[i];if(it){if(it.lk)delete it.lk;else it.lk=1;}}
   else if(a==="sd"){const it=pl.items[i];if(!it)return;const s=b.dataset.s,cur=it.sd||[],id=sdParse(s).id;it.sd=cur.includes(s)?cur.filter(z=>z!==s):[...cur.filter(z=>sdParse(z).id!==id),s];}
   else if(a==="px"){const it=pl.items[i];if(!it)return;it.px=(it.px||[]).filter(z=>z!==b.dataset.k);}
+  else if(a==="pxall"){for(const it of pl.items)it.px=(it.px||[]).filter(z=>z!==b.dataset.k);}
   else if(a==="sn"){const id=b.dataset.id,v=Math.max(0,(pl.sn[id]||0)+(+b.dataset.d));if(v)pl.sn[id]=v;else delete pl.sn[id];}
   else if(a==="bk"){const id=b.dataset.id;pl.bk=pl.bk.includes(id)?pl.bk.filter(x=>x!==id):[...pl.bk,id];}
   else if(a==="vo"){const k=b.dataset.k;pl.vo=pl.vo.includes(k)?pl.vo.filter(x=>x!==k):[...pl.vo,k];}
@@ -4059,7 +4090,7 @@ $("planBody").addEventListener("change",e=>{
   if(t.id==="pba"){const v=parseFloat(String(t.value).replace(",","."));state.pl.ba=v>0&&v<=10000?Math.round(v*100)/100:0;mutate();renderPlan();}
 });
 
-if(import.meta.env.DEV)window.__app={PL,plCands,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
+if(import.meta.env.DEV)window.__app={PL,plCands,autoN,plDefaults,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
 
 /* mobiilinäppäimistö: lisäysikkuna nostetaan näppäimistön yläpuolelle ja kohdistettu kenttä vieritetään näkyviin */
 if(window.visualViewport){

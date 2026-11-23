@@ -32,6 +32,7 @@ export default [
       "Paista keskilämmöllä 3–4 minuuttia kummaltakin puolelta, kunnes pinta on kullanruskea.",
     ],
     serve: "Tarjoa puolukkahillon ja jogurttikastikkeen kanssa.",
+    sides: ["k-perunamuusi", "k-vihersalaatti"],
     extras: ["puolukkahillo", "turkkilainen jogurtti"],
     tips: ["Pihvit voi kypsentää myös uunissa leivinpaperilla 225 asteessa noin 20 minuuttia."],
     tw: [
