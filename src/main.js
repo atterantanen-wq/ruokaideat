@@ -1120,6 +1120,12 @@ function qIngs(r){
   if(!v){v=r.ing.map(l=>parseIng(l).key.replace(/kananmun\w*/g,"muna"));if(qIngCache.size>800)qIngCache.clear();qIngCache.set(k,v);}
   return v;
 }
+/* muunnelmat, jotka vaihtavat saman aineksen, sulkevat toisensa pois: uuden valinta poistaa ristiriitaiset */
+function twExcl(r,list,k){
+  const tw=(r&&r.tw)||[],m=tw.find(t=>t.id===k),rm=(m&&m.rm)||[],g=m&&m.g;
+  if(!rm.length&&!g)return list;
+  return list.filter(o=>{const om=tw.find(t=>t.id===o);return !(om&&((g&&om.g===g)||(om.rm||[]).some(x=>rm.includes(x))));});
+}
 /* nimet hakua varten: reseptin nimi, muut nimet ja versioiden nimet */
 const qNames=r=>[r.name,...(r.aka||[]),...((r.vs||[]).length>1?r.vs.flatMap(v=>[v.n,v.n+" "+r.name]):[])];
 /* versioiden ja muunnelmien tuomat ainekset: [avain, versio/muunnelma] */
@@ -1357,7 +1363,7 @@ $("hkdlg").addEventListener("click",e=>{
     const c=e.target.closest("[data-id], [data-open]"),r=c&&byId(c.dataset.open||c.dataset.id);
     if(r&&hasOpt(r)&&!state.lists.some(l=>l.cart.includes(r.id))){
       const o=qOpts(r,termsOf(hq));
-      if(o.length)setSel(r.id,n=>{for(const m of o){if((r.vs||[]).includes(m))n.v=m.id;else if(!n.t.includes(m.id))n.t.push(m.id);}});
+      if(o.length)setSel(r.id,n=>{for(const m of o){if((r.vs||[]).includes(m))n.v=m.id;else if(!n.t.includes(m.id)){n.t=twExcl(r,n.t,m.id);n.t.push(m.id);}}});
     }
   }
 });
@@ -3425,7 +3431,7 @@ document.addEventListener("click",e=>{
     return;
   }
   if((x=t.closest("[data-ver]"))){const id=openId,v=x.dataset.ver;setSel(id,n=>{n.v=v;});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-ver="'+CSS.escape(v)+'"]');if(nb)nb.focus({preventScroll:true});return;}
-  if((x=t.closest("[data-tw]"))){const id=openId,k=x.dataset.tw;setSel(id,n=>{const i=n.t.indexOf(k);if(i>=0)n.t.splice(i,1);else n.t.push(k);});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-tw="'+CSS.escape(k)+'"]');if(nb)nb.focus({preventScroll:true});return;}
+  if((x=t.closest("[data-tw]"))){const id=openId,k=x.dataset.tw;setSel(id,n=>{const i=n.t.indexOf(k);if(i>=0)n.t.splice(i,1);else{n.t=twExcl(byId(id),n.t,k);n.t.push(k);}});renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-tw="'+CSS.escape(k)+'"]');if(nb)nb.focus({preventScroll:true});return;}
   if((x=t.closest("[data-oside]"))){if(x.dataset.over&&!state.lists.some(l=>l.cart.includes(x.dataset.oside)))useSideVer(x.dataset.oside,x.dataset.over);openDlg(x.dataset.oside);return;}
   if((x=t.closest("[data-acc]"))){const k=x.dataset.acc;if(k==="ing")ingOpen=!ingOpen;else if(k==="steps")stepOpen=!stepOpen;else nutOpen=!nutOpen;renderDlg();const nb=dlg.querySelector('[data-acc="'+k+'"]');if(nb)nb.focus();return;}
   if((x=t.closest("[data-pv]"))){setPv(openId,+x.dataset.pv);mutate();renderDlg();renderIdeas();refreshCart();const nb=dlg.querySelector('[data-pv="'+x.dataset.pv+'"]');if(nb)nb.focus();return;}

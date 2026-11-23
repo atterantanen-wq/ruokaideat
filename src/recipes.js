@@ -11,8 +11,9 @@
  *   sides  lisukereseptien id:t, extras valmiit tuotteet ("puolukkahillo")
  *   tips   tekniikkavinkit (pelkkää tekstiä)
  *   tw     muunnelmat, joita voi olla päällä useita:
- *          {id, n, d, add:[rivit], rm:[ainekset], step:{indeksi:teksti}, ins:[[indeksi, teksti]], del:[indeksit], m}
+ *          {id, n, d, add:[rivit], rm:[ainekset], step:{indeksi:teksti}, ins:[[indeksi, teksti]], del:[indeksit], m, g}
  *          (indeksit viittaavat aina perusreseptin vaiheisiin)
+ *          g = ryhmä: saman ryhmän muunnelmista voi olla valittuna vain yksi (samoin, jos ne poistavat saman aineksen)
  *          Jos muunnelma vaihtaa tai lisää aineksen, päivitä myös vaiheet (step/ins), muuten ohje jää vanhaksi.
  *   vs     versiot, joista valitaan yksi; ensimmäinen on oletus. Reseptin ing sisältää vain kaikille
  *          versioille yhteiset ainekset, ja versio tuo omansa add-kentässä:

@@ -26,22 +26,29 @@ npm run preview
 ## Rakenne
 
 ```
-index.html               sivun runko: yläpalkki, välilehdet ja dialogit
+index.html                 sivun runko: yläpalkki, välilehdet ja dialogit
 public/favicon.svg
 src/
-  main.js                sovelluslogiikka (tila, haku, ruokalista, ostoslistat, rekisteri, kokkausnäkymä)
-  styles/main.css        tyylit, vaalea ja tumma teema
+  main.js                  sovelluslogiikka (tila, haku, ruokalista, ostoslistat, rekisteri, hinnat, kokkausnäkymä)
+  recipes.js               reseptikirjaston muunnos sekä versioiden ja muunnelmien käsittely
+  styles/main.css          tyylit, vaalea ja tumma teema
   data/
-    recipes.js           valmiit reseptit (raw) ja niiden ainekset (DATA)
-    ingredients.js       ainesosarekisteri, Fineli (THL), CC BY 4.0
-    stores.js            kauppaketjujen myymälälistat
-    logos.js             kauppaketjujen logot
-  assets/                yläpalkin kuvat ja logot
+    library/*.js           reseptikirjasto (arki, keitot, juhla, kasvis, aamu, leivonta, lisukkeet)
+    ingredients.js         ainesosarekisteri, Fineli (THL), CC BY 4.0
+    stores.js              kauppaketjujen myymälälistat
+    logos.js               kauppaketjujen logot
+  assets/                  yläpalkin kuvat ja logot
+scripts/check-library.mjs  reseptikirjaston tarkistus (npm run check)
+docs/reseptit.md           ohje reseptien lisäämiseen ja muuttamiseen
 ```
 
-Reseptien rivimuoto `recipes.js`:ssä on
-`nimi|pääraaka-aine|ruokalaji|tägit|aika (min)|kuvaus|annokset`, ja `DATA`:ssa on jokaisen reseptin ainekset
-samalla rivillä `;`-erotettuina.
+Reseptien lisäämisestä ja muuttamisesta kerrotaan tarkemmin tiedostossa [docs/reseptit.md](docs/reseptit.md).
+
+Kirjaston tarkistus:
+
+```bash
+npm run check
+```
 
 ## Tallennus
 
@@ -55,7 +62,7 @@ artifactissa ja **Palauta** tässä sovelluksessa.
 
 ## Julkaisu
 
-`.github/workflows/deploy.yml` rakentaa ja julkaisee sovelluksen GitHub Pagesiin, kun `main`-haaraan
+`.github/workflows/deploy.yml` tarkistaa reseptikirjaston, rakentaa ja julkaisee sovelluksen GitHub Pagesiin, kun `main`-haaraan
 pusketaan. Ota Pages käyttöön repon asetuksista: *Settings → Pages → Source: GitHub Actions*.
 
 ## Lähteet

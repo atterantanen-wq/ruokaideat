@@ -75,8 +75,8 @@ export default [
   },
   {
     n: "Kaalipata", m: "j", t: "pa", min: 75, w: 25, sv: 6,
-    d: "Haudutettu valkokaali, porkkana ja jauheliha samassa padassa, siirapilla ja meiramilla maustettuna. Kaalilaatikon nopeampi serkku.",
-    ing: ["valkokaali 1 kg", "porkkana 4 kpl", "sipuli 1 kpl", "jauheliha 400 g", "vesi 3 dl", "liemikuutio 1 kpl", "puuroriisi 0.5 dl", "siirappi 2 rkl", "meirami 2 tl", "suola 1 tl", "mustapippuri 0.5 tl"],
+    d: "Haudutettu valkokaali ja porkkana jauhelihan, lampaan tai perunan kanssa samassa padassa, siirapilla ja meiramilla maustettuna. Kaalilaatikon nopeampi serkku.",
+    ing: ["valkokaali 1 kg", "porkkana 4 kpl", "sipuli 1 kpl", "vesi 3 dl", "puuroriisi 0.5 dl", "siirappi 2 rkl", "meirami 2 tl", "suola 1 tl", "mustapippuri 0.5 tl"],
     steps: [
       "Leikkaa kaalista ohuita suikaleita, porkkanoista kiekkoja ja silppua sipuli.",
       "Ruskista jauheliha isossa kattilassa ja lisää sipuli.",
@@ -86,9 +86,11 @@ export default [
     ],
     serve: "Tarjoa puolukkahillon kanssa.",
     extras: ["puolukkahillo"],
-    tw: [
-      { id: "kasvis", n: "Kasvisversio", d: "Jätä jauheliha pois, lisää perunaa ja käytä kasvislientä.", rm: ["jauheliha", "liemikuutio"], add: ["peruna 400 g", "kasvisliemikuutio 1 kpl"], m: "v", step: {"1": "Kuumenna tilkka öljyä isossa kattilassa ja kuullota sipuli.", "2": "Lisää kattilaan vesi ja kasvisliemikuutio ja sitten kaali vähitellen. Käännä kaalia, kunnes se lysähtää ja mahtuu kattilaan.", "3": "Lisää porkkanat, kuutioidut perunat, riisi, siirappi ja mausteet. Hauduta kannen alla miedolla lämmöllä noin 45 minuuttia ja sekoita välillä."} },
-      { id: "lammas", n: "Lampaasta", d: "Käytä jauhelihan tilalla ruskistettuja lampaan keittolihakuutioita ja pidennä haudutusaikaa tunnilla.", rm: ["jauheliha"], add: ["lammas 600 g"], m: "n", step: {"1": "Ruskista lampaanlihakuutiot erissä isossa kattilassa ja lisää sipuli.", "3": "Lisää porkkanat, riisi, siirappi ja mausteet. Hauduta kannen alla miedolla lämmöllä noin 1 tunti 45 minuuttia, kunnes liha on mureaa, ja sekoita välillä."} },
+    vh: "Pääraaka-aine",
+    vs: [
+      { id: "jauheliha", n: "Jauheliha", add: ["jauheliha 400 g", "liemikuutio 1 kpl"] },
+      { id: "lammas", n: "Lammas", m: "n", add: ["lammas 600 g", "liemikuutio 1 kpl"], step: { 1: "Ruskista lampaanlihakuutiot erissä isossa kattilassa ja lisää sipuli.", 3: "Lisää porkkanat, riisi, siirappi ja mausteet. Hauduta kannen alla miedolla lämmöllä noin 1 tunti 45 minuuttia, kunnes liha on mureaa, ja sekoita välillä." } },
+      { id: "kasvis", n: "Kasvis", m: "v", veg: true, add: ["peruna 400 g", "kasvisliemikuutio 1 kpl"], step: { 1: "Kuumenna tilkka öljyä isossa kattilassa ja kuullota sipuli.", 2: "Lisää kattilaan vesi ja kasvisliemikuutio ja sitten kaali vähitellen. Käännä kaalia, kunnes se lysähtää ja mahtuu kattilaan.", 3: "Lisää porkkanat, kuutioidut perunat, riisi, siirappi ja mausteet. Hauduta kannen alla miedolla lämmöllä noin 45 minuuttia ja sekoita välillä." } },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/kaalipata/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/8639/Kaalipata/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-kaalipata/recipe-3126"], ["Valio", "https://www.valio.fi/reseptit/kasvis-kaalipata/"]],
   },

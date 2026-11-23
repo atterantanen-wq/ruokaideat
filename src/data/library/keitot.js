@@ -42,8 +42,8 @@ export default [
       "Curry tai juustokumina kuullotusvaiheessa antaa keitolle lämpimän maun.",
     ],
     tw: [
-      { id: "tuorejuusto", n: "Tuorejuustolla", d: "Korvaa kerma maustetulla tuorejuustolla, joka sulaa keittoon kuumentaessa.", rm: ["ruokakerma"], add: ["tuorejuusto 100 g"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Lisää tuorejuusto ja kuumenna sekoittaen, kunnes se on sulanut."} },
-      { id: "maidoton", n: "Maidoton", d: "Käytä kerman tilalla kookosmaitoa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Sekoita kookosmaito joukkoon ja kuumenna vielä kertaalleen."} },
+      { id: "tuorejuusto", n: "Tuorejuustolla", g: "kerma", d: "Korvaa kerma maustetulla tuorejuustolla, joka sulaa keittoon kuumentaessa.", rm: ["ruokakerma"], add: ["tuorejuusto 100 g"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Lisää tuorejuusto ja kuumenna sekoittaen, kunnes se on sulanut."} },
+      { id: "maidoton", n: "Maidoton", g: "kerma", d: "Käytä kerman tilalla kookosmaitoa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Sekoita kookosmaito joukkoon ja kuumenna vielä kertaalleen."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/kasvissosekeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kasvissosekeitto/recipe-4223"], ["Valio", "https://www.valio.fi/reseptit/nopea-kasvissosekeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/176/Kasvissosekeitto/"]],
   },
