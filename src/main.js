@@ -3832,29 +3832,8 @@ function plDefaults(it){
   const ex=(r.extras||[]).map(k=>String(k).toLowerCase()).find(k=>vkOk(k));
   if(ex)it.px=[ex];else if(r.t==="ke")it.px=["ruisleipä"];
 }
-/* annokset: vähintään valittu määrä; pakkauskokojen mukaan enintään 3 enemmän, jos pakkauksia jää silloin vähemmän vajaaksi */
-const plNMemo=new Map();
-function packWaste(r,v,t,n){
-  let w=0;
-  for(const line of ingFor(r,n,v,t)){
-    const p=parseIng(line);if(p.v==null||isSkip(p.key)||pantryHit(p.key))continue;
-    const pk=packOf(p.key);if(!pk)continue;
-    const x=toBase(p.key,p.fam,p.v,pk[1]);if(!(x>0))continue;
-    const c=costOf(p.key,p.fam,p.v);if(c.t!=="ok")continue;
-    const left=Math.ceil(x/pk[0]-1e-6)*pk[0]-x;w+=left*c.c/x;
-  }
-  return w;
-}
-function autoN(it){
-  const N=state.pl.sv,r=byId(it.id);if(!r)return N;
-  const k=it.id+"|"+(it.v||"")+"|"+(it.t||[]).join(",")+"|"+N;
-  if(plNMemo.has(k))return plNMemo.get(k);
-  let best=N,bw=packWaste(r,it.v,it.t||[],N);
-  /* lisäannos kannattaa vain, jos se vähentää hukkaa selvästi (yli 1 € ja 25 % per lisäannos) */
-  const w0=bw;
-  for(let n=N+1;n<=Math.min(N+3,20);n++){const w=packWaste(r,it.v,it.t||[],n),d=n-N;if(w0-w>1*d&&w<w0*(1-0.25*d)&&w<bw){best=n;bw=w;}}
-  plNMemo.set(k,best);return best;
-}
+/* annokset: reseptin oma annosmäärä (määrät on mitoitettu pakkauksiin), ruoalle voi asettaa oman */
+function autoN(it){const r=byId(it.id);return r?servOf(r)||4:4;}
 const plN=it=>it.n>0?it.n:autoN(it);
 const plFill=(fresh=false)=>{PL.fill(plCands(),state.pl,Math.random,fresh,new Date(),plDefaults);state.pl.n=state.pl.items.length;};
 function plItemCost(it){
@@ -3886,7 +3865,7 @@ function rowChips(it,i){
 }
 function renderPlan(){
   const h=$("planBody");if(!h)return;
-  plCostMemo.clear();plNMemo.clear();plCandsMemo=null;
+  plCostMemo.clear();plCandsMemo=null;
   const pl=state.pl;
   if(pl.n!==pl.items.length){pl.n=pl.items.length;persist();}
   const tot=plTotals(),over=pl.ba>0&&tot.food+tot.extra>pl.ba;
@@ -3897,7 +3876,7 @@ function renderPlan(){
       :`<span class="pn-name muted">Ei ruokaa näillä valinnoilla</span><small>Muuta valintoja tai valitse ruoka itse.</small>`;
     const mt=PL.mainTag(it.tg)||"a",tl=[PL.TAG_N[mt],...it.tg.filter(t=>t!==mt&&t!=="a").map(t=>PL.TAG_N[t])].join(" · ");
     const lab=`<button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-i="${i}" aria-label="Millainen ruoka ${i+1}: ${esc(tl)}">${esc(tl)} ▾</button>`;
-    return`<li class="pn-item${planNew===i?" pn-new":""}"><div class="pn-body"><div class="pn-top"><div class="pn-nm">${lab}${head}</div><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Vaihda ruoka ${i+1}">${ico("shuffle")}</button></span></div>${r?rowChips(it,i):`<div class="pn-tags"><button type="button" class="pn-tg" data-pa="pick" data-i="${i}">Valitse itse</button></div>`}</div></li>`;
+    return`<li class="pn-item${planNew===i?" pn-new":""}"><div class="pn-body"><div class="pn-top"><div class="pn-nm">${lab}${head}</div><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Vaihda ruoka ${i+1}">${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="rm" data-i="${i}" aria-label="Poista suunnitelmasta: ruoka ${i+1}">${ico("x")}</button></span></div>${r?rowChips(it,i):`<div class="pn-tags"><button type="button" class="pn-tg" data-pa="pick" data-i="${i}">Valitse itse</button></div>`}</div></li>`;
   }).join("");
   const snacks=plSnacks(),bakes=plBakes();
   const snSel=Object.keys(pl.sn).filter(id=>byId(id));
@@ -3915,7 +3894,7 @@ function renderPlan(){
     <div class="chips" style="margin-top:8px">${VK_SUG.filter(k=>!vk.includes(k)).map(k=>`<button type="button" class="chip sdm" data-pa="vkq" data-k="${esc(k)}">${ico("plus")}${esc(capF(k))}</button>`).join("")}</div>
     ${vk.length?`<p class="note">Poista vakio kokonaan: <span class="pn-rmv">${vk.map(k=>`<button type="button" class="lk" data-pa="vkrm" data-k="${esc(k)}">${esc(capF(k))}</button>`).join(", ")}</span></p>`:""}`;
   const stepper=(pa,lbl,v,min,max,aria)=>`<div class="pn-step"><span>${lbl}</span><div><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="-1" aria-label="Vähemmän ${aria}"${v<=min?" disabled":""}>${ico("minus")}</button><b>${v}</b><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="1" aria-label="Enemmän ${aria}"${v>=max?" disabled":""}>${ico("plus")}</button></div></div>`;
-  h.innerHTML=`<div class="pn-head">${stepper("sv","Annoksia vähintään",pl.sv,2,16,"annoksia")}</div>
+  h.innerHTML=`
     ${rows?`<ol class="pn-list">${rows}</ol>`:""}
     ${pl.items.length?"":`<div class="pn-card pn-four">${stepper("cnt","Ruokia",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four" style="width:100%;justify-content:center;margin-top:8px">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div>`}
     ${pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`}
@@ -3944,6 +3923,10 @@ $("toast").addEventListener("click",e=>{
   else if(state.pl.items[i]){state.pl.items[i]=prev;mutate();renderPlan();}
   hideToast();
 });
+function planRemove(i){
+  const pl=state.pl,prev=pl.items.splice(i,1)[0];if(!prev)return;pl.n=pl.items.length;planUndo={i,prev,ins:true};mutate();renderPlan();
+  const r=byId(prev.id);undoToast(`${esc(r?r.name:"Ruoka")} poistettiin`,'data-pundo="1"');
+}
 /* ---------- ruoan muokkausikkuna ---------- */
 function renderEditPl(){
   if(!planEdit)return;
@@ -3968,7 +3951,7 @@ function renderEditPl(){
     const prods=g?[...g.out.c,...g.out.v,...g.out.o].filter(x=>x.t==="p"):[];
     const pk=[...new Set([...prods.map(x=>x.id),...(it.px||[])])].slice(0,8);
     if(pk.length)body+=`<h3 class="pn-h">Lisäksi kaupasta</h3><div class="chips">${pk.map(k=>vkOn(k)?chip("pxv",k,true,capF(k)+" (vakio)"):chip("px",k,(it.px||[]).includes(k),capF(k))).join("")}</div>`;
-    body+=`<h3 class="pn-h">Annokset</h3><div class="pn-step"><span>${it.n>0?"Tälle ruoalle":plN(it)>pl.sv?`Vähintään ${pl.sv}, pakkauskokojen takia ${plN(it)}`:"Kuten muille"}</span><div><button type="button" class="pn-ib sm" data-pe="n" data-k="-1" aria-label="Vähemmän annoksia"${plN(it)<=1?" disabled":""}>${ico("minus")}</button><b>${plN(it)}</b><button type="button" class="pn-ib sm" data-pe="n" data-k="1" aria-label="Enemmän annoksia">${ico("plus")}</button></div></div>`;
+    body+=`<h3 class="pn-h">Annokset</h3><div class="pn-step"><span>${it.n>0?`Muutettu, reseptissä ${autoN(it)}`:"Reseptin mukaan"}</span><div><button type="button" class="pn-ib sm" data-pe="n" data-k="-1" aria-label="Vähemmän annoksia"${plN(it)<=1?" disabled":""}>${ico("minus")}</button><b>${plN(it)}</b><button type="button" class="pn-ib sm" data-pe="n" data-k="1" aria-label="Enemmän annoksia">${ico("plus")}</button></div></div>`;
   }
   const ver=r&&it.v&&(r.vs||[]).find(v=>v.id===it.v);
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${r?esc(r.name)+(ver?" – "+esc(ver.n):""):"Ruoka "+(i+1)}</h2>
@@ -4008,7 +3991,7 @@ function renderPick(){
   if(!planPick)return;
   const pl=state.pl,it=pl.items[planPick.i],q=fold(planPick.q.trim());
   const list=q?plCands().filter(c=>fzBest(q,[c.name])>=0):PL.ranked(plCands(),it.tg,plOthers(planPick.i));
-  const rows=list.slice(0,40).map(c=>`<li><button type="button" class="pn-pr" data-pp="${esc(c.id)}"><span>${esc(c.name)}</span><small>${eur1(c.cost*plN(it))} · ${fmtDur(c.work)}</small></button></li>`).join("");
+  const rows=list.slice(0,40).map(c=>`<li><button type="button" class="pn-pr" data-pp="${esc(c.id)}"><span>${esc(c.name)}</span><small>${eur1(c.cost*(servOf(byId(c.id))||4))} · ${fmtDur(c.work)}</small></button></li>`).join("");
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">Ruoka ${planPick.i+1}</h2>
     <input id="ppq" type="search" placeholder="Hae ruokaa" autocomplete="off" value="${esc(planPick.q)}" aria-label="Hae ruokaa">
     <p class="note">${q?"Hakutulokset kaikista ruoista":it.tg.length?"Valintoihin sopivat: "+it.tg.map(t=>PL.TAG_N[t]).join(", "):"Sopivimmat ensin"}</p><ul class="pn-pl">${rows||`<li class="note">Ei osumia.</li>`}</ul>`;
@@ -4082,8 +4065,7 @@ $("pkbody").addEventListener("click",e=>{
   const a=x.dataset.pe,k=x.dataset.k,r=byId(it.id);
   if(a==="open"){$("pkdlg").close();openDlg(k);return;}
   if(a==="pick")return planPickOpen(planEdit.i);
-  if(a==="rm"){const i=planEdit.i,prev=pl.items.splice(i,1)[0];pl.n=pl.items.length;planUndo={i,prev,ins:true};$("pkdlg").close();mutate();renderPlan();
-    const r=byId(prev.id);undoToast(`${esc(r?r.name:"Ruoka")} poistettiin`,'data-pundo="1"');return;}
+  if(a==="rm"){$("pkdlg").close();return planRemove(planEdit.i);}
   if(a==="swap")planSwap(planEdit.i,true);
   else if(a==="allsd")planEdit.allSd=!planEdit.allSd;
   else if(a==="tg"||a==="tm"){it.tg=a==="tm"?[k,...it.tg.filter(t=>t!=="a"&&t!=="w")]:it.tg.includes(k)?it.tg.filter(t=>t!==k):[...it.tg,k];
@@ -4104,6 +4086,7 @@ $("planBody").addEventListener("click",e=>{
   const a=b.dataset.pa,pl=state.pl,i=+b.dataset.i;
   if(a==="edit")return planEditOpen(i,b.dataset.to);
   if(a==="type")return planTypeOpen(i);
+  if(a==="rm")return planRemove(i);
   if(a==="pick")return planPickOpen(i);
   if(a==="shop")return planChkOpen();
   if(a==="xo"){planOpen[b.dataset.k]=!planOpen[b.dataset.k];return renderPlan();}

@@ -224,8 +224,7 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   const it5 = await page.evaluate(() => { const A = window.__app, it = A.state.pl.items; return { n: it.length, light: !!(it[4] && A.plCands().find((c) => c.id === it[4].id) || {}).light }; });
   ok(it5.n === 5 && it5.light, "kevyen ruoan lisäys ei onnistunut: " + JSON.stringify(it5));
   /* poisto ja kumoa */
-  await click('[data-pa="edit"][data-i="4"]'); await wait(150);
-  await click('#pkbody [data-pe="rm"]'); await wait(150);
+  await click('[data-pa="rm"][data-i="4"]'); await wait(150);
   ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 4, "poisto ei onnistunut");
   await click('#toast [data-pundo]'); await wait(150);
   ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 5, "poiston kumoaminen ei onnistunut");
