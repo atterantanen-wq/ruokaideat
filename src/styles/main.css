@@ -4,6 +4,7 @@
   --gr:#3F7A58;--gr-ink:#2A5A3F;--gr-bg:#E3EFE6;
   --err:#B3261E;
   --ls:#2F5B45;--ls-ink:#244A37;--ls-bg:#E2EDE5;--ls-on:#fff;
+  --pl-ink:#6B3F7D;--pl-bg:#F1E6F3;--ad-ink:#2D5F8A;--ad-bg:#E2ECF5;
   --hd-i:#B4532A;--hd-a:#3D6A4C;--hd-c:#2F5B45;--hd-r:#6B4A34;--hd:var(--hd-i);
   --fp:#F3E8D6;--fp-line:#E8D8BF;--dpb:#25782F;--dis:#F3F3F3;--dis2:#F6F6F6;--dis-ink:#8A8A8A;--dis-ink2:#9A9A9A;--dis-line:#E0E0E0;--off-b:#BDBDBD;--trk:#C9C9C9;--inv:#292929;
   --fd:Fraunces,Georgia,"Times New Roman",serif;
@@ -19,6 +20,7 @@
   --gr:#5BA67A;--gr-ink:#9AD6B2;--gr-bg:#1C3226;
   --err:#FF8A80;
   --ls:#6DB58C;--ls-ink:#A3DDBA;--ls-bg:#1A3025;--ls-on:#0B2016;
+  --pl-ink:#D9B8E6;--pl-bg:#30223A;--ad-ink:#A9CCEC;--ad-bg:#1B2B3A;
   --hd-i:#6E3518;--hd-a:#2B4D37;--hd-c:#244636;--hd-r:#4A3426;
   --fp:#251D15;--fp-line:#42342A;--dpb:#2A6B34;--dis:#262626;--dis2:#242424;--dis-ink:#7C7C7C;--dis-ink2:#707070;--dis-line:#3A3A3A;--off-b:#5A5A5A;--trk:#555;--inv:#3A3A3A;
   --sh-1:0 1px 6px rgba(0,0,0,.4);
@@ -187,9 +189,10 @@ body.searching .fpanel .bar{border-top:0;margin-top:0}
 .hdbtn:active{background:rgba(255,255,255,.32)}
 .hdbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 body.inlist .appbar{display:none}
-.tab[data-tab="add"][aria-selected="true"]{color:var(--gr-ink)}
-.tab[data-tab="cart"]{color:var(--ls-ink)}
-.tab[data-tab="cart"][aria-selected="true"]{background:var(--ls-bg);color:var(--ls-ink)}
+.tab[data-tab="ideas"]{--ta:var(--or-ink);--ta-bg:var(--or-bg)}
+.tab[data-tab="plan"]{--ta:var(--pl-ink);--ta-bg:var(--pl-bg)}
+.tab[data-tab="add"]{--ta:var(--ad-ink);--ta-bg:var(--ad-bg)}
+.tab[data-tab="cart"]{--ta:var(--ls-ink);--ta-bg:var(--ls-bg)}
 .tab[data-tab="cart"] .badge{background:var(--ls);color:var(--ls-on)}
 .cartbtn[data-cart]{background:var(--ls);border-color:var(--ls);color:var(--ls-on)}
 .cartbtn[data-cart][aria-pressed="true"]{background:var(--ls-bg);border-color:var(--ls);color:var(--ls-ink)}
@@ -332,7 +335,7 @@ a.go{text-decoration:none}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:inherit;font-size:.8125rem;font-weight:600;color:var(--muted);background:none;border:0;border-radius:16px;padding:8px 6px;cursor:pointer;min-height:58px}
 .tab svg{width:26px;height:26px}
 .tab .lb{display:inline-flex;align-items:center}
-.tab[aria-selected="true"]{color:var(--or)}
+.tab[aria-selected="true"]{background:var(--ta-bg,var(--or-bg));color:var(--ta,var(--or-ink))}
 .badge{display:inline-block;min-width:1.5em;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--or);color:#fff;font-size:.8125rem;text-align:center}
 .badge:empty{display:none}
 h2.h{font-weight:700;font-size:1.35rem;margin:28px 0 12px}
@@ -774,10 +777,8 @@ body[data-view="ideas"] .appbar h1{margin-top:26px;max-width:68%;font-size:clamp
 #list[data-lay="grid"]{gap:14px!important}
 .tabs{box-shadow:0 -1px 8px rgba(80,50,20,.08)}
 .go{background:var(--ls);color:var(--ls-on)}
-.tab[aria-selected="true"]{color:var(--tc)}
 :root[data-theme="dark"] .chip,:root[data-theme="dark"] .sortw select{border-color:var(--line);box-shadow:none}
 :root[data-theme="dark"] .chip[aria-pressed="true"]{border-color:var(--tc)}
-:root[data-theme="dark"] .tab[aria-selected="true"]{color:var(--or-ink)}
 
 /* ---------- muut osiot: sama yläosan ilme ---------- */
 :root{--hero2:url("../assets/hero-sections.jpg")}
