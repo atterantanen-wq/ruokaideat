@@ -267,42 +267,98 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
-/* Design system: jokainen näkyvä teksti täyttää WCAG 2.2 AA -kontrastin (4.5:1, iso teksti 3:1)
- * kaikilla välilehdillä ja reseptiikkunassa, vaaleassa ja tummassa teemassa. Kuvan päällä olevia tekstejä ei mitata. */
-test("tyylit: tekstien kontrasti riittää vaaleassa ja tummassa teemassa", async () => {
-  const bad = [], prevTheme = await page.evaluate(() => document.documentElement.dataset.theme);
+/* Design system -tarkistukset. Ajetaan selaimessa page.evaluate:lla. */
+/* Kontrasti: jokainen näkyvä teksti WCAG 2.2 AA (4.5:1, iso teksti 3:1). Kuvan päällä olevia tekstejä ei mitata. */
+function contrastAudit() {
+  const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const a = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: a[0], g: a[1], b: a[2], a: a[3] ?? 1 }; };
+  const lum = ({ r, g, b }) => [r, g, b].map((x) => x / 255).map((x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)).reduce((s, x, i) => s + x * [0.2126, 0.7152, 0.0722][i], 0);
+  const mix = (t, u) => ({ r: t.r * t.a + u.r * (1 - t.a), g: t.g * t.a + u.g * (1 - t.a), b: t.b * t.a + u.b * (1 - t.a), a: 1 });
+  const bgOf = (el) => { const ls = []; for (let e = el; e && e.nodeType === 1; e = e.parentElement) { const s = getComputedStyle(e); if (s.backgroundImage !== "none") return null; const c = parse(s.backgroundColor); if (c && c.a > 0) { ls.push(c); if (c.a >= 1) break; } } let b = parse(getComputedStyle(document.body).backgroundColor); for (let i = ls.length - 1; i >= 0; i--) b = mix(ls[i], b); return b; };
+  const root = document.querySelector("dialog[open]") || document.body, out = [];
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n; (n = w.nextNode());) {
+    const el = n.parentElement; if (!n.textContent.trim() || el.closest("dialog:not([open]),[hidden],:disabled")) continue;
+    const r = el.getBoundingClientRect(), s = getComputedStyle(el); if (!r.width || !r.height || s.visibility === "hidden") continue;
+    const bg = bgOf(el); if (!bg) continue;
+    const c = parse(s.color), fg = mix({ ...c, a: c.a * +s.opacity }, bg);
+    const L1 = lum(fg), L2 = lum(bg), cr = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+    const fs = parseFloat(s.fontSize), big = fs >= 24 || (fs >= 18.66 && +s.fontWeight >= 700);
+    if (cr < (big ? 3 : 4.5)) out.push(`.${String(el.className).split(" ")[0] || el.tagName} "${n.textContent.trim().slice(0, 24)}" ${cr.toFixed(2)}:1`);
+  }
+  return [...new Set(out)];
+}
+/* Asettelu: napit, laput ja välilehtien nimet pysyvät yhdellä rivillä, eivätkä ne valu oman alueensa yli.
+ * (Rivittyvä lappu, esim. "VIIKONLOPPU JA JUHLA" + nuoli toisella rivillä, ei näy kontrastimittauksessa.) */
+function layoutAudit() {
+  const root = document.querySelector("dialog[open]") || document.body, out = [];
+  const sel = ".pn-lab,.go,.cartbtn,.pc,.tab .lb,.chip:not(#fa .chip),.pn-opt b,.pn-tg,.toast button";
+  for (const el of root.querySelectorAll(sel)) {
+    if (el.closest("dialog:not([open]),[hidden]")) continue;
+    const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
+    /* tekstirivien määrä: tekstisolmujen rivilaatikoiden eri korkeudet (kuvakkeet jätetään pois) */
+    const lines = [], tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let n; (n = tw.nextNode());) { if (!n.textContent.trim()) continue; const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) if (q.width > 1) lines.push(q); }
+    const tops = new Set(); for (const q of lines) if (![...tops].some((t) => Math.abs(t - q.top) < q.height * 0.6)) tops.add(q.top);
+    const name = `.${String(el.className).split(" ")[0] || el.tagName} "${el.textContent.trim().slice(0, 24)}"`;
+    if (tops.size > 1) out.push(name + " rivittyy");
+    if (r.right > innerWidth + 1 || r.left < -1) out.push(name + " valuu näytön yli");
+  }
+  /* sivu ei saa levitä näyttöä leveämmäksi (WCAG 1.4.10, puhelin zoomaisi ulos) */
+  if (document.documentElement.scrollWidth > innerWidth + 1) {
+    const wide = [...document.querySelectorAll("body *")].find((e) => e.className && e.getBoundingClientRect().right > innerWidth + 1);
+    out.push(`sivu ${document.documentElement.scrollWidth} px leveä (${innerWidth} px näyttö), esim. .${wide ? String(wide.className).split(" ")[0] : "?"}`);
+  }
+  return [...new Set(out)];
+}
+async function auditViews(views, label) {
+  const bad = [];
   for (const theme of ["light", "dark"]) {
-    for (const v of ["ideas", "plan", "add", "cart", "recipe"]) {
+    for (const [name, open] of views) {
       await closeAll();
-      await page.evaluate(([th, v]) => {
-        document.documentElement.dataset.theme = th;
-        document.querySelector(`.tab[data-tab="${v === "recipe" ? "ideas" : v}"]`).click();
-        if (v === "recipe") document.querySelector("#list .card [data-open]").click();
-      }, [theme, v]);
-      await wait(300);
-      const f = await page.evaluate(() => {
-        const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const a = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: a[0], g: a[1], b: a[2], a: a[3] ?? 1 }; };
-        const lum = ({ r, g, b }) => [r, g, b].map((x) => x / 255).map((x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)).reduce((s, x, i) => s + x * [0.2126, 0.7152, 0.0722][i], 0);
-        const mix = (t, u) => ({ r: t.r * t.a + u.r * (1 - t.a), g: t.g * t.a + u.g * (1 - t.a), b: t.b * t.a + u.b * (1 - t.a), a: 1 });
-        const bgOf = (el) => { const ls = []; for (let e = el; e && e.nodeType === 1; e = e.parentElement) { const s = getComputedStyle(e); if (s.backgroundImage !== "none") return null; const c = parse(s.backgroundColor); if (c && c.a > 0) { ls.push(c); if (c.a >= 1) break; } } let b = parse(getComputedStyle(document.body).backgroundColor); for (let i = ls.length - 1; i >= 0; i--) b = mix(ls[i], b); return b; };
-        const root = document.querySelector("dialog[open]") || document.body, out = [];
-        const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-        for (let n; (n = w.nextNode());) {
-          const el = n.parentElement; if (!n.textContent.trim() || el.closest("dialog:not([open]),[hidden],:disabled")) continue;
-          const r = el.getBoundingClientRect(), s = getComputedStyle(el); if (!r.width || !r.height || s.visibility === "hidden") continue;
-          const bg = bgOf(el); if (!bg) continue;
-          const c = parse(s.color), fg = mix({ ...c, a: c.a * +s.opacity }, bg);
-          const L1 = lum(fg), L2 = lum(bg), cr = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
-          const fs = parseFloat(s.fontSize), big = fs >= 24 || (fs >= 18.66 && +s.fontWeight >= 700);
-          if (cr < (big ? 3 : 4.5)) out.push(`.${String(el.className).split(" ")[0] || el.tagName} "${n.textContent.trim().slice(0, 24)}" ${cr.toFixed(2)}:1`);
-        }
-        return out;
-      });
-      if (f.length) bad.push(`${theme}/${v}: ${[...new Set(f)].slice(0, 4).join(", ")}`);
+      await page.evaluate((th) => { document.documentElement.dataset.theme = th; }, theme);
+      await open(); await wait(300);
+      const c = await page.evaluate(contrastAudit), l = await page.evaluate(layoutAudit);
+      if (c.length) bad.push(`${theme}/${name} kontrasti: ${c.slice(0, 4).join(", ")}`);
+      if (l.length) bad.push(`${theme}/${name} asettelu: ${l.slice(0, 4).join(", ")}`);
     }
   }
-  await page.evaluate((th) => { document.querySelectorAll("dialog[open]").forEach((d) => d.close()); document.documentElement.dataset.theme = th; document.querySelector('.tab[data-tab="ideas"]').click(); }, prevTheme);
-  ok(!bad.length, "liian heikko kontrasti: " + bad.join(" | "));
+  await closeAll();
+  ok(!bad.length, label + ": " + bad.join(" | "));
+}
+const tab = (v) => () => click(`.tab[data-tab="${v}"]`);
+
+test("tyylit: kontrasti ja asettelu kaikilla välilehdillä ja reseptissä", async () => {
+  const prev = await page.evaluate(() => document.documentElement.dataset.theme);
+  await auditViews([["ideat", tab("ideas")], ["suunnitelma", tab("plan")], ["lisää", tab("add")], ["ostoslista", tab("cart")],
+    ["resepti", async () => { await tab("ideas")(); await click("#list .card [data-open]"); }]], "tyylit");
+  await page.evaluate((th) => { document.documentElement.dataset.theme = th; }, prev);
+  await click('.tab[data-tab="ideas"]');
+});
+
+/* Suunnitelma jokaisella pääryhmällä ja rajauksella, kapealla ja tavallisella puhelimella. */
+test("tyylit: suunnitelma kaikilla valinnoilla (arki, viikonloppu ja juhla, rajaukset)", async () => {
+  const prev = await page.evaluate(() => document.documentElement.dataset.theme);
+  const tags = await page.evaluate(() => [...new Set([...document.querySelectorAll('[data-pe="tg"]')].map((b) => b.dataset.k))]);
+  for (const width of [390, 360]) {
+    await page.setViewportSize({ width, height: 844 });
+    await fresh();
+    await click('.tab[data-tab="plan"]'); await wait(300);
+    await click('[data-pa="four"]'); await wait(300);
+    /* ruoka 1 arki, ruoka 2 viikonloppu ja juhla, ruoka 3 viikonloppu ja juhla + kaikki rajaukset */
+    for (const [i, main, all] of [[1, "w", false], [2, "w", true]]) {
+      await click(`[data-pa="type"][data-i="${i}"]`); await wait(150);
+      await click(`#pkbody [data-pe="tm"][data-k="${main}"]`); await wait(100);
+      if (all) for (const k of await page.$$eval('#pkbody [data-pe="tg"]', (x) => x.map((b) => b.dataset.k))) { await click(`#pkbody [data-pe="tg"][data-k="${k}"]`); await wait(60); }
+      await click("#pkbody [data-pp-x]"); await wait(200);
+    }
+    await wait(1800); /* uuden ruoan korostus ehtii häivyä */
+    await auditViews([[`suunnitelma ${width}px`, tab("plan")],
+      [`valintaikkuna ${width}px`, async () => { await tab("plan")(); await click('[data-pa="type"][data-i="2"]'); }]], "suunnitelma");
+  }
+  ok(tags !== null, "");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate((th) => { document.documentElement.dataset.theme = th; }, prev);
+  await click('.tab[data-tab="ideas"]');
 });
 
 /* ---------------- ajo ---------------- */
