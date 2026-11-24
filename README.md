@@ -29,9 +29,29 @@ npm run preview
 index.html                 sivun runko: yläpalkki, välilehdet ja dialogit
 public/favicon.svg
 src/
-  main.js                  sovelluslogiikka (tila, haku, ruokalista, ostoslistat, rekisteri, hinnat, kokkausnäkymä)
+  main.js                  sisäänkäynti: tyylit, moduulit ja kehitystilan apu testeille (window.__app)
+  app/                     sovelluslogiikka moduuleina, suoritusjärjestyksessä:
+    core.js                perusvakiot, kuvakkeet, apufunktiot ja reseptikirjasto
+    prices.js              hintatiedot
+    catalog.js             ainesosarekisteri (Fineli), ravintoarvot, reseptien hinnat, versiot ja muunnelmat
+    state.js               tila, tallennus ja etäsynkka
+    ideas.js               ruokalista: tägit, lisukkeet, kuvat ja suodatinsirut
+    search.js              haku, ruokakortit ja hakuikkuna
+    price-updates.js       hintatäydennykset ja arviohinnat
+    cart.js                ostoslistan laskenta: kaupat, osastot, muut tuotteet ja pakkaukset
+    cart-add.js            ruoan lisääminen ostoslistalle
+    cart-view.js           ostoslistanäkymä
+    info.js                ruoan tietoikkuna ja hinnat
+    tabs.js                välilehdet
+    registry.js            ainesosarekisterin näkymä
+    editor.js              oman ruoan lisäys ja muokkaus
+    clicks.js              yhteiset klikkaukset
+    backup.js              varmuuskopio
+    cook.js                kokkausnäkymä
+    start.js               käynnistys
+    plan-view.js           Suunnitelma-välilehden näkymä ja kaapin tarkistus
   recipes.js               reseptikirjaston muunnos sekä versioiden ja muunnelmien käsittely
-  planner.js               Suunnitelma-välilehti: ruokaehdotukset siruilla ja lisäostokset
+  planner.js               Suunnitelma-välilehden logiikka: ruokaehdotukset siruilla ja lisäostokset
   styles/main.css          tyylit, vaalea ja tumma teema
   data/
     library/*.js           reseptikirjasto (arki, keitot, juhla, kasvis, aamu, leivonta, lisukkeet)
@@ -43,6 +63,11 @@ scripts/check-library.mjs  reseptikirjaston tarkistus (npm run check)
 tests/e2e.mjs              selaintestit (npm test)
 docs/reseptit.md           ohje reseptien lisäämiseen ja muuttamiseen
 ```
+
+Moduulit `src/app/` suoritetaan yllä olevassa järjestyksessä: jokaisen moduulin ensimmäinen import on
+edeltävä moduuli, ja `main.js` tuo ketjun viimeisen (`plan-view.js`). Uusi moduuli lisätään ketjuun samalla
+tavalla. Toisen moduulin `let`-muuttujaa ei voi asettaa suoraan, joten sille on omistajamoduulissa
+asetusfunktio (esim. `setState`, `setPick`).
 
 Reseptien lisäämisestä ja muuttamisesta kerrotaan tarkemmin tiedostossa [docs/reseptit.md](docs/reseptit.md).
 
