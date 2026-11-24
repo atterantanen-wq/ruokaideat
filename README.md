@@ -36,10 +36,12 @@ src/
   data/
     library/*.js           reseptikirjasto (arki, keitot, juhla, kasvis, aamu, leivonta, lisukkeet)
     ingredients.js         ainesosarekisteri, Fineli (THL), CC BY 4.0
+    prices.js              ainesten hinnat (S-kaupat.fi) tarkistuspäivineen
     stores.js              kauppaketjujen myymälälistat
     logos.js               kauppaketjujen logot
   assets/                  yläpalkin kuvat ja logot
 scripts/check-library.mjs  reseptikirjaston tarkistus (npm run check)
+scripts/check-prices.mjs   arvioidut ja vanhentuneet hinnat (npm run prices)
 tests/e2e.mjs              selaintestit (npm test)
 docs/reseptit.md           ohje reseptien lisäämiseen ja muuttamiseen
 ```
@@ -51,6 +53,16 @@ Kirjaston tarkistus:
 ```bash
 npm run check
 ```
+
+Hinnat ovat tiedostossa `src/data/prices.js`, ja jokaisella hinnalla on tarkistuspäivä. Sovellus näyttää
+päivän aineksen hintatiedoissa ja varoittaa yli 6 kuukautta vanhasta hinnasta. Tarkistuslista arvioista ja
+yli 60 päivää vanhoista hinnoista linkkeineen:
+
+```bash
+npm run prices              # oma raja: npm run prices -- --days 30, kaikki: -- --all
+```
+
+Päivitä hinta lisäämällä tiedoston loppuun `PV("avain", hinta, "lähde", "huomautus", "VVVV-KK-PP")` -rivi.
 
 Selaintestit (käynnistävät kehityspalvelimen ja käyvät läpi kaikki reseptit, ostoslistan, haun ja omat ruoat):
 
