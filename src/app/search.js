@@ -161,6 +161,38 @@ function hkWhy(r,ts){
   }
   return out.slice(0,3);
 }
+/* ei osumia: lähimmät sanat ruokien nimistä ja aineksista (kirjoitusvirheet) */
+let sugWords=null;
+function lev(a,b){
+  const m=a.length,n=b.length;if(!m)return n;if(!n)return m;
+  let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c;}
+  return p[n];
+}
+function nearWords(ts){
+  if(!sugWords){
+    const w=new Map(),add=x=>{const f=fold(x).trim();if(f.length>=3&&!w.has(f))w.set(f,x.toLowerCase());};
+    for(const r of all()){for(const x of r.name.split(/[\s,()]+/))add(x);for(const k of qIngs(r))add(k);}
+    sugWords=[...w];
+  }
+  const out=[];
+  for(const t of ts){
+    if(t.length<3)continue;
+    const lim=t.length<=4?1:t.length<=7?2:3;
+    const best=sugWords.map(([f,x])=>[x,Math.min(lev(t,f),f.length>t.length?lev(t,f.slice(0,t.length))+1:99)]).filter(([,d])=>d<=lim).sort((a,b)=>a[1]-b[1]||a[0].length-b[0].length);
+    for(const[x]of best)if(!out.includes(x)&&out.length<5)out.push(x);
+  }
+  return out;
+}
+export function noHitsHtml(ts,anyF,clrAttr,nNoF){
+  const near=ts.length?nearWords(ts):[];
+  const chip=q=>`<button type="button" class="chip" data-hq="${esc(q)}">${esc(q)}</button>`;
+  let h=`<div class="empty"><p>${ts.length?"Ei osumia haulle.":"Ei osumia näillä valinnoilla."}</p>`;
+  if(near.length)h+=`<div class="hkgt"><b>Tarkoititko</b></div><div class="chips">${near.map(chip).join("")}</div>`;
+  if(anyF)h+=`<p class="note" style="margin-top:14px">${nNoF?"Ilman suodattimia löytyy "+(nNoF===1?"1 ruokaidea":nNoF+" ruokaideaa")+".":"Poista jokin valinta, niin ideoita löytyy."}</p><div class="actions"><button type="button" class="go" ${clrAttr}>Tyhjennä suodattimet</button></div>`;
+  else if(ts.length&&!near.length)h+=`<div class="hkgt"><b>Kokeile</b></div><div class="chips">${HK_SUG.map(chip).join("")}</div>`;
+  return h+`</div>`;
+}
 function hkEmpty(){
   const rec=state.sr||[];
   const chip=(q,ic)=>`<button type="button" class="chip" data-hq="${esc(q)}">${ic?ico("clock"):""}${esc(q)}</button>`;
@@ -188,7 +220,7 @@ function renderHk(){
   const{res}=hkResults();
   const head=`<p class="hkcount" aria-live="polite">${res.length===1?"1 ruokaidea":res.length+" ruokaideaa"}</p>`;
   if(!res.length){
-    box.innerHTML=head+`<p class="empty">${ts.length?"Ei osumia haulle. Kokeile lyhyempää sanaa":"Ei osumia näillä valinnoilla"}${hkAny()?" tai poista suodattimia.":"."}</p>`+(hkAny()?`<div class="actions"><button type="button" class="go" data-hkclrf>Tyhjennä suodattimet</button></div>`:"");
+    box.innerHTML=head+noHitsHtml(ts,hkAny(),"data-hkclrf",ts.length?all().filter(r=>qHit(r,ts)>=0).length:0);
     return;
   }
   box.innerHTML=head+`<div class="grid hkgrid" data-lay="${state.lay==="grid"?"grid":"list"}">${res.map(r=>{const w=hkWhy(r,ts),o=qOpts(r,ts);return cardHtml(r,(w.length?`<div class="why">Sisältää ${w.map(esc).join(", ")}</div>`:"")+(o.length?`<div class="why">${o.map(m=>((r.vs||[]).includes(m)?"Versiona: ":"Muunnelmana: ")+esc(m.n)).join(" · ")}</div>`:""));}).join("")}</div>`;
@@ -317,6 +349,6 @@ export function renderIdeas(){
   $("sort").value=state.sort;
   $("count").textContent=res.length===1?"1 ruokaidea":res.length+" ruokaideaa";$("clrBtn").hidden=!anyF;
   $("list").innerHTML=res.length?res.map(r=>cardHtml(r)).join(""):
-    `<p class="empty">${qTerms().length?"Ei osumia haulle. Kokeile lyhyempää sanaa tai poista suodattimia.":"Ei osumia näillä valinnoilla. Poista jokin valinta, niin ideoita löytyy."}</p>`;
+    noHitsHtml(qTerms(),onlyFP||FK.some(k=>sel[k].size),"data-clrf",qTerms().length?all().filter(r=>qHit(r)>=0).length:0);
   uiEdit();renderSd();
 }
