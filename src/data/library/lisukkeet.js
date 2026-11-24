@@ -198,17 +198,19 @@ export default [
     src: [["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/78987/Auraperunat%20Grilliss%C3%A4/"]],
   },
   {
-    id: "k-grillimaissit", n: "Grillatut maissit", m: "v", t: "li", min: 30, w: 30, sv: 4, wd: "tm", kq: ["gl"],
-    aka: ["Elotes", "Meksikolaiset grillimaissit"],
-    d: "Meksikolaisittain: grillatut maissintähkät sivellään valkosipulisella kermakastikkeella ja ripotellaan fetalla, chilillä ja korianterilla.",
-    ing: ["maissintähkä 4 kpl", "rypsiöljy 1 rkl", "# Kastike", "creme fraiche 150 g", "majoneesi 0.5 dl", "valkosipulinkynsi 1 kpl", "lime 1 kpl", "suola 0.25 tl", "# Päälle", "fetajuusto 100 g", "chilijauhe 1 tl", "korianteri 0.5 nippu"],
+    id: "k-grillimaissit", n: "Grillatut maissit", m: "v", t: "li", min: 20, w: 15, sv: 4, kq: ["gl"],
+    aka: ["Maissintähkät grillissä", "Elotes"],
+    d: "Maissintähkät grillataan kevyesti rusehtaviksi ja sivellään sulatetulla voilla ja suolalla. Muunnelmana meksikolainen versio.",
+    ing: ["maissintähkä 4 kpl", "rypsiöljy 1 rkl", "voi 50 g", "suola 0.5 tl"],
     steps: [
       "Jos tähkät ovat tuoreita, keitä niitä suolatussa vedessä 5–7 minuuttia ja kuivaa. Esikypsennetyt tähkät voi grillata sellaisenaan.",
       "Sivele tähkät öljyllä ja grillaa niitä noin 10 minuuttia käännellen, kunnes pintaan tulee tummia kohtia.",
-      "Sekoita ranskankerma, majoneesi, murskattu valkosipuli, puolikkaan limen mehu ja suola.",
-      "Sivele kuumat tähkät kastikkeella, murenna päälle feta ja ripottele chili ja silputtu korianteri. Tarjoa loppujen limelohkojen kanssa.",
+      "Sulata voi ja sivele se kuumille tähkille. Ripottele päälle suola.",
     ],
-    tips: ["Maissit voi grillata myös pannulla tai uunin grillivastuksen alla."],
+    tips: ["Maissit voi grillata myös grillipannulla tai uunin grillivastuksen alla."],
+    tw: [
+      { id: "meksiko", n: "Meksikolaisittain", d: "Voin tilalla valkosipulinen kermakastike, feta, chili ja lime.", rm: ["voi"], add: ["creme fraiche 150 g", "majoneesi 0.5 dl", "valkosipulinkynsi 1 kpl", "lime 1 kpl", "fetajuusto 100 g", "chilijauhe 1 tl"], step: { 2: "Sekoita ranskankerma, majoneesi, murskattu valkosipuli ja puolikkaan limen mehu. Sivele kuumat tähkät kastikkeella, murenna päälle feta ja ripottele chili ja suola. Tarjoa limelohkojen kanssa." } },
+    ],
     src: [["Valio", "https://www.valio.fi/reseptit/elotes-eli-meksikolaiset-grillatut-maissit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/elotes-eli-meksikolaiset-grillatut-maissit/4IigNue1j2FMakWlAmKavc"]],
   },
 ];

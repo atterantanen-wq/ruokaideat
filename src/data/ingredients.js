@@ -308,5 +308,4 @@ silli|sillifilee,marinoitu silli,matjessilli|12|f|,,,,,|190,9,11,2.5,13,2||||
 meloni|hunajameloni,cantaloupe,vesimeloni|0||,,,800,,|30,0.6,0.1,0,6.5,0||||
 etikkapunajuuri|punajuurisäilyke,etikkapunajuuret,punajuuret purkissa,viipaloidut punajuuret|4||,,,,300,|50,1,0.1,0,10.5,0.5||||
 kanansiivet|kanansiipi,broilerin siivet,kanan siivet,siivet|10|k|,,,,,|200,18,14,4,0,0.2||||
-harissa|harissatahna,harissa-tahna|7||,16,5,,,|110,3,7,1,9,3||||
 maissintähkä|maissintähkät,maissin tähkä,tähkämaissi,maissit tähkä|0||,,,150,,|86,3.3,1.4,0.2,16,0||||`;

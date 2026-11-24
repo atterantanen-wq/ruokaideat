@@ -368,7 +368,6 @@ PA("kaurakerma",4.6,"l","Kaurakerma ruoanvalmistukseen");
 PA("grahamjauho",1.7,"kg","Grahamjauho");
 PA("silli",12,"kg","Marinoitu silli");
 PA("kanansiivet",7,"kg","Broilerin siivet, maustamaton");
-PA("harissa",20,"kg","Harissatahna");
 PA("maissintähkä",1.5,"kpl","Maissintähkä, esikypsennetty");
 PA("meloni",2.5,"kg","Meloni");
 PA("etikkapunajuuri",4.2,"kg","Etikkapunajuuret, purkki");
