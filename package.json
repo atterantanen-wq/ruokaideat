@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "build:single": "vite build --config vite.single.config.js",
     "check": "node scripts/check-library.mjs",
+    "prices": "node scripts/check-prices.mjs",
     "test": "node tests/e2e.mjs"
   },
   "devDependencies": {

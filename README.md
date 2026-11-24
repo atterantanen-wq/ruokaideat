@@ -32,12 +32,12 @@ src/
   main.js                  sisäänkäynti: tyylit, moduulit ja kehitystilan apu testeille (window.__app)
   app/                     sovelluslogiikka moduuleina, suoritusjärjestyksessä:
     core.js                perusvakiot, kuvakkeet, apufunktiot ja reseptikirjasto
-    prices.js              hintatiedot
+    prices.js              hintatiedot (välittää src/data/prices.js:n)
     catalog.js             ainesosarekisteri (Fineli), ravintoarvot, reseptien hinnat, versiot ja muunnelmat
     state.js               tila, tallennus ja etäsynkka
     ideas.js               ruokalista: tägit, lisukkeet, kuvat ja suodatinsirut
     search.js              haku, ruokakortit ja hakuikkuna
-    price-updates.js       hintatäydennykset ja arviohinnat
+    price-updates.js       kaupan osastot (DEPS, DEPMAP, DEPSUB)
     cart.js                ostoslistan laskenta: kaupat, osastot, muut tuotteet ja pakkaukset
     cart-add.js            ruoan lisääminen ostoslistalle
     cart-view.js           ostoslistanäkymä
@@ -56,10 +56,12 @@ src/
   data/
     library/*.js           reseptikirjasto (arki, keitot, juhla, kasvis, aamu, leivonta, lisukkeet)
     ingredients.js         ainesosarekisteri, Fineli (THL), CC BY 4.0
+    prices.js              ainesten hinnat (S-kaupat.fi) tarkistuspäivineen
     stores.js              kauppaketjujen myymälälistat
     logos.js               kauppaketjujen logot
   assets/                  yläpalkin kuvat ja logot
 scripts/check-library.mjs  reseptikirjaston tarkistus (npm run check)
+scripts/check-prices.mjs   arvioidut ja vanhentuneet hinnat (npm run prices)
 tests/e2e.mjs              selaintestit (npm test)
 docs/reseptit.md           ohje reseptien lisäämiseen ja muuttamiseen
 ```
@@ -76,6 +78,16 @@ Kirjaston tarkistus:
 ```bash
 npm run check
 ```
+
+Hinnat ovat tiedostossa `src/data/prices.js`, ja jokaisella hinnalla on tarkistuspäivä. Sovellus näyttää
+päivän aineksen hintatiedoissa ja varoittaa yli 6 kuukautta vanhasta hinnasta. Tarkistuslista arvioista ja
+yli 60 päivää vanhoista hinnoista linkkeineen:
+
+```bash
+npm run prices              # oma raja: npm run prices -- --days 30, kaikki: -- --all
+```
+
+Päivitä hinta lisäämällä tiedoston loppuun `PV("avain", hinta, "lähde", "huomautus", "VVVV-KK-PP")` -rivi.
 
 Selaintestit (käynnistävät kehityspalvelimen ja käyvät läpi kaikki reseptit, ostoslistan, haun ja omat ruoat):
 
