@@ -812,7 +812,7 @@ function cleanState0(x){
     {const n=parseInt(p.sv);if(n>=2&&n<=16)q.sv=n;}
     {const ba=+p.ba;if(ba>0&&ba<=10000)q.ba=Math.round(ba*100)/100;}
     const TG=new Set(PL.TAGS.map(t=>t[0]));
-    q.items=p.items.slice(0,10).map(it=>{const e={id:"",v:"",tg:[]};if(!it||typeof it!=="object")return e;if(typeof it.id==="string"&&ids.has(it.id))e.id=it.id;if(e.id&&typeof it.v==="string")e.v=clip(it.v,30);if(Array.isArray(it.tg))e.tg=[...new Set(it.tg.filter(t=>TG.has(t)))];if(it.lk&&e.id)e.lk=1;if(!e.id)return e;
+    q.items=p.items.slice(0,10).map(it=>{const e={id:"",v:"",tg:[]};if(!it||typeof it!=="object")return e;if(typeof it.id==="string"&&ids.has(it.id))e.id=it.id;if(e.id&&typeof it.v==="string")e.v=clip(it.v,30);if(Array.isArray(it.tg))e.tg=PL.normTags(it.tg.filter(t=>typeof t==="string"));if(it.lk&&e.id)e.lk=1;if(!e.id)return e;
       const sl=(a,f)=>Array.isArray(a)?[...new Set(a.filter(z=>typeof z==="string"&&f(z)))].slice(0,8):[];
       e.t=sl(it.t,z=>z.length<=30);e.sd=sl(it.sd,z=>ids.has(z.split(":")[0])&&z.length<=70);e.px=sl(it.px,z=>/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,39}$/i.test(z));
       {const n=Math.round(+it.n);if(n>=1&&n<=20)e.n=n;}return e;});
@@ -3770,7 +3770,7 @@ Object.assign(IC,{
   shuffle:'<path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M20 20l-5-5M4 4l5 5"/>',
   minus:'<path d="M6 12h12"/>'
 });
-let planNew=-1,planPick=null,planEdit=null,planChk=null,planUndo=null,planOpen={sn:false,bk:false,vk:false};
+let planCount=4,planAdd=null,planNew=-1,planPick=null,planEdit=null,planChk=null,planUndo=null,planOpen={sn:false,bk:false,vk:false};
 const fmtN=n=>String(Math.round(n*2)/2).replace(".",",");
 /* reseptin raaka-ainerivit valitulla annosmäärällä, versiolla ja muunnelmilla (t = null: ruoan omat valinnat) */
 function ingFor(r,n,v,t){
@@ -3876,14 +3876,13 @@ function plTotals(){
 /* rivin sirut: tyyppi, lisukkeet, muunnelmat ja tuotteet */
 function rowChips(it,i){
   const r=byId(it.id);if(!r)return"";
-  const tg=it.tg.length?it.tg.map(t=>PL.TAG_N[t]).join(", "):"Mikä tahansa";
-  const out=[`<button type="button" class="pn-tg pn-tsum" data-pa="type" data-i="${i}" aria-label="Muokkaa ruokaa ${i+1}: ${esc(tg)}">${esc(tg)} ▾</button>`];
+  const out=[];
   for(const s of it.sd||[])out.push(`<button type="button" class="pn-tg on" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="true">${ico("check")}${esc(sdBase(s))}<span class="pn-pc">${sdPrice(s,plN(it))}</span></button>`);
   for(const k of (it.px||[]).filter(k=>!vkOn(k)))out.push(`<button type="button" class="pn-tg on" data-pa="px" data-i="${i}" data-k="${esc(k)}" aria-pressed="true">${ico("check")}${esc(capF(k))}</button>`);
   for(const t of it.t||[]){const m=(r.tw||[]).find(x=>x.id===t);if(m)out.push(`<button type="button" class="pn-tg tw" data-pa="edit" data-i="${i}" data-to="tw">${esc(m.n)}</button>`);}
   if(!(it.t||[]).length&&(r.tw||[]).length)out.push(`<button type="button" class="pn-tg pn-twh" data-pa="edit" data-i="${i}" data-to="tw">${r.tw.length===1?"1 muunnelma":r.tw.length+" muunnelmaa"}</button>`);
   if(!(it.sd||[]).length){const g=sideSug(r);const x=g&&[...g.out.c,...g.out.v].find(y=>y.t==="r");if(x){const s=x.id+(x.ver?":"+x.ver:"");out.push(`<button type="button" class="pn-tg" data-pa="sd" data-i="${i}" data-s="${esc(s)}" aria-pressed="false">${ico("plus")}${esc(sdBase(s))}<span class="pn-pc">${sdPrice(s,plN(it))}</span></button>`);}}
-  return`<div class="pn-tags">${out.join("")}</div>`;
+  return out.length?`<div class="pn-tags">${out.join("")}</div>`:"";
 }
 function renderPlan(){
   const h=$("planBody");if(!h)return;
@@ -3896,7 +3895,9 @@ function renderPlan(){
     const ver=r&&it.v&&(r.vs||[]).find(v=>v.id===it.v);
     const head=r?`<button type="button" class="lk pn-name" data-pa="edit" data-i="${i}">${esc(r.name)}${ver?" – "+esc(ver.n):""}</button><small>${fmtN(plN(it))} annosta · ${eur1(plItemCost(it))} · ${fmtDur(workOf(r)||r.min||0)}</small>`
       :`<span class="pn-name muted">Ei ruokaa näillä valinnoilla</span><small>Muuta valintoja tai valitse ruoka itse.</small>`;
-    return`<li class="pn-item${planNew===i?" pn-new":""}"><span class="pn-no">${i+1}</span><div class="pn-body"><div class="pn-top"><div class="pn-nm">${head}</div><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Vaihda ruoka ${i+1}">${ico("shuffle")}</button></span></div>${r?rowChips(it,i):`<div class="pn-tags"><button type="button" class="pn-tg pn-tsum" data-pa="type" data-i="${i}">${esc(it.tg.map(t=>PL.TAG_N[t]).join(", ")||"Mikä tahansa")} ▾</button><button type="button" class="pn-tg" data-pa="pick" data-i="${i}">Valitse itse</button></div>`}</div></li>`;
+    const mt=PL.mainTag(it.tg)||"a",tl=[PL.TAG_N[mt],...it.tg.filter(t=>t!==mt&&t!=="a").map(t=>PL.TAG_N[t])].join(" · ");
+    const lab=`<button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-i="${i}" aria-label="Millainen ruoka ${i+1}: ${esc(tl)}">${esc(tl)} ▾</button>`;
+    return`<li class="pn-item${planNew===i?" pn-new":""}"><div class="pn-body"><div class="pn-top"><div class="pn-nm">${lab}${head}</div><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Vaihda ruoka ${i+1}">${ico("shuffle")}</button></span></div>${r?rowChips(it,i):`<div class="pn-tags"><button type="button" class="pn-tg" data-pa="pick" data-i="${i}">Valitse itse</button></div>`}</div></li>`;
   }).join("");
   const snacks=plSnacks(),bakes=plBakes();
   const snSel=Object.keys(pl.sn).filter(id=>byId(id));
@@ -3913,16 +3914,15 @@ function renderPlan(){
     <div class="xrow" style="margin-top:10px"><input id="vkin" type="text" maxlength="40" placeholder="Lisää vakio-ostos, esim. maito" autocomplete="off" aria-label="Lisää vakio-ostos"><button type="button" class="go" data-pa="vkadd" style="min-height:44px;padding:0 18px">Lisää</button></div>
     <div class="chips" style="margin-top:8px">${VK_SUG.filter(k=>!vk.includes(k)).map(k=>`<button type="button" class="chip sdm" data-pa="vkq" data-k="${esc(k)}">${ico("plus")}${esc(capF(k))}</button>`).join("")}</div>
     ${vk.length?`<p class="note">Poista vakio kokonaan: <span class="pn-rmv">${vk.map(k=>`<button type="button" class="lk" data-pa="vkrm" data-k="${esc(k)}">${esc(capF(k))}</button>`).join(", ")}</span></p>`:""}`;
-  const addT=[["a","Arki"],["k","Kevyt"],["e","Edullinen"],["v","Kasvis"],["f","Kala"],["w","Viikonloppu"],["j","Juhla"]];
-  const addBox=pl.items.length>=10?"":`<div class="pn-add"><button type="button" class="pn-addb" data-pa="add" data-k="">${ico("plus")}<span>Lisää ruoka</span></button>
-      <p class="note">Tai valitse millainen:</p><div class="chips">${addT.map(([k,n])=>`<button type="button" class="chip" data-pa="add" data-k="${k}">${esc(n)}</button>`).join("")}</div></div>`;
-  h.innerHTML=`<section class="pn-card"><div class="pn-ctl">
-      <div class="pn-step"><span>Annoksia vähintään</span><div><button type="button" class="pn-ib sm" data-pa="sv" data-d="-1" aria-label="Vähemmän annoksia"${pl.sv<=2?" disabled":""}>${ico("minus")}</button><b>${pl.sv}</b><button type="button" class="pn-ib sm" data-pa="sv" data-d="1" aria-label="Enemmän annoksia"${pl.sv>=16?" disabled":""}>${ico("plus")}</button></div></div></div>
-      ${rows?`<ol class="pn-list">${rows}</ol>`:""}
-      ${addBox}
-      ${pl.items.length?"":`<div class="actions" style="margin-top:10px"><button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota 4 ruokaa</span></button></div>`}</section>
-    <section class="pn-card"><h3 class="pn-h" style="margin-top:0">Lisäksi kaupasta</h3>
+  const stepper=(pa,lbl,v,min,max,aria)=>`<div class="pn-step"><span>${lbl}</span><div><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="-1" aria-label="Vähemmän ${aria}"${v<=min?" disabled":""}>${ico("minus")}</button><b>${v}</b><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="1" aria-label="Enemmän ${aria}"${v>=max?" disabled":""}>${ico("plus")}</button></div></div>`;
+  h.innerHTML=`<div class="pn-head">${stepper("sv","Annoksia vähintään",pl.sv,2,16,"annoksia")}</div>
+    ${rows?`<ol class="pn-list">${rows}</ol>`:""}
+    ${pl.items.length?"":`<div class="pn-card pn-four">${stepper("cnt","Ruokia",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four" style="width:100%;justify-content:center;margin-top:8px">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div>`}
+    ${pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`}
+    <h3 class="pn-sec">Lisäksi kaupasta</h3>
+    <section class="pn-card">
       ${sec("sn","Aamu- ja välipalat",snSum,snInner)}${sec("bk","Leivonta",bkSum,bkInner)}${sec("vk","Vakiot ja tuotteet",vkSum,vkInner)}</section>
+    <h3 class="pn-sec">Hinta-arvio</h3>
     <section class="pn-card pn-sum"><div class="pn-sr"><span>Ruoat ja lisukkeet</span><b>${eur1(tot.food)}</b></div>${tot.extra>0?`<div class="pn-sr"><span>Aamu- ja välipalat, leivonta</span><b>${eur1(tot.extra)}</b></div>`:""}
       <div class="pn-bud"><label for="pba">Budjetti</label><input id="pba" type="number" inputmode="decimal" min="0" step="1" value="${pl.ba>0?pl.ba:""}" placeholder="ei" aria-label="Budjetti euroina"><span>€</span></div>
       ${pl.ba>0?`<div class="pn-bar${over?" over":""}"><i style="width:${Math.min(100,Math.round((tot.food+tot.extra)/pl.ba*100))}%"></i></div>${over?`<p class="note err">Budjetti ylittyy ${eur1(tot.food+tot.extra-pl.ba)}. Valitse Edullinen tai vaihda kalleimpia ruokia.</p>`:""}`:""}
@@ -3980,21 +3980,30 @@ function renderEditPl(){
     <div class="actions"><button type="button" class="go" data-pp-x="1" style="width:100%">Valmis</button></div>`;
 }
 /* tyyppivalinta: millaista ruokaa vaihto hakee */
+/* millainen ruoka: pääryhmä (yksi) ja lisärajaukset; muokkaa ruokaa tai lisää uusi */
 function renderTypePl(){
-  const it=state.pl.items[planEdit.i];if(!it)return;
-  $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">Millainen ruoka?</h2>
-    <p class="note">Ruoka ${planEdit.i+1}. Vaihtonappi hakee tällaisia ruokia. Jos nykyinen ruoka ei sovi valintaan, se vaihtuu heti.</p>
-    <div class="chips">${PL.TAGS.map(([k,n])=>`<button type="button" class="chip" data-pe="tg" data-k="${k}" aria-pressed="${it.tg.includes(k)}">${it.tg.includes(k)?ico("check"):""}${esc(n)}</button>`).join("")}</div>
-    <div class="actions"><button type="button" class="go" data-pp-x="1" style="width:100%">Valmis</button></div>`;
+  const add=!!planAdd,it=add?planAdd:state.pl.items[planEdit.i];if(!it)return;
+  const mt=PL.mainTag(it.tg)||"a";
+  const opt=(a,k,n,d,on,radio)=>`<button type="button" class="pn-opt" data-pe="${a}" data-k="${k}" role="${radio?"radio":"checkbox"}" aria-checked="${on}"><span class="pn-ok${radio?" r":""}">${on?ico("check"):""}</span><span><b>${esc(n)}</b><small>${esc(d)}</small></span></button>`;
+  $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${add?"Lisää ruoka":"Millainen ruoka?"}</h2>
+    <div class="pn-opts" role="radiogroup" aria-label="Pääryhmä">${PL.MAIN_TAGS.map(([k,n,d])=>opt("tm",k,n,d,mt===k,true)).join("")}</div>
+    <h3 class="pn-h">Lisäksi <small class="muted">valitse yksi tai useampi</small></h3>
+    <div class="pn-opts">${PL.EXTRA_TAGS.map(([k,n,d])=>opt("tg",k,n,d,it.tg.includes(k),false)).join("")}</div>
+    ${add?"":`<p class="note">Vaihtonappi hakee tällaisia ruokia. Jos nykyinen ruoka ei sovi valintaan, se vaihtuu heti.</p>`}
+    <div class="actions">${add?`<button type="button" class="go" data-pe="addok" data-k="1" style="width:100%">${ico("plus")}<span>Lisää suunnitelmaan</span></button>`:`<button type="button" class="go" data-pp-x="1" style="width:100%">Valmis</button>`}</div>`;
 }
-function planTypeOpen(i){planEdit={i,allSd:false,type:true};planPick=null;planChk=null;renderTypePl();$("pkdlg").showModal();}
-function planEditOpen(i,to){planEdit={i,allSd:false};planPick=null;planChk=null;renderEditPl();$("pkdlg").showModal();
+function planAddOpen(){
+  const pl=state.pl;planAdd={tg:PL.defaultTags(pl.items.length,pl.items.length+1)};planEdit={i:-1,type:true};planPick=null;planChk=null;
+  renderTypePl();$("pkdlg").showModal();
+}
+function planTypeOpen(i){planAdd=null;planEdit={i,allSd:false,type:true};planPick=null;planChk=null;renderTypePl();$("pkdlg").showModal();}
+function planEditOpen(i,to){planAdd=null;planEdit={i,allSd:false};planPick=null;planChk=null;renderEditPl();$("pkdlg").showModal();
   const h=to&&$("pkbody").querySelector("#pe-"+to);if(h)h.scrollIntoView({block:"start"});}
 const vkOn=k=>state.vk.includes(k)&&!state.pl.vo.includes(k);
 /* muunnelma sopii valittuun siruun */
 const twFits=(m,tg)=>(tg.includes("k")&&/kevye|kevyt/i.test(m.n+" "+(m.d||"")))||(tg.includes("v")&&(m.m==="v"||/kasvis/i.test(m.n)))||(tg.includes("e")&&/edullis|halvem/i.test(m.n+" "+(m.d||"")));
 /* ---------- valitse itse ---------- */
-function planPickOpen(i){planPick={i,q:""};planEdit=null;planChk=null;renderPick();if(!$("pkdlg").open)$("pkdlg").showModal();}
+function planPickOpen(i){planAdd=null;planPick={i,q:""};planEdit=null;planChk=null;renderPick();if(!$("pkdlg").open)$("pkdlg").showModal();}
 function renderPick(){
   if(!planPick)return;
   const pl=state.pl,it=pl.items[planPick.i],q=fold(planPick.q.trim());
@@ -4019,7 +4028,7 @@ function planChkOpen(){
   if(!items.length&&!xs.length){flashToast("Suunnitelmassa ei ole ruokia.");return;}
   const rows=shopping([],items.map(e=>({r:byId(e.id),lines:ingFor(byId(e.id),e.n,e.v,e.t)})));
   const off=new Set(rows.filter(e=>pantryHit(e.key)).map(e=>e.key));
-  planChk={items,xs,rows,off};planEdit=null;planPick=null;renderChk();$("pkdlg").showModal();
+  planChk={items,xs,rows,off};planAdd=null;planEdit=null;planPick=null;renderChk();$("pkdlg").showModal();
 }
 function renderChk(){
   if(!planChk)return;
@@ -4063,6 +4072,12 @@ $("pkbody").addEventListener("click",e=>{
   }
   /* muokkausikkuna */
   const x=e.target.closest("[data-pe]");if(!x||!planEdit)return;
+  if(planAdd){const a=x.dataset.pe,k=x.dataset.k,t=planAdd.tg;
+    if(a==="tm")planAdd.tg=[k,...t.filter(z=>z!=="a"&&z!=="w")];
+    else if(a==="tg")planAdd.tg=t.includes(k)?t.filter(z=>z!==k):[...t,k];
+    else if(a==="addok"){if(pl.items.length>=10)return;pl.items.push({tg:planAdd.tg,id:"",v:""});pl.n=pl.items.length;plFill();planNew=pl.items.length-1;planAdd=null;$("pkdlg").close();
+      mutate();renderPlan();const li=$("planBody").querySelectorAll(".pn-item")[planNew];if(li)li.scrollIntoView({block:"nearest",behavior:"smooth"});setTimeout(()=>{planNew=-1;},50);return;}
+    return renderTypePl();}
   const it=pl.items[planEdit.i];if(!it)return;
   const a=x.dataset.pe,k=x.dataset.k,r=byId(it.id);
   if(a==="open"){$("pkdlg").close();openDlg(k);return;}
@@ -4071,7 +4086,7 @@ $("pkbody").addEventListener("click",e=>{
     const r=byId(prev.id);undoToast(`${esc(r?r.name:"Ruoka")} poistettiin`,'data-pundo="1"');return;}
   if(a==="swap")planSwap(planEdit.i,true);
   else if(a==="allsd")planEdit.allSd=!planEdit.allSd;
-  else if(a==="tg"){it.tg=it.tg.includes(k)?it.tg.filter(t=>t!==k):[...it.tg.filter(t=>!(k==="a"&&(t==="w"||t==="j"))&&!((k==="w"||k==="j")&&t==="a")),k];
+  else if(a==="tg"||a==="tm"){it.tg=a==="tm"?[k,...it.tg.filter(t=>t!=="a"&&t!=="w")]:it.tg.includes(k)?it.tg.filter(t=>t!==k):[...it.tg,k];
     delete it.lk;const cur=plCands().find(c=>c.id===it.id);if(!cur||!PL.matches(cur,it.tg))planSwap(planEdit.i,true);else{const v=PL.versionFor(cur,it.tg);if(v)it.v=v;}}
   else if(a==="v")it.v=r&&r.vs[0]&&r.vs[0].id===k?"":k;
   else if(a==="t"){const tw=(r.tw||[]).find(m=>m.id===k);if(!tw)return;const cur=it.t||[];it.t=cur.includes(k)?cur.filter(z=>z!==k):[...cur.filter(z=>{const o=(r.tw||[]).find(m=>m.id===z);return!(o&&((tw.g&&o.g===tw.g)||(o.rm||[]).some(q=>(tw.rm||[]).includes(q))));}),k];}
@@ -4082,7 +4097,7 @@ $("pkbody").addEventListener("click",e=>{
   else if(a==="n"){const v=Math.max(1,Math.min(20,plN(it)+(+k)));it.n=0;it.n=v===autoN(it)?0:v;}
   mutate();renderPlan();if(planEdit.type)renderTypePl();else renderEditPl();
 });
-$("pkdlg").addEventListener("close",()=>{if($("pkdlg").open)return;planPick=null;planEdit=null;planChk=null;});
+$("pkdlg").addEventListener("close",()=>{if($("pkdlg").open)return;planPick=null;planEdit=null;planChk=null;planAdd=null;});
 const vkOk=k=>/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,39}$/i.test(k);
 $("planBody").addEventListener("click",e=>{
   const b=e.target.closest("[data-pa]");if(!b)return;
@@ -4092,9 +4107,9 @@ $("planBody").addEventListener("click",e=>{
   if(a==="pick")return planPickOpen(i);
   if(a==="shop")return planChkOpen();
   if(a==="xo"){planOpen[b.dataset.k]=!planOpen[b.dataset.k];return renderPlan();}
-  if(a==="add"){if(pl.items.length>=10)return;const k=b.dataset.k;pl.items.push({tg:k?[k]:PL.defaultTags(pl.items.length,pl.items.length+1),id:"",v:""});pl.n=pl.items.length;plFill();planNew=pl.items.length-1;
-    mutate();renderPlan();const li=$("planBody").querySelectorAll(".pn-item")[planNew];if(li)li.scrollIntoView({block:"nearest",behavior:"smooth"});setTimeout(()=>{planNew=-1;},50);return;}
-  if(a==="four"){pl.items=[];pl.n=4;plFill();}
+  if(a==="add"){if(pl.items.length>=10)return;return planAddOpen();}
+  if(a==="cnt"){planCount=Math.max(1,Math.min(10,planCount+(+b.dataset.d)));return renderPlan();}
+  if(a==="four"){pl.items=[];pl.n=planCount;plFill();}
   else if(a==="sv")pl.sv=Math.max(2,Math.min(16,pl.sv+(+b.dataset.d)));
   else if(a==="swap")planSwap(i,true);
   else if(a==="sd"){const it=pl.items[i];if(!it)return;const s=b.dataset.s,cur=it.sd||[],id=sdParse(s).id;it.sd=cur.includes(s)?cur.filter(z=>z!==s):[...cur.filter(z=>sdParse(z).id!==id),s];}

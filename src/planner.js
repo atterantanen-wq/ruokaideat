@@ -7,16 +7,25 @@
  *                    sn: { id: annokset } aamu- ja välipalat, bk: [id] leivonta, vo: [pois tältä kerralta] }
  * Vakio-ostokset ovat erikseen (state.vk), koska ne säilyvät listasta toiseen. */
 
-export const TAGS = [
-  ["a", "Arki"],
-  ["e", "Edullinen"],
-  ["k", "Kevyt"],
-  ["v", "Kasvis"],
-  ["f", "Kala"],
-  ["w", "Viikonloppu"],
-  ["j", "Juhla"],
+/* pääryhmä (valitaan yksi) ja lisärajaukset (nolla tai useampi) */
+export const MAIN_TAGS = [
+  ["a", "Arki", "Nopeat arkiruoat, alle 45 min työtä"],
+  ["w", "Viikonloppu ja juhla", "Enemmän aikaa, herkuttelua ja juhlapöytään"],
 ];
+export const EXTRA_TAGS = [
+  ["k", "Kevyt", "Keitot, salaatit ja kevyemmät ruoat"],
+  ["e", "Edullinen", "Edullisimmat ruoat"],
+  ["v", "Kasvis", "Kasvisruoka tai ruoan kasvisversio"],
+  ["f", "Kala", "Kalaruoka tai ruoan kalaversio"],
+];
+export const TAGS = [...MAIN_TAGS, ...EXTRA_TAGS].map(([k, n]) => [k, n]);
 export const TAG_N = Object.fromEntries(TAGS);
+/* vanhat tallennukset: erillinen Juhla (j) kuuluu nyt viikonloppuun */
+export const normTags = (tg) => {
+  const t = [...new Set((tg || []).map((x) => (x === "j" ? "w" : x)).filter((x) => x in TAG_N))];
+  return t.includes("a") && t.includes("w") ? t.filter((x) => x !== "a") : t;
+};
+export const mainTag = (tg) => (tg.includes("w") ? "w" : tg.includes("a") ? "a" : "");
 
 export const defaultPlan = () => ({ n: 0, sv: 4, ba: 0, items: [], sn: {}, bk: [], vo: [] });
 
@@ -35,10 +44,10 @@ export function matches(c, tags) {
     if (t === "k" && !c.light) return false;
     if (t === "v" && !c.veg) return false;
     if (t === "f" && !c.fish) return false;
-    if (t === "w" && !c.wknd) return false;
-    if (t === "j" && !c.juhla) return false;
+    if (t === "w" && !c.wknd && !c.juhla) return false;
   }
-  if (c.holiday && !tags.includes("j")) return false;
+  /* juhlapyhien ruoat (joulukinkku ym.) eivät tule ehdotuksiin; ne löytyvät haulla */
+  if (c.holiday) return false;
   return true;
 }
 

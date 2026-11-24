@@ -217,7 +217,10 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   const e = await page.evaluate((i) => window.__app.state.pl.items[i], tw);
   ok(e.t.length === 1 && e.n >= 5, "muokkaus ei tallentunut: " + JSON.stringify(e));
   ok(!sdk || e.sd.includes(sdk), "lisuke ei tallentunut");
-  await click('[data-pa="add"][data-k="k"]'); await wait(150);
+  await click('[data-pa="add"]'); await wait(150);
+  await click('#pkbody [data-pe="tm"][data-k="a"]');
+  await click('#pkbody [data-pe="tg"][data-k="k"]');
+  await click('#pkbody [data-pe="addok"]'); await wait(200);
   const it5 = await page.evaluate(() => { const A = window.__app, it = A.state.pl.items; return { n: it.length, light: !!(it[4] && A.plCands().find((c) => c.id === it[4].id) || {}).light }; });
   ok(it5.n === 5 && it5.light, "kevyen ruoan lisäys ei onnistunut: " + JSON.stringify(it5));
   /* poisto ja kumoa */
