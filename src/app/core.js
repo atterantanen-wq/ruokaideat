@@ -79,3 +79,46 @@ export function ingText(p){
   if(p.q==null)return p.rawName;
   return(p.u?fmtNum(p.q)+" "+p.u:fmtNum(p.q)+" ×")+" "+p.rawName;
 }
+
+/* Avoimet ikkunat ja ostoslistan näkymä ovat "kerroksia". Kun kerros on auki, selainhistoriassa on yksi
+   ylimääräinen merkintä, joten puhelimen takaisin-painike tai iPhonen pyyhkäisy sulkee päällimmäisen
+   kerroksen eikä poistu sovelluksesta.
+   Ikkunan avaus kosketuksella tai hiirellä kohdistaa ikkunaan itseensä eikä ensimmäiseen painikkeeseen,
+   jottei näppäimistökäytön kohdistusrengas näy turhaan. Näppäimistöllä avattaessa selain kohdistaa kuten ennenkin. */
+{
+  let byPointer=false,hasEntry=false,ignore=0,pending=false;
+  addEventListener("pointerdown",()=>{byPointer=true;},true);
+  addEventListener("keydown",()=>{byPointer=false;},true);
+  const open=[];
+  const listOpen=()=>document.body.classList.contains("inlist");
+  const layers=()=>open.length+(listOpen()?1:0);
+  /* tarkistus viiveellä: ikkunan vaihto toiseen (sulje + avaa samassa tapahtumassa) ei liikuta historiaa */
+  const sync=()=>{
+    if(pending)return;pending=true;
+    setTimeout(()=>{
+      pending=false;
+      const n=layers();
+      if(n&&!hasEntry){history.pushState({ly:1},"");hasEntry=true;}
+      else if(!n&&hasEntry){hasEntry=false;ignore++;history.back();}
+    },0);
+  };
+  const sm=HTMLDialogElement.prototype.showModal;
+  HTMLDialogElement.prototype.showModal=function(){
+    sm.call(this);
+    if(byPointer){if(!this.hasAttribute("tabindex"))this.tabIndex=-1;this.focus({preventScroll:true});}
+    if(!open.includes(this)){
+      open.push(this);
+      this.addEventListener("close",()=>{const i=open.indexOf(this);if(i>=0)open.splice(i,1);sync();},{once:true});
+    }
+    sync();
+  };
+  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:["class"]});
+  addEventListener("popstate",()=>{
+    if(ignore){ignore--;return;}
+    hasEntry=false;
+    const top=open[open.length-1];
+    if(top)top.close();
+    else if(listOpen()){const b=document.querySelector('[data-lst="back"]');if(b)b.click();}
+    sync();
+  });
+}

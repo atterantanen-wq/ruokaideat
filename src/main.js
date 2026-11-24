@@ -2,6 +2,7 @@
    alkuperäisessä main.js:ssä: jokainen moduuli tuo ensimmäisenä edeltäjänsä, ja tämä tiedosto tuo
    ketjun viimeisen. Järjestys: core, prices, catalog, state, ideas, search, price-updates, cart,
    cart-add, cart-view, info, tabs, registry, editor, clicks, backup, cook, start, plan-view. */
+import "./styles/fonts.css";
 import "./styles/main.css";
 import {ingFor,plCostPer,plCands,plDefaults,autoN} from "./app/plan-view.js";
 import {R,parseIng} from "./app/core.js";

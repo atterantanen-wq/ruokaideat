@@ -10,6 +10,8 @@ import {typeOf,storeName,XSUG,XD,OTS,otOf,listItems,needed,groupDeps,packInfo,pe
 import {curTab} from "./tabs.js";
 import {uiEdit} from "./editor.js";
 import {LOGO} from "../data/logos.js";
+/* puhelimen jakovalikko, jos selain tukee sitä */
+const canShare=typeof navigator!=="undefined"&&typeof navigator.share==="function";
 
 function leftCount(l){let n=0;for(const e of listItems(l))if(!l.have.includes(e.key)&&!l.checked.includes(e.key))n++;return n;}
 export function updBadge(){const b=$("badge");if(!b)return;const l=actList(state),n=l?leftCount(l):0;const t=n?String(n):"";if(b.textContent!==t)b.textContent=t;}
@@ -115,9 +117,9 @@ export function renderCart(){
   document.body.classList.add("inlist");
   const body=$("cartBody");
   const rn=renaming?`<div class="rnm"><input id="lname" type="text" maxlength="40" value="${esc(l.name)}" aria-label="Listan nimi"><button type="button" class="go" data-lst="rensave">Tallenna</button></div>`:"";
-  const head=`<div class="lbar"><button type="button" class="back" data-lst="back" aria-label="Takaisin ostoslistoihin">${ico("chev")}</button><div class="lbt"><h2 class="lbn">${esc(l.name)}</h2></div><button type="button" class="dots wah" data-act="copy" aria-label="Kopioi lista WhatsAppiin">${ico("copy")}</button><button type="button" class="dots" data-lst="menu" data-lid="${esc(l.id)}" aria-haspopup="dialog" aria-label="Listan valikko">${ico("dots")}</button></div>`+rn;
+  const head=`<div class="lbar"><button type="button" class="back" data-lst="back" aria-label="Takaisin ostoslistoihin">${ico("chev")}</button><div class="lbt"><h2 class="lbn">${esc(l.name)}</h2></div><button type="button" class="dots wah" data-act="copy" aria-label="${canShare?"Jaa lista":"Kopioi lista WhatsAppiin"}">${ico(canShare?"share":"copy")}</button><button type="button" class="dots" data-lst="menu" data-lid="${esc(l.id)}" aria-haspopup="dialog" aria-label="Listan valikko">${ico("dots")}</button></div>`+rn;
   const stb0=()=>{const stx=listStats(l),n=stx.act.length,pr=stx.tot>0?(stx.miss?"väh. ":"")+eur(stx.tot):"";return`<button type="button" class="scard" data-st="open" aria-haspopup="dialog" aria-label="Kauppa: ${esc(storeName(l.store))}. Vaihda kauppa"><span class="sl2">${lg(typeOf(l.store))}<b>${LOGO[typeOf(l.store)]?"":"Kauppa: "}${esc(storeName(l.store)).replace(/-/g,"\u2011")}</b></span>${n?`<span class="sr2">${pr?`<b>${pr}</b>`:""}<span>${n} ${n===1?"tuote":"tuotetta"}</span></span>`:""}</button>`;};
-  const waBtn=`<button type="button" class="wa" data-act="copy">${ico("copy")}<span>Kopioi lista WhatsAppiin</span></button>`;
+  const waBtn=`<button type="button" class="wa${canShare?" sh":""}" data-act="copy">${ico(canShare?"share":"copy")}<span>${canShare?"Jaa lista":"Kopioi lista WhatsAppiin"}</span></button>`;
   if(!l.cart.length&&!(l.x||[]).length&&!(l.pl||[]).length){
     body.innerHTML=head+`<p class="note">Lista on tyhjä. Paina ruoan kohdalla Lisää ostoslistalle, niin ainekset kerääntyvät tähän. Voit valita useita ruokia, jolloin samat tuotteet lasketaan yhteen.</p>`+`<div class="actions"><button class="go" type="button" data-tab-go="ideas">Selaa ruokaideoita</button></div>`+xBar();
     return;
@@ -175,6 +177,11 @@ export async function copyList(){
   const l=vList();if(!l)return;
   const txt=shareText(l);
   if(!txt){flashToast("Ei ostettavia tuotteita.");return;}
+  /* puhelimen oma jakovalikko (WhatsApp, Viestit, sähköposti…), muuten kopiointi leikepöydälle */
+  if(canShare){
+    try{await navigator.share({title:l.name,text:txt});return;}
+    catch(e){if(e&&e.name==="AbortError")return;}
+  }
   let ok=false;
   try{await navigator.clipboard.writeText(txt);ok=true;}catch(e){}
   if(!ok){

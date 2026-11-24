@@ -1,0 +1,6 @@
+/* fontit omalta palvelimelta (ei Google Fonts -latausta): Inter ja Fraunces, latin-merkistö, SIL OFL 1.1 (ks. src/assets/fonts) */
+@font-face{font-family:Inter;font-style:normal;font-weight:400;font-display:swap;src:url("../assets/fonts/inter-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:Inter;font-style:normal;font-weight:500;font-display:swap;src:url("../assets/fonts/inter-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:Inter;font-style:normal;font-weight:600;font-display:swap;src:url("../assets/fonts/inter-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:Inter;font-style:normal;font-weight:700;font-display:swap;src:url("../assets/fonts/inter-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:Fraunces;font-style:normal;font-weight:100 900;font-display:swap;src:url("../assets/fonts/fraunces-latin-opsz-normal.woff2") format("woff2")}
