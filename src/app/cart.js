@@ -217,6 +217,10 @@ export function listItems(l){
   }
   return items.sort((a,b)=>a.name.localeCompare(b.name,"fi"));
 }
+/* listan ruoat: itse lisätyt ja suunnitelmasta tulleet (myös lisukkeet), kukin kerran */
+export const listRecs=l=>[...new Set([...l.cart,...(l.pl||[]).map(e=>e.id)])].map(byId).filter(Boolean);
+/* suunnitelmasta tulleen ruoan poisto listalta: poistetut rivit talteen kumoamista varten */
+export const plRm={lid:"",rid:"",gone:[]};
 export const needed=l=>listItems(l).filter(e=>!l.have.includes(e.key));
 export function groupDeps(list,have,store){
   const g=DEPS.map(()=>[]);
@@ -417,9 +421,9 @@ export function showRmToast(l,rid,i){
   t.innerHTML=`<span>Poistettu listalta <b>${esc(l.name)}</b>: ${esc(r?r.name:"ruoka")}</span><button type="button" data-lst="undorm" data-rid="${esc(rid)}" data-from="${esc(l.id)}" data-i="${i}">Kumoa</button>`;
   t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true;},8000);
 }
-export function undoToast(html,attrs){
+export function undoToast(html,attrs,lbl="Kumoa"){
   const t=$("toast");$("dtoast").hidden=true;
-  t.innerHTML=`<span>${html}</span><button type="button" ${attrs}>Kumoa</button>`;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true;},8000);
+  t.innerHTML=`<span>${html}</span><button type="button" ${attrs}>${esc(lbl)}</button>`;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true;},8000);
 }
 export function hideToast(){clearTimeout(toastT);$("toast").hidden=true;$("dtoast").hidden=true;}
 export function moveRecipe(rid,fromId,toId){
