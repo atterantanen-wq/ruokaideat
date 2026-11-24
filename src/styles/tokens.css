@@ -1,0 +1,35 @@
+/* Design systemin perusta: asteikot, jotka eivät riipu sovelluksen ilmeestä.
+ * Sama tiedosto käy muihinkin projekteihin; ilme (värit, fontit, pyöristykset) on tiedostossa theme.css.
+ * Käytä näitä muuttujia uusissa tyyleissä. Älä kirjoita uusia hex-värejä, pikselikokoja tai kestoja suoraan. */
+:root{
+  /* typografia: 7 kokoa, rem-pohjainen (seuraa käyttäjän tekstikokoasetusta) */
+  --fs-xs:.75rem;     /* 12 px: merkit, pienet laput */
+  --fs-sm:.8125rem;   /* 13 px: aputeksti, alapalkki */
+  --fs-md:.9375rem;   /* 15 px: napit, listat */
+  --fs-base:1rem;     /* 16 px: leipäteksti (iOS ei zoomaa kenttiin tästä alkaen) */
+  --fs-lg:1.125rem;   /* 18 px: kortin otsikko */
+  --fs-xl:1.375rem;   /* 22 px: ikkunan otsikko */
+  --fs-2xl:clamp(1.6rem,7vw,2.1rem); /* sivun otsikko */
+  --fw-regular:400;--fw-medium:500;--fw-semibold:600;--fw-bold:700;
+  --lh-tight:1.2;--lh-base:1.55;
+
+  /* välit: 4 px:n ruudukko */
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;
+
+  /* kosketusalueet: vähintään 44 px (Apple HIG 44 pt, Material 48 dp) */
+  --h-sm:44px;--h-md:48px;--h-lg:52px;--tap-min:44px;
+
+  /* liike: lyhyet, alusta nopeat ja lopusta hidastuvat. Liike vain kun se kertoo jotain. */
+  --dur-instant:100ms; /* painallus */
+  --dur-fast:150ms;    /* värin ja tilan vaihto */
+  --dur-base:220ms;    /* ikkuna, ilmoitus, näkymä */
+  --dur-slow:300ms;    /* isot paneelit */
+  --ease-out:cubic-bezier(.2,.8,.2,1);
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --press-scale:.97;
+}
+/* Vähennä liikettä -asetus (WCAG 2.3.3): ei siirtymiä eikä animaatioita */
+@media (prefers-reduced-motion:reduce){
+  :root{--dur-instant:0ms;--dur-fast:0ms;--dur-base:0ms;--dur-slow:0ms;--press-scale:1}
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

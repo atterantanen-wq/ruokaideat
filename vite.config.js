@@ -5,5 +5,7 @@ export default defineConfig({
   base: "./",
   build: {
     target: "es2020",
+    // tyylit.html = design systemin tyylisivu (julkaistaan sovelluksen rinnalle)
+    rollupOptions: { input: { main: "index.html", tyylit: "tyylit.html" } },
   },
 });

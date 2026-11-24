@@ -267,6 +267,44 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
+/* Design system: jokainen näkyvä teksti täyttää WCAG 2.2 AA -kontrastin (4.5:1, iso teksti 3:1)
+ * kaikilla välilehdillä ja reseptiikkunassa, vaaleassa ja tummassa teemassa. Kuvan päällä olevia tekstejä ei mitata. */
+test("tyylit: tekstien kontrasti riittää vaaleassa ja tummassa teemassa", async () => {
+  const bad = [], prevTheme = await page.evaluate(() => document.documentElement.dataset.theme);
+  for (const theme of ["light", "dark"]) {
+    for (const v of ["ideas", "plan", "add", "cart", "recipe"]) {
+      await closeAll();
+      await page.evaluate(([th, v]) => {
+        document.documentElement.dataset.theme = th;
+        document.querySelector(`.tab[data-tab="${v === "recipe" ? "ideas" : v}"]`).click();
+        if (v === "recipe") document.querySelector("#list .card [data-open]").click();
+      }, [theme, v]);
+      await wait(300);
+      const f = await page.evaluate(() => {
+        const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const a = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: a[0], g: a[1], b: a[2], a: a[3] ?? 1 }; };
+        const lum = ({ r, g, b }) => [r, g, b].map((x) => x / 255).map((x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)).reduce((s, x, i) => s + x * [0.2126, 0.7152, 0.0722][i], 0);
+        const mix = (t, u) => ({ r: t.r * t.a + u.r * (1 - t.a), g: t.g * t.a + u.g * (1 - t.a), b: t.b * t.a + u.b * (1 - t.a), a: 1 });
+        const bgOf = (el) => { const ls = []; for (let e = el; e && e.nodeType === 1; e = e.parentElement) { const s = getComputedStyle(e); if (s.backgroundImage !== "none") return null; const c = parse(s.backgroundColor); if (c && c.a > 0) { ls.push(c); if (c.a >= 1) break; } } let b = parse(getComputedStyle(document.body).backgroundColor); for (let i = ls.length - 1; i >= 0; i--) b = mix(ls[i], b); return b; };
+        const root = document.querySelector("dialog[open]") || document.body, out = [];
+        const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        for (let n; (n = w.nextNode());) {
+          const el = n.parentElement; if (!n.textContent.trim() || el.closest("dialog:not([open]),[hidden],:disabled")) continue;
+          const r = el.getBoundingClientRect(), s = getComputedStyle(el); if (!r.width || !r.height || s.visibility === "hidden") continue;
+          const bg = bgOf(el); if (!bg) continue;
+          const c = parse(s.color), fg = mix({ ...c, a: c.a * +s.opacity }, bg);
+          const L1 = lum(fg), L2 = lum(bg), cr = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+          const fs = parseFloat(s.fontSize), big = fs >= 24 || (fs >= 18.66 && +s.fontWeight >= 700);
+          if (cr < (big ? 3 : 4.5)) out.push(`.${String(el.className).split(" ")[0] || el.tagName} "${n.textContent.trim().slice(0, 24)}" ${cr.toFixed(2)}:1`);
+        }
+        return out;
+      });
+      if (f.length) bad.push(`${theme}/${v}: ${[...new Set(f)].slice(0, 4).join(", ")}`);
+    }
+  }
+  await page.evaluate((th) => { document.querySelectorAll("dialog[open]").forEach((d) => d.close()); document.documentElement.dataset.theme = th; document.querySelector('.tab[data-tab="ideas"]').click(); }, prevTheme);
+  ok(!bad.length, "liian heikko kontrasti: " + bad.join(" | "));
+});
+
 /* ---------------- ajo ---------------- */
 
 async function main() {
@@ -284,6 +322,9 @@ async function main() {
   await wait(500);
 
   let failed = 0;
+  /* ONLY="haku|tyylit" npm test ajaa vain osuvat testit */
+  const only = process.env.ONLY ? new RegExp(process.env.ONLY) : null;
+  if (only) results.splice(0, results.length, ...results.filter((t) => only.test(t.name)));
   for (const t of results) {
     errs = [];
     const t0 = Date.now();
