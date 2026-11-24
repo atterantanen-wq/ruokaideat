@@ -1,7 +1,7 @@
 /* Aamu-, väli- ja iltapalat */
 export default [
   {
-    n: "Riisipuuro", m: "v", t: "pu", min: 55, w: 10, sv: 4, fe: "jo", pop: true, aka: ["Joulupuuro", "Juhlariisipuuro"],
+    n: "Riisipuuro", m: "v", t: "pu", min: 55, w: 10, sv: 4, fe: "jo", pop: true,
     d: "Pehmeä ja kermainen maitopuuro hitaasti hauduttaen. Tärkein vaihe on alku: riisi turpoaa ensin vedessä, eikä puuro pala pohjaan.",
     ing: ["vesi 2 dl", "puuroriisi 2 dl", "maito 1 l", "voi 1 rkl", "suola 0.5 tl"],
     steps: [
@@ -13,16 +13,36 @@ export default [
     ],
     serve: "Tarjoa sokeri-kanelisekoituksen, voisilmän tai sekahedelmäkeiton kanssa.",
     extras: ["kaneli"],
-    tips: ["Jäänyt puuro kelpaa seuraavana päivänä riisipuuropannukakuksi.", "Juhlapöytään puurosta saa jälkiruoan, kun valitset muunnelmista misokinuskin, granolan, kanelivoin ja sokeroidut marjat. Ne valmistuvat puuron hautuessa."],
+    tips: ["Jäänyt puuro kelpaa seuraavana päivänä riisipuuropannukakuksi."],
     tw: [
-      { id: "misokinuski", n: "Misokinuski", d: "Kinuskikastike, jonka vaalea miso tekee suolaisen makeaksi. Valuta puuron päälle.", add: ["# Misokinuski", "fariinisokeri 1 dl", "kuohukerma 2 dl", "voi 30 g", "miso 1 tl"], ins: [[3, "Valmista puuron hautuessa misokinuski: kuumenna fariinisokeri kattilassa miedolla lämmöllä sulaksi. Kaada kerma joukkoon vähän kerrallaan ja keitä jatkuvasti sekoittaen 3–4 minuuttia. Sekoita voi ja miso joukkoon ja keitä vielä pari minuuttia, kunnes ne ovat sulaneet kastikkeeseen."]] },
-      { id: "granola", n: "Granola", d: "Paahdetut mantelit ja hasselpähkinät hunajalla ja ripauksella suolaa tuovat puuroon rapeutta.", add: ["# Granola", "mantelit 1 dl", "hasselpähkinät 1 dl", "hunaja 1 rkl", "suola 1 ripaus"], ins: [[3, "Tee granola: rouhi mantelit ja hasselpähkinät karkeaksi ja levitä ne pellille. Paahda 180-asteisessa uunissa noin 7 minuuttia. Valuta hunaja vielä lämpimien pähkinöiden päälle ja mausta ripauksella suolaa."]] },
-      { id: "kanelivoi", n: "Kanelivoi", d: "Pehmeä voi vaahdotettuna sokerin ja kanelin kanssa. Nostetaan nokare kuuman puuron päälle sulamaan.", add: ["# Kanelivoi", "voi 100 g", "sokeri 50 g", "kaneli 1 rkl"], ins: [[3, "Tee kanelivoi: vaahdota huoneenlämpöinen voi ja sokeri kuohkeaksi ja sekoita kaneli joukkoon."]] },
-      { id: "marjat", n: "Sokeroidut marjat", d: "Jäiset karpalot sokeroituna tuovat makeaan puuroon kirpeyttä. Puolukat käyvät yhtä hyvin.", add: ["# Sokeroidut marjat", "karpalot 2 dl", "sokeri 2 rkl"], ins: [[4, "Ripottele sokeri jäisten karpaloiden päälle juuri ennen tarjoilua ja nosta niitä annoksen päälle."]] },
       { id: "uuni", n: "Uunissa", d: "Uunissa puuro ei pala pohjaan. Kypsennä 150 asteessa noin kaksi tuntia.", step: { 2: "Kaada riisi, maito ja vesi uunivuokaan ja sekoita.", 3: "Kypsennä 150-asteisessa uunissa noin kaksi tuntia. Sekoita kerran tai kahdesti." }, del: [0, 1] },
       { id: "kaura", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja lisää lopuksi tilkka kaurakermaa.", rm: ["maito", "voi"], add: ["kauramaito 1 l", "kaurakerma 1 dl"], step: {"2": "Lisää kaurajuoma ja kuumenna puuro sekoittaen kiehahtamispisteeseen.", "4": "Kun riisinjyvät ovat pehmeitä ja puuro paksua, sekoita joukkoon suola ja kaurakerma."} },
     ],
     src: [["Martat", "https://www.martat.fi/reseptit/riisipuuro/"], ["Valio", "https://www.valio.fi/reseptit/riisipuuro/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/99039/Riisipuuro/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-riisipuuro/1sQUmedygzmeYacebUYNLO"]],
+  },
+  {
+    n: "Riisipuuro misokinuskilla", m: "v", t: "pu", min: 80, w: 35, sv: 6, fe: "jo", jf: true,
+    aka: ["Juhlariisipuuro", "Misokinuskipuuro", "Hittipuuro"],
+    d: "Juhlava riisipuuro, jonka päälle tulevat suolaisen makea misokinuski, kanelivoi, hunajainen pähkinägranola ja kirpeät jäiset karpalot. Lisukkeet valmistuvat puuron hautuessa ja kootaan samaan annokseen.",
+    ing: ["# Puuro", "vesi 2 dl", "puuroriisi 2 dl", "voi 30 g", "maito 1 l", "suola 0.5 tl", "# Misokinuski", "fariinisokeri 1 dl", "kuohukerma 2 dl", "voi 30 g", "miso 1 tl", "# Granola", "mantelit 1 dl", "hasselpähkinät 1 dl", "hunaja 1 rkl", "suola 1 ripaus", "# Kanelivoi", "voi 100 g", "sokeri 50 g", "kaneli 1 rkl", "# Marjat", "karpalot 2 dl", "sokeri 2 rkl"],
+    steps: [
+      "Kuumenna vesi kiehuvaksi paksupohjaisessa kattilassa. Lisää puuroriisi ja keitä muutama minuutti koko ajan sekoittaen, kunnes riisi on imenyt suurimman osan vedestä.",
+      "Lisää voi, maito ja suola ja kuumenna sekoittaen kiehuvaksi. Pidä silmällä, ettei maito kuohu yli.",
+      "Käännä lämpö pienelle, nosta kansi päälle ja anna puuron hautua noin tunti. Sekoita pohjaa välillä.",
+      "Tee granola puuron hautuessa: rouhi mantelit ja hasselpähkinät karkeaksi ja paahda ne pellillä 180-asteisessa uunissa noin 7 minuuttia. Valuta hunaja lämpimien pähkinöiden päälle ja ripottele pinnalle hieman suolaa.",
+      "Vaahdota huoneenlämpöinen voi ja sokeri kuohkeaksi ja sekoita kaneli joukkoon.",
+      "Valmista misokinuski: kuumenna fariinisokeri kattilassa miedolla lämmöllä sulaksi. Kaada kerma joukkoon vähän kerrallaan ja keitä jatkuvasti sekoittaen 3–4 minuuttia. Sekoita voi ja miso joukkoon ja keitä vielä pari minuuttia, kunnes ne ovat sulaneet kastikkeeseen.",
+      "Sokeroi jäiset karpalot juuri ennen tarjoilua.",
+      "Kokoa annokset: nosta kuuman puuron päälle nokare kanelivoita, valuta päälle misokinuskia ja ripottele pinnalle granolaa ja sokeroituja karpaloita.",
+    ],
+    tips: [
+      "Puuro on kotiversio helsinkiläisen N4ku-ravintolan Tuomaan markkinoilla myymästä hittipuurosta, jossa misokinuskin kanssa tarjotaan voita, kanelia, mantelia ja punaisia marjoja.",
+      "Misokinuski ja kanelivoi säilyvät jääkaapissa muutaman päivän, joten ne voi tehdä edellisenä päivänä. Lämmitä kinuski ennen tarjoilua.",
+    ],
+    tw: [
+      { id: "puolukka", n: "Puolukoilla", d: "Käytä karpaloiden tilalla jäisiä puolukoita.", rm: ["karpalot"], add: ["puolukka 2 dl"], step: { 6: "Sokeroi jäiset puolukat juuri ennen tarjoilua.", 7: "Kokoa annokset: nosta kuuman puuron päälle nokare kanelivoita, valuta päälle misokinuskia ja ripottele pinnalle granolaa ja sokeroituja puolukoita." } },
+    ],
+    src: [["MTV Uutiset (N4ku)", "https://www.mtvuutiset.fi/makuja/artikkeli/yllattava-puuro-aiheutti-jattijonot-helsingissa-tassa-sen-salaisuus/9268956"], ["Kotiliesi", "https://kotiliesi.fi/ruoka/tuomaan-markkinoiden-hittipuuro/"], ["Herkkusuut", "https://www.herkkusuut.com/tuomaanmarkkinoiden-hittipuuroa-kehutaan-syysta-nain-se-onnistui-kotikeittiossa/"], ["Valio", "https://www.valio.fi/reseptit/joulupuuro/"]],
   },
   {
     n: "Kaurapuuro", m: "v", t: "pu", min: 15, w: 10, sv: 4,

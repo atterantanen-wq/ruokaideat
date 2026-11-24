@@ -116,26 +116,9 @@ export function applySel(r, sel, keyOf) {
   const addV = [], addT = [];
   for (const m of mods) {
     if (m.rm && m.rm.length) rows = rows.filter((x) => !hits(keyOf, x.l, m.rm));
-    if (m.add) {
-      if (m === ver) addV.push(...m.add);
-      else addT.push({ a: m.add, h: m.add.some((l) => String(l).trim().startsWith("#")) });
-    }
+    if (m.add) (m === ver ? addV : addT).push(...m.add);
   }
-  /* add-kentän rivit "# Otsikko" ovat oman ainesosionsa otsikoita (esim. muunnelman lisuke) */
-  const isH = (l) => String(l).trim().startsWith("#");
-  const hd = (a, at) => {
-    const out = [], h = [];
-    for (const l of a) {
-      if (isH(l)) h.push([at + out.length, String(l).trim().replace(/^#+\s*/, "")]);
-      else out.push(l);
-    }
-    return { out, h };
-  };
-  /* otsikottomat muunnelmat ensin, jotta niiden rivit eivät jää toisen muunnelman otsikon alle */
-  const tOrd = [...addT.filter((x) => !x.h), ...addT.filter((x) => x.h)];
-  const V = hd(addV, rows.length);
-  const T = hd(tOrd.flatMap((x) => x.a), rows.length + V.out.length);
-  const ing = rows.map((x) => x.l).concat(V.out, T.out);
+  const ing = rows.map((x) => x.l).concat(addV, addT);
   /* osiot: uusi aloitusindeksi = ensimmäinen säilynyt rivi alkuperäisestä aloituskohdasta eteenpäin */
   const gr = [];
   const G = r.gr || [];
@@ -144,19 +127,9 @@ export function applySel(r, sel, keyOf) {
     const j = rows.findIndex((x) => x.i >= st && x.i < end);
     if (j >= 0) gr.push([j, h]);
   });
-  /* perusainekset saavat reseptin nimen otsikoksi, jos muunnelma tuo omia osioitaan */
-  if (!gr.length && rows.length && (V.h.length || T.h.length)) gr.push([0, r.name]);
-  const vStart = V.h.some((x) => x[0] === rows.length), tStart = T.h.some((x) => x[0] === rows.length + V.out.length);
-  if (gr.length || (V.out.length && r.ing.length) || V.h.length || T.h.length) {
-    if (V.out.length && !vStart) gr.push([rows.length, r.vh || "Täytteet"]);
-    gr.push(...V.h);
-    if (T.out.length && !tStart) gr.push([rows.length + V.out.length, "Lisäksi"]);
-    gr.push(...T.h);
-  }
-  /* tyhjät osiot pois: otsikko, jonka jälkeen ei tule riviä ennen seuraavaa otsikkoa */
-  for (let k = gr.length - 1; k >= 0; k--) {
-    const nx = k + 1 < gr.length ? gr[k + 1][0] : ing.length;
-    if (gr[k][0] >= nx) gr.splice(k, 1);
+  if (gr.length || (addV.length && r.ing.length)) {
+    if (addV.length) gr.push([rows.length, r.vh || "Täytteet"]);
+    if (addT.length) gr.push([rows.length + addV.length, "Lisäksi"]);
   }
   /* vaiheet: korvaukset (step), lisäykset alkuperäisen vaiheen perään (ins, -1 = alkuun) ja poistot (del) */
   const rep = {}, after = {}, del = new Set();
@@ -176,6 +149,6 @@ export function applySel(r, sel, keyOf) {
 /* kaikki ainesrivit, jotka jokin versio tai muunnelma voi tuoda (hakua varten) */
 export function optLines(r) {
   const o = [];
-  for (const m of [...(r.vs || []), ...(r.tw || [])]) for (const l of m.add || []) if (!String(l).trim().startsWith("#")) o.push([l, m]);
+  for (const m of [...(r.vs || []), ...(r.tw || [])]) for (const l of m.add || []) o.push([l, m]);
   return o;
 }
