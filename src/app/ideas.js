@@ -16,13 +16,26 @@ export const byId=id=>all().find(r=>r.id===id);
 export const inCart=id=>state.cart.includes(id);
 /* ---------- automaattiset tägit ---------- */
 const KEVYT_KCAL=500,KEVYT_SAT=7;
+/* Edullinen: pääruoista (MEAL_MAIN) halvin kolmannes annoshinnan mukaan. Raja lasketaan
+ * kerran renderöintiä kohden ja seuraa näin hintojen ja reseptien muutoksia. */
+const CHEAP_SHARE=1/3;
+const cheapPer=r=>{if(!MEAL_MAIN.has(r.t))return null;const c=recipeCost(r);return c.n&&!c.big&&!c.miss.length?c.sum/pvOf(r):null;};
+let cheapMemo=null;
+function cheapLimit(){
+  if(cheapMemo==null){
+    const a=all().map(cheapPer).filter(v=>v!=null).sort((x,y)=>x-y);
+    cheapMemo=a.length?a[Math.max(0,Math.ceil(a.length*CHEAP_SHARE)-1)]:-1;
+    queueMicrotask(()=>{cheapMemo=null;});
+  }
+  return cheapMemo;
+}
 export function autoTags(r){
   const a=new Set();
   if(r.min>0&&r.min<=30)a.add("n");
-  const c=recipeCost(r),per=c.n&&!c.big?c.sum/pvOf(r):null;
-  if(per!=null&&!c.miss.length&&per<3)a.add("e");
+  const per=cheapPer(r);
+  if(per!=null&&per<=cheapLimit())a.add("e");
   const nu=nutPer(r);
-  if(nu&&nu.full&&r.t!=="le"&&r.t!=="ja"&&nu.per.kcal<=KEVYT_KCAL&&nu.per.sat<=KEVYT_SAT)a.add("k");
+  if(nu&&nu.full&&MEAL_MAIN.has(r.t)&&nu.per.kcal<=KEVYT_KCAL&&nu.per.sat<=KEVYT_SAT)a.add("k");
   return a;
 }
 export function tagsOf(r){
@@ -239,10 +252,12 @@ export const dhSize=n=>{n=String(n||"");const L=n.length,W=Math.max(1,...n.split
 export const favBtn=(r,cls)=>{const on=isFav(r.id);return`<button type="button" class="fav${cls||""}" data-fav="${esc(r.id)}" aria-pressed="${on}" aria-label="${on?"Poista suosikeista":"Lisää suosikiksi"}: ${esc(r.name)}">${ico("heart")}</button>`;};
 
 export const chipEls={a:{},s:{},t:{},m:{},v:{},w:{},f:{}};
-const timeCodes=r=>{const m=+r.min||0;if(m<=0)return[];if(m>60)return["61"];return["60"].concat(m<=30?["30"]:[],m<=15?["15"]:[]);};
+/* aikasuodatin: aktiivinen työaika (w), ei odotus- tai uuniaikaa; jos työaikaa ei ole merkitty, kokonaisaika */
+const timeCodes=r=>{const m=workOf(r)||+r.min||0;if(m<=0)return[];if(m>30)return["31"];return["30"].concat(m<=20?["20"]:[],m<=10?["10"]:[]);};
 /* pääraaka-aineet kaikista versioista: suodatin "Kasvis" löytää pizzan, jolla on kasvisversio */
 export const verMain=(r,v)=>v.veg?"v":(M[v.m]?v.m:"");
-function mainsOf(r){const a=[mainOf(r)];for(const v of r.vs||[]){const m=verMain(r,v);if(m&&!a.includes(m))a.push(m);}return a;}
+/* Kasvis-suodatin koskee vain pääruokia: leivonnaiset, aamupalat ja lisukkeet ovat lähes aina kasvisruokaa */
+function mainsOf(r){const a=[mainOf(r)];for(const v of r.vs||[]){const m=verMain(r,v);if(m&&!a.includes(m))a.push(m);}return MEAL_MAIN.has(r.t)?a:a.filter(m=>m!=="v");}
 export const FV={a:mealOf,s:tagsOf,t:r=>[r.t],m:mainsOf,v:timeCodes,w:r=>r.wd?[r.wd]:[],f:r=>r.fe?[r.fe]:[]};
 export const poolOf=r=>({lt:r.t,v0:{a:mealOf(r),s:tagsOf(r),t:[r.t],m:mainsOf(r),v:timeCodes(r),w:r.wd?[r.wd]:[],f:r.fe?[r.fe]:[]}});
 export const xOpen={},hkX={};

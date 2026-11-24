@@ -125,24 +125,32 @@ export function nutData(key){
 }
 export function recipeNut(r){
   const t={kcal:0,prot:0,fat:0,sat:0,carb:0,salt:0};
-  let n=0,big=false;const miss=[];
+  let n=0,big=false,major=0;const miss=[];
   for(const line of ingOf(r)){
     const p=parseIng(line),c=nutData(p.key);
     if(c&&c.neg)continue;
     if(p.v==null)continue;
     const g=c&&c.n?gramsOf(p.key,p.fam,p.v):null;
-    if(g==null){miss.push(p.name);if(!(p.fam==="g"&&p.v<30)&&!(p.fam==="ml"&&p.v<30)&&!(p.fam==="tl")&&!(p.fam==="rkl"&&p.v<=2)&&p.fam!=="ripaus"&&!nameSkip(p.key))big=true;continue;}
+    if(g==null){
+      miss.push(p.name);
+      /* mausteiden pienet määrät (ripaus, teelusikat, kokonaiset mausteet) eivät vaikuta tulokseen,
+       * joten ne eivät tee ravintoarvoista vajaita */
+      const tiny=p.fam==="tl"||(p.fam==="rkl"&&p.v<=2)||p.fam==="ripaus"||nameSkip(p.key)||(p.fam==="kpl"&&c&&c.d===6);
+      if(!tiny)major++;
+      if(!tiny&&!(p.fam==="g"&&p.v<30)&&!(p.fam==="ml"&&p.v<30))big=true;
+      continue;
+    }
     for(const k of Object.keys(t))t[k]+=c.n[k]*g/100;
     n++;
   }
-  return{t,n,miss,big};
+  return{t,n,miss,big,major};
 }
 export function nutPer(r){
   const x=recipeNut(r);
   if(!x.n||x.big)return null;
   const s=pvOf(r),p={};
   for(const k of Object.keys(x.t))p[k]=x.t[k]/s;
-  return{per:p,miss:x.miss,full:!x.miss.length};
+  return{per:p,miss:x.miss,full:!x.major};
 }
 /* pääraaka-aine ainesten mukaan; käsin valittu (mo) ohittaa */
 export function autoMain(r){

@@ -7,7 +7,7 @@ export const A={a:"Arkiruoka",j:"Viikonloppu ja juhla",b:"Aamu-, väli- ja iltap
 export const T={pa:"Pata",ki:"Kiusaus",ke:"Keitto",uu:"Uuniruoka",pn:"Pannulla",ps:"Pasta ja riisi",pu:"Puuro",am:"Aamiainen",sa:"Salaatti",le:"Leivonta",ja:"Jälkiruoka",li:"Lisuke",wo:"Wokit ja nuudelit",pi:"Pizza",ha:"Hampurilaiset ja täytetyt leivät",vp:"Välipala",al:"Alkupala"};
 export const M={j:"Jauheliha",k:"Kana",f:"Kala",p:"Porsas",n:"Nauta",s:"Makkara",v:"Kasvis",e:"Muna",y:"Kasviproteiini"};
 
-export const TIME={"15":"Enintään 15 min","30":"Enintään 30 min","60":"Enintään 60 min","61":"Yli 60 min"};
+export const TIME={"10":"Enintään 10 min","20":"Enintään 20 min","30":"Enintään 30 min","31":"Yli 30 min"};
 export const WLD={it:"Italialainen",tm:"Texmex",as:"Aasialainen",in:"Intialainen",am:"Amerikkalainen",vm:"Välimeri"};
 export const HOL={jo:"Joulu",pa:"Pääsiäinen",ju:"Juhannus",va:"Vappu"};
 export const KQ=["ai","gl"];
@@ -16,7 +16,7 @@ export const FK=["a","m","s","v","w","t","f"];
 const HZ=new Set(["m:e","m:y","s:ai","s:gl","t:wo","t:pi","t:ha","t:vp","t:al"]);
 export const hide0=(g,c)=>g==="w"||g==="f"||HZ.has(g+":"+c);
 export const XLIM={t:12};
-const WORDS_WD=[["tm",/taco|tortilla|burrito|fajita|nacho|quesadilla|chili con|texmex|tex-mex/],["it",/pizza|pasta|spagetti|lasagne|risotto|bolognese|carbonara|gnocchi|penne|tagliatelle|pesto/],["in",/curry|tikka|masala|korma|butter chicken|dal\b|biryani|naan/],["as",/wok|nuudeli|ramen|sushi|pad thai|dumpling|kimchi|teriyaki|bibimbap|pho\b/],["am",/hampurilais|burger|hot dog|bbq|pulled/],["vm",/kreikka|tsatsiki|tzatziki|souvlaki|gyros|hummus|falafel|paella|ratatouille|moussaka/]];
+const WORDS_WD=[["tm",/taco|tortilla|burrito|fajita|nacho|quesadilla|chili con|texmex|tex-mex/],["it",/pizza|pasta|spagetti|lasagne|risotto|bolognese|carbonara|gnocchi|penne|tagliatelle|pesto/],["in",/curry|\btikka|masala|korma|butter chicken|\bdal\b|biryani|\bnaan/],["as",/wok|nuudeli|ramen|sushi|pad thai|dumpling|kimchi|teriyaki|bibimbap|pho\b/],["am",/hampurilais|burger|hot dog|bbq|pulled/],["vm",/kreikka|tsatsiki|tzatziki|souvlaki|gyros|hummus|falafel|paella|ratatouille|moussaka/]];
 export const suggestWd=n=>{const t=String(n||"").toLowerCase();for(const[c,re]of WORDS_WD)if(re.test(t))return c;return"";};
 
 export const $=id=>document.getElementById(id);
