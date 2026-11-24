@@ -895,7 +895,7 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pseg .pcw{flex:1;width:auto;padding:0 10px;white-space:nowrap}
 
 /* viikkosuunnitelma */
-#v-plan{padding:12px 16px 120px}
+#v-plan{padding:0}
 .tab{padding:8px 2px}
 .pn-card{background:var(--surface);border-radius:20px;padding:16px;margin:0 0 12px;box-shadow:0 1px 8px rgba(0,0,0,.05)}
 .pn-sh span{flex:1}
@@ -1057,3 +1057,13 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-labs .pn-lab{margin:0}
 .pn-lab-x{background:var(--bg);color:var(--ink)}
 .pn-lab-x.none{background:transparent;border:1.5px dashed var(--line);color:var(--muted)}
+/* suunnitelman kortti: tyyppi ja napit, nimi, valinnat, annokset ja hinta */
+.pn-row1{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px}
+.pn-row1 .pn-labs{flex:1;min-width:0;margin:4px 0 0}
+#v-plan .pn-item .pn-name{display:block;font:inherit;font-family:var(--fd);font-size:1.2rem;font-weight:600;line-height:1.25;text-align:left;background:none;border:0;padding:4px 0;margin:0;color:var(--ink);cursor:pointer;width:100%}
+.pn-ver{font-family:Inter,Roboto,system-ui,sans-serif;font-size:.95rem;font-weight:500;color:var(--muted)}
+.pn-meta{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:.875rem;color:var(--muted)}
+.pn-meta b{font-size:1.125rem;color:var(--ink)}
+.pn-click{cursor:pointer}
+.pn-more{display:inline-block;margin:8px 0 0;font-size:.875rem}
+.pn-act .pn-ib{width:38px;height:38px}
