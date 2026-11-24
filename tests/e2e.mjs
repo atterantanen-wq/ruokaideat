@@ -248,11 +248,19 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('[data-pa="shop"]'); await wait(300);
   const nOff = await page.evaluate(() => document.querySelectorAll('#pkbody .ar.off').length);
   ok(nOff > 0, "kaapin tarkistus: kaappitavaroita ei rastitettu pois");
+  const chk = await page.evaluate(() => ({ g: document.querySelectorAll("#pkbody h4.ag").length, f: document.querySelectorAll("#pkbody .ar small.af").length, n: document.querySelectorAll("#pkbody .ar").length }));
+  ok(chk.g >= 3 && chk.f === chk.n, "kaapin tarkistus: osastot tai ruokien nimet puuttuvat: " + JSON.stringify(chk));
   await click('#pkbody [data-pc-ok]'); await wait(500);
   const l = await page.evaluate(() => { const s = window.__app.state; const l = s.lists[s.lists.length - 1]; return { pl: (l.pl || []).length, x: (l.x || []).map((e) => e.k), name: l.name, have: (l.have || []).length, t: (l.pl || []).some((e) => e.t && e.t.length) }; });
   ok(l.have > 0 && l.t, "kaappi tai muunnelmat puuttuvat listalta: " + JSON.stringify(l));
-  ok(l.pl >= 5 && /Suunnitelma/.test(l.name), "ostoslistalle ei tullut suunnitelmaa: " + JSON.stringify(l));
+  ok(l.pl >= 5 && /^Ostoslista \d/.test(l.name), "ostoslistalle ei tullut suunnitelmaa: " + JSON.stringify(l));
   ok([...l.x].sort().join(",") === px, "ruokien tuotteet väärin: " + l.x.join(",") + " / " + px);
+  /* suunnitelma tyhjenee, ja sen voi palauttaa */
+  ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 0, "suunnitelma ei tyhjentynyt");
+  await click('#toast [data-pundo]'); await wait(150);
+  ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 5, "suunnitelman palautus ei onnistunut");
+  const card = await page.evaluate(() => document.querySelector(".lcard .lr").innerText);
+  ok(card !== "Tyhjä lista" && card.includes(","), "listan kortissa ei näy ruokia: " + card);
   await click(".lcard"); await wait(300);
   ok((await page.evaluate(() => document.querySelectorAll("#v-cart li").length)) >= 10, "ostoslista on tyhjä");
   await page.evaluate(() => { const b = document.querySelector(".lbar .back"); b && b.click(); });

@@ -5,7 +5,7 @@ import {setPv,ingOpen,stepOpen,nutOpen,setIngOpen,setStepOpen,setNutOpen,setSel}
 import {state,mutate} from "./state.js";
 import {byId,useSideVer,sdOpen,sdOwn,sdFor,setSdOwn,setSdFor,renderSd,toggleSide,togglePSide,addOwnSide,toggleFav} from "./ideas.js";
 import {twExcl,clearFilters,renderIdeas} from "./search.js";
-import {pruneChecked,newList,openMenu,showRmToast,hideToast,moveRecipe,openChooser,viewId,renaming,delList,setViewId,setRenaming,setDelList,vList,toggleCart} from "./cart.js";
+import {pruneChecked,newList,openMenu,showRmToast,hideToast,moveRecipe,openChooser,viewId,renaming,delList,setViewId,setRenaming,setDelList,vList,toggleCart,plRm} from "./cart.js";
 import {refreshCart,renderCart,copyList} from "./cart-view.js";
 import {pf,setPf,pmOpen,pfAct,dlg,openId,edit,renderDlg,openDlg} from "./info.js";
 import {showTab} from "./tabs.js";
@@ -43,7 +43,8 @@ document.addEventListener("click",e=>{
     const a=x.dataset.lst,rid=x.dataset.rid,from=x.dataset.from;
     if(a==="undorm"){
       const l=state.lists.find(q=>q.id===from);
-      if(l&&!l.cart.includes(rid))l.cart.splice(Math.min(+x.dataset.i||0,l.cart.length),0,rid);
+      if(l&&+x.dataset.i>=0&&!l.cart.includes(rid))l.cart.splice(Math.min(+x.dataset.i||0,l.cart.length),0,rid);
+      if(l&&plRm.lid===l.id&&plRm.rid===rid&&plRm.gone.length){l.pl=l.pl||[];for(const[j,e]of plRm.gone)l.pl.splice(Math.min(j,l.pl.length),0,e);plRm.gone=[];}
       hideToast();mutate();refreshCart();return;
     }
     if(a==="undohave"||a==="undox"){
@@ -94,8 +95,13 @@ document.addEventListener("click",e=>{
   if((x=t.closest("[data-fav]"))){toggleFav(x.dataset.fav);return;}
   if((x=t.closest("[data-rmfl]"))){
     const rid=x.dataset.rmfl,l=state.lists.find(q=>q.id===x.dataset.lid),i=l?l.cart.indexOf(rid):-1;
-    if(i<0)return;
-    l.cart.splice(i,1);pruneChecked();mutate();dlg.close();refreshCart();showRmToast(l,rid,i);return;
+    if(!l)return;
+    /* suunnitelmasta tulleet rivit (ruoka tai lisuke) poistetaan kaikki kerralla */
+    const gone=(l.pl||[]).map((e,j)=>[j,e]).filter(([,e])=>e.id===rid);
+    if(i<0&&!gone.length)return;
+    if(i>=0)l.cart.splice(i,1);
+    if(gone.length){l.pl=l.pl.filter(e=>e.id!==rid);Object.assign(plRm,{lid:l.id,rid,gone});}else plRm.gone=[];
+    pruneChecked();mutate();dlg.close();refreshCart();showRmToast(l,rid,i);return;
   }
   if((x=t.closest("[data-cart]"))){toggleCart(x.dataset.cart);return;}
   if((x=t.closest("[data-rm]"))){toggleCart(x.dataset.rm);return;}

@@ -1,10 +1,10 @@
 /* Suunnitelma-välilehden näkymä (logiikka: ../planner.js) ja kaapin tarkistus */
 import "./start.js";
-import {$,IC,ico,esc,clip,isPop,workOf,parseIng} from "./core.js";
+import {$,IC,ico,esc,isPop,workOf,parseIng} from "./core.js";
 import {fold,fzBest,mainOf,pantryHit,costOf,costBake,eur1,fmtDur,servOf,isBatch,scaleLine,hasOpt,keyOfLine} from "./catalog.js";
 import {todayLocal,state,persist,mutate} from "./state.js";
 import {all,byId,tagsOf,MEAL_MAIN,mealOf,sideSug,isFav} from "./ideas.js";
-import {shopping,qtyText,newList,flashToast,undoToast,hideToast} from "./cart.js";
+import {shopping,qtyText,newList,flashToast,undoToast,hideToast,groupDeps,storeName} from "./cart.js";
 import {openDlg} from "./info.js";
 import {showTab} from "./tabs.js";
 import {capF} from "./registry.js";
@@ -156,8 +156,11 @@ export function renderPlan(){
   const stepper=(pa,lbl,v,min,max,aria)=>`<div class="pn-step"><span>${lbl}</span><div><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="-1" aria-label="Vähemmän ${aria}"${v<=min?" disabled":""}>${ico("minus")}</button><b>${v}</b><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="1" aria-label="Enemmän ${aria}"${v>=max?" disabled":""}>${ico("plus")}</button></div></div>`;
   h.innerHTML=`
     ${rows?`<ol class="pn-list">${rows}</ol>`:""}
-    ${pl.items.length?"":`<div class="pn-card pn-four">${stepper("cnt","Ruokia",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four" style="width:100%;justify-content:center;margin-top:8px">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div>`}
-    ${pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`}
+    ${pl.items.length?(pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`):`
+    <div class="pn-empty"><p class="pn-lead">Kokoa tulevien päivien ruoat, niin ainekset menevät kerralla ostoslistalle.</p>
+      <button type="button" class="go pn-add1" data-pa="add">${ico("plus")}<span>Lisää ruoka</span></button></div>
+    <div class="pn-four"><p class="note">Tai anna sovelluksen ehdottaa useampi kerralla:</p>
+      <div class="pn-fr">${stepper("cnt","",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div></div>`}
     ${PL_EXTRAS?`
     <h3 class="pn-sec">Lisäksi kaupasta</h3>
     <section class="pn-card">
@@ -179,8 +182,9 @@ function planSwap(i,undo){
 }
 $("toast").addEventListener("click",e=>{
   if(!e.target.closest("[data-pundo]")||!planUndo)return;
-  const{i,prev,ins}=planUndo;planUndo=null;
-  if(ins){state.pl.items.splice(Math.min(i,state.pl.items.length),0,prev);state.pl.n=state.pl.items.length;mutate();renderPlan();}
+  const{i,prev,ins,all}=planUndo;planUndo=null;
+  if(all){state.pl.items=[...all,...state.pl.items].slice(0,10);state.pl.n=state.pl.items.length;mutate();renderPlan();}
+  else if(ins){state.pl.items.splice(Math.min(i,state.pl.items.length),0,prev);state.pl.n=state.pl.items.length;mutate();renderPlan();}
   else if(state.pl.items[i]){state.pl.items[i]=prev;mutate();renderPlan();}
   hideToast();
 });
@@ -281,11 +285,13 @@ function planChkOpen(){
 function renderChk(){
   if(!planChk)return;
   const{rows,off,xs}=planChk;
-  const row=e=>{const o=off.has(e.key);return`<li><button type="button" class="ar${o?" off":""}" data-pc="${esc(e.key)}" aria-pressed="${!o}"><span class="ack">${ico("check")}</span><span class="an">${esc(e.name)}${o?"<small>on jo kaapissa</small>":""}</span><span class="aq">${esc(qtyText(e))}</span></button></li>`;};
+  /* pienellä: mihin ruokiin aines menee; järjestys kaupan osastojen mukaan (sama kuin ostoslistalla) */
+  const row=e=>{const o=off.has(e.key),fr=e.from.join(", ");return`<li><button type="button" class="ar${o?" off":""}" data-pc="${esc(e.key)}" aria-pressed="${!o}"><span class="ack">${ico("check")}</span><span class="an">${esc(e.name)}${o?"<small class=\"ak\">on jo kaapissa</small>":""}${fr?`<small class="af">${esc(fr)}</small>`:""}</span><span class="aq">${esc(qtyText(e))}</span></button></li>`;};
   const cnt=rows.length-off.size+xs.length;
+  const gs=groupDeps(rows,[],state.store);
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">Tarkista kaappi</h2>
-    <p class="note">Napauta pois ainekset, jotka löytyvät jo kotoa. Tavalliset kaappitavarat on valmiiksi rastitettu pois.</p>
-    <ul class="al">${rows.map(row).join("")}</ul>
+    <p class="note">Napauta pois ainekset, jotka löytyvät jo kotoa. Tavalliset kaappitavarat on valmiiksi rastitettu pois.${state.store?` Järjestys: ${esc(storeName(state.store))}.`:""}</p>
+    ${gs.map(g=>`<h4 class="ag">${esc(g.name)}</h4><ul class="al">${g.items.map(row).join("")}</ul>`).join("")}
     ${xs.length?`<h4 class="ag">Vakiot ja tuotteet</h4><p class="note">${xs.map(k=>esc(capF(k))).join(", ")}</p>`:""}
     <div class="actions"><button type="button" class="go" data-pc-ok="1" style="width:100%">Lisää ostoslistalle (${cnt})</button></div>`;
 }
@@ -293,15 +299,17 @@ function planShop(){
   if(!planChk)return;
   const pl=state.pl,{items,xs,off}=planChk;
   const l=newList();
-  const d=new Date();l.name=clip(`Suunnitelma ${d.getDate()}.${d.getMonth()+1}.`,40);
   l.pl=items;
   l.x=xs.map(k=>({k,q:""}));
   l.have=[...off];
+  /* suunnitelma tyhjenee, kun ruoat ovat listalla; kumoa palauttaa ruoat suunnitelmaan (lista jää) */
+  planUndo={all:pl.items};pl.items=[];pl.n=0;
   pl.vo=[];planChk=null;
   $("pkdlg").close();
-  mutate();
-  flashToast(`<span>Lisätty ostoslistalle <b>${esc(l.name)}</b></span>`);
+  mutate();renderPlan();
+  /* välilehden vaihto piilottaa ilmoitukset, joten ilmoitus vasta sen jälkeen */
   showTab("cart");
+  undoToast(`Lisätty ostoslistalle <b>${esc(l.name)}</b>. Suunnitelma tyhjennettiin.`,'data-pundo="1"',"Palauta suunnitelma");
 }
 $("pkbody").addEventListener("input",e=>{if(e.target.id==="ppq"&&planPick){planPick.q=e.target.value;const pos=e.target.selectionStart;renderPick();const i=$("ppq");i.focus();try{i.setSelectionRange(pos,pos);}catch(x){}}});
 $("pkbody").addEventListener("click",e=>{

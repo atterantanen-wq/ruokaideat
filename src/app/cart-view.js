@@ -6,7 +6,7 @@ import {actList,state,applyTheme,mutate} from "./state.js";
 import {byId,inCart} from "./ideas.js";
 import {applyLay,renderIdeas} from "./search.js";
 import {DEPS} from "./price-updates.js";
-import {typeOf,storeName,XSUG,XD,OTS,otOf,listItems,needed,groupDeps,packInfo,perText,xQty,itemCost,pillText,rowSub,qtyMain,flashToast,undoToast,hideToast,lg,sNew,renderStoreDlg,viewId,renaming,setViewId,vList} from "./cart.js";
+import {typeOf,storeName,XSUG,XD,OTS,otOf,listItems,needed,groupDeps,packInfo,perText,xQty,itemCost,pillText,rowSub,qtyMain,flashToast,undoToast,hideToast,lg,sNew,renderStoreDlg,viewId,renaming,setViewId,vList,listRecs} from "./cart.js";
 import {curTab} from "./tabs.js";
 import {uiEdit} from "./editor.js";
 import {LOGO} from "../data/logos.js";
@@ -39,7 +39,7 @@ function listStatus(l){
 function renderOverview(){
   const ls=[...state.lists].reverse();
   const cards=ls.map(l=>{
-    const names=l.cart.map(id=>(byId(id)||{}).name).filter(Boolean),stt=listStatus(l);
+    const names=listRecs(l).map(r=>r.name),stt=listStatus(l);
     return`<div class="lcw"><button type="button" class="lcard" data-lst="open" data-lid="${esc(l.id)}"><span class="lt"><b>${esc(l.name)}</b></span>${l.store?`<span class="lst">${lg(typeOf(l.store))}<span>${esc(storeName(l.store))}</span></span>`:""}${names.length?`<span class="lr">${esc(names.join(", "))}</span>`:`<span class="lr">Tyhjä lista</span>`}${stt?`<span class="lm">${esc(stt)}</span>`:""}</button><button type="button" class="dots" data-lst="menu" data-lid="${esc(l.id)}" aria-haspopup="dialog" aria-label="Valikko: ${esc(l.name)}">${ico("dots")}</button></div>`;
   }).join("");
   $("abx").innerHTML=curTab==="cart"?`<button type="button" class="cartbtn" data-lst="create">${ico("plus")}<span>Uusi lista</span></button>`:"";
@@ -122,7 +122,7 @@ export function renderCart(){
     body.innerHTML=head+`<p class="note">Lista on tyhjä. Paina ruoan kohdalla Lisää ostoslistalle, niin ainekset kerääntyvät tähän. Voit valita useita ruokia, jolloin samat tuotteet lasketaan yhteen.</p>`+`<div class="actions"><button class="go" type="button" data-tab-go="ideas">Selaa ruokaideoita</button></div>`+xBar();
     return;
   }
-  const st=listStats(l),chosen=l.cart.map(byId).filter(Boolean);
+  const st=listStats(l),chosen=listRecs(l);
   const noIng=chosen.filter(r=>!r.ing.length);
   const li=e=>{
     const h=l.have.includes(e.key),c=l.checked.includes(e.key),k=esc(e.key),nmx=esc(e.name);
@@ -165,7 +165,7 @@ function shareText(l){
   if(!items.length)return"";
   const sh=e=>qtyMain(e,l).replace(/^1 × /,"");
   const nm=e=>e.name.replace(/^Wc-/,"WC-");
-  const rec=l.cart.map(id=>(byId(id)||{}).name).filter(Boolean);
+  const rec=listRecs(l).map(r=>r.name);
   let out="*🛒 "+l.name+"* ("+items.length+" "+(items.length===1?"tuote":"tuotetta")+")\n";
   if(rec.length)out+="_"+rec.join(", ")+"_\n";
   for(const g of groupDeps(items,[],l.store))out+="\n*"+g.name+"*\n"+g.items.map(e=>("• "+nm(e)+" "+sh(e)).trim()).join("\n")+"\n";

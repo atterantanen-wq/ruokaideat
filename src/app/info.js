@@ -137,7 +137,7 @@ export function renderDlg(){
     (url&&!ing.length?`<p class="note">Aineksia ei ole tallennettu, joten tämä ruoka ei lisää tuotteita ostoslistalle.</p>`:"")+
     (!url&&!ing.length&&!sl.steps.length?`<p class="note">Tähän ruokaan ei ole tallennettu aineksia eikä ohjetta.</p>`:"")+
     tagsHtml(r,"tags")+(r.src&&r.src.length?libSrcHtml(r):srcHtml(r,url))+
-    sdOnLink(r)+`<p class="cpy"><button type="button" class="clear" data-copy="${esc(r.id)}">Tee oma kopio</button></p><div class="actions"><div class="sdslot" id="sdslot">${sdFor===r.id?sdRowHtml(r):""}</div>${(()=>{const fl=dlgList&&state.lists.find(q=>q.id===dlgList);return fl&&fl.cart.includes(r.id)?`<button type="button" class="cartbtn rmfl" data-rmfl="${esc(r.id)}" data-lid="${esc(fl.id)}">${ico("x")}<span>Poista listalta: ${esc(fl.name)}</span></button>`:cartBtn(r);})()}<button type="button" class="cartbtn" data-edit="${esc(r.id)}">${ico("pencil")}<span>Muokkaa</span></button></div>`;
+    sdOnLink(r)+`<p class="cpy"><button type="button" class="clear" data-copy="${esc(r.id)}">Tee oma kopio</button></p><div class="actions"><div class="sdslot" id="sdslot">${sdFor===r.id?sdRowHtml(r):""}</div>${(()=>{const fl=dlgList&&state.lists.find(q=>q.id===dlgList);return fl&&(fl.cart.includes(r.id)||(fl.pl||[]).some(e=>e.id===r.id))?`<button type="button" class="cartbtn rmfl" data-rmfl="${esc(r.id)}" data-lid="${esc(fl.id)}">${ico("x")}<span>Poista listalta: ${esc(fl.name)}</span></button>`:cartBtn(r);})()}<button type="button" class="cartbtn" data-edit="${esc(r.id)}">${ico("pencil")}<span>Muokkaa</span></button></div>`;
 }
 export function openDlg(id,fl){
   /* pääraaka-ainesuodatin päällä: avataan versio, joka vastaa suodatinta */
