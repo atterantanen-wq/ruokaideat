@@ -18,6 +18,8 @@ Object.assign(IC,{
   shuffle:'<path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M20 20l-5-5M4 4l5 5"/>',
   minus:'<path d="M6 12h12"/>'
 });
+/* kaappi (pantry-view.js): ehdotusnäkymän sisäänkäynti ja kaapin tarkistuksen esivalinta */
+export const planHooks={entry:()=>"",have:null};
 let planCount=4,planAdd=null,planNew=-1,planPick=null,planEdit=null,planChk=null,planUndo=null,planOpen={sn:false,bk:false,vk:false};
 const fmtN=n=>String(Math.round(n*2)/2).replace(".",",");
 /* reseptin raaka-ainerivit valitulla annosmäärällä, versiolla ja muunnelmilla (t = null: ruoan omat valinnat) */
@@ -156,11 +158,12 @@ export function renderPlan(){
   const stepper=(pa,lbl,v,min,max,aria)=>`<div class="pn-step"><span>${lbl}</span><div><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="-1" aria-label="Vähemmän ${aria}"${v<=min?" disabled":""}>${ico("minus")}</button><b>${v}</b><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="1" aria-label="Enemmän ${aria}"${v>=max?" disabled":""}>${ico("plus")}</button></div></div>`;
   h.innerHTML=`
     ${rows?`<ol class="pn-list">${rows}</ol>`:""}
-    ${pl.items.length?(pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`):`
+    ${pl.items.length?(pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>${planHooks.entry()}`):`
     <div class="pn-empty"><p class="pn-lead">Kokoa tulevien päivien ruoat, niin ainekset menevät kerralla ostoslistalle.</p>
       <button type="button" class="go pn-add1" data-pa="add">${ico("plus")}<span>Lisää ruoka</span></button></div>
     <div class="pn-four"><p class="note">Tai anna sovelluksen ehdottaa useampi kerralla:</p>
-      <div class="pn-fr">${stepper("cnt","",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div></div>`}
+      <div class="pn-fr">${stepper("cnt","",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div></div>
+    ${planHooks.entry()}`}
     ${PL_EXTRAS?`
     <h3 class="pn-sec">Lisäksi kaupasta</h3>
     <section class="pn-card">
@@ -279,7 +282,7 @@ function planChkOpen(){
   const xs=[...new Set([...(PL_EXTRAS?state.vk.filter(k=>!state.pl.vo.includes(k)):[]),...state.pl.items.flatMap(it=>it.px||[])])];
   if(!items.length&&!xs.length){flashToast("Suunnitelmassa ei ole ruokia.");return;}
   const rows=shopping([],items.map(e=>({r:byId(e.id),lines:ingFor(byId(e.id),e.n,e.v,e.t)})));
-  const off=new Set(rows.filter(e=>pantryHit(e.key)).map(e=>e.key));
+  const hv=planHooks.have||pantryHit,off=new Set(rows.filter(e=>hv(e.key)).map(e=>e.key));
   planChk={items,xs,rows,off};planAdd=null;planEdit=null;planPick=null;renderChk();$("pkdlg").showModal();
 }
 function renderChk(){
@@ -290,7 +293,7 @@ function renderChk(){
   const cnt=rows.length-off.size+xs.length;
   const gs=groupDeps(rows,[],state.store);
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">Tarkista kaappi</h2>
-    <p class="note">Napauta pois ainekset, jotka löytyvät jo kotoa. Tavalliset kaappitavarat on valmiiksi rastitettu pois.${state.store?` Järjestys: ${esc(storeName(state.store))}.`:""}</p>
+    <p class="note">Napauta pois ainekset, jotka löytyvät jo kotoa. Tavalliset kaappitavarat ja kaappiin merkityt on valmiiksi rastitettu pois.${state.store?` Järjestys: ${esc(storeName(state.store))}.`:""}</p>
     ${gs.map(g=>`<h4 class="ag">${esc(g.name)}</h4><ul class="al">${g.items.map(row).join("")}</ul>`).join("")}
     ${xs.length?`<h4 class="ag">Vakiot ja tuotteet</h4><p class="note">${xs.map(k=>esc(capF(k))).join(", ")}</p>`:""}
     <div class="actions"><button type="button" class="go" data-pc-ok="1" style="width:100%">Lisää ostoslistalle (${cnt})</button></div>`;

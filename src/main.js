@@ -1,11 +1,12 @@
 /* Sovelluksen sisäänkäynti. Moduulit (src/app) suoritetaan samassa järjestyksessä kuin ne olivat
    alkuperäisessä main.js:ssä: jokainen moduuli tuo ensimmäisenä edeltäjänsä, ja tämä tiedosto tuo
    ketjun viimeisen. Järjestys: core, prices, catalog, state, ideas, search, price-updates, cart,
-   cart-add, cart-view, info, tabs, registry, editor, clicks, backup, cook, start, plan-view. */
+   cart-add, cart-view, info, tabs, registry, editor, clicks, backup, cook, start, plan-view, pantry-view. */
 import "./styles/fonts.css";
 import "./styles/tokens.css";
 import "./styles/theme.css";
 import "./styles/main.css";
+import "./app/pantry-view.js";
 import {ingFor,plCostPer,plCands,plDefaults,autoN} from "./app/plan-view.js";
 import {R,parseIng} from "./app/core.js";
 import {catFind,recipeNut,nutPer,findPrice,nameSkip,isSkip,selR,recipeCost} from "./app/catalog.js";

@@ -275,6 +275,71 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
+test("kaappi: logiikka (järjestys, vanheneminen)", async () => {
+  const KP = await import("../src/pantry.js");
+  const have = KP.haveMap([{ k: "@kana", d: "2026-11-20" }, { k: "peruna", d: "2026-11-20" }]);
+  ok(have.has("broilerinfilee") && have.get("broilerinfilee") === "@kana", "ryhmä ei kata kanaa");
+  const r = KP.rank([
+    { id: "a", need: ["naudanliha", "ruokakerma"], main: ["naudanliha"] },
+    { id: "b", need: ["broilerinfilee", "peruna", "tilli"], main: ["broilerinfilee"] },
+    { id: "c", need: ["broilerinfilee", "kerma x"], main: ["broilerinfilee"] },
+    { id: "c", v: "v2", need: ["broilerinfilee", "kerma x", "paprika"], main: ["broilerinfilee"] },
+    { id: "d", need: ["lohifile"], main: ["lohifile"] },
+  ], have, new Set(["@kana"]));
+  ok(r.map((x) => x.id).join() === "b,c", "järjestys väärin: " + r.map((x) => x.id).join());
+  ok(r[0].miss.length === 0 && r[0].minor.join() === "tilli", "yrtti laskettiin puuttuvaksi");
+  ok(r[1].v === "" && r[1].miss.join() === "kerma x", "paras versio väärin");
+  ok(KP.rank([{ id: "a", need: ["naudanliha", "peruna"], main: ["naudanliha"] }], have).every((x) => x.mainMiss === 1), "puuttuva pääraaka-aine");
+  ok(KP.shortlist(KP.rank([{ id: "a", need: ["naudanliha", "peruna"], main: ["naudanliha"] }], have)).length === 1, "varalista puuttuu");
+  ok(KP.daysLeft({ k: "@kana", d: "2026-11-20" }, "2026-11-25", 10) === 2, "kanan päivät väärin");
+  ok(KP.daysLeft({ k: "peruna", d: "2026-11-01" }, "2026-11-25", 0) === null, "peruna vanhenee");
+  ok(KP.prune([{ k: "@kana", d: "2026-11-10" }, { k: "@pasta", d: "2026-01-01" }], "2026-11-25", () => 18).map((x) => x.k).join() === "@pasta", "vanhentunut jäi kaappiin");
+});
+
+test("kaappi: merkintä, ehdotukset, lisäys suunnitelmaan ja kaapin tarkistus", async () => {
+  await fresh();
+  await click('.tab[data-tab="plan"]'); await wait(300);
+  await click('[data-kpo]'); await wait(200);
+  ok(await page.evaluate(() => document.getElementById("kpdlg").open), "kaappi ei auennut");
+  for (const k of ["@kana", "peruna", "@kerma"]) await click(`#kpbody [data-ka="${k}"]`);
+  /* haku: hakusana löytää aineksen, ja ryhmään kuuluva näytetään ryhmänä */
+  await page.fill("#kpq", "broilerin"); await wait(150);
+  ok(await page.evaluate(() => !!document.querySelector('#kpbody .chip:disabled') || !document.querySelector('#kpbody [data-ka="broilerinfilee"]')), "ryhmän aines näkyy erikseen");
+  await page.fill("#kpq", "tomaattimu"); await wait(150);
+  await click('#kpbody [data-ka="tomaattimurska"]'); await wait(100);
+  /* perusaine pois */
+  await click('#kpbody [data-kb]'); await wait(100);
+  await click('#kpbody [data-kn="oregano"]'); await wait(100);
+  const st = await page.evaluate(() => window.__app.state.kp);
+  ok(st.h.map((x) => x.k).join() === "@kana,peruna,@kerma,tomaattimurska", "kaappi väärin: " + JSON.stringify(st));
+  ok(st.no.includes("oregano"), "perusaineen poisto ei tallentunut");
+  await click('#kpbody .kp-foot [data-kv="sg"]'); await wait(200);
+  const sg = await page.$$eval("#kpbody .kp-sg", (x) => x.map((e) => e.innerText));
+  ok(sg.length >= 5, "ehdotuksia vain " + sg.length);
+  ok(/Kaikki löytyy|Puuttuu 1:/.test(sg[0]), "paras ehdotus ei ole lähes valmis: " + sg[0]);
+  ok(sg.every((t) => !/Puuttuu [4-9]/.test(t)), "liian kaukaisia ehdotuksia");
+  const id = await page.evaluate(() => document.querySelector("#kpbody [data-kadd]").dataset.kadd);
+  await click("#kpbody [data-kadd]"); await wait(150);
+  ok(await page.evaluate((id) => window.__app.state.pl.items.some((x) => x.id === id), id), "ehdotus ei mennyt suunnitelmaan");
+  ok(await page.evaluate((id) => !document.querySelector(`#kpbody [data-kadd="${id}"]`), id), "lisätty näkyy yhä lisättävänä");
+  await click("#kpbody [data-kx]"); await wait(150);
+  ok(await page.evaluate(() => /Kaapissa: kana, peruna, kerma \+1/.test(document.querySelector(".kp-entry").innerText)), "sisäänkäynnissä ei näy kaappia");
+  /* kaapin tarkistus: kaappiin merkitty kana on valmiiksi pois, puuttuvaksi merkitty perusaine ei */
+  await click('[data-pa="shop"]'); await wait(300);
+  const off = await page.evaluate(() => [...document.querySelectorAll("#pkbody .ar")].map((b) => [b.dataset.pc, b.classList.contains("off")]));
+  const kana = off.filter(([k]) => /broiler|kana/.test(k));
+  ok(kana.length && kana.every(([, o]) => o), "kaappiin merkitty kana ei ole valmiiksi pois: " + JSON.stringify(off));
+  ok(off.filter(([k]) => k === "oregano").every(([, o]) => !o), "puuttuvaksi merkitty perusaine rastitettiin pois");
+  await closeAll();
+  /* säilyy uudelleenlatauksessa, vanhentuneet tuoretuotteet poistuvat */
+  await page.evaluate(() => { const s = JSON.parse(localStorage.getItem("ruokaideat-v1")); s.kp.h[0].d = "2020-01-01"; localStorage.setItem("ruokaideat-v1", JSON.stringify(s)); });
+  await reloadApp();
+  await click('.tab[data-tab="plan"]'); await wait(300);
+  const h = await page.evaluate(() => window.__app.state.kp.h.map((x) => x.k).join());
+  ok(h === "peruna,@kerma,tomaattimurska", "vanhentunut kana jäi kaappiin: " + h);
+  await click('.tab[data-tab="ideas"]');
+});
+
 /* Design system -tarkistukset. Ajetaan selaimessa page.evaluate:lla. */
 /* Kontrasti: jokainen näkyvä teksti WCAG 2.2 AA (4.5:1, iso teksti 3:1). Kuvan päällä olevia tekstejä ei mitata. */
 function contrastAudit() {
@@ -338,7 +403,9 @@ const tab = (v) => () => click(`.tab[data-tab="${v}"]`);
 test("tyylit: kontrasti ja asettelu kaikilla välilehdillä ja reseptissä", async () => {
   const prev = await page.evaluate(() => document.documentElement.dataset.theme);
   await auditViews([["ideat", tab("ideas")], ["suunnitelma", tab("plan")], ["lisää", tab("add")], ["ostoslista", tab("cart")],
-    ["resepti", async () => { await tab("ideas")(); await click("#list .card [data-open]"); }]], "tyylit");
+    ["resepti", async () => { await tab("ideas")(); await click("#list .card [data-open]"); }],
+    ["kaappi", async () => { await tab("plan")(); await click("[data-kpo]"); await click('#kpbody .kp-seg [data-kv="kp"]'); await page.evaluate(() => { for (const k of ["@kana", "peruna"]) { const b = document.querySelector(`#kpbody [data-ka="${k}"]`); if (b) b.click(); } document.querySelector("#kpbody [data-kb]").click(); }); }],
+    ["kaapin ehdotukset", async () => { await tab("plan")(); await click("[data-kpo]"); await click('#kpbody .kp-seg [data-kv="sg"]'); }]], "tyylit");
   await page.evaluate((th) => { document.documentElement.dataset.theme = th; }, prev);
   await click('.tab[data-tab="ideas"]');
 });

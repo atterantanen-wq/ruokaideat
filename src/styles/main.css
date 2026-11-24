@@ -1080,3 +1080,46 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-click{cursor:pointer}
 .pn-more{display:inline-block;margin:8px 0 0;font-size:.875rem}
 .pn-act .pn-ib{width:44px;height:44px}
+
+/* ---------- kaappi: ehdotukset kaapin aineksista (src/app/pantry-view.js) ---------- */
+.kp-entry{font:inherit;display:flex;align-items:center;gap:var(--sp-3);width:100%;min-height:var(--h-lg);margin:var(--sp-4) 0 var(--sp-3);padding:var(--sp-3) var(--sp-4);background:var(--c-surface);color:var(--c-ink);border:0;border-radius:var(--r-lg);box-shadow:var(--sh-1);text-align:left;cursor:pointer}
+.kp-entry>.ico{flex:none;width:28px;height:28px;color:var(--c-primary)}
+.kp-entry>.ico:last-child{width:20px;height:20px;color:var(--c-muted)}
+.kp-entry span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kp-entry b{font-size:var(--fs-base);font-weight:var(--fw-bold)}
+.kp-entry small{font-size:var(--fs-sm);color:var(--c-muted);line-height:var(--lh-tight)}
+#v-plan .pn-addb+.kp-entry{margin-top:0}
+#kpdlg{margin:auto auto 0;width:100%;max-width:580px;max-height:88vh;border-radius:var(--r-xl) var(--r-xl) 0 0}
+#kpdlg .pn-h{font-family:inherit}
+#kpdlg .chips{margin-top:var(--sp-1)}
+#kpdlg .chip{display:inline-flex;align-items:center;gap:var(--sp-1);min-height:var(--tap-min)}
+#kpdlg .chip .ico{width:16px;height:16px;flex:none}
+#kpdlg input[type=search]{width:100%;min-height:var(--h-md);border:1.5px solid var(--c-field-line);border-radius:var(--r-md);padding:0 var(--sp-3);font:inherit;font-size:var(--fs-base);background:var(--c-bg);color:var(--c-ink);margin:var(--sp-1) 0 var(--sp-2)}
+.kp-seg{margin:0 0 var(--sp-3)}
+#kpdlg .kp-on{background:var(--c-primary-soft);color:var(--c-ink);border-color:var(--c-primary-soft);box-shadow:none;font-weight:var(--fw-semibold)}
+#kpdlg .kp-on .ico{margin-left:2px;color:var(--c-muted)}
+.kp-d{font-weight:var(--fw-regular);color:var(--c-muted);font-size:var(--fs-sm)}
+#kpdlg .kp-on.soon{background:var(--c-danger-soft);border-color:var(--c-danger-soft)}
+#kpdlg .kp-on.soon .kp-d{color:var(--c-danger);font-weight:var(--fw-semibold)}
+.kp-bas{margin:var(--sp-5) 0 0;border:1.5px solid var(--c-line);border-radius:var(--r-lg);padding:0 var(--sp-3) var(--sp-1)}
+.kp-bh{font:inherit;display:flex;align-items:center;gap:var(--sp-2);width:100%;min-height:var(--h-lg);padding:var(--sp-2) 0;background:none;border:0;color:var(--c-ink);text-align:left;cursor:pointer}
+.kp-bh span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kp-bh small{font-size:var(--fs-sm);color:var(--c-muted)}
+.kp-bh .ico{flex:none;width:20px;height:20px;color:var(--c-muted)}
+.kp-bas .note{margin:0 0 var(--sp-1)}
+.kp-bas .chips{padding-bottom:var(--sp-3)}
+.kp-foot{position:sticky;bottom:0;background:var(--c-surface);padding:var(--sp-3) 0 var(--sp-1);margin-top:var(--sp-4)}
+.kp-clr{text-align:center;margin:0}
+.kp-sgs{list-style:none;margin:0;padding:0}
+.dl ul.kp-sgs li.kp-sg{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:0;border-top:1px solid var(--c-line)}
+.dl ul.kp-sgs li.kp-sg:first-child{border-top:0}
+.kp-sgt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kp-sgt small{font-size:var(--fs-sm);color:var(--c-muted);line-height:var(--lh-tight)}
+.kp-nm{font:inherit;font-weight:var(--fw-bold);font-size:var(--fs-base);text-align:left;padding:var(--sp-1) 0;min-height:32px;background:none;border:0;color:var(--c-ink);cursor:pointer;overflow-wrap:anywhere}
+.kp-miss{font-size:var(--fs-sm);font-weight:var(--fw-semibold);color:var(--c-ink)}
+.kp-all{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);font-weight:var(--fw-semibold);color:var(--c-success-ink)}
+.kp-all .ico{width:15px;height:15px;stroke-width:3}
+.kp-sg .kp-add{flex:none;min-height:var(--tap-min);padding:0 var(--sp-3);font-size:var(--fs-md);gap:var(--sp-1);align-self:center}
+.kp-sg .kp-add .ico{width:16px;height:16px}
+#kpdlg .kp-bas .chip[aria-pressed="true"]{background:var(--c-primary-soft);border-color:var(--c-primary-soft);color:var(--c-ink);font-weight:var(--fw-medium)}
+#kpdlg .kp-bas .chip[aria-pressed="false"]{color:var(--c-muted);text-decoration:line-through;border-color:var(--c-line)}
