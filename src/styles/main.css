@@ -1033,7 +1033,7 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-head{padding:4px 2px 8px}
 .pn-head .pn-step>span{font-weight:600}
 .pn-head .pn-ib{background:var(--surface)}
-#v-plan .pn-list{display:grid;gap:12px;margin:4px 0 12px}
+#v-plan .pn-list{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:4px 0 12px}
 #v-plan .pn-item{display:block;padding:14px 16px;border:0;border-radius:20px;background:var(--surface);box-shadow:0 2px 12px rgba(0,0,0,.06)}
 #v-plan .pn-addb{background:var(--surface);border:2px dashed var(--line);border-radius:20px;min-height:60px;margin:0 0 12px;box-shadow:none}
 .pn-empty{background:var(--surface);border-radius:20px;padding:18px 16px 16px;margin:4px 0 14px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -1049,8 +1049,9 @@ body:not([data-view="ideas"]) .spill{display:none}
 #pkdlg .an small.af{font-size:.75rem;color:var(--muted);margin-top:1px}
 #pkdlg .ar.off .an small.af{color:var(--dis-ink)}
 .pn-sec{font-family:var(--fd);font-size:1.35rem;font-weight:600;margin:22px 2px 10px}
-.pn-lab{font:inherit;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:999px;padding:4px 10px;margin:0 0 6px;min-height:28px;cursor:pointer}
-.pn-lab-a{background:var(--gr-bg);color:var(--gr-ink)}
+/* laput: tavallinen kirjainkoko (luetaan nopeammin kuin VERSAALIT), yhdellä rivillä, ylipitkä nimi lyhennetään … -merkillä */
+.pn-lab{font:inherit;font-size:var(--fs-sm);font-weight:var(--fw-semibold);border:0;border-radius:var(--r-pill);padding:0 12px;margin:0 0 6px;min-height:36px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.pn-lab-a{background:var(--c-primary-soft);color:var(--c-primary-ink)}
 .pn-lab-w{background:var(--or-bg);color:var(--or-ink)}
 .pn-opts{display:grid;gap:8px}
 .pn-opt{font:inherit;display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:12px 14px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);cursor:pointer;min-height:56px}
@@ -1066,7 +1067,7 @@ body:not([data-view="ideas"]) .spill{display:none}
 .pn-nm .pn-lab{display:inline-block}
 .pn-nm .pn-name{display:block}
 .pn-labs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
-.pn-labs .pn-lab{margin:0}
+.pn-labs .pn-lab{margin:0;min-width:0}
 .pn-lab-x{background:var(--bg);color:var(--ink)}
 .pn-lab-x.none{background:transparent;border:1.5px dashed var(--line);color:var(--muted)}
 /* suunnitelman kortti: tyyppi ja napit, nimi, valinnat, annokset ja hinta */
