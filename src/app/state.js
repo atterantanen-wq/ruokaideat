@@ -213,7 +213,7 @@ async function flush(){
 export function persist(){lsSave();if(!remote)return;dirty=true;if(!saving)flush();}
 export function applyTheme(){const t=state.th||"auto",d=t==="dark"||(t==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);document.documentElement.dataset.theme=d?"dark":"light";document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.th===(state.th||"auto")));applyLay();}
 try{matchMedia("(prefers-color-scheme:dark)").addEventListener("change",applyTheme);}catch(e){}
-const BAR={plan:"Seuraavat ruoat",ideas:"Mitä tänään syödään?",add:"Lisää oma ruoka",cart:"Ostoslistat",reg:"Ainesosarekisteri"};
+const BAR={plan:"Seuraavat ruoat",ideas:"Ruokaideat",add:"Lisää oma ruoka",cart:"Ostoslistat",reg:"Ainesosarekisteri"};
 export function setBar(n,t){document.body.dataset.view=n;$("ttl").textContent=t||BAR[n];}
 export function mutate(){touched=true;persist();try{updBadge();}catch(e){}}
 
