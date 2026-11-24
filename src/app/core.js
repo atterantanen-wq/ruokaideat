@@ -7,7 +7,7 @@ export const A={a:"Arkiruoka",j:"Viikonloppu ja juhla",b:"Aamu-, väli- ja iltap
 export const T={pa:"Pata",ki:"Kiusaus",ke:"Keitto",uu:"Uuniruoka",pn:"Pannulla",ps:"Pasta ja riisi",pu:"Puuro",am:"Aamiainen",sa:"Salaatti",le:"Leivonta",ja:"Jälkiruoka",li:"Lisuke",wo:"Wokit ja nuudelit",pi:"Pizza",ha:"Hampurilaiset ja täytetyt leivät",vp:"Välipala",al:"Alkupala"};
 export const M={j:"Jauheliha",k:"Kana",f:"Kala",p:"Porsas",n:"Nauta",s:"Makkara",v:"Kasvis",e:"Muna",y:"Kasviproteiini"};
 
-export const TIME={"15":"Enintään 15 min","30":"Enintään 30 min","60":"Enintään 60 min","61":"Yli 60 min"};
+export const TIME={"10":"Enintään 10 min","20":"Enintään 20 min","30":"Enintään 30 min","31":"Yli 30 min"};
 export const WLD={it:"Italialainen",tm:"Texmex",as:"Aasialainen",in:"Intialainen",am:"Amerikkalainen",vm:"Välimeri"};
 export const HOL={jo:"Joulu",pa:"Pääsiäinen",ju:"Juhannus",va:"Vappu"};
 export const KQ=["ai","gl"];

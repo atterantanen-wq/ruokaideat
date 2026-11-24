@@ -285,7 +285,7 @@ function sortRes(a){
   const num=(f)=>(x,y)=>{const u=f(x),v=f(y);if(u==null&&v==null)return nm(x,y);if(u==null)return 1;if(v==null)return-1;return u-v||nm(x,y);};
   const k=state.sort;
   if(k==="cheap")return a.sort(num(costPer));
-  if(k==="fast")return a.sort(num(r=>r.min>0?r.min:null));
+  if(k==="fast")return a.sort(num(r=>workOf(r)||(r.min>0?r.min:null)));
   if(k==="abc")return a.sort(nm);
   if(k==="views")return a.sort((x,y)=>((state.views[y.id]||0)-(state.views[x.id]||0))||(isFav(y.id)-isFav(x.id))||0);
   return a.sort((x,y)=>(isFav(y.id)-isFav(x.id))||0);
