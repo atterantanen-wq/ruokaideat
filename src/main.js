@@ -20,7 +20,7 @@ const FK=["a","m","s","v","w","t","f"];
 const HZ=new Set(["m:e","m:y","s:ai","s:gl","t:wo","t:pi","t:ha","t:vp","t:al"]);
 const hide0=(g,c)=>g==="w"||g==="f"||HZ.has(g+":"+c);
 const XLIM={t:12};
-const WORDS_WD=[["tm",/taco|tortilla|burrito|fajita|nacho|quesadilla|chili con|texmex|tex-mex/],["it",/pizza|pasta|spagetti|lasagne|risotto|bolognese|carbonara|gnocchi|penne|tagliatelle|pesto/],["in",/curry|tikka|masala|korma|butter chicken|dal\b|biryani|naan/],["as",/wok|nuudeli|ramen|sushi|pad thai|dumpling|kimchi|teriyaki|bibimbap|pho\b/],["am",/hampurilais|burger|hot dog|bbq|pulled/],["vm",/kreikka|tsatsiki|tzatziki|souvlaki|gyros|hummus|falafel|paella|ratatouille|moussaka/]];
+const WORDS_WD=[["tm",/taco|tortilla|burrito|fajita|nacho|quesadilla|chili con|texmex|tex-mex/],["it",/pizza|pasta|spagetti|lasagne|risotto|bolognese|carbonara|gnocchi|penne|tagliatelle|pesto/],["in",/curry|\btikka|masala|korma|butter chicken|\bdal\b|biryani|\bnaan/],["as",/wok|nuudeli|ramen|sushi|pad thai|dumpling|kimchi|teriyaki|bibimbap|pho\b/],["am",/hampurilais|burger|hot dog|bbq|pulled/],["vm",/kreikka|tsatsiki|tzatziki|souvlaki|gyros|hummus|falafel|paella|ratatouille|moussaka/]];
 const suggestWd=n=>{const t=String(n||"").toLowerCase();for(const[c,re]of WORDS_WD)if(re.test(t))return c;return"";};
 
 const $=id=>document.getElementById(id);
@@ -865,11 +865,24 @@ const byId=id=>all().find(r=>r.id===id);
 const inCart=id=>state.cart.includes(id);
 /* ---------- automaattiset tägit ---------- */
 const KEVYT_KCAL=500,KEVYT_SAT=7;
+/* Edullinen: pääruoista halvin kolmannes annoshinnan mukaan. Raja lasketaan kerran
+ * renderöintiä kohden ja seuraa näin hintojen ja reseptien muutoksia. */
+const CHEAP_T=new Set(["pa","ki","ke","uu","pn","ps","sa","wo","pi","ha"]),CHEAP_SHARE=1/3;
+const cheapPer=r=>{if(!CHEAP_T.has(r.t))return null;const c=recipeCost(r);return c.n&&!c.big&&!c.miss.length?c.sum/pvOf(r):null;};
+let cheapMemo=null;
+function cheapLimit(){
+  if(cheapMemo==null){
+    const a=all().map(cheapPer).filter(v=>v!=null).sort((x,y)=>x-y);
+    cheapMemo=a.length?a[Math.max(0,Math.ceil(a.length*CHEAP_SHARE)-1)]:-1;
+    queueMicrotask(()=>{cheapMemo=null;});
+  }
+  return cheapMemo;
+}
 function autoTags(r){
   const a=new Set();
   if(r.min>0&&r.min<=30)a.add("n");
-  const c=recipeCost(r),per=c.n&&!c.big?c.sum/pvOf(r):null;
-  if(per!=null&&!c.miss.length&&per<3)a.add("e");
+  const per=cheapPer(r);
+  if(per!=null&&per<=cheapLimit())a.add("e");
   const nu=nutPer(r);
   if(nu&&nu.full&&r.t!=="le"&&r.t!=="ja"&&nu.per.kcal<=KEVYT_KCAL&&nu.per.sat<=KEVYT_SAT)a.add("k");
   return a;
