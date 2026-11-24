@@ -1,7 +1,7 @@
 /* Viikonloppu- ja juhlaruoat sekä juhlapyhien perinneruoat */
 export default [
   {
-    n: "Lanttulaatikko", m: "v", t: "uu", min: 150, w: 30, sv: 8, fe: "jo", jf: true, pop: true,
+    n: "Lanttulaatikko", m: "v", t: "uu", min: 150, w: 30, sv: 8, fe: "jo", jf: true, pop: true, nopl: true,
     d: "Joulupöydän makeahko klassikko: lanttusose, kerma, siirappi ja inkivääri paistetaan uunissa tummaksi ja täyteläiseksi.",
     ing: ["lanttu 1.2 kg", "vesi 1 l", "suola 1.5 tl", "kuohukerma 2 dl", "korppujauho 1 dl", "kananmuna 2 kpl", "siirappi 0.75 dl", "inkivääri 0.5 tl", "muskotti 0.25 tl", "valkopippuri 0.25 tl", "voi 2 rkl"],
     steps: [
@@ -20,7 +20,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/lanttulaatikko/"], ["Martat", "https://www.martat.fi/reseptit/lanttulaatikko/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-lanttulaatikko/recipe-3926"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/37662/Lanttulaatikko/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/lanttulaatikko/"]],
   },
   {
-    n: "Imelletty perunalaatikko", m: "v", t: "uu", min: 480, w: 30, sv: 10, fe: "jo", jf: true, pop: true,
+    n: "Imelletty perunalaatikko", m: "v", t: "uu", min: 480, w: 30, sv: 10, fe: "jo", jf: true, pop: true, nopl: true,
     d: "Perunasose makeutuu lämpimässä itsestään, ja pitkä paisto antaa laatikolle tumman pinnan ja pehmeän makean sisuksen.",
     ing: ["peruna 2 kg", "vehnäjauho 4 rkl", "maito 8 dl", "voi 50 g", "suola 2 tl", "siirappi 2 rkl"],
     steps: [
@@ -93,7 +93,7 @@ export default [
     src: [["Martat", "https://www.martat.fi/reseptit/sima/"], ["Valio", "https://www.valio.fi/reseptit/sima/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/sima/recipe-2548"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/138944/Sima/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/sima/"]],
   },
   {
-    n: "Porkkanalaatikko", m: "v", t: "uu", min: 90, w: 30, sv: 8, fe: "jo", jf: true, pop: true,
+    n: "Porkkanalaatikko", m: "v", t: "uu", min: 90, w: 30, sv: 8, fe: "jo", jf: true, pop: true, nopl: true,
     d: "Porkkanasose ja riisipuuro yhdessä, kevyesti makeutettuna ja maustettuna. Joulupöydän laatikoista lempein.",
     ing: ["porkkana 1 kg", "vesi 5 dl", "suola 1.5 tl", "puuroriisi 1.5 dl", "maito 3 dl", "kananmuna 1 kpl", "siirappi 0.5 dl", "muskotti 0.25 tl", "valkopippuri 0.25 tl", "korppujauho 2 rkl", "voi 1 rkl"],
     steps: [
@@ -133,7 +133,7 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/munkit/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/munkit/recipe-2213"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/124855/Munkit/"], ["Valio", "https://www.valio.fi/reseptit/berliininmunkit/"]],
   },
   {
-    n: "Rosolli", m: "v", t: "sa", min: 60, w: 30, sv: 8, fe: "jo", jf: true,
+    n: "Rosolli", m: "v", t: "sa", min: 60, w: 30, sv: 8, fe: "jo", jf: true, nopl: true,
     d: "Joulupöydän värikäs salaatti kuutioiduista juureksista, omenasta ja suolakurkusta. Vaaleanpunainen kermakastike tarjotaan erikseen.",
     ing: ["peruna 300 g", "porkkana 300 g", "punajuuri 300 g", "suolakurkku 2 kpl", "omena 1 kpl", "sipuli 1 kpl", "suola 0.5 tl", "valkopippuri 0.25 tl", "# Kastike", "kuohukerma 2 dl", "etikka 1 tl", "sokeri 0.5 tl"],
     steps: [
@@ -182,7 +182,7 @@ export default [
     src: [["Martat", "https://www.martat.fi/reseptit/perinteinen-pasha/"], ["Valio", "https://www.valio.fi/reseptit/pasha/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/perinteinen-pasha/recipe-1647"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/13219/Pasha/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/pasha-kakku/"]],
   },
   {
-    n: "Joulukinkku", m: "p", t: "uu", min: 600, w: 30, sv: 20, fe: "jo", jf: true,
+    n: "Joulukinkku", m: "p", t: "uu", min: 600, w: 30, sv: 20, fe: "jo", jf: true, nopl: true,
     d: "Kokonainen suolattu kinkku kypsennetään matalassa lämmössä lihamittarin avulla ja kuorrutetaan lopuksi sinapilla ja korppujauholla.",
     ing: ["joulukinkku 6 kg", "vesi 3 dl", "sinappi 4 rkl", "fariinisokeri 2 rkl", "korppujauho 1 dl", "neilikka 10 kpl"],
     steps: [

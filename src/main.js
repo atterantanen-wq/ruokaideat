@@ -3802,7 +3802,7 @@ function plCands(){
   for(const l of state.lists)if(l.d>=lim){l.cart.forEach(i=>recent.add(i));(l.pl||[]).forEach(e=>recent.add(e.id));}
   const out=[];
   for(const r of all()){
-    if(!MEAL_MAIN.has(r.t)||r.perus||isBatch(r)||!r.ing.length)continue;
+    if(!MEAL_MAIN.has(r.t)||r.perus||r.nopl||isBatch(r)||!r.ing.length)continue;
     /* ruoat, jotka on merkitty vain aamu-, väli- tai iltapalaksi, eivät ole pääruokia */
     if((r.ml||[]).length&&!r.ml.includes("p")&&!r.ml.includes("l"))continue;
     const vegV=(r.vs||[]).find(v=>v.veg||v.m==="v"||v.m==="y"),fishV=(r.vs||[]).find(v=>v.m==="f");
@@ -3851,9 +3851,12 @@ function plItemCost(it){
 /* lisukkeen hinta annoksille n */
 function sdCost(s,n){const{id,v}=sdParse(s),x=byId(id);return x?plCostPer(x,v,[])*n:0;}
 const sdPrice=(s,n)=>{const c=sdCost(s,n);return c>0?eur1(c):"";};
+/* Lisäksi kaupasta (aamu- ja välipalat, leivonta, vakiot) ja hinta-arvio ovat vielä kesken: piilossa, kunnes valmiit */
+const PL_EXTRAS=false;
 function plTotals(){
   const pl=state.pl;let food=0,extra=0;
   for(const it of pl.items)food+=plItemCost(it);
+  if(!PL_EXTRAS)return{food,extra};
   for(const[id,n]of Object.entries(pl.sn)){const r=byId(id);if(r)extra+=plCostPer(r,"")*n;}
   for(const id of pl.bk){const r=byId(id);if(r)extra+=plCostPer(r,"")*servOf(r);}
   return{food,extra};
@@ -3907,6 +3910,7 @@ function renderPlan(){
     ${rows?`<ol class="pn-list">${rows}</ol>`:""}
     ${pl.items.length?"":`<div class="pn-card pn-four">${stepper("cnt","Ruokia",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four" style="width:100%;justify-content:center;margin-top:8px">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div>`}
     ${pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`}
+    ${PL_EXTRAS?`
     <h3 class="pn-sec">Lisäksi kaupasta</h3>
     <section class="pn-card">
       ${sec("sn","Aamu- ja välipalat",snSum,snInner)}${sec("bk","Leivonta",bkSum,bkInner)}${sec("vk","Vakiot ja tuotteet",vkSum,vkInner)}</section>
@@ -3914,8 +3918,8 @@ function renderPlan(){
     <section class="pn-card pn-sum"><div class="pn-sr"><span>Ruoat ja lisukkeet</span><b>${eur1(tot.food)}</b></div>${tot.extra>0?`<div class="pn-sr"><span>Aamu- ja välipalat, leivonta</span><b>${eur1(tot.extra)}</b></div>`:""}
       <div class="pn-bud"><label for="pba">Budjetti</label><input id="pba" type="number" inputmode="decimal" min="0" step="1" value="${pl.ba>0?pl.ba:""}" placeholder="ei" aria-label="Budjetti euroina"><span>€</span></div>
       ${pl.ba>0?`<div class="pn-bar${over?" over":""}"><i style="width:${Math.min(100,Math.round((tot.food+tot.extra)/pl.ba*100))}%"></i></div>${over?`<p class="note err">Budjetti ylittyy ${eur1(tot.food+tot.extra-pl.ba)}. Valitse Edullinen tai vaihda kalleimpia ruokia.</p>`:""}`:""}
-      <p class="note">Arvio lasketaan annoksista. Vakiot ja pakkauskoot näkyvät ostoslistan hinnassa.</p></section>
-    ${pl.items.length||snSel.length||pl.bk.length?`<div class="actions pn-foot"><button type="button" class="go" data-pa="shop" style="width:100%">${ico("tlist")}<span>Ostoslistalle · noin ${eur1(tot.food+tot.extra)}</span></button></div>`:""}`;
+      <p class="note">Arvio lasketaan annoksista. Vakiot ja pakkauskoot näkyvät ostoslistan hinnassa.</p></section>`:""}
+    ${pl.items.length||PL_EXTRAS&&(snSel.length||pl.bk.length)?`<div class="actions pn-foot"><button type="button" class="go" data-pa="shop" style="width:100%">${ico("tlist")}<span>Ostoslistalle · noin ${eur1(tot.food+tot.extra)}</span></button></div>`:""}`;
 }
 const plOthers=i=>state.pl.items.filter((x,j)=>j!==i&&x.id).map(x=>plCands().find(c=>c.id===x.id)).filter(Boolean);
 function planSwap(i,undo){
@@ -3995,7 +3999,7 @@ function planAddOpen(){
 function planTypeOpen(i,to){planAdd=null;planEdit={i,allSd:false,type:true};planPick=null;planChk=null;renderTypePl();$("pkdlg").showModal();
   const h=to==="ex"&&$("pt-ex");if(h)h.scrollIntoView({block:"start"});}
 function planEditOpen(i,to){planAdd=null;planEdit={i,allSd:false,only:to==="sd"||to==="tw"?to:""};planPick=null;planChk=null;renderEditPl();$("pkdlg").showModal();$("pkbody").scrollTop=0;}
-const vkOn=k=>state.vk.includes(k)&&!state.pl.vo.includes(k);
+const vkOn=k=>PL_EXTRAS&&state.vk.includes(k)&&!state.pl.vo.includes(k);
 /* muunnelma sopii valittuun siruun */
 const twFits=(m,tg)=>(tg.includes("k")&&/kevye|kevyt/i.test(m.n+" "+(m.d||"")))||(tg.includes("v")&&(m.m==="v"||/kasvis/i.test(m.n)))||(tg.includes("e")&&/edullis|halvem/i.test(m.n+" "+(m.d||"")));
 /* ---------- valitse itse ---------- */
@@ -4014,13 +4018,13 @@ function plShopItems(){
   const pl=state.pl,out=new Map();
   const add=(id,v,t,n)=>{if(!id||!(n>0)||!byId(id))return;const k=id+"|"+(v||"")+"|"+(t||[]).join(",");const e=out.get(k)||{id,v:v||"",t:t||[],n:0};e.n+=n;out.set(k,e);};
   for(const it of pl.items){if(!it.id)continue;const n=plN(it);add(it.id,it.v,it.t||[],n);for(const s of it.sd||[]){const{id,v}=sdParse(s);add(id,v,[],n);}}
-  for(const[id,n]of Object.entries(pl.sn))add(id,"",[],n);
-  for(const id of pl.bk){const r=byId(id);if(r)add(id,"",[],servOf(r));}
+  if(PL_EXTRAS){for(const[id,n]of Object.entries(pl.sn))add(id,"",[],n);
+    for(const id of pl.bk){const r=byId(id);if(r)add(id,"",[],servOf(r));}}
   return[...out.values()].map(e=>({...e,n:Math.round(e.n*2)/2}));
 }
 function planChkOpen(){
   const items=plShopItems();
-  const xs=[...new Set([...state.vk.filter(k=>!state.pl.vo.includes(k)),...state.pl.items.flatMap(it=>it.px||[])])];
+  const xs=[...new Set([...(PL_EXTRAS?state.vk.filter(k=>!state.pl.vo.includes(k)):[]),...state.pl.items.flatMap(it=>it.px||[])])];
   if(!items.length&&!xs.length){flashToast("Suunnitelmassa ei ole ruokia.");return;}
   const rows=shopping([],items.map(e=>({r:byId(e.id),lines:ingFor(byId(e.id),e.n,e.v,e.t)})));
   const off=new Set(rows.filter(e=>pantryHit(e.key)).map(e=>e.key));

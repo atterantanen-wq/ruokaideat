@@ -25,6 +25,7 @@
  *   perus  perusateria ilman reseptiä (ei lähdettä), ml aterian kohdat: a aamupala, l lounas, p päivällinen,
  *          v välipala, i iltapala, e eväs
  *   batch  erä: hinta koko erälle ja määrä erinä (leivonnaisissa aina); yu = kappaleiden yksikkö ("lasia", oletus "kpl")
+ *   nopl   ei ehdoteta Suunnitelmaan (joulupöydän lisukkeet, isot juhla-annokset); löytyy silti haulla
  *   wd, fe, jf, kq, mo  kuten ennenkin (maailmalta, juhlapyhä, juhlaruoka, airfryer/grilli, pääraaka-aine käsin)
  */
 
@@ -73,6 +74,7 @@ export function fromLib(e) {
     wd: e.wd || "",
     fe: e.fe || "",
     jf: !!e.jf,
+    nopl: !!e.nopl,
     kq: e.kq || [],
     pop: !!e.pop,
     serve: e.serve || "",

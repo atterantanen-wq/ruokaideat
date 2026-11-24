@@ -111,6 +111,12 @@ Muuten ohje neuvoo käyttämään ainesta, jota ei enää ole.
   `i` iltapala, `e` eväs. Suunnitelma käyttää tätä aamu- ja välipalojen valikoimaan. Jos kenttä puuttuu, kohta
   päätellään ruokalajista.
 
+## Suunnitelman ehdotukset
+
+- Suunnitelma ehdottaa pääruokia. Jos ruoka on pääruoan tyyppiä mutta tarjotaan lisukkeena tai sitä
+  tehdään vain isoon juhlapöytään (rosolli, joululaatikot, joulukinkku), merkitse `nopl: true`.
+  Ruoka löytyy silti haulla ja Valitse itse -listasta.
+
 ## Lisukkeet
 
 - Lisukkeet ovat tiedostossa `lisukkeet.js`, ja niillä on kiinteä tunniste `id: "k-…"`.

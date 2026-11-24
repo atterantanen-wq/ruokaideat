@@ -46,7 +46,7 @@ export function matches(c, tags) {
     if (t === "f" && !c.fish) return false;
     if (t === "w" && !c.wknd && !c.juhla) return false;
   }
-  /* juhlapyhien ruoat (joulukinkku ym.) eivät tule ehdotuksiin; ne löytyvät haulla */
+  /* vain juhlapyhään kuuluvat ruoat (holiday) eivät tule ehdotuksiin; ne löytyvät haulla */
   if (c.holiday) return false;
   return true;
 }

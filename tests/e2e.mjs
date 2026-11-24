@@ -177,7 +177,7 @@ test("leivonnaisissa hinta ja määrä erinä", async () => {
   await closeAll();
 });
 
-test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
+test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () => {
   await fresh();
   await click('.tab[data-tab="plan"]'); await wait(300);
   ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 0, "suunnitelma ei ala tyhjänä");
@@ -232,24 +232,19 @@ test("suunnitelma: ruoat siruilla, lisäostokset ja ostoslista", async () => {
   ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 4, "poisto ei onnistunut");
   await click('#toast [data-pundo]'); await wait(150);
   ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 5, "poiston kumoaminen ei onnistunut");
-  /* lisäostokset */
-  await click('[data-pa="xo"][data-k="sn"]'); await wait(100);
-  const sid = await page.$eval('[data-pa="sn"][data-d="1"]', (b) => b.dataset.id);
-  await click(`[data-pa="sn"][data-id="${sid}"][data-d="1"]`); await click(`[data-pa="sn"][data-id="${sid}"][data-d="1"]`);
-  await click('[data-pa="xo"][data-k="vk"]'); await wait(100);
-  await click('[data-pa="vkq"][data-k="maito"]'); await wait(100);
-  await click('[data-pa="vkq"][data-k="kahvi"]'); await wait(100);
-  await click('[data-pa="vo"][data-k="kahvi"]'); await wait(100);
+  /* keskeneräiset osiot (Lisäksi kaupasta, hinta-arvio) eivät näy */
+  ok(!(await page.evaluate(() => /Lisäksi kaupasta|Hinta-arvio/.test(document.querySelector("#planBody").innerText))), "keskeneräinen osio näkyy");
+  const px = await page.evaluate(() => [...new Set(window.__app.state.pl.items.flatMap((it) => it.px || []))].sort().join(","));
   await click('[data-pa="shop"]'); await wait(300);
   const nOff = await page.evaluate(() => document.querySelectorAll('#pkbody .ar.off').length);
   ok(nOff > 0, "kaapin tarkistus: kaappitavaroita ei rastitettu pois");
   await click('#pkbody [data-pc-ok]'); await wait(500);
   const l = await page.evaluate(() => { const s = window.__app.state; const l = s.lists[s.lists.length - 1]; return { pl: (l.pl || []).length, x: (l.x || []).map((e) => e.k), name: l.name, have: (l.have || []).length, t: (l.pl || []).some((e) => e.t && e.t.length) }; });
   ok(l.have > 0 && l.t, "kaappi tai muunnelmat puuttuvat listalta: " + JSON.stringify(l));
-  ok(l.pl >= 6 && /Suunnitelma/.test(l.name), "ostoslistalle ei tullut suunnitelmaa: " + JSON.stringify(l));
-  ok(l.x.includes("maito") && !l.x.includes("kahvi"), "vakiot väärin: " + l.x.join(","));
+  ok(l.pl >= 5 && /Suunnitelma/.test(l.name), "ostoslistalle ei tullut suunnitelmaa: " + JSON.stringify(l));
+  ok([...l.x].sort().join(",") === px, "ruokien tuotteet väärin: " + l.x.join(",") + " / " + px);
   await click(".lcard"); await wait(300);
-  ok(/Maito/.test(await page.evaluate(() => document.querySelector("#v-cart").innerText)), "maito puuttuu ostoslistalta");
+  ok((await page.evaluate(() => document.querySelectorAll("#v-cart li").length)) >= 10, "ostoslista on tyhjä");
   await page.evaluate(() => { const b = document.querySelector(".lbar .back"); b && b.click(); });
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
