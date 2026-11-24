@@ -3874,8 +3874,8 @@ function renderPlan(){
     const ver=r&&it.v&&(r.vs||[]).find(v=>v.id===it.v);
     const head=r?`<button type="button" class="lk pn-name" data-pa="edit" data-i="${i}">${esc(r.name)}${ver?" – "+esc(ver.n):""}</button><small>${fmtN(plN(it))} annosta · ${eur1(plItemCost(it))} · ${fmtDur(workOf(r)||r.min||0)}</small>`
       :`<span class="pn-name muted">Ei ruokaa näillä valinnoilla</span><small>Muuta valintoja tai valitse ruoka itse.</small>`;
-    const mt=PL.mainTag(it.tg)||"a",tl=[PL.TAG_N[mt],...it.tg.filter(t=>t!==mt&&t!=="a").map(t=>PL.TAG_N[t])].join(" · ");
-    const lab=`<button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-i="${i}" aria-label="Millainen ruoka ${i+1}: ${esc(tl)}">${esc(tl)} ▾</button>`;
+    const mt=PL.mainTag(it.tg)||"a",ex=it.tg.filter(t=>t!=="a"&&t!=="w").map(t=>PL.TAG_N[t]);
+    const lab=`<div class="pn-labs"><button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-to="main" data-i="${i}" aria-label="Pääryhmä, ruoka ${i+1}: ${esc(PL.TAG_N[mt])}">${esc(PL.TAG_N[mt])} ▾</button><button type="button" class="pn-lab pn-lab-x${ex.length?"":" none"}" data-pa="type" data-to="ex" data-i="${i}" aria-label="Rajaukset, ruoka ${i+1}: ${esc(ex.join(", ")||"ei rajauksia")}">${ex.length?esc(ex.join(", "))+" ▾":"+ Rajaus"}</button></div>`;
     return`<li class="pn-item${planNew===i?" pn-new":""}"><div class="pn-body"><div class="pn-top"><div class="pn-nm">${lab}${head}</div><span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Vaihda ruoka ${i+1}">${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="rm" data-i="${i}" aria-label="Poista suunnitelmasta: ruoka ${i+1}">${ico("x")}</button></span></div>${r?rowChips(it,i):`<div class="pn-tags"><button type="button" class="pn-tg" data-pa="pick" data-i="${i}">Valitse itse</button></div>`}</div></li>`;
   }).join("");
   const snacks=plSnacks(),bakes=plBakes();
@@ -3969,8 +3969,9 @@ function renderTypePl(){
   const mt=PL.mainTag(it.tg)||"a";
   const opt=(a,k,n,d,on,radio)=>`<button type="button" class="pn-opt" data-pe="${a}" data-k="${k}" role="${radio?"radio":"checkbox"}" aria-checked="${on}"><span class="pn-ok${radio?" r":""}">${on?ico("check"):""}</span><span><b>${esc(n)}</b><small>${esc(d)}</small></span></button>`;
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${add?"Lisää ruoka":"Millainen ruoka?"}</h2>
+    <h3 class="pn-h">Pääryhmä</h3>
     <div class="pn-opts" role="radiogroup" aria-label="Pääryhmä">${PL.MAIN_TAGS.map(([k,n,d])=>opt("tm",k,n,d,mt===k,true)).join("")}</div>
-    <h3 class="pn-h">Lisäksi <small class="muted">valitse yksi tai useampi</small></h3>
+    <h3 class="pn-h" id="pt-ex">Rajaukset <small class="muted">valitse yksi tai useampi</small></h3>
     <div class="pn-opts">${PL.EXTRA_TAGS.map(([k,n,d])=>opt("tg",k,n,d,it.tg.includes(k),false)).join("")}</div>
     ${add?"":`<p class="note">Vaihtonappi hakee tällaisia ruokia. Jos nykyinen ruoka ei sovi valintaan, se vaihtuu heti.</p>`}
     <div class="actions">${add?`<button type="button" class="go" data-pe="addok" data-k="1" style="width:100%">${ico("plus")}<span>Lisää suunnitelmaan</span></button>`:`<button type="button" class="go" data-pp-x="1" style="width:100%">Valmis</button>`}</div>`;
@@ -3979,7 +3980,8 @@ function planAddOpen(){
   const pl=state.pl;planAdd={tg:PL.defaultTags(pl.items.length,pl.items.length+1)};planEdit={i:-1,type:true};planPick=null;planChk=null;
   renderTypePl();$("pkdlg").showModal();
 }
-function planTypeOpen(i){planAdd=null;planEdit={i,allSd:false,type:true};planPick=null;planChk=null;renderTypePl();$("pkdlg").showModal();}
+function planTypeOpen(i,to){planAdd=null;planEdit={i,allSd:false,type:true};planPick=null;planChk=null;renderTypePl();$("pkdlg").showModal();
+  const h=to==="ex"&&$("pt-ex");if(h)h.scrollIntoView({block:"start"});}
 function planEditOpen(i,to){planAdd=null;planEdit={i,allSd:false};planPick=null;planChk=null;renderEditPl();$("pkdlg").showModal();
   const h=to&&$("pkbody").querySelector("#pe-"+to);if(h)h.scrollIntoView({block:"start"});}
 const vkOn=k=>state.vk.includes(k)&&!state.pl.vo.includes(k);
@@ -4085,7 +4087,7 @@ $("planBody").addEventListener("click",e=>{
   const b=e.target.closest("[data-pa]");if(!b)return;
   const a=b.dataset.pa,pl=state.pl,i=+b.dataset.i;
   if(a==="edit")return planEditOpen(i,b.dataset.to);
-  if(a==="type")return planTypeOpen(i);
+  if(a==="type")return planTypeOpen(i,b.dataset.to);
   if(a==="rm")return planRemove(i);
   if(a==="pick")return planPickOpen(i);
   if(a==="shop")return planChkOpen();

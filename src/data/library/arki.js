@@ -546,7 +546,7 @@ export default [
       "Palauta broileri pannulle ja kaada kastike päälle. Kuumenna, kunnes kastike sakenee ja kiiltää. Ripottele pinnalle kevätsipulia.",
     ],
     serve: "Tarjoa riisin tai nuudeleiden kanssa.",
-    sides: ["k-riisi"],
+    sides: ["k-riisi", "k-nuudelit"],
     tips: ["Wokki onnistuu parhaiten, kun kaikki on pilkottu valmiiksi ennen kuin pannu kuumenee."],
     tw: [
       { id: "tulinen", n: "Tulisempi", d: "Lisää kastikkeeseen 1 tl srirachaa ja tuoretta chiliä.", add: ["sriracha 1 tl", "tuore chili 1 kpl"], step: {"1": "Sekoita kastikkeen ainekset: soija, hoisin, hunaja, maissitärkkelys, vesi ja sriracha.", "3": "Paista kasviksia, valkosipulia, raastettua inkivääriä ja silputtua chiliä kovalla lämmöllä sekoitellen 3–4 minuuttia. Kasvisten kuuluu jäädä napakoiksi."} },

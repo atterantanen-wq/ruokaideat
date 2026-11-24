@@ -59,6 +59,21 @@ export default [
     ],
   },
   {
+    id: "k-nuudelit", n: "Nuudelit", m: "v", t: "li", min: 10, w: 5, sv: 4,
+    d: "Nopeasti kypsyvät nuudelit wokkien ja aasialaisten kastikkeiden pohjaksi.",
+    ing: ["nuudelit 250 g", "vesi 2 l", "rypsiöljy 1 tl"],
+    steps: [
+      "Kiehauta vesi kattilassa.",
+      "Lisää nuudelit ja keitä pakkauksen ohjeen mukaan, yleensä 3–4 minuuttia. Erottele levyt haarukalla.",
+      "Kaada nuudelit siivilään ja sekoita joukkoon tilkka öljyä, jotteivät ne takerru toisiinsa.",
+    ],
+    tips: ["Riisinuudelit eivät tarvitse keittämistä: anna niiden hautua kuumassa vedessä noin 5 minuuttia."],
+    vs: [
+      { id: "perus", n: "Perus" },
+      { id: "soija", n: "Soijanuudelit", add: ["soijakastike 1 rkl", "kevätsipuli 2 kpl"], ins: [[2, "Kääntele valutettujen nuudelien joukkoon soijakastike ja ohuiksi viipaloitu kevätsipuli."]] },
+    ],
+  },
+  {
     id: "k-pasta", n: "Pasta", m: "v", t: "li", min: 15, w: 5, sv: 4,
     d: "Runsaassa vedessä keitetty pasta, joka jää sopivasti al dente.",
     ing: ["pasta 400 g", "vesi 3 l", "suola 1 rkl"],

@@ -1053,3 +1053,7 @@ body:not([data-view="ideas"]) .spill{display:none}
 #pkdlg .pn-h{font-family:inherit}
 .pn-nm .pn-lab{display:inline-block}
 .pn-nm .pn-name{display:block}
+.pn-labs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.pn-labs .pn-lab{margin:0}
+.pn-lab-x{background:var(--bg);color:var(--ink)}
+.pn-lab-x.none{background:transparent;border:1.5px dashed var(--line);color:var(--muted)}

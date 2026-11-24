@@ -106,8 +106,8 @@ export default [
       "Paista tofukuutiot öljyssä kuumalla pannulla rapeiksi ja nosta sivuun.",
       "Paista kasviksia ja valkosipulia kovalla lämmöllä muutama minuutti. Lisää tofu ja kastike ja kääntele. Ripottele korianteri pinnalle.",
     ],
-    serve: "Tarjoa riisin kanssa.",
-    sides: ["k-riisi"],
+    serve: "Riisi tai nuudelit sopivat wokin pohjaksi.",
+    sides: ["k-riisi", "k-nuudelit"],
     tw: [
       { id: "nuudeli", n: "Nuudeleilla", d: "Sekoita lopuksi wokin joukkoon 200 g keitettyjä nuudeleita.", add: ["nuudelit 200 g"], ins: [[-1, "Kypsennä nuudelit ja valuta ne siivilässä."]], step: {"4": "Paista kasviksia ja valkosipulia kovalla lämmöllä muutama minuutti. Lisää tofu, nuudelit ja kastike ja kääntele. Ripottele korianteri pinnalle."} },
       { id: "maapahkina", n: "Maapähkinällä", d: "Ripottele pinnalle paahdettuja maapähkinöitä.", add: ["maapähkinä 0.5 dl"], step: {"4": "Paista kasviksia ja valkosipulia kovalla lämmöllä muutama minuutti. Lisää tofu ja kastike ja kääntele. Ripottele pinnalle korianteri ja paahdetut maapähkinät."} },
