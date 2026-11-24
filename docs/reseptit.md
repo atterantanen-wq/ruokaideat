@@ -11,6 +11,8 @@ ravintoarvot, haku ja valmistusohjeet pysyvät oikein. Kenttien tarkka kuvaus on
 | `src/data/library/arki.js` | arkiruoat |
 | `src/data/library/keitot.js` | keitot |
 | `src/data/library/juhla.js` | juhla- ja sesonkiruoat |
+| `src/data/library/airfryer.js` | airfryer-ruoat (`kq: ["ai"]`) |
+| `src/data/library/grilli.js` | grilliruoat (`kq: ["gl"]`); grillin lisukkeet ovat `lisukkeet.js`:ssä |
 | `src/data/library/kasvis.js` | kasvisruoat |
 | `src/data/library/aamu.js` | aamu-, väli- ja iltapalat |
 | `src/data/library/valipalat.js` | nopeat aamu- ja välipalat sekä eväät |
@@ -130,8 +132,8 @@ Muuten ohje neuvoo käyttämään ainesta, jota ei enää ole.
   Aineslistat ja määrät eivät ole suojattuja, mutta ohjeiden ja kuvausten lauseita ei kopioida.
 - Lähdelinkiksi (`src`) merkitään vain resepti, joka on samaa ruokatyyppiä. Esimerkiksi
   murotaikinapiirakan lähde ei sovi pehmeälle piirakalle.
-- Käytetyt sivustot: Valio, Yhteishyvä, Kotikokki, Martat ja Kinuskikissa. K-ruoka estää automaattisen
-  haun. Haku sivustokartoista kannattaa tehdä myös vaihtoehtoisilla nimillä (Valiolla piparkakut ovat
+- Käytetyt sivustot: Valio, Yhteishyvä, Kotikokki, Martat, Kinuskikissa, K-Ruoka ja Arla. K-Ruoka ja Arla
+  näkyvät sivunlukijalla, vaikka suora haku kontista estyy. Haku sivustokartoista kannattaa tehdä myös vaihtoehtoisilla nimillä (Valiolla piparkakut ovat
   nimellä "Piparkakkutaikina").
 - Kehitysvaiheessa teksti on verrattu lähdesivuihin automaattisesti: jos neljän sanan jakso esiintyy
   lähteessä, lause muotoillaan uudelleen. Työkalu ei ole repossa, koska se tarvitsee lähdesivujen
