@@ -67,6 +67,16 @@ test("jokaisella reseptillä on hinta ja ravintoarvot", async () => {
   ok(!r.nonut.length, "ravintoarvot puuttuvat: " + r.nonut.join(", "));
 });
 
+test("hinta löytyy aineksen nimen osalla ja hinnoilla on kauppalinkki", async () => {
+  const r = await page.evaluate(() => {
+    const A = window.__app, f = (n) => A.findPrice(n);
+    return { hunaja: f("luomu hunaja")?.src || "", etikka: f("tumma etikka")?.src || "", turska: f("tuore turska")?.u || "" };
+  });
+  ok(/hunaja/i.test(r.hunaja), "luomu hunaja → " + r.hunaja);
+  ok(/etikka/i.test(r.etikka), "tumma etikka → " + r.etikka);
+  ok(r.turska.startsWith("https://www.s-kaupat.fi/"), "turskalta puuttuu kauppalinkki");
+});
+
 test("ruoka lisukkeineen ostoslistalle", async () => {
   await page.evaluate(() => [...document.querySelectorAll("#list .card")].find((c) => c.querySelector("h3").innerText.trim() === "Karjalanpaisti").querySelector(".cartbtn").click());
   await wait(300);

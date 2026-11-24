@@ -220,10 +220,8 @@ P2("pekoni",14.46,"kg","Pekoni (ei kanapekoni)",{},"","liha-ja-kasviproteiinit/m
 P2("kasvissekoitus",4.46,"kg","Pakastevihannessekoitukset",{},"","pakasteet/kasvispakasteet/kasvissekoitukset");
 P2("pinaattipakaste",5.14,"kg","Hienonnettu pinaatti 150 g",{},"","pakasteet/kasvispakasteet/yksittaiset-kasvikset");
 
-for(const k of Object.keys(PR)){if(PU[k])PR[k].u=PBASE+PU[k];}
 const PALIAS={"kanankoipi":"kanankoivet","kananmunat":"kananmuna","herkkusieni":"herkkusienet","kirsikkatomaatti":"kirsikkatomaatit","kidneypapu":"kidneypavut","kikherne":"kikherneet","porsaankyljys":"porsaankyljykset","kasvisliemi":"kanaliemi","herne":"herneet","punasipulit":"punasipuli","sipulit":"sipuli","porkkanat":"porkkana","perunat":"peruna","nauta":"naudanliha","sika":"porsaanliha","lasagnelevy":"lasagnelevyt","linssit":"punaiset linssit","valkosipuli":"valkosipulinkynsi","kookosmaito":"kookosmaito","rahka":"maitorahka","maustamaton tofu":"tofu","broilerinfilee":"kananrintafilee","sekajauheliha":"sika-nauta jauheliha","paistijauheliha":"jauheliha","kaurajuoma":"kauramaito","omenat":"omena","banaanit":"banaani","tomaatit":"tomaatti","kurkut":"kurkku"};
 const PSKIP=new Set(["suola","pippuri","mustapippuri","maustepippuri","paprikajauhe","chilijauhe","kumina","oregano","timjami","yrttimauste","tacomauste","currytahna","laakerinlehti","inkivääri","siirappi","sinappi","kaprikset","tartarkastike","vesi","sokeri","persilja jauhe","curry","meirami","muskotti","kardemumma","neilikka","kurkuma","korianterinsiemen","rosmariini","sitruunapippuri","italialainen mausteseos","chiliflakes","kaneli","juustokumina","garam masala","vaniljasokeri","merisuola","sriracha","kahvi","liivate","nonparellit","valkopippuri"]);
-const PKEYS=Object.keys(PR).sort((a,b)=>b.length-a.length);
 const wordHit=(name,k)=>name===k||name.startsWith(k+" ")||name.endsWith(" "+k)||name.includes(" "+k+" ");
 /* hintatäydennys s-kaupat.fi 19.11.2026: vain avaimet, joille hintaa ei vielä ole */
 const P3=(k,p,per,src,o,w,u)=>{if(!PR[k])P2(k,p,per,src,o,w,u);};
@@ -432,5 +430,9 @@ PV("raparperi",5,"Raparperi (arvio, kausituote keväällä ja kesällä)",NF,D4)
 PV("kantarellit",28,"Kantarelli (arvio, kausituote syksyllä)",NF,D4);
 PV("persikka",6.5,"Persikka (arvio, kausituote kesällä)",NF,D4);
 PV("mätitahna",14,"Mätitahna (arvio)",NF,D4);
+
+/* kaikkien rivien jälkeen: kauppalinkit ja osittaisen nimen haku (pisin avain ensin) koskevat jokaista hintaa */
+for(const k of Object.keys(PR)){if(PU[k])PR[k].u=PBASE+PU[k];}
+const PKEYS=Object.keys(PR).sort((a,b)=>b.length-a.length);
 
 export {PR,PU,PBASE,PALIAS,PSKIP,PKEYS,wordHit};
