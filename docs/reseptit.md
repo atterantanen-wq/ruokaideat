@@ -20,7 +20,7 @@ ravintoarvot, haku ja valmistusohjeet pysyvät oikein. Kenttien tarkka kuvaus on
 | `src/data/library/leivonta.js` | leivonnaiset ja jälkiruoat |
 | `src/data/library/lisukkeet.js` | lisukkeet, joita ruoat ehdottavat (`t: "li"`) |
 | `src/data/ingredients.js` | ainesrekisteri: osasto, yksikkömuunnokset ja ravintoarvot (Fineli) |
-| `src/main.js` | hinnat (`P`, `P2`, `P3` ja arviot `PA`) |
+| `src/data/prices.js` | hinnat (`P`, `P2`, `P3` ja arviot `PA`) |
 | `scripts/check-library.mjs` | kirjaston automaattinen tarkistus |
 
 ## Tarkistus ennen julkaisua

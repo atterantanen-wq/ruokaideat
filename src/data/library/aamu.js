@@ -21,6 +21,30 @@ export default [
     src: [["Martat", "https://www.martat.fi/reseptit/riisipuuro/"], ["Valio", "https://www.valio.fi/reseptit/riisipuuro/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/99039/Riisipuuro/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/vegaaninen-riisipuuro/1sQUmedygzmeYacebUYNLO"]],
   },
   {
+    n: "Riisipuuro misokinuskilla", m: "v", t: "pu", min: 80, w: 35, sv: 6, fe: "jo", jf: true,
+    aka: ["Juhlariisipuuro", "Misokinuskipuuro", "Hittipuuro"],
+    d: "Juhlava riisipuuro, jonka päälle tulevat suolaisen makea misokinuski, kanelivoi, hunajainen pähkinägranola ja kirpeät jäiset karpalot. Lisukkeet valmistuvat puuron hautuessa ja kootaan samaan annokseen.",
+    ing: ["# Puuro", "vesi 2 dl", "puuroriisi 2 dl", "voi 30 g", "maito 1 l", "suola 0.5 tl", "# Misokinuski", "fariinisokeri 1 dl", "kuohukerma 2 dl", "voi 30 g", "miso 1 tl", "# Granola", "mantelit 1 dl", "hasselpähkinät 1 dl", "hunaja 1 rkl", "suola 1 ripaus", "# Kanelivoi", "voi 100 g", "sokeri 50 g", "kaneli 1 rkl", "# Marjat", "karpalot 2 dl", "sokeri 2 rkl"],
+    steps: [
+      "Kuumenna vesi kiehuvaksi paksupohjaisessa kattilassa. Lisää puuroriisi ja keitä muutama minuutti koko ajan sekoittaen, kunnes riisi on imenyt suurimman osan vedestä.",
+      "Lisää voi, maito ja suola ja kuumenna sekoittaen kiehuvaksi. Pidä silmällä, ettei maito kuohu yli.",
+      "Käännä lämpö pienelle, nosta kansi päälle ja anna puuron hautua noin tunti. Sekoita pohjaa välillä.",
+      "Tee granola puuron hautuessa: rouhi mantelit ja hasselpähkinät karkeaksi ja paahda ne pellillä 180-asteisessa uunissa noin 7 minuuttia. Valuta hunaja lämpimien pähkinöiden päälle ja ripottele pinnalle hieman suolaa.",
+      "Vaahdota huoneenlämpöinen voi ja sokeri kuohkeaksi ja sekoita kaneli joukkoon.",
+      "Valmista misokinuski: kuumenna fariinisokeri kattilassa miedolla lämmöllä sulaksi. Kaada kerma joukkoon vähän kerrallaan ja keitä jatkuvasti sekoittaen 3–4 minuuttia. Sekoita voi ja miso joukkoon ja keitä vielä pari minuuttia, kunnes ne ovat sulaneet kastikkeeseen.",
+      "Sokeroi jäiset karpalot juuri ennen tarjoilua.",
+      "Kokoa annokset: nosta kuuman puuron päälle nokare kanelivoita, valuta päälle misokinuskia ja ripottele pinnalle granolaa ja sokeroituja karpaloita.",
+    ],
+    tips: [
+      "Puuro on kotiversio helsinkiläisen N4ku-ravintolan Tuomaan markkinoilla myymästä hittipuurosta, jossa misokinuskin kanssa tarjotaan voita, kanelia, mantelia ja punaisia marjoja.",
+      "Misokinuski ja kanelivoi säilyvät jääkaapissa muutaman päivän, joten ne voi tehdä edellisenä päivänä. Lämmitä kinuski ennen tarjoilua.",
+    ],
+    tw: [
+      { id: "puolukka", n: "Puolukoilla", d: "Käytä karpaloiden tilalla jäisiä puolukoita.", rm: ["karpalot"], add: ["puolukka 2 dl"], step: { 6: "Sokeroi jäiset puolukat juuri ennen tarjoilua.", 7: "Kokoa annokset: nosta kuuman puuron päälle nokare kanelivoita, valuta päälle misokinuskia ja ripottele pinnalle granolaa ja sokeroituja puolukoita." } },
+    ],
+    src: [["MTV Uutiset (N4ku)", "https://www.mtvuutiset.fi/makuja/artikkeli/yllattava-puuro-aiheutti-jattijonot-helsingissa-tassa-sen-salaisuus/9268956"], ["Kotiliesi", "https://kotiliesi.fi/ruoka/tuomaan-markkinoiden-hittipuuro/"], ["Herkkusuut", "https://www.herkkusuut.com/tuomaanmarkkinoiden-hittipuuroa-kehutaan-syysta-nain-se-onnistui-kotikeittiossa/"], ["Valio", "https://www.valio.fi/reseptit/joulupuuro/"]],
+  },
+  {
     n: "Kaurapuuro", m: "v", t: "pu", min: 15, w: 10, sv: 4,
     d: "Arkiaamun perusta: kaurahiutaleet keitetään vedessä ja maidossa pehmeäksi puuroksi.",
     ing: ["vesi 5 dl", "kaurahiutaleet 4 dl", "maito 5 dl", "suola 0.5 tl"],

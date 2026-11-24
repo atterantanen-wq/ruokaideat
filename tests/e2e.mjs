@@ -27,11 +27,19 @@ async function search(q) {
   await wait(400);
   return page.$$eval("#hkres .card h3", (x) => x.map((h) => h.innerText.trim()));
 }
-async function fresh() {
-  await page.evaluate(() => localStorage.clear());
+/* Uudelleenlataus: suljetaan ensin auki olevat ikkunat ja odotetaan, että sovelluksen takaisin-ele
+   (history.back() ikkunan sulkeutuessa, src/app/core.js) on ehtinyt valmiiksi. Muuten kesken oleva
+   historiasiirtymä keskeyttää latauksen (net::ERR_ABORTED). */
+async function reloadApp() {
+  await page.evaluate(() => { for (const d of document.querySelectorAll("dialog[open]")) d.close(); document.body.classList.remove("inlist"); });
+  await wait(200);
   await page.reload();
   await page.waitForFunction(() => window.__app);
   await wait(300);
+}
+async function fresh() {
+  await page.evaluate(() => localStorage.clear());
+  await reloadApp();
 }
 
 /* ---------------- testit ---------------- */
@@ -130,7 +138,7 @@ test("oma ruoka tallentuu, säilyy ja näkyy omissa ruoissa", async () => {
   await click('#newBody .epanel [data-ed="bulkadd"], #newBody .epanel .go');
   await wait(200);
   await click('#newBody [data-ed="save"]'); await wait(400);
-  await page.reload(); await page.waitForFunction(() => window.__app); await wait(300);
+  await reloadApp();
   const c = await page.evaluate(() => window.__app.state.custom.find((x) => x.name === "Testiruoka"));
   ok(c && c.intro === "Oma kuvaus" && c.ing.length === 2, "oma ruoka ei tallentunut");
   await click('.tab[data-tab="add"]'); await wait(300);
