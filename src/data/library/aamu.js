@@ -1,7 +1,7 @@
 /* Aamu-, väli- ja iltapalat */
 export default [
   {
-    n: "Riisipuuro", m: "v", t: "pu", min: 55, w: 10, sv: 4, fe: "jo", pop: true,
+    n: "Riisipuuro", m: "v", t: "pu", min: 55, w: 10, sv: 4, fe: "jo", pop: true, aka: ["Joulupuuro", "Juhlariisipuuro"],
     d: "Pehmeä ja kermainen maitopuuro hitaasti hauduttaen. Tärkein vaihe on alku: riisi turpoaa ensin vedessä, eikä puuro pala pohjaan.",
     ing: ["vesi 2 dl", "puuroriisi 2 dl", "maito 1 l", "voi 1 rkl", "suola 0.5 tl"],
     steps: [
@@ -13,8 +13,12 @@ export default [
     ],
     serve: "Tarjoa sokeri-kanelisekoituksen, voisilmän tai sekahedelmäkeiton kanssa.",
     extras: ["kaneli"],
-    tips: ["Jäänyt puuro kelpaa seuraavana päivänä riisipuuropannukakuksi."],
+    tips: ["Jäänyt puuro kelpaa seuraavana päivänä riisipuuropannukakuksi.", "Juhlapöytään puurosta saa jälkiruoan, kun valitset muunnelmista misokinuskin, granolan, kanelivoin ja sokeroidut marjat. Ne valmistuvat puuron hautuessa."],
     tw: [
+      { id: "misokinuski", n: "Misokinuski", d: "Kinuskikastike, jonka vaalea miso tekee suolaisen makeaksi. Valuta puuron päälle.", add: ["# Misokinuski", "fariinisokeri 1 dl", "kuohukerma 2 dl", "voi 30 g", "miso 1 tl"], ins: [[3, "Valmista puuron hautuessa misokinuski: kuumenna fariinisokeri kattilassa miedolla lämmöllä sulaksi. Kaada kerma joukkoon vähän kerrallaan ja keitä jatkuvasti sekoittaen 3–4 minuuttia. Sekoita voi ja miso joukkoon ja keitä vielä pari minuuttia, kunnes ne ovat sulaneet kastikkeeseen."]] },
+      { id: "granola", n: "Granola", d: "Paahdetut mantelit ja hasselpähkinät hunajalla ja ripauksella suolaa tuovat puuroon rapeutta.", add: ["# Granola", "mantelit 1 dl", "hasselpähkinät 1 dl", "hunaja 1 rkl", "suola 1 ripaus"], ins: [[3, "Tee granola: rouhi mantelit ja hasselpähkinät karkeaksi ja levitä ne pellille. Paahda 180-asteisessa uunissa noin 7 minuuttia. Valuta hunaja vielä lämpimien pähkinöiden päälle ja mausta ripauksella suolaa."]] },
+      { id: "kanelivoi", n: "Kanelivoi", d: "Pehmeä voi vaahdotettuna sokerin ja kanelin kanssa. Nostetaan nokare kuuman puuron päälle sulamaan.", add: ["# Kanelivoi", "voi 100 g", "sokeri 50 g", "kaneli 1 rkl"], ins: [[3, "Tee kanelivoi: vaahdota huoneenlämpöinen voi ja sokeri kuohkeaksi ja sekoita kaneli joukkoon."]] },
+      { id: "marjat", n: "Sokeroidut marjat", d: "Jäiset karpalot sokeroituna tuovat makeaan puuroon kirpeyttä. Puolukat käyvät yhtä hyvin.", add: ["# Sokeroidut marjat", "karpalot 2 dl", "sokeri 2 rkl"], ins: [[4, "Ripottele sokeri jäisten karpaloiden päälle juuri ennen tarjoilua ja nosta niitä annoksen päälle."]] },
       { id: "uuni", n: "Uunissa", d: "Uunissa puuro ei pala pohjaan. Kypsennä 150 asteessa noin kaksi tuntia.", step: { 2: "Kaada riisi, maito ja vesi uunivuokaan ja sekoita.", 3: "Kypsennä 150-asteisessa uunissa noin kaksi tuntia. Sekoita kerran tai kahdesti." }, del: [0, 1] },
       { id: "kaura", n: "Maidoton", d: "Käytä maidon tilalla kaurajuomaa ja lisää lopuksi tilkka kaurakermaa.", rm: ["maito", "voi"], add: ["kauramaito 1 l", "kaurakerma 1 dl"], step: {"2": "Lisää kaurajuoma ja kuumenna puuro sekoittaen kiehahtamispisteeseen.", "4": "Kun riisinjyvät ovat pehmeitä ja puuro paksua, sekoita joukkoon suola ja kaurakerma."} },
     ],

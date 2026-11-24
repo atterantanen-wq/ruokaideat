@@ -120,7 +120,7 @@ ruisjauho|ruisjauhot,ruisjauhoa|3||55,8,,,,|304,8.8,1.9,0.2,55.4,0||100|jauho, r
 kaurahiutaleet|kaurahiutale,puuro hiutaleet,hiutaleet|2||40,6,,,,|374,14.5,7.3,0.7,57,0||153|kaurahiutale
 korppujauho|korppujauhot,korppujauhoja,korppu|3||50,7,,,,|366,10.5,1,0.2,74.9,1.1||126|jauho, korppujauho
 leivinjauhe|leivinjauhetta|3||,15,5,,,|176,5.2,0,0,37.8,30.1||74|leivinjauhe
-sokeri|kidesokeri,hienosokeri,sokeria,ruskea sokeri,fariinisokeri,muscovado,raesokeri|3||85,12,4,3,,|406,0,0,0,99.9,0||1|sokeri
+sokeri|kidesokeri,hienosokeri,sokeria,raesokeri|3||85,12,4,3,,|406,0,0,0,99.9,0||1|sokeri
 tomaattiketsuppi|ketsuppi|7||120,18,5,,,|91,1.2,0.4,0,19.2,2.6||353|ketsuppi
 patonki|patongit,ranskanleipä,vaalea patonki|1||,,,25,,|261,7.9,0.9,0.1,53,1.1||1309|vaalea leipä, patonki/ranskanleipä, vesi, vehnäjauho, teollinen
 leipä|ruisleipä,vaalea leipä,paahtoleipä,vehnäleipä|1||,,,30,,|240,7.5,1.3,0.1,44.9,1.2||1036|ruisleipä, ruista 51%
@@ -308,4 +308,8 @@ silli|sillifilee,marinoitu silli,matjessilli|12|f|,,,,,|190,9,11,2.5,13,2||||
 meloni|hunajameloni,cantaloupe,vesimeloni|0||,,,800,,|30,0.6,0.1,0,6.5,0||||
 etikkapunajuuri|punajuurisäilyke,etikkapunajuuret,punajuuret purkissa,viipaloidut punajuuret|4||,,,,300,|50,1,0.1,0,10.5,0.5||||
 kanansiivet|kanansiipi,broilerin siivet,kanan siivet,siivet|10|k|,,,,,|200,18,14,4,0,0.2||||
-maissintähkä|maissintähkät,maissin tähkä,tähkämaissi,maissit tähkä|0||,,,150,,|86,3.3,1.4,0.2,16,0||||`;
+maissintähkä|maissintähkät,maissin tähkä,tähkämaissi,maissit tähkä|0||,,,150,,|86,3.3,1.4,0.2,16,0||||
+fariinisokeri|fariinisokeria,ruskea sokeri,muscovado,tumma muscovado|3||85,12,4,,,|389,0.1,0,0,97,0.1||||
+miso|vaalea miso,misotahna,shiro miso,misoa|7||110,17,6,,,|198,12,6,1,21,9.3||||
+hasselpähkinät|hasselpähkinä,hasselpähkinöitä,hasselpähkinärouhe|3||60,9,3,,,|640,15,61,4.5,6,0||||
+karpalot|karpalo,karpaloita,jäiset karpalot,pakastekarpalot|16||50,8,,,,|38,0.4,0.6,0,7,0||||`;

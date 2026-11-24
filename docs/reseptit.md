@@ -20,7 +20,7 @@ ravintoarvot, haku ja valmistusohjeet pysyvät oikein. Kenttien tarkka kuvaus on
 | `src/data/library/leivonta.js` | leivonnaiset ja jälkiruoat |
 | `src/data/library/lisukkeet.js` | lisukkeet, joita ruoat ehdottavat (`t: "li"`) |
 | `src/data/ingredients.js` | ainesrekisteri: osasto, yksikkömuunnokset ja ravintoarvot (Fineli) |
-| `src/main.js` | hinnat (`P`, `P2`, `P3` ja arviot `PA`) |
+| `src/data/prices.js` | hinnat (`P`, `P2`, `P3` ja arviot `PA`) |
 | `scripts/check-library.mjs` | kirjaston automaattinen tarkistus |
 
 ## Tarkistus ennen julkaisua
@@ -63,6 +63,9 @@ vaiheita, sekä toisensa poissulkevat muunnelmat.
 - **Erillinen resepti versioiden sijaan**, kun pohja tai tekotapa on eri ja lähes kaikki vaiheet
   muuttuisivat, tai kun ruoka tunnetaan omalla nimellään (esim. murotaikinapiirakka ja pullapohjainen
   piirakka).
+- Muunnelma voi tuoda oman ainesosionsa: aloita `add` rivillä `"# Otsikko"`. Esimerkiksi Riisipuuron
+  lisukkeet (misokinuski, granola, kanelivoi, marjat) ovat kukin oma muunnelmansa ja oma osionsa.
+  Silloin perusainekset saavat otsikoksi reseptin nimen.
 - Jos kaksi muunnelmaa vaihtaa saman aineksen, sovellus ei anna valita niitä yhtä aikaa. Jos tämä on
   tarkoitus, merkitse ne samaan ryhmään (`g: "kerma"`), muuten tee niistä versiot.
 

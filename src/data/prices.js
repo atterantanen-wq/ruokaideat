@@ -433,6 +433,12 @@ PV("kantarellit",28,"Kantarelli (arvio, kausituote syksyllä)",NF,D4);
 PV("persikka",6.5,"Persikka (arvio, kausituote kesällä)",NF,D4);
 PV("mätitahna",14,"Mätitahna (arvio)",NF,D4);
 
+/* juhlariisipuuron lisukkeet: S-kaupat.fi 24.11.2026 (oletusmyymälä) */
+P("fariinisokeri",3.36,"kg","Dansukker fariinisokeri 500 g (1,68 €)",{},"","kuivatuotteet-ja-leivonta/sokerit-makeutusaineet-ja-hunaja",D4);
+P("miso",17.28,"kg","Misotahna 200–300 g (2 tuotteen keskiarvo, 16,25–18,3 €/kg)",{},"Vaaleaa misoa ei ollut erikseen, hinta on misotahnan.","texmex-ja-maailman-makuja/maailman-makuja",D4);
+P("hasselpähkinät",23.75,"kg","Coop hasselpähkinät 200 g (4,75 €)",{},"Vain yksi tuote.","snacksit/pahkinat",D4);
+P("karpalot",17.95,"kg","Pakkasmarja karpalo 200 g, pakaste (3,59 €)",{},"Vain yksi tuote.","pakasteet/hedelma-ja-marjapakasteet/marjapakasteet",D4);
+
 /* kaikkien rivien jälkeen: kauppalinkit ja osittaisen nimen haku (pisin avain ensin) koskevat jokaista hintaa */
 for(const k of Object.keys(PR)){if(PU[k])PR[k].u=PBASE+PU[k];}
 const PKEYS=Object.keys(PR).sort((a,b)=>b.length-a.length);
