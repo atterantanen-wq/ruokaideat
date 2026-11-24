@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<title>Tyylit – Ruokaideat</title>
+<script>try{var _t=(JSON.parse(localStorage.getItem("ruokaideat-v1"))||{}).th||"auto";document.documentElement.dataset.theme=(_t==="dark"||(_t==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))?"dark":"light";}catch(e){}</script>
+</head>
+<body class="sg">
+<main class="sg-wrap">
+  <header class="sg-head">
+    <div>
+      <h1>Ruokaideat: tyylit</h1>
+      <p class="sg-lead">Design systemin kaikki osat yhdellä sivulla. Värit ja kontrastit luetaan suoraan tyylitiedostoista, joten sivu pysyy aina ajan tasalla.</p>
+    </div>
+    <div class="sg-theme" role="group" aria-label="Teema">
+      <button type="button" class="chip" data-sgth="light">Vaalea</button>
+      <button type="button" class="chip" data-sgth="dark">Tumma</button>
+    </div>
+  </header>
+
+  <section>
+    <h2>Periaatteet</h2>
+    <ol class="sg-rules">
+      <li><b>Yksi pääväri.</b> Kaikki päätoiminnot ja valitut tilat ovat päävärillä. Osiovärit näkyvät vain alapalkissa ja yläosassa, eivät napeissa.</li>
+      <li><b>Väri kertoo aina saman asian.</b> Vihreä tarkoittaa valmista tai onnistunutta, punainen poistoa tai virhettä. Väri ei ole koskaan ainoa vihje, vaan mukana on kuvake tai teksti.</li>
+      <li><b>Luettavuus.</b> Tekstin kontrasti vähintään 4.5:1 ja reunojen sekä kuvakkeiden 3:1 (WCAG 2.2 AA) molemmissa teemoissa.</li>
+      <li><b>Peukaloystävällinen.</b> Jokainen painettava kohde on vähintään 44 px korkea.</li>
+      <li><b>Liike kertoo jotain.</b> Painallus, siirtyminen ja lisäys saavat lyhyen palautteen (100–300 ms). Ei koristeliikettä. Vähennä liikettä -asetus poistaa animaatiot.</li>
+      <li><b>Ruoka pääosassa.</b> Pinnat ovat rauhallisia ja lämpimiä, jotta ruokakuvat erottuvat.</li>
+      <li><b>Vain tokeneita.</b> Uusissa tyyleissä käytetään muuttujia (<code>--c-*</code>, <code>--fs-*</code>, <code>--sp-*</code>, <code>--r-*</code>, <code>--dur-*</code>), ei suoria värejä tai mittoja.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Värit</h2>
+    <p class="sg-note">Luku on tekstin kontrasti kyseisellä pohjalla. ✓ = täyttää vaatimuksen.</p>
+    <div class="sg-sw" id="sgColors"></div>
+    <h3>Osiovärit (vain alapalkki ja yläosa)</h3>
+    <div class="sg-sw" id="sgSections"></div>
+  </section>
+
+  <section>
+    <h2>Typografia</h2>
+    <div id="sgType" class="sg-type"></div>
+  </section>
+
+  <section>
+    <h2>Välit, pyöristykset ja varjot</h2>
+    <div id="sgSpace" class="sg-space"></div>
+    <div id="sgRadius" class="sg-radius"></div>
+  </section>
+
+  <section>
+    <h2>Napit</h2>
+    <div class="sg-row">
+      <button type="button" class="go">Päätoiminto</button>
+      <button type="button" class="cartbtn">Toissijainen</button>
+      <button type="button" class="cartbtn" data-cart aria-pressed="false">Lisää ostoslistalle</button>
+      <button type="button" class="cartbtn" data-cart aria-pressed="true">Listalla</button>
+      <button type="button" class="cartbtn" disabled>Ei käytössä</button>
+    </div>
+    <p class="sg-note">Päätoiminto: enintään yksi näkymää kohti. Toissijainen: muut toiminnot. Valittu tila näkyy pehmeällä pohjalla ja tekstillä, ei pelkällä värillä.</p>
+    <h3>Sirut ja valinnat</h3>
+    <div class="chips">
+      <button type="button" class="chip" aria-pressed="true">Arkiruoka</button>
+      <button type="button" class="chip" aria-pressed="false">Viikonloppu</button>
+      <button type="button" class="chip" aria-pressed="false">Leivonta</button>
+    </div>
+    <div class="sg-row sg-pc">
+      <button type="button" class="pc" aria-pressed="false">2</button>
+      <button type="button" class="pc" aria-pressed="true">4</button>
+      <button type="button" class="pc" aria-pressed="false">6</button>
+      <button type="button" class="pc" aria-pressed="false">8</button>
+    </div>
+    <label class="sw"><input type="checkbox" checked><span class="trk"></span>Kytkin päällä</label><br>
+    <label class="sw"><input type="checkbox"><span class="trk"></span>Kytkin pois</label>
+  </section>
+
+  <section>
+    <h2>Kortti</h2>
+    <div class="sg-card">
+      <div class="sg-ph" aria-hidden="true"></div>
+      <div class="sg-cb"><h3>Tomaattikeitto</h3><b>1,6 € / annos</b><span>35 min</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Palaute</h2>
+    <div class="sg-row">
+      <p class="sg-msg ok">✓ Lista luotu: Ostoslista 24.11.</p>
+      <p class="sg-msg err">✕ Tallennus epäonnistui. Yritä uudelleen.</p>
+    </div>
+    <div class="toast sg-toast"><span>Lisätty ostoslistalle</span><button type="button">Näytä</button></div>
+  </section>
+
+  <section>
+    <h2>Alapalkki</h2>
+    <nav class="tabs sg-tabs" role="tablist" id="sgTabs"></nav>
+  </section>
+
+  <section>
+    <h2>Liike</h2>
+    <p class="sg-note">Paina nappeja: painallus kutistaa hieman, ja ostoslistan määrä hypähtää lisätessä.</p>
+    <div class="sg-row">
+      <button type="button" class="go" id="sgBump">Lisää listalle <span class="badge" id="sgBadge">2</span></button>
+    </div>
+    <div id="sgMotion" class="sg-motion"></div>
+  </section>
+</main>
+<script type="module" src="./src/styleguide.js"></script>
+</body>
+</html>

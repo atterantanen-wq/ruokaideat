@@ -14,7 +14,7 @@ import {LOGO} from "../data/logos.js";
 const canShare=typeof navigator!=="undefined"&&typeof navigator.share==="function";
 
 function leftCount(l){let n=0;for(const e of listItems(l))if(!l.have.includes(e.key)&&!l.checked.includes(e.key))n++;return n;}
-export function updBadge(){const b=$("badge");if(!b)return;const l=actList(state),n=l?leftCount(l):0;const t=n?String(n):"";if(b.textContent!==t)b.textContent=t;}
+export function updBadge(){const b=$("badge");if(!b)return;const l=actList(state),n=l?leftCount(l):0;const t=n?String(n):"";if(b.textContent!==t){const up=b.dataset.seen&&+t>(+b.textContent||0);b.textContent=t;if(up){b.classList.remove("bump");void b.offsetWidth;b.classList.add("bump");}}b.dataset.seen="1";}
 export function refreshCart(){
   updBadge();
   document.querySelectorAll("[data-cart]").forEach(b=>{

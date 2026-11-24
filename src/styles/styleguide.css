@@ -1,0 +1,38 @@
+/* Vain tyylisivun (tyylit.html) asettelu. Komponentit tulevat main.css:stä. */
+.sg{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.sg-wrap{max-width:900px;margin:0 auto;padding:var(--sp-6) var(--sp-4) var(--sp-8)}
+.sg-head{display:flex;flex-wrap:wrap;gap:var(--sp-4);justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-6)}
+.sg h1{font:var(--fw-bold) var(--fs-2xl)/var(--lh-tight) var(--font-display);margin:0 0 var(--sp-2)}
+.sg h2{font:var(--fw-bold) var(--fs-xl)/var(--lh-tight) var(--font-display);margin:var(--sp-8) 0 var(--sp-3);padding-top:var(--sp-4);border-top:1px solid var(--c-line)}
+.sg h3{font-size:var(--fs-base);margin:var(--sp-5) 0 var(--sp-2)}
+.sg-lead{color:var(--c-muted);max-width:60ch;margin:0}
+.sg-note{color:var(--c-muted);font-size:var(--fs-sm);margin:var(--sp-2) 0}
+.sg-theme{display:flex;gap:var(--sp-2)}
+.sg-rules{padding-left:1.2em;margin:0;display:grid;gap:var(--sp-2)}
+.sg code{font:var(--fs-xs)/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--c-muted)}
+.sg-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--sp-3)}
+.sg-c{margin:0;background:var(--c-surface);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1)}
+.sg-t{height:64px;display:grid;place-items:center;font:var(--fw-bold) var(--fs-xl) var(--font-display);border-bottom:1px solid var(--c-line)}
+.sg-c figcaption{display:flex;flex-direction:column;gap:2px;padding:var(--sp-2) var(--sp-3) var(--sp-3);font-size:var(--fs-sm)}
+.sg-c .ok{color:var(--c-success-ink);font-weight:var(--fw-semibold)}
+.sg-c .bad{color:var(--c-danger);font-weight:var(--fw-bold)}
+.sg-ty{display:flex;flex-direction:column;gap:2px;padding:var(--sp-2) 0;border-bottom:1px solid var(--c-line)}
+.sg-space,.sg-radius{display:flex;flex-wrap:wrap;gap:var(--sp-4);align-items:flex-end;margin-bottom:var(--sp-4)}
+.sg-space div,.sg-radius div{display:flex;flex-direction:column;align-items:center;gap:var(--sp-1)}
+.sg-space i{display:block;background:var(--c-primary);border-radius:2px}
+.sg-radius i{display:block;width:64px;height:48px;background:var(--c-surface);border:1.5px solid var(--c-field-line)}
+.sg-row{display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;margin:var(--sp-3) 0}
+.sg-pc{max-width:320px}
+.sg-card{width:180px;background:var(--c-surface);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-1)}
+.sg-ph{aspect-ratio:4/3;background:linear-gradient(135deg,var(--c-ideas-tint),var(--c-sunken))}
+.sg-cb{display:flex;flex-direction:column;gap:2px;padding:var(--sp-3)}
+.sg-cb h3{margin:0;font:var(--fw-bold) var(--fs-lg)/var(--lh-tight) var(--font-display)}
+.sg-cb span{color:var(--c-muted);font-size:var(--fs-sm)}
+.sg-msg{margin:0;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);font-weight:var(--fw-semibold)}
+.sg-msg.ok{background:var(--c-success-soft);color:var(--c-success-ink)}
+.sg-msg.err{background:var(--c-danger-soft);color:var(--c-danger)}
+.sg .sg-toast{position:static;margin:var(--sp-3) 0 0;max-width:360px}
+.sg .sg-tabs{position:static;max-width:420px;border-radius:var(--r-lg)}
+.sg-motion{display:grid;gap:var(--sp-2);margin-top:var(--sp-3)}
+.sg-motion div{display:flex;gap:var(--sp-3);align-items:baseline}
+.go .badge{background:var(--c-on-primary);color:var(--c-primary)}

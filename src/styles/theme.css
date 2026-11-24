@@ -1,0 +1,95 @@
+/* Ruokaideat-teema: värit, fontit ja muodot. Suunta A "Kotikeittiö" (lämmin, kotoisa, rauhallinen, luotettava).
+ * Toisessa projektissa vaihdetaan vain tämä tiedosto; perusta on tiedostossa tokens.css.
+ * Värit on valittu OKLCH-asteikolla (L = havaittu kirkkaus, C = värikkyys, h = sävy) ja kirjoitettu hex-muotoon.
+ * Kaikki tekstiparit vähintään 4.5:1 (WCAG 2.2 AA), reunat ja kuvakkeet vähintään 3:1. Tarkistus: npm run contrast.
+ *
+ * Värisäännöt:
+ * - primary = kaikki päätoiminnot ja valittu tila koko sovelluksessa. Osiovärit eivät koskaan ole napin värejä.
+ * - osiovärit (ideas/plan/add/cart) vain alapalkissa ja yläosassa.
+ * - success = valmis/onnistui, danger = poisto/virhe. Väri ei koskaan ole ainoa vihje: mukana kuvake tai teksti.
+ * - accent = suosikkisydän ja pienet korostukset, ei tekstinä. */
+:root{
+  --c-bg:#faf5ec; /* oklch(0.972 0.013 80) */
+  --c-surface:#fffdfa; /* oklch(0.995 0.006 85) */
+  --c-sunken:#f4ece0; /* oklch(0.945 0.018 78) */
+  --c-line:#e6dcd0; /* oklch(0.9 0.02 75) */
+  --c-field-line:#928377; /* oklch(0.62 0.025 60) */
+  --c-ink:#2c211b; /* oklch(0.26 0.02 50) */
+  --c-muted:#6c5d53; /* oklch(0.49 0.025 55) */
+  --c-disabled-ink:#8d847d; /* oklch(0.62 0.015 60) */
+  --c-primary:#513629; /* oklch(0.36 0.045 45) */
+  --c-primary-hover:#3f271d; /* oklch(0.3 0.04 45) */
+  --c-on-primary:#fefaf3; /* oklch(0.985 0.01 80) */
+  --c-primary-soft:#f5e4d8; /* oklch(0.93 0.025 60) */
+  --c-primary-ink:#513629; /* oklch(0.36 0.045 45) */
+  --c-accent:#c46016; /* oklch(0.6 0.15 50) */
+  --c-success:#2b7440; /* oklch(0.5 0.11 150) */
+  --c-success-ink:#225a31; /* oklch(0.42 0.09 150) */
+  --c-success-soft:#dcf2df; /* oklch(0.94 0.035 150) */
+  --c-on-success:#ffffff; /* oklch(1 0 0) */
+  --c-danger:#b6322d; /* oklch(0.52 0.17 27) */
+  --c-danger-soft:#fee9e6; /* oklch(0.95 0.03 27) */
+  --c-inverse:#2f241e; /* oklch(0.27 0.02 50) */
+  --c-on-inverse:#f9f4ee; /* oklch(0.97 0.01 80) */
+  --c-focus:#864404; /* oklch(0.46 0.12 55) */
+  --c-ideas-ink:#864404; /* oklch(0.46 0.12 55) */
+  --c-ideas-tint:#ffe6d6; /* oklch(0.94 0.035 55) */
+  --c-plan-ink:#6c4289; /* oklch(0.46 0.12 310) */
+  --c-plan-tint:#f2e5fd; /* oklch(0.94 0.035 310) */
+  --c-add-ink:#125a98; /* oklch(0.46 0.12 250) */
+  --c-add-tint:#ddedfe; /* oklch(0.94 0.035 250) */
+  --c-cart-ink:#0f6a31; /* oklch(0.46 0.12 150) */
+  --c-cart-tint:#dcf2df; /* oklch(0.94 0.035 150) */
+  --c-ideas-head:#773a10; /* oklch(0.42 0.1 50) */
+  --c-plan-head:#56386c; /* oklch(0.4 0.09 310) */
+  --c-add-head:#224a71; /* oklch(0.4 0.08 250) */
+  --c-cart-head:#295233; /* oklch(0.4 0.07 150) */
+  --c-reg-head:#513629; /* oklch(0.36 0.045 45) */
+  --font-display:Fraunces,Georgia,"Times New Roman",serif;
+  --font-body:Inter,Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-xs:8px;--r-sm:12px;--r-md:16px;--r-lg:24px;--r-xl:28px;--r-pill:999px;
+  --sh-1:0 1px 2px rgba(60,35,15,.06),0 2px 10px rgba(60,35,15,.06);
+  --sh-2:0 8px 28px rgba(40,20,5,.18);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --c-bg:#16100d; /* oklch(0.18 0.012 55) */
+  --c-surface:#211a16; /* oklch(0.225 0.014 55) */
+  --c-sunken:#100b08; /* oklch(0.155 0.01 55) */
+  --c-line:#39312c; /* oklch(0.32 0.015 55) */
+  --c-field-line:#72665e; /* oklch(0.52 0.02 60) */
+  --c-ink:#f0eae3; /* oklch(0.94 0.012 75) */
+  --c-muted:#baafa4; /* oklch(0.76 0.02 70) */
+  --c-disabled-ink:#77706b; /* oklch(0.55 0.012 60) */
+  --c-primary:#e5d5bf; /* oklch(0.88 0.035 75) */
+  --c-primary-hover:#f4e6d2; /* oklch(0.93 0.03 75) */
+  --c-on-primary:#221812; /* oklch(0.22 0.02 50) */
+  --c-primary-soft:#392a1e; /* oklch(0.3 0.03 60) */
+  --c-primary-ink:#ecdbc5; /* oklch(0.9 0.035 75) */
+  --c-accent:#ed9658; /* oklch(0.75 0.13 55) */
+  --c-success:#76be86; /* oklch(0.74 0.11 150) */
+  --c-success-ink:#95d7a2; /* oklch(0.82 0.1 150) */
+  --c-success-soft:#1a321f; /* oklch(0.29 0.045 150) */
+  --c-on-success:#07150a; /* oklch(0.18 0.03 150) */
+  --c-danger:#f2897e; /* oklch(0.74 0.13 27) */
+  --c-danger-soft:#442320; /* oklch(0.3 0.05 27) */
+  --c-inverse:#3c332e; /* oklch(0.33 0.015 55) */
+  --c-on-inverse:#f9f4ee; /* oklch(0.97 0.01 80) */
+  --c-focus:#f2ad73; /* oklch(0.8 0.11 60) */
+  --c-ideas-ink:#f7b385; /* oklch(0.82 0.1 55) */
+  --c-ideas-tint:#412714; /* oklch(0.3 0.05 55) */
+  --c-plan-ink:#d8b2f5; /* oklch(0.82 0.1 310) */
+  --c-plan-tint:#352641; /* oklch(0.3 0.05 310) */
+  --c-add-ink:#96c9fe; /* oklch(0.82 0.1 250) */
+  --c-add-tint:#192f46; /* oklch(0.3 0.05 250) */
+  --c-cart-ink:#95d7a2; /* oklch(0.82 0.1 150) */
+  --c-cart-tint:#1a3520; /* oklch(0.3 0.05 150) */
+  --c-ideas-head:#5e2f11; /* oklch(0.36 0.08 50) */
+  --c-plan-head:#432d53; /* oklch(0.34 0.07 310) */
+  --c-add-head:#1e3a56; /* oklch(0.34 0.06 250) */
+  --c-cart-head:#224028; /* oklch(0.34 0.055 150) */
+  --c-reg-head:#422d24; /* oklch(0.32 0.035 45) */
+  --sh-1:0 1px 2px rgba(0,0,0,.3),0 2px 10px rgba(0,0,0,.25);
+  --sh-2:0 8px 28px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
