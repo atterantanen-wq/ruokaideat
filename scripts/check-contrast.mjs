@@ -21,6 +21,7 @@ export const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.m
 const PAIRS = [
   ["ink", "bg", 4.5, "teksti taustalla"], ["ink", "surface", 4.5, "teksti kortilla"], ["ink", "sunken", 4.5, "teksti upotetulla pinnalla"],
   ["muted", "bg", 4.5, "toissijainen teksti taustalla"], ["muted", "surface", 4.5, "toissijainen teksti kortilla"], ["muted", "sunken", 4.5, "toissijainen teksti upotetulla"],
+  ["ink", "card-foot", 4.5, "teksti kortin alaosassa"], ["muted", "card-foot", 4.5, "toissijainen teksti kortin alaosassa"], ["primary-ink", "card-foot", 4.5, "Muokkaa kortin alaosassa"],
   ["on-primary", "primary", 4.5, "päänapin teksti"], ["on-primary", "primary-hover", 4.5, "päänapin teksti (hover)"], ["primary-ink", "primary-soft", 4.5, "valittu tila"],
   ["on-success", "success", 4.5, "valmis-merkki"], ["success-ink", "success-soft", 4.5, "onnistumisviesti"], ["success-ink", "surface", 4.5, "onnistumisteksti kortilla"],
   ["danger", "surface", 4.5, "virheteksti kortilla"], ["danger", "bg", 4.5, "virheteksti taustalla"], ["danger", "danger-soft", 4.5, "virheviesti"],

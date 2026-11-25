@@ -9,9 +9,11 @@
  * - success = valmis/onnistui, danger = poisto/virhe. Väri ei koskaan ole ainoa vihje: mukana kuvake tai teksti.
  * - accent = suosikkisydän ja pienet korostukset, ei tekstinä. */
 :root{
-  --c-bg:#faf5ec; /* oklch(0.972 0.013 80) */
+  --c-bg:#f4eee3; /* oklch(0.95 0.016 80) */
   --c-surface:#fffdfa; /* oklch(0.995 0.006 85) */
-  --c-sunken:#f4ece0; /* oklch(0.945 0.018 78) */
+  --c-sunken:#ece3d6; /* oklch(0.92 0.02 78) */
+  --c-card-line:#e6dcd0; /* oklch(0.9 0.02 75) kortin reuna */
+  --c-card-foot:#f5decc; /* oklch(0.915 0.035 60) kortin alaosa (avaa ikkunan) */
   --c-line:#e6dcd0; /* oklch(0.9 0.02 75) */
   --c-field-line:#928377; /* oklch(0.62 0.025 60) */
   --c-ink:#2c211b; /* oklch(0.26 0.02 50) */
@@ -49,13 +51,16 @@
   --font-body:Inter,Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
   --r-xs:8px;--r-sm:12px;--r-md:16px;--r-lg:24px;--r-xl:28px;--r-pill:999px;
   --sh-1:0 1px 2px rgba(60,35,15,.06),0 2px 10px rgba(60,35,15,.06);
+  --sh-card:0 0 0 1px var(--c-card-line),0 1px 3px rgba(60,35,15,.08),0 4px 14px rgba(60,35,15,.06); /* kortti erottuu taustasta */
   --sh-2:0 8px 28px rgba(40,20,5,.18);
   color-scheme:light;
 }
 :root[data-theme="dark"]{
   --c-bg:#16100d; /* oklch(0.18 0.012 55) */
-  --c-surface:#211a16; /* oklch(0.225 0.014 55) */
+  --c-surface:#231c18; /* oklch(0.235 0.014 55) */
   --c-sunken:#100b08; /* oklch(0.155 0.01 55) */
+  --c-card-line:#342c26; /* oklch(0.3 0.016 55) */
+  --c-card-foot:#32261c; /* oklch(0.28 0.025 60) */
   --c-line:#39312c; /* oklch(0.32 0.015 55) */
   --c-field-line:#72665e; /* oklch(0.52 0.02 60) */
   --c-ink:#f0eae3; /* oklch(0.94 0.012 75) */
@@ -90,6 +95,7 @@
   --c-cart-head:#224028; /* oklch(0.34 0.055 150) */
   --c-reg-head:#422d24; /* oklch(0.32 0.035 45) */
   --sh-1:0 1px 2px rgba(0,0,0,.3),0 2px 10px rgba(0,0,0,.25);
+  --sh-card:0 0 0 1px var(--c-card-line),0 2px 10px rgba(0,0,0,.35);
   --sh-2:0 8px 28px rgba(0,0,0,.5);
   color-scheme:dark;
 }

@@ -112,16 +112,16 @@ function plTotals(){
   for(const id of pl.bk){const r=byId(id);if(r)extra+=plCostPer(r,"")*servOf(r);}
   return{food,extra};
 }
-/* kortin yhteenveto (pelkkää tekstiä, ei nappeja): lisukkeet ja tuotteet sekä muunnelmat. Koko kortti avaa muokkauksen. */
-function rowSum(it){
+/* kortin sirut: lisukkeet ja tuotteet avaavat lisukevalinnan, muunnelmat muunnelmavalinnan */
+function rowChips(it,i){
   const r=byId(it.id);if(!r)return"";
-  const sd=[...(it.sd||[]).map(sdBase),...(it.px||[]).filter(k=>!vkOn(k)).map(capF)].filter(Boolean);
-  const tw=(it.t||[]).map(t=>(r.tw||[]).find(x=>x.id===t)).filter(Boolean).map(m=>m.n);
-  const out=[];
-  if(sd.length)out.push(`<span class="pn-sl">${ico("check")}<span>${esc(sd.join(", "))}</span></span>`);
-  if(tw.length)out.push(`<span class="pn-sl tw">${ico("pencil")}<span>${esc(tw.join(", "))}</span></span>`);
-  else if((r.tw||[]).length)out.push(`<span class="pn-sl hint">${r.tw.length===1?"1 muunnelma":r.tw.length+" muunnelmaa"} valittavissa</span>`);
-  return out.length?`<div class="pn-sum1">${out.join("")}</div>`:"";
+  const out=[],n=plN(it),b=(to,cls,html)=>`<button type="button" class="pn-tg ${cls}" data-pa="edit" data-to="${to}" data-i="${i}">${html}</button>`;
+  for(const s of it.sd||[])out.push(b("sd","on",`${ico("check")}${esc(sdBase(s))}<span class="pn-pc">${sdPrice(s,n)}</span>`));
+  for(const k of (it.px||[]).filter(k=>!vkOn(k)))out.push(b("sd","on",`${ico("check")}${esc(capF(k))}`));
+  if(!(it.sd||[]).length){const g=sideSug(r);if(g&&[...g.out.c,...g.out.v].some(y=>y.t==="r"))out.push(b("sd","pn-twh",`${ico("plus")}Lisuke`));}
+  for(const t of it.t||[]){const m=(r.tw||[]).find(x=>x.id===t);if(m)out.push(b("tw","tw",esc(m.n)));}
+  if(!(it.t||[]).length&&(r.tw||[]).length)out.push(b("tw","pn-twh",r.tw.length===1?"1 muunnelma":r.tw.length+" muunnelmaa"));
+  return out.length?`<div class="pn-tags">${out.join("")}</div>`:"";
 }
 /* kuvat korteissa: kokeilu (false = ei kuvia, true = oma kuva tai ruokatyypin värillinen paikka) */
 export let PL_PICS=false;
@@ -140,11 +140,11 @@ export function renderPlan(){
     const ver=r&&(r.vs||[]).length>1&&((it.v&&r.vs.find(v=>v.id===it.v))||r.vs[0]);
     const mt=PL.mainTag(it.tg)||"a",ex=it.tg.filter(t=>t!=="a"&&t!=="w").map(t=>PL.TAG_N[t]);
     const labs=`<div class="pn-labs"><button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-to="main" data-i="${i}" aria-label="Pääryhmä, ruoka ${i+1}: ${esc(PL.TAG_N[mt])}">${esc(MT_SHORT[mt])} ▾</button><button type="button" class="pn-lab pn-lab-x${ex.length?"":" none"}" data-pa="type" data-to="ex" data-i="${i}" aria-label="Rajaukset, ruoka ${i+1}: ${esc(ex.join(", ")||"ei rajauksia")}">${ex.length?esc(ex[0])+(ex.length>1?` +${ex.length-1}`:"")+" ▾":"+ Rajaus"}</button></div>`;
-    const acts=`<span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Arvo toinen ruoka ${i+1}">${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="rm" data-i="${i}" aria-label="Poista suunnitelmasta: ruoka ${i+1}">${ico("x")}</button></span>`;
-    const body=r?`<div class="pn-main" data-pa="edit" data-i="${i}">${PL_PICS?thumb(r):""}<div class="pn-mt"><span class="pn-name">${esc(r.name)}${ver?`<span class="pn-ver"> – ${esc(ver.n)}</span>`:""}</span>${rowSum(it)}</div></div>
+    const acts=`<span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Arvo toinen ruoka ${i+1}">${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="pick" data-i="${i}" aria-label="Hae ruoka ${i+1}">${ico("search")}</button><button type="button" class="pn-ib" data-pa="rm" data-i="${i}" aria-label="Poista suunnitelmasta: ruoka ${i+1}">${ico("x")}</button></span>`;
+    const body=r?`<div class="pn-main" data-pa="edit" data-i="${i}">${PL_PICS?thumb(r):""}<div class="pn-mt"><div class="pn-nr"><span class="pn-name">${esc(r.name)}${ver?`<span class="pn-ver"> – ${esc(ver.n)}</span>`:""}</span>${acts}</div>${rowChips(it,i)}</div></div>
       <button type="button" class="pn-open" data-pa="edit" data-i="${i}" aria-label="Muokkaa: ${esc(r.name)}"><span>${fmtN(plN(it))} annosta · ${fmtDur(workOf(r)||r.min||0)}</span><b>${eur1(plItemCost(it))}</b><span class="pn-ed">Muokkaa${ico("right")}</span></button>`
-      :`<div class="pn-main"><div class="pn-mt"><span class="pn-name muted">Ei ruokaa näillä valinnoilla</span><p class="note">Muuta valintoja tai hae ruoka itse.</p><button type="button" class="lk" data-pa="pick" data-i="${i}">Hae ruoka</button></div></div>`;
-    return`<li class="pn-item${planNew===i?" pn-new":""}${r?" pn-click":""}${PL_PICS?" pics":""}" data-i="${i}"><div class="pn-row1">${labs}${acts}</div>${body}</li>`;
+      :`<div class="pn-main"><div class="pn-mt"><div class="pn-nr"><span class="pn-name muted">Ei ruokaa näillä valinnoilla</span>${acts}</div><p class="note">Muuta valintoja tai hae ruoka itse.</p><button type="button" class="lk" data-pa="pick" data-i="${i}">Hae ruoka</button></div></div>`;
+    return`<li class="pn-item${planNew===i?" pn-new":""}${r?" pn-click":""}${PL_PICS?" pics":""}" data-i="${i}"><div class="pn-row1">${labs}</div>${body}</li>`;
   }).join("");
   const snacks=plSnacks(),bakes=plBakes();
   const snSel=Object.keys(pl.sn).filter(id=>byId(id));

@@ -1125,28 +1125,29 @@ body:not([data-view="ideas"]) .spill{display:none}
 #kpdlg .kp-bas .chip[aria-pressed="false"]{color:var(--c-muted);text-decoration:line-through;border-color:var(--c-line)}
 
 /* ---------- suunnitelman kortti: yläosa = valinnat ja napit, keskiosa = ruoka, alaosa = avaa muokkauksen ---------- */
-#v-plan .pn-item{padding:0;overflow:hidden}
-#v-plan .pn-row1{align-items:center;gap:var(--sp-2);margin:0;padding:var(--sp-2) var(--sp-2) 0 var(--sp-4)}
+#v-plan .pn-item{padding:0;overflow:hidden;box-shadow:var(--sh-card)}
+#v-plan .pn-row1{align-items:center;gap:var(--sp-2);margin:0;padding:var(--sp-3) var(--sp-4) 0}
 #v-plan .pn-row1 .pn-labs{flex:1;min-width:0;flex-wrap:nowrap;margin:0}
 #v-plan .pn-labs .pn-lab{flex:none;min-height:var(--tap-min)}
 #v-plan .pn-labs .pn-lab-x{flex:0 1 auto;min-width:0}
 #v-plan .pn-act{gap:0}
 #v-plan .pn-act .pn-ib{background:transparent;color:var(--c-muted)}
-.pn-main{display:flex;gap:var(--sp-3);align-items:flex-start;padding:var(--sp-1) var(--sp-4) var(--sp-3);cursor:pointer}
+.pn-main{display:flex;gap:var(--sp-3);align-items:flex-start;padding:var(--sp-1) var(--sp-2) var(--sp-3) var(--sp-4);cursor:pointer}
+.pn-nr{display:flex;align-items:flex-start;gap:var(--sp-1)}
+.pn-nr .pn-name{flex:1;min-width:0;padding-top:var(--sp-2)!important}
+#v-plan .pn-main .pn-tags{margin:var(--sp-1) var(--sp-2) 0 0}
 .pn-mt{flex:1;min-width:0}
 #v-plan .pn-item .pn-main .pn-name{padding:0;cursor:inherit}
-.pn-sum1{display:flex;flex-direction:column;gap:2px;margin-top:var(--sp-1)}
-.pn-sl{display:flex;align-items:flex-start;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--c-muted);line-height:var(--lh-tight)}
-.pn-sl .ico{flex:none;width:14px;height:14px;margin-top:1px}
-.pn-sl.tw{color:var(--c-ink)}
-.pn-sl.hint{font-style:italic}
 .pn-th{flex:none;width:64px;height:64px;border-radius:var(--r-md);overflow:hidden;display:flex;align-items:center;justify-content:center;background:hsl(var(--h) 45% 88%);color:hsl(var(--h) 35% 36%)}
 :root[data-theme="dark"] .pn-th{background:hsl(var(--h) 22% 22%);color:hsl(var(--h) 30% 70%)}
 .pn-th img{width:100%;height:100%;object-fit:cover}
 .pn-th .ico{width:28px;height:28px;opacity:.75}
-.pn-open{font:inherit;display:flex;align-items:center;gap:var(--sp-2);width:100%;min-height:var(--h-lg);padding:var(--sp-2) var(--sp-4);border:0;border-top:1px solid var(--c-line);background:var(--c-sunken);color:var(--c-muted);font-size:var(--fs-sm);text-align:left;cursor:pointer}
+.pn-open{font:inherit;display:flex;align-items:center;gap:var(--sp-2);width:100%;min-height:var(--h-lg);padding:var(--sp-2) var(--sp-4);border:0;border-top:1px solid var(--c-card-line);background:var(--c-card-foot);color:var(--c-muted);font-size:var(--fs-sm);text-align:left;cursor:pointer}
 .pn-open>span:first-child{flex:1;min-width:0}
 .pn-open b{font-size:var(--fs-base);color:var(--c-ink)}
-.pn-ed{display:inline-flex;align-items:center;gap:2px;font-weight:var(--fw-semibold);color:var(--c-primary-ink);padding-left:var(--sp-2);border-left:1px solid var(--c-line)}
+.pn-ed{display:inline-flex;align-items:center;gap:2px;font-weight:var(--fw-semibold);color:var(--c-primary-ink);padding-left:var(--sp-2);border-left:1px solid var(--c-card-line)}
 .pn-ed .ico{width:16px;height:16px}
 @media (hover:hover){.pn-open:hover{background:var(--c-primary-soft)}}
+
+/* kortit erottuvat taustasta: reunaviiva ja varjo (--sh-card, theme.css) */
+.card,.lcard,.pn-empty,.pn-card,.kp-entry{box-shadow:var(--sh-card)}

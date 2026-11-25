@@ -241,12 +241,15 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('#pkbody [data-pe="addok"]'); await wait(200);
   const it5 = await page.evaluate(() => { const A = window.__app, it = A.state.pl.items; return { n: it.length, light: !!(it[4] && A.plCands().find((c) => c.id === it[4].id) || {}).light }; });
   ok(it5.n === 5 && it5.light, "kevyen ruoan lisäys ei onnistunut: " + JSON.stringify(it5));
-  /* kortti: keskiosassa ei nappeja (ei vahinkopainalluksia), alaosa avaa koko muokkauksen, laput yhdellä rivillä */
+  /* kortti: laput yhdellä rivillä, lisuke- ja muunnelmasirut sekä haku tallella, alaosa avaa koko muokkauksen */
   const cardChk = await page.evaluate(() => {
     const li = document.querySelector("#planBody .pn-item"), labs = [...li.querySelectorAll(".pn-lab")].map((b) => b.getBoundingClientRect().top);
-    return { btns: li.querySelectorAll(".pn-main button").length, open: !!li.querySelector("button.pn-open"), row: labs.every((t) => Math.abs(t - labs[0]) < 2) };
+    return { chips: li.querySelectorAll(".pn-main .pn-tg").length, pick: !!li.querySelector('[data-pa="pick"]'), open: !!li.querySelector("button.pn-open"), row: labs.every((t) => Math.abs(t - labs[0]) < 2) };
   });
-  ok(!cardChk.btns && cardChk.open && cardChk.row, "kortin rakenne: " + JSON.stringify(cardChk));
+  ok(cardChk.chips && cardChk.pick && cardChk.open && cardChk.row, "kortin rakenne: " + JSON.stringify(cardChk));
+  await click('[data-pa="edit"][data-to="tw"]'); await wait(150);
+  ok((await page.evaluate(() => document.querySelector("#pkbody h2").innerText)) === "Muunnelmat", "muunnelmasiru ei avannut muunnelmia");
+  await click('#pkbody [data-pp-x]'); await wait(150);
   await click('#planBody .pn-open[data-i="0"]'); await wait(150);
   ok(await page.evaluate(() => !!document.querySelector('#pkbody [data-pe="n"]')), "alaosa ei avannut muokkausta");
   await click('#pkbody [data-pe="pick"]'); await wait(150);
