@@ -46,16 +46,23 @@ function needs(){
   for(const c of plCands()){
     const r=byId(c.id);if(!r)continue;
     const vs=(r.vs||[]).length>1?r.vs.map((v,i)=>i?v.id:""):[""];
-    for(const v of vs){
+    /* muunnelmat, jotka tuovat ruokaan oman aineksen (esim. Bataatilla): kaapissa oleva aines voi nostaa muunnelman ehdotukseksi.
+       Yksi muunnelma kerrallaan, joten saman ryhmän (g) muunnelmat eivät tule yhtä aikaa. */
+    const tws=[["",[]]];
+    for(const m of r.tw||[]){
+      const tk=(m.add||[]).map(l=>{const p=parseIng(l);return isBasic(p.key)?"":canon(p.key);}).filter(Boolean);
+      if(tk.length)tws.push([m.id,tk]);
+    }
+    for(const v of vs)for(const [t,tk] of tws){
       const need=[],main=[];
-      for(const line of ingFor(r,servOf(r),v,[])){
+      for(const line of ingFor(r,servOf(r),v,t?[t]:[])){
         const p=parseIng(line),k=canon(p.key);
         if(k==="vesi")continue;
-        if(isBasic(p.key)||isBasic(k)){if(!v)cnt.set(k,(cnt.get(k)||0)+1);if(!no.has(k))continue;}
+        if(isBasic(p.key)||isBasic(k)){if(!v&&!t)cnt.set(k,(cnt.get(k)||0)+1);if(!no.has(k))continue;}
         need.push(k);
         const e=catFind(k);if(e&&e.m&&MAINM.includes(e.m))main.push(k);
       }
-      out.push({id:c.id,v,need,main});
+      out.push({id:c.id,v,t,tk,need,main});
     }
   }
   /* perusaineet, joita ruoissa käytetään, yleisimmät ensin */
@@ -119,13 +126,13 @@ function kpHtml(nSg){
 }
 function sgRow(x){
   const r=byId(x.id);if(!r)return"";
-  const ver=x.v&&(r.vs||[]).find(v=>v.id===x.v);
+  const ver=x.v&&(r.vs||[]).find(v=>v.id===x.v),tw=x.t&&(r.tw||[]).find(m=>m.id===x.t);
   const st=x.miss.length?`<span class="kp-miss">Puuttuu ${x.miss.length}: ${esc(x.miss.join(", "))}</span>`:`<span class="kp-all">${ico("check")}Kaikki löytyy</span>`;
   const extra=x.minor.length?`<small>Lisäksi tarvittaessa: ${esc(x.minor.join(", "))}</small>`:"";
   const on=inPlan(x.id),full=state.pl.items.length>=10;
   return`<li class="kp-sg"><div class="kp-sgt"><button type="button" class="kp-nm" data-kopen="${esc(x.id)}">${esc(r.name)}${ver?`<span class="pn-ver"> – ${esc(ver.n)}</span>`:""}</button>
-    ${st}<small>Kaapista: ${esc(x.hit.map(nm).join(", "))} · ${fmtDur(workOf(r)||r.min||0)}</small>${extra}</div>
-    ${on?`<button type="button" class="cartbtn kp-add" disabled>${ico("check")}<span>Lisätty</span></button>`:`<button type="button" class="cartbtn kp-add" data-kadd="${esc(x.id)}" data-v="${esc(x.v)}"${full?" disabled":""} aria-label="Lisää suunnitelmaan: ${esc(r.name)}">${ico("plus")}<span>Lisää</span></button>`}</li>`;
+    ${tw?`<span class="kp-tw">Muunnelma: ${esc(tw.n)}</span>`:""}${st}<small>Kaapista: ${esc(x.hit.map(nm).join(", "))} · ${fmtDur(workOf(r)||r.min||0)}</small>${extra}</div>
+    ${on?`<button type="button" class="cartbtn kp-add" disabled>${ico("check")}<span>Lisätty</span></button>`:`<button type="button" class="cartbtn kp-add" data-kadd="${esc(x.id)}" data-v="${esc(x.v)}" data-t="${esc(x.t)}"${full?" disabled":""} aria-label="Lisää suunnitelmaan: ${esc(r.name)}${tw?", "+esc(tw.n):""}">${ico("plus")}<span>Lisää</span></button>`}</li>`;
 }
 function sgHtml(sg){
   if(!kp().h.length)return`<p class="note">Merkitse ensin, mitä kaapista löytyy. Perusaineita ei tarvitse merkitä.</p><div class="actions"><button type="button" class="go" data-kv="kp" style="width:100%">Merkitse ainekset</button></div>`;
@@ -137,10 +144,11 @@ function sgHtml(sg){
     ${rest.length?`<h3 class="pn-h">${soon.length?"Muut osumat":"Parhaat osumat"}</h3><ul class="kp-sgs">${rest.map(sgRow).join("")}</ul>`:""}
     <div class="actions kp-foot"><button type="button" class="go" data-kx="1" style="width:100%">Valmis</button></div>`;
 }
-function addToPlan(id,v){
+function addToPlan(id,v,t){
   const pl=state.pl;if(pl.items.length>=10||inPlan(id))return;
   const c=plCands().find(x=>x.id===id);if(!c)return;
   const it={tg:[c.arki?"a":"w"],id,v:v||""};plDefaults(it);
+  const r=byId(id);if(t&&(r.tw||[]).some(m=>m.id===t))it.t=[t];
   pl.items.push(it);pl.n=pl.items.length;
 }
 $("kpbody").addEventListener("input",e=>{if(e.target.id!=="kpq")return;q=e.target.value;const pos=e.target.selectionStart;render();const i=$("kpq");i.focus();try{i.setSelectionRange(pos,pos);}catch(x){}});
@@ -155,7 +163,7 @@ $("kpbody").addEventListener("click",e=>{
   else if(d.kr)K.h=K.h.filter(it=>it.k!==d.kr);
   else if(d.kn){K.no=K.no.includes(d.kn)?K.no.filter(k=>k!==d.kn):[...K.no,d.kn];needMemo=null;}
   else if(d.kc)K.h=[];
-  else if(d.kadd)addToPlan(d.kadd,d.v);
+  else if(d.kadd)addToPlan(d.kadd,d.v,d.t);
   else return;
   mutate();renderPlan();render();
 });
