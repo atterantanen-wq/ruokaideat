@@ -7,7 +7,7 @@ import "./styles/tokens.css";
 import "./styles/theme.css";
 import "./styles/main.css";
 import "./app/pantry-view.js";
-import {ingFor,plCostPer,plCands,plDefaults,autoN} from "./app/plan-view.js";
+import {ingFor,plCostPer,plCands,plDefaults,autoN,setPlPics} from "./app/plan-view.js";
 import {R,parseIng} from "./app/core.js";
 import {catFind,recipeNut,nutPer,findPrice,nameSkip,isSkip,selR,recipeCost} from "./app/catalog.js";
 import {state} from "./app/state.js";
@@ -17,4 +17,4 @@ import {LIB} from "./data/library/index.js";
 import {applySel} from "./recipes.js";
 
 /* kehitystila: testiskriptien apu (ei mukana tuotantoversiossa) */
-if(import.meta.env.DEV)window.__app={PL,plCands,autoN,plDefaults,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
+if(import.meta.env.DEV)window.__app={PL,plCands,setPlPics,autoN,plDefaults,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};

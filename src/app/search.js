@@ -328,7 +328,7 @@ export function applyLay(){
   $("list").dataset.lay=g?"grid":"list";
   document.querySelectorAll("#thm [data-lay]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lay===(g?"grid":"list")));
 }
-const LAYH={pa:22,ki:38,ke:8,uu:30,pn:48,ps:42,pu:62,am:52,sa:120,le:335,ja:350,li:95,wo:52,pi:28,ha:40,vp:70,al:100};
+export const LAYH={pa:22,ki:38,ke:8,uu:30,pn:48,ps:42,pu:62,am:52,sa:120,le:335,ja:350,li:95,wo:52,pi:28,ha:40,vp:70,al:100};
 function gridPrice(r){
   const t=priceTxt(r);
   return t?`<b class="gp">${t}</b>`:"";
