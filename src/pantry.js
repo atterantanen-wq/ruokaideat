@@ -49,14 +49,16 @@ export function haveMap(h) {
   return m;
 }
 
-/* ehdokkaat: [{ id, v, need: [avaimet ilman perusaineita], main: [pääraaka-aineet (liha, kala)] }], have = haveMap,
+/* ehdokkaat: [{ id, v, t, tk, need: [avaimet ilman perusaineita], main: [pääraaka-aineet (liha, kala)] }], have = haveMap,
+ * t = muunnelma ja tk = muunnelman lisäämät ainekset: muunnelma on ehdokas vain, jos jokin sen lisäämistä aineksista on kaapissa,
  * soon = Set(kaapin merkinnät, jotka vanhenevat pian)
- * palauttaa ruoat, joissa on vähintään yksi kaapin aines: { id, v, hit: [merkinnät], miss: [avaimet], minor: [avaimet], soon: [merkinnät], mainMiss, mainHit }
+ * palauttaa ruoat, joissa on vähintään yksi kaapin aines: { id, v, t, hit: [merkinnät], miss: [avaimet], minor: [avaimet], soon: [merkinnät], mainMiss, mainHit }
  * Järjestys: pääraaka-aine löytyy, vähiten puuttuvia, eniten pian vanhenevia, pääraaka-aine kaapista, eniten osumia.
- * Samasta ruoasta vain paras versio. */
+ * Samasta ruoasta vain paras versio ja muunnelma; tasapelissä perusresepti. */
 export function rank(cands, have, soon = new Set()) {
   const best = new Map();
   for (const c of cands) {
+    if (c.t && !(c.tk || []).some((k) => have.has(k))) continue;
     const hit = new Set(), miss = [], minor = [], main = new Set(c.main || []);
     let mainMiss = 0, mainHit = 0;
     for (const k of new Set(c.need)) {
@@ -65,7 +67,7 @@ export function rank(cands, have, soon = new Set()) {
       else { miss.push(k); if (main.has(k)) mainMiss++; }
     }
     if (!hit.size) continue;
-    const e = { id: c.id, v: c.v || "", hit: [...hit], miss, minor, soon: [...hit].filter((k) => soon.has(k)), mainMiss, mainHit };
+    const e = { id: c.id, v: c.v || "", t: c.t || "", hit: [...hit], miss, minor, soon: [...hit].filter((k) => soon.has(k)), mainMiss, mainHit };
     const o = best.get(c.id);
     if (!o || cmp(e, o) < 0) best.set(c.id, e);
   }
@@ -73,7 +75,7 @@ export function rank(cands, have, soon = new Set()) {
 }
 function cmp(a, b) {
   return (a.mainMiss > 0) - (b.mainMiss > 0) || a.miss.length - b.miss.length || b.soon.length - a.soon.length || b.mainHit - a.mainHit ||
-    b.hit.length - a.hit.length || a.minor.length - b.minor.length || (a.v ? 1 : 0) - (b.v ? 1 : 0);
+    b.hit.length - a.hit.length || a.minor.length - b.minor.length || (a.v ? 1 : 0) - (b.v ? 1 : 0) || (a.t ? 1 : 0) - (b.t ? 1 : 0);
 }
 /* näytettävät: pääraaka-aine löytyy ja puuttuu enintään 3; jos sellaisia ei ole, parhaat 5 */
 export function shortlist(ranked, max = 15) {
