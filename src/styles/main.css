@@ -1157,10 +1157,9 @@ body:not([data-view="ideas"]) .spill{display:none}
 .mn.ct{align-items:flex-start}
 .mn.ct .ico{margin-top:.15em}
 .ct .ctx{display:inline-flex;flex-wrap:wrap;column-gap:var(--sp-1);row-gap:0;min-width:0}
-.ct .tw,.ct .nw{white-space:nowrap}
+.ct .tw,.ct .tp{white-space:nowrap}
 .ct .tw{color:var(--c-ink);font-weight:600}
 .ct .tp{color:var(--c-muted)}
 .gc .gm .mn.ct{flex-wrap:wrap;align-items:center;column-gap:var(--sp-1)}
 .gc .gm .mn.ct .ico{margin-top:0}
 .gc .ct .ctx{display:contents}
-.gc .ct .tp{font-size:var(--fs-sm)}
