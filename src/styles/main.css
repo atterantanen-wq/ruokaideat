@@ -1152,3 +1152,14 @@ body:not([data-view="ideas"]) .spill{display:none}
 
 /* kortit erottuvat taustasta: reunaviiva ja varjo (--sh-card, theme.css) */
 .card,.lcard,.pn-empty,.pn-card,.kp-entry{box-shadow:var(--sh-card)}
+
+/* ---------- korttien aikarivi: työaika + odotus ---------- */
+.mn.ct{align-items:flex-start}
+.mn.ct .ico{margin-top:.15em}
+.ct .ctx{display:inline-flex;flex-wrap:wrap;column-gap:var(--sp-1);row-gap:0;min-width:0}
+.ct .tw,.ct .tp{white-space:nowrap}
+.ct .tw{color:var(--c-ink);font-weight:600}
+.ct .tp{color:var(--c-muted)}
+.gc .gm .mn.ct{flex-wrap:wrap;align-items:center;column-gap:var(--sp-1)}
+.gc .gm .mn.ct .ico{margin-top:0}
+.gc .ct .ctx{display:contents}
