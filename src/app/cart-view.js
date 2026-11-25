@@ -162,13 +162,20 @@ export function renderCart(){
     (st.act.length?(()=>{const xN=st.act.filter(e=>e.extra&&!(e.per&&e.per.size)).length,t=(st.miss?st.miss+" ainekselta puuttuu hinta. ":"")+(xN?"Lisätuotteita "+xN+" kpl, niiden hintaa ei ole mukana. ":"")+(st.tot>0?"Hinta lasketaan kokonaisista pakkauksista. S-kaupat.fi 18.–19.11.2026.":"");return t?`<p class="tot"><span class="note">${t}</span></p>`:"";})():"")+
     xBar();
 }
+/* linkki sovelluksen ostoslistaan: GitHub Pages -osoite, tai nykyinen osoite kun sovellus on jo jossain muualla http(s):n takana */
+const APP_URL="https://atterantanen-wq.github.io/ruokaideat/";
+function appUrl(){
+  try{const u=location;if(/^https?:$/.test(u.protocol)&&!/claude|localhost|127\.0\.0\.1/.test(u.hostname))return u.origin+u.pathname;}catch(e){}
+  return APP_URL;
+}
+export const listLink=l=>appUrl()+"#lista="+encodeURIComponent(l.id);
 function shareText(l){
   const items=needed(l).filter(e=>!l.checked.includes(e.key));
   if(!items.length)return"";
   const sh=e=>qtyMain(e,l).replace(/^1 × /,"");
   const nm=e=>e.name.replace(/^Wc-/,"WC-");
   const rec=listRecs(l).map(r=>r.name);
-  let out="*🛒 "+l.name+"* ("+items.length+" "+(items.length===1?"tuote":"tuotetta")+")\n";
+  let out="*"+l.name+"* ("+items.length+" "+(items.length===1?"tuote":"tuotetta")+")\n"+listLink(l)+"\n";
   if(rec.length)out+="_"+rec.join(", ")+"_\n";
   for(const g of groupDeps(items,[],l.store))out+="\n*"+g.name+"*\n"+g.items.map(e=>("• "+nm(e)+" "+sh(e)).trim()).join("\n")+"\n";
   return out.trim();
