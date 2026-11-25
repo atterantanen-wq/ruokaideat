@@ -77,8 +77,9 @@ function cmp(a, b) {
   return (a.mainMiss > 0) - (b.mainMiss > 0) || a.miss.length - b.miss.length || b.soon.length - a.soon.length || b.mainHit - a.mainHit ||
     b.hit.length - a.hit.length || a.minor.length - b.minor.length || (a.v ? 1 : 0) - (b.v ? 1 : 0) || (a.t ? 1 : 0) - (b.t ? 1 : 0);
 }
-/* näytettävät: pääraaka-aine löytyy ja puuttuu enintään 3; jos sellaisia ei ole, parhaat 5 */
-export function shortlist(ranked, max = 15) {
-  const near = ranked.filter((x) => !x.mainMiss && x.miss.length <= 3);
-  return (near.length ? near : ranked.slice(0, 5)).slice(0, max);
+/* näytettävät kahdessa osassa: near = pääraaka-aine löytyy ja puuttuu enintään 3 (enintään max),
+ * more = muut kaapin aineksia käyttävät ruoat, lähimmät ensin (rank-järjestys säilyy) */
+export function split(ranked, max = 15) {
+  const near = ranked.filter((x) => !x.mainMiss && x.miss.length <= 3).slice(0, max), ns = new Set(near);
+  return { near, more: ranked.filter((x) => !ns.has(x)) };
 }
