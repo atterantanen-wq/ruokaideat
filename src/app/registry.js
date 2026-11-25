@@ -7,13 +7,13 @@ import {state,setBar,mutate} from "./state.js";
 import {all} from "./ideas.js";
 import {renderIdeas} from "./search.js";
 import {DEPS} from "./price-updates.js";
-import {OT,otOf,applyOtx,otP,otPack,otUnit,deptOf,packOf} from "./cart.js";
+import {OT,otOf,applyOtx,otP,otPack,otUnit,deptOf,packOf,listItems,undoToast,hideToast} from "./cart.js";
 import {refreshCart} from "./cart-view.js";
 import {pf,setPf,PUNIT,kvRow,nutKv,packTxt,priceKv,priceFormHtml,dlg} from "./info.js";
 import {fmtQ} from "./editor.js";
 
 /* ---------- ainesosarekisteri ---------- */
-export const regS={q:"",d:"",m:"",own:false,nop:false,open:null,form:null,back:"add",del:false,g:""};
+export const regS={q:"",d:"",m:"",own:false,nop:false,open:null,form:null,back:"add",del:false,g:"",rdel:null,rto:"",rerr:""};
 export const capF=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const num1=v=>{const x=parseFloat(String(v).replace(",","."));return isFinite(x)?x:null;};
 /* yksi rekisteri: ainekset, valmiit tuotteet ja kodin tarvikkeet (laji kind: "" ruoka-aine, t valmis tuote, k kodin tarvike) */
@@ -75,7 +75,7 @@ function regFormHtml(){
   const f=regS.form,fixed=f.kind==="ix"||f.kind==="pr";
   const fld=(id,lab,val,ph)=>`<label class="rf2"><span>${lab}</span><input type="text" inputmode="decimal" data-reg-in="${id}" value="${esc(val)}" placeholder="${ph||""}" autocomplete="off"></label>`;
   const nameHtml=fixed?`<p class="rfn">${esc(capF(f.orig))}</p>`:`<label class="rf2 w"><span>Nimi</span><input type="text" data-reg-in="name" value="${esc(f.name)}" maxlength="60" autocomplete="off"></label>${f.orig?`<p class="note nd" style="margin:-4px 0 10px">Nimen muutos päivittyy myös omiin reseptehisi ja ostoslistoihin.</p>`:""}`;
-  const reset=f.kind==="own"?`<button type="button" class="clear err" data-reg="del">${regS.del?"Varmista poisto":"Poista aines"}</button>`:(f.has?`<button type="button" class="clear err" data-reg="del">${regS.del?"Varmista palautus":"Palauta alkuperäinen"}</button>`:"");
+  const reset=f.kind==="own"?`<button type="button" class="clear err" data-reg="del">Poista aines</button>`:(f.has?`<button type="button" class="clear err" data-reg="del">${regS.del?"Varmista palautus":"Palauta alkuperäinen"}</button>`:"");
   return`<div class="rform"><p class="pft">${!f.orig?(f.b?"Lisää muunnelma":"Lisää oma aines"):fixed?"Muokkaa ainesta":"Muokkaa omaa ainesta"}</p>
 ${nameHtml}
 ${fixed?"":`<label class="rf2 w"><span>Muunnelma tuotteesta (valinnainen)</span><input type="text" data-reg-in="b" value="${esc(f.b||"")}" list="rbl" placeholder="esim. tuorejuusto" autocomplete="off"></label><datalist id="rbl">${CAT.filter(e=>e.kind!=="k").map(e=>`<option value="${esc(e.key)}">`).join("")}</datalist><p class="note nd" style="margin:-4px 0 10px">Esimerkiksi valkosipulituorejuusto on tuorejuuston muunnelma. Tyhjiksi jätetyt kentät täytetään pohjatuotteen tiedoilla, ja hinta tulee pohjatuotteelta, ellet anna omaa.</p>`}
@@ -137,9 +137,100 @@ function regDetail(row){
   if(row.syn.length)h+=`<section class="ib"><h4>Tunnistetaan myös</h4><p class="ru">${row.syn.map(esc).join(", ")}</p></section>`;
   const used=all().filter(r=>r.ing.some(l=>{const k=parseIng(l).key;if(row.cat){const c=catFind(k);return c&&c.key===row.key;}return k===row.key;}));
   if(used.length)h+=`<section class="ib"><h4>Käytössä ruuissa</h4><p class="ru">${used.slice(0,8).map(r=>`<button type="button" class="lk" data-open="${esc(r.id)}">${esc(r.name)}</button>`).join("")}${used.length>8?` ja ${used.length-8} muuta`:""}</p></section>`;
-  h+=`<div class="nfa"><button type="button" class="cartbtn" data-reg="edit" data-key="${esc(row.key)}">${ico("pencil")}<span>Muokkaa</span></button>${row.ov?`<button type="button" class="clear" data-reg="reset" data-key="${esc(row.key)}">Palauta alkuperäinen</button>`:""}</div>`;
+  const own=row.own&&!row.ov,arm=own&&regS.rdel===row.key;
+  if(arm)h+=delPanel(row.key);
+  h+=`<div class="nfa"><button type="button" class="cartbtn" data-reg="edit" data-key="${esc(row.key)}">${ico("pencil")}<span>Muokkaa</span></button>${own?`<button type="button" class="cartbtn regdel${arm?" arm":""}" data-reg="rdel" data-key="${esc(row.key)}" aria-label="${arm?"Varmista poisto":"Poista"}: ${esc(capF(row.key))}">${ico("trash")}<span>${arm?"Varmista poisto":"Poista"}</span></button>${arm?`<button type="button" class="clear" data-reg="rdelno">Peruuta</button>`:""}`:""}${row.ov?`<button type="button" class="clear" data-reg="reset" data-key="${esc(row.key)}">Palauta alkuperäinen</button>`:""}</div>`;
   return h+"</div>";
 }
+/* ---------- oman aineksen poisto ----------
+   Reseptirivit ovat vapaata tekstiä: poiston jälkeen rivi jää reseptiin ja ostoslistalle sellaisenaan, mutta hinta ja
+   ravintoarvot tulevat vain, jos rivin nimi osuu johonkin rekisterin tuotteeseen. Siksi varmistus kertoo, missä ainesta
+   käytetään, ja tarjoaa korvaavan rekisterituotteen, jolla rivit nimetään uudelleen (määrät säilyvät). */
+const lineHas=(l,k)=>parseIng(l).key===k;
+function ownUses(k){
+  const recs=[...state.custom.filter(r=>r.ing.some(l=>lineHas(l,k))).map(r=>r.name),
+    ...Object.keys(state.over).filter(id=>(state.over[id].ing||[]).some(l=>lineHas(l,k))).map(id=>{const r=all().find(x=>x.id===id);return r?r.name:"";}).filter(Boolean)];
+  const lists=state.lists.filter(l=>{try{return listItems(l).some(e=>e.key===k);}catch(_){return(l.x||[]).some(i=>i.k===k);}}).map(l=>l.name);
+  const pan=state.kp.h.some(i=>i.k===k);
+  return{recs:[...new Set(recs)],lists,pan};
+}
+/* ehdotukset korvaajaksi: pohjatuote, tuote johon nimi jo nyt osuu, yhdyssanan osa (koskenlaskijadippi -> koskenlaskija
+   = sulatejuusto) ja lähin nimi. Kenttää ei täytetä valmiiksi, koska ehdotus voi olla väärä (curry ei ole currytahna). */
+function ownSugs(k){
+  const o=[],add=x=>{if(x&&x!==k&&!o.includes(x)&&o.length<3)o.push(x);};
+  const v=state.ing[k];if(v&&v.b&&CBYK.has(v.b))add(v.b);
+  const c=catFind(k);if(c&&c.kind!=="k")add(c.key);
+  const ws=fold(k).split(/\s+/),hits=[];
+  for(const e of CAT){if(e.kind==="k")continue;let bl=0;for(const n0 of [e.key,...e.syn]){const n=fold(n0);if(n.length>=5&&ws.some(w=>w.includes(n)))bl=Math.max(bl,n.length);}if(bl)hits.push([bl,e.key]);}
+  hits.sort((a,b)=>b[0]-a[0]).forEach(h=>add(h[1]));
+  const fz=[];
+  for(const e of CAT){if(e.kind==="k")continue;let bs=9;for(const w of ws){if(w.length<4)continue;const s=fzBest(w,[e.key,...e.syn]);if(s>=0&&s<bs)bs=s;}if(bs<=2)fz.push([bs,e.key]);}
+  fz.sort((a,b)=>a[0]-b[0]||a[1].length-b[1].length).forEach(h=>add(h[1]));
+  return o;
+}
+function delPanel(k){
+  const u=ownUses(k),fb=catFind(k),fbt=fb?`nimi tunnistetaan jatkossa tuotteeksi ${esc(capF(fb.key))}, jonka hintaa ja ravintoarvoja silloin käytetään`:"niiltä puuttuu hinta ja ravintoarvot";
+  if(!u.recs.length&&!u.lists.length&&!u.pan)return`<p class="note nd regdelp" role="status">Ainesta ei käytetä omissa ruoissa, ostoslistoilla eikä kaapissa. Poiston voi vielä kumota.</p>`;
+  const li=[];
+  if(u.recs.length)li.push(`<li>Omat ruoat: ${u.recs.map(esc).join(", ")}</li>`);
+  if(u.lists.length)li.push(`<li>Ostoslistat: ${u.lists.map(esc).join(", ")}</li>`);
+  if(u.pan)li.push(`<li>Kaappi</li>`);
+  return`<div class="rform regdelp"><p class="pft">Aines on käytössä</p><ul class="regdelu">${li.join("")}</ul>
+<label class="rf2 w"><span>Korvaa tuotteella (valinnainen)</span><input type="text" data-reg-del="to" value="${esc(regS.rto)}" list="rdl" placeholder="esim. sulatejuusto" autocomplete="off"></label>${(()=>{const sg=ownSugs(k);return sg.length?`<p class="ru" style="margin:-4px 0 10px">Ehdotukset: ${sg.map(x=>`<button type="button" class="lk" data-reg="rto" data-key="${esc(x)}">${esc(capF(x))}</button>`).join(", ")}</p>`:"";})()}<datalist id="rdl">${CAT.filter(e=>e.kind!=="k").map(e=>`<option value="${esc(e.key)}">`).join("")}</datalist>
+<p class="note nd" style="margin:-4px 0 0">Korvaava tuote vaihdetaan aineksen tilalle resepteihin, ostoslistoille ja kaappiin, ja määrät säilyvät. Jos jätät kentän tyhjäksi, rivit eivät katoa: ne jäävät resepteihin ja listoille sellaisinaan, mutta ${fbt}. ${fb?"":"Ostoslistalla rivin vieressä on silloin Lisää rekisteriin."}</p>
+${regS.rerr?`<p class="note err" role="alert">${esc(regS.rerr)}</p>`:""}</div>`;
+}
+/* nimetään rivit, listat ja kaappi uudelleen; hinta ei siirry korvaajalle */
+function swapKey(from,to){
+  const fix=r=>{
+    r.ing=r.ing.map(line=>{
+      const p=parseIng(line);
+      if(p.key!==from)return line;
+      if(line.includes(p.rawName))return line.replace(p.rawName,to);
+      return p.q==null?to:to+" "+fmtQ(p.q)+" "+(p.u||"kpl");
+    });
+  };
+  for(const r of state.custom)fix(r);
+  for(const k of Object.keys(state.over))if(state.over[k].ing)fix(state.over[k]);
+  const m=a=>[...new Set(a.map(x=>x===from?to:x))];
+  for(const l of state.lists){
+    l.have=m(l.have);l.checked=m(l.checked);
+    if(l.x){const seen=new Set();l.x=l.x.map(i=>i.k===from?{...i,k:to}:i).filter(i=>!seen.has(i.k)&&seen.add(i.k));}
+    if(l.adj&&l.adj[from]!=null){if(l.adj[to]==null)l.adj[to]=l.adj[from];delete l.adj[from];}
+  }
+  const seen=new Set();state.kp.h=state.kp.h.map(i=>i.k===from?{...i,k:to}:i).filter(i=>!seen.has(i.k)&&seen.add(i.k));
+  state.kp.no=m(state.kp.no);
+}
+let ownIngUndo=null;
+function deleteOwnIng(k){
+  const t=String(regS.rto||"").trim().toLowerCase();
+  let to="";
+  if(t){
+    const c=CBYK.get(t)||CIDX.get(t);
+    if(!c||c.kind==="k"){regS.rerr="Tuotetta ”"+t+"” ei löydy rekisteristä. Valitse tuote listasta tai jätä kenttä tyhjäksi.";renderRegList();return;}
+    to=c.key;
+  }
+  ownIngUndo={k,v:state.ing[k],p:state.prices[k],snap:structuredClone({custom:state.custom.map(r=>[r.id,r.ing]),over:Object.keys(state.over).map(id=>[id,state.over[id].ing]),lists:state.lists.map(l=>[l.id,{have:l.have,checked:l.checked,x:l.x,adj:l.adj}]),kp:state.kp})};
+  if(to)swapKey(k,to);
+  delete state.ing[k];delete state.prices[k];
+  rebuildCat();regS.rdel=null;regS.rto="";regS.rerr="";regS.form=null;regS.del=false;regS.open=null;
+  mutate();renderRegList();renderIdeas();refreshCart();
+  undoToast(`Poistettu rekisteristä: <b>${esc(capF(k))}</b>${to?" · korvattu: "+esc(capF(to)):""}`,'data-regundo="1"');
+}
+$("toast").addEventListener("click",e=>{
+  if(!e.target.closest("[data-regundo]")||!ownIngUndo)return;
+  const u=ownIngUndo;ownIngUndo=null;
+  if(!state.ing[u.k]){
+    state.ing[u.k]=u.v;if(u.p)state.prices[u.k]=u.p;
+    const s=u.snap;
+    for(const[id,ing]of s.custom){const r=state.custom.find(x=>x.id===id);if(r)r.ing=ing;}
+    for(const[id,ing]of s.over)if(state.over[id]&&ing)state.over[id].ing=ing;
+    for(const[id,v]of s.lists){const l=state.lists.find(x=>x.id===id);if(!l)continue;l.have=v.have;l.checked=v.checked;if(v.x)l.x=v.x;if(v.adj)l.adj=v.adj;}
+    state.kp=s.kp;
+    rebuildCat();regS.open=u.k;mutate();if(!$("v-reg").hidden)renderRegList();renderIdeas();refreshCart();
+  }
+  hideToast();
+});
 function regListHtml(){
   const rows=regFilter(regRows());
   $("rcount").textContent=rows.length===1?"1 tuote":rows.length+" tuotetta";
@@ -169,7 +260,7 @@ export const refreshReg=()=>{if(!$("v-reg").hidden){renderRegList();}};
 export function openReg(q){
   if(dlg.open)dlg.close();
   if(curTab!=="reg")regS.back=curTab;
-  regS.q=q||"";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.form=null;regS.otf=null;regS.del=false;regS.g="";
+  regS.q=q||"";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.form=null;regS.otf=null;regS.del=false;regS.g="";regS.rdel=null;
   const c=q?catFind(q):null;
   regS.open=q?(state.ing[q]?q:(c?c.key:null)):null;
   if(q&&regS.open)regS.q="";
@@ -307,7 +398,7 @@ $("regBody").addEventListener("click",e=>{
     if(Object.keys(x).length)state.ot[o.k]=x;else delete state.ot[o.k];
     regS.otf=null;mutate();applyOtx();renderRegList();refreshCart();
   }
-  else if(a==="t"){regS.otf=null;regS.open=regS.open===k?null:k;regS.form=regS.form&&regS.form.orig?null:regS.form;regS.del=false;setPf(null);renderRegList();const nb=$("rlist").querySelector('[data-key="'+(window.CSS&&CSS.escape?CSS.escape(k):k)+'"]');if(nb)nb.focus();}
+  else if(a==="t"){regS.otf=null;regS.rdel=null;regS.open=regS.open===k?null:k;regS.form=regS.form&&regS.form.orig?null:regS.form;regS.del=false;setPf(null);renderRegList();const nb=$("rlist").querySelector('[data-key="'+(window.CSS&&CSS.escape?CSS.escape(k):k)+'"]');if(nb)nb.focus();}
   else if(a==="go"){regS.otf=null;regS.form=null;regS.del=false;regS.q="";regS.g="";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.open=k;renderReg();const nb=$("rlist").querySelector('[aria-expanded="true"]');if(nb){nb.scrollIntoView({block:"center"});nb.focus();}}
   else if(a==="newv"){const c=CBYK.get(k);regS.form=Object.assign(regFormOf("",{d:c?c.d:""},"new"),{name:"",b:k});regS.del=false;regS.open=null;renderRegList();renderRegForm();$("rform").scrollIntoView({block:"start"});const i=$("rform").querySelector("input");if(i)i.focus();}
   else if(a==="reset"){
@@ -326,6 +417,14 @@ $("regBody").addEventListener("click",e=>{
     if(f.orig)renderRegList();else renderRegForm();
   }
   else if(a==="save")regSave();
+  else if(a==="rdel"){
+    if(regS.rdel===k){deleteOwnIng(k);return;}
+    regS.rdel=k;regS.rto="";regS.rerr="";renderRegList();
+    const nb=$("rlist").querySelector('[data-reg="rdel"]');if(nb)nb.focus();
+  }
+  else if(a==="rto"){regS.rto=k;regS.rerr="";const i=$("rlist").querySelector('[data-reg-del="to"]');if(i){i.value=k;i.focus();}}
+  else if(a==="rdelno"){regS.rdel=null;regS.rerr="";renderRegList();}
+  else if(a==="del"&&regS.form&&regS.form.kind==="own"){const key=regS.form.orig;regS.form=null;regS.del=false;regS.open=key;regS.rdel=key;regS.rto="";regS.rerr="";renderRegForm();renderRegList();}
   else if(a==="del"){
     if(!regS.del){regS.del=true;renderRegList();return;}
     const key=regS.form.orig;if(regS.form.kind==="ix")delete state.ix[key];else delete state.ing[key];rebuildCat();regS.form=null;regS.del=false;regS.open=CBYK.has(key)?key:null;
@@ -336,6 +435,7 @@ $("regBody").addEventListener("input",e=>{
   const t=e.target;
   if(t.id==="rq"){regS.q=t.value;renderRegList();return;}
   const k=t.dataset&&t.dataset.regIn;if(k&&regS.form)regS.form[k]=t.value;
+  if(t.dataset&&t.dataset.regDel==="to"){regS.rto=t.value;regS.rerr="";}
   const ok=t.dataset&&t.dataset.otIn;if(ok&&regS.otf)regS.otf[ok]=t.value;
 });
 $("regBody").addEventListener("change",e=>{

@@ -1181,3 +1181,9 @@ body:not([data-view="ideas"]) .spill{display:none}
 .hl .cartbtn.owndel{color:var(--c-danger);border-color:var(--c-danger);padding:0 var(--sp-3);gap:var(--sp-1)}
 .hl .cartbtn.owndel svg{width:18px;height:18px}
 .hl .cartbtn.owndel.arm{background:var(--c-danger-soft);border-color:var(--c-danger);color:var(--c-danger)}
+/* Tuoterekisteri: oman aineksen Poista Muokkaa-painikkeen vieressä (sama kaava kuin Omat ruoat: danger, Varmista, Kumoa-toast) */
+.rd .cartbtn.regdel{color:var(--c-danger);border-color:var(--c-danger);gap:var(--sp-1)}
+.rd .cartbtn.regdel svg{width:18px;height:18px}
+.rd .cartbtn.regdel.arm{background:var(--c-danger-soft)}
+.rd .regdelp{margin:12px 0 0}
+.rd .regdelu{margin:0 0 10px;padding-left:1.2em;line-height:1.5}
