@@ -1,4 +1,4 @@
-# Mitä tänään syödään?
+# Ruokaideat
 
 Ruokaideasovellus: valmiit reseptit suodattimineen, omat ruoat, ostoslistat kauppakohtaisella
 osastojärjestyksellä, hinta-arviot ja ravintoarvot (Fineli). Toimii selaimessa, mobiili edellä.
@@ -27,7 +27,10 @@ npm run preview
 
 ```
 index.html                 sivun runko: yläpalkki, välilehdet ja dialogit
-public/favicon.svg
+public/
+  favicon.svg              selaimen välilehden kuvake
+  icon.svg                 kotinäytön kuvakkeen lähde; PNG:t (apple-touch-icon, icon-192/512, maskable) tehdään: npm run icons
+  manifest.webmanifest     sovelluksen nimi ja kuvakkeet kotinäytölle (Android); iPhone lukee index.html:n apple-touch-icon-linkin
 src/
   main.js                  sisäänkäynti: tyylit, moduulit ja kehitystilan apu testeille (window.__app)
   app/                     sovelluslogiikka moduuleina, suoritusjärjestyksessä:
