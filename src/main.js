@@ -7,6 +7,7 @@ import "./styles/tokens.css";
 import "./styles/theme.css";
 import "./styles/main.css";
 import "./app/pantry-view.js";
+import "./app/update.js";
 import {ingFor,plCostPer,plCands,plDefaults,autoN,setPlPics} from "./app/plan-view.js";
 import {R,parseIng} from "./app/core.js";
 import {catFind,recipeNut,nutPer,findPrice,nameSkip,isSkip,selR,recipeCost} from "./app/catalog.js";
