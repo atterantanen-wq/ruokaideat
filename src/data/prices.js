@@ -369,6 +369,7 @@ PA("kanansiivet",7,"kg","Broilerin siivet, maustamaton");
 PA("maissintähkä",1.5,"kpl","Maissintähkä, esikypsennetty");
 PA("meloni",2.5,"kg","Meloni");
 PA("etikkapunajuuri",4.2,"kg","Etikkapunajuuret, purkki");
+PA("keittojuurekset",3.4,"kg","Keittojuurekset, tuore pussi (porkkana, lanttu, selleri, purjo)");
 P3("persilja",50,"kg","Persilja (arvio, ruukku tai nippu)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
 P3("minttu",60,"kg","Minttu (arvio, ruukku)",{},"Arvio, perustuu yrttiruukkuun.","hedelmat-ja-vihannekset/yrtit");
 P3("leivinjauhe",13,"kg","Leivinjauhe 100 g (arvio)",{},"Arvio, perustuu tyypilliseen pakkaushintaan.","kuivatuotteet-ja-leivonta/leivontatarvikkeet");

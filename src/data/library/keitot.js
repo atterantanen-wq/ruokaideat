@@ -29,7 +29,7 @@ export default [
     d: "Samettisen sileä keitto juureksista ja perunasta. Toimii melkein millä tahansa kasviksilla, joita jääkaapista löytyy.",
     ing: ["porkkana 400 g", "peruna 300 g", "palsternakka 1 kpl", "sipuli 1 kpl", "valkosipulinkynsi 1 kpl", "rypsiöljy 1 rkl", "vesi 8 dl", "kasvisliemikuutio 2 kpl", "ruokakerma 2 dl", "mustapippuri 0.25 tl", "suola 0.5 tl", "persilja 0.5 nippu"],
     steps: [
-      "Kuori kasvikset. Pilko porkkanat, perunat ja palsternakka suunnilleen samankokoisiksi paloiksi ja sipuli lohkoiksi.",
+      "Kuori kasvikset. Pilko juurekset ja perunat suunnilleen samankokoisiksi paloiksi ja sipuli lohkoiksi.",
       "Kuumenna öljy kattilassa ja käännä kasviksia siinä muutama minuutti. Lisää lopuksi viipaloitu valkosipuli.",
       "Kaada joukkoon vesi ja liemikuutiot. Keitä kannen alla miedolla lämmöllä noin 20 minuuttia, kunnes palat hajoavat painettaessa.",
       "Surauta keitto sauvasekoittimella sileäksi. Sekoita kerma joukkoon ja kuumenna vielä kertaalleen.",
@@ -43,9 +43,12 @@ export default [
     ],
     tw: [
       { id: "tuorejuusto", n: "Tuorejuustolla", g: "kerma", d: "Korvaa kerma maustetulla tuorejuustolla, joka sulaa keittoon kuumentaessa.", rm: ["ruokakerma"], add: ["tuorejuusto 100 g"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Lisää tuorejuusto ja kuumenna sekoittaen, kunnes se on sulanut."} },
+      { id: "juustoinen", n: "Juustoinen", g: "kerma", d: "Korvaa kerma sulatejuustodipillä, esimerkiksi Koskenlaskija dippi voimakkaalla. Keitosta tulee juustoinen ja suolaisempi.", rm: ["ruokakerma"], add: ["sulatejuustodippi 0.5 prk"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Lisää sulatejuustodippi ja kuumenna sekoittaen, kunnes se on sulanut. Älä enää keitä.", "4": "Säädä paksuutta vedellä ja mausta pippurilla. Juusto suolaa keittoa, joten lisää suolaa vasta maistettuasi, ja ripottele annoksille persiljaa."} },
+      { id: "bataatti", n: "Bataatilla", d: "Lisää yksi bataatti muiden kasvisten joukkoon. Keitosta tulee makeampi ja kirkkaan oranssi.", add: ["bataatti 1 kpl"], step: {"0": "Kuori kasvikset. Pilko juurekset, perunat ja bataatti suunnilleen samankokoisiksi paloiksi ja sipuli lohkoiksi."} },
+      { id: "juurespussi", n: "Valmiista keittojuureksista", d: "Pussillinen valmiiksi pilkottuja keittojuureksia korvaa palsternakan ja osan porkkanoista. Kaikki keitetään suoraan liemessä ilman kuullotusta.", rm: ["porkkana", "palsternakka", "sipuli", "valkosipulinkynsi", "rypsiöljy"], add: ["keittojuurekset 500 g", "porkkana 2 kpl"], step: {"0": "Kuori ja pilko kokonaiset kasvikset suunnilleen samankokoisiksi paloiksi. Keittojuurekset ovat valmiiksi pilkottuja.", "1": "Kiehauta vesi ja liemikuutiot kattilassa.", "2": "Lisää kaikki kasvikset kiehuvaan liemeen. Keitä kannen alla miedolla lämmöllä noin 20 minuuttia, kunnes palat hajoavat painettaessa."} },
       { id: "maidoton", n: "Maidoton", g: "kerma", d: "Käytä kerman tilalla kookosmaitoa tai kaurakermaa.", rm: ["ruokakerma"], add: ["kookosmaito 2 dl"], step: {"3": "Surauta keitto sauvasekoittimella sileäksi. Sekoita kookosmaito joukkoon ja kuumenna vielä kertaalleen."} },
     ],
-    src: [["Martat", "https://www.martat.fi/reseptit/kasvissosekeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kasvissosekeitto/recipe-4223"], ["Valio", "https://www.valio.fi/reseptit/nopea-kasvissosekeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/176/Kasvissosekeitto/"]],
+    src: [["Martat", "https://www.martat.fi/reseptit/kasvissosekeitto/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/kasvissosekeitto/recipe-4223"], ["Valio", "https://www.valio.fi/reseptit/nopea-kasvissosekeitto/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/176/Kasvissosekeitto/"], ["MTV Makuja", "https://www.mtvuutiset.fi/makuja/artikkeli/paivakotien-ja-koulujen-kasvissosekeitto-nousi-hitiksi-maistuuko-kotona-tehty-versio-suosikkisopasta-lapsille-ollenkaan/8642330"], ["MTV Makuja, juustokeitto", "https://www.mtvuutiset.fi/artikkeli/kevainen-juustokeitto/3213670"]],
   },
   {
     n: "Nakkikeitto", m: "s", t: "ke", min: 30, w: 15, sv: 4, pop: true,

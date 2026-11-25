@@ -266,7 +266,7 @@ chorizo|chorizomakkara,chorizogrillimakkara,chorizoa|11|s|,,,115,230,|290,14,25,
 kassler|porsaan kassler,kasslerpaisti,kasslerpihvi,kassleria|11|p||150,19,8,3,0.5,2.3|||kassler
 salami|salamia,salamimakkara,pepperonisalami,milanon salami|11|s|,,,,150,|440,22,38,14,1,4.5|||salami
 palvikinkku|palvikinkkua,saunapalvi,saunapalvikinkku|11|p||125,21,4,1.5,0.5,3.2|||palvikinkku
-sulatejuusto|sulatejuustoa,sulatejuustoviipale,sulatejuustoviipaleet,viipalejuusto|14||,,,20,200,|270,16,20,12,5,2.1|||sulatejuusto
+sulatejuusto|sulatejuustoa,sulatejuustoviipale,sulatejuustoviipaleet,viipalejuusto,sulatejuustodippi,dippisulatejuusto,koskenlaskija|14||,,,20,200,|270,16,20,12,5,2.1|||sulatejuusto
 tuorejuusto|tuorejuustoa,philadelphia,levitettävä tuorejuusto|14||100,15,5,,150,|250,5,24,15,3,1|||tuorejuusto
 hiiva|tuorehiiva,hiivaa,leivinhiiva,hiivapala|3||,,,,50,|105,14,1.5,0.2,5.5,0.1|||tuorehiiva
 kuivahiiva|kuivahiivaa,hiivajauhe,pussi kuivahiivaa|3||,,3,,11,|325,40,7,1,3,0.2|||kuivahiiva
@@ -312,4 +312,5 @@ maissintähkä|maissintähkät,maissin tähkä,tähkämaissi,maissit tähkä|0||
 fariinisokeri|fariinisokeria,ruskea sokeri,muscovado,tumma muscovado|3||85,12,4,,,|389,0.1,0,0,97,0.1||||
 miso|vaalea miso,misotahna,shiro miso,misoa|7||110,17,6,,,|198,12,6,1,21,9.3||||
 hasselpähkinät|hasselpähkinä,hasselpähkinöitä,hasselpähkinärouhe|3||60,9,3,,,|640,15,61,4.5,6,0||||
-karpalot|karpalo,karpaloita,jäiset karpalot,pakastekarpalot|16||50,8,,,,|38,0.4,0.6,0,7,0||||`;
+karpalot|karpalo,karpaloita,jäiset karpalot,pakastekarpalot|16||50,8,,,,|38,0.4,0.6,0,7,0||||
+keittojuurekset|keittojuureksia,keittojuurespussi,tuoreet keittojuurekset|0||,,,,,|36,1,0.2,0,6.8,0.1||||`;
