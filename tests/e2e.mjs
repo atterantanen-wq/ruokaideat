@@ -309,7 +309,7 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('#toast [data-pundo]'); await wait(150);
   ok((await page.evaluate(() => window.__app.state.pl.items.length)) === 5, "suunnitelman palautus ei onnistunut");
   const card = await page.evaluate(() => document.querySelector(".lcard .lr").innerText);
-  ok(card !== "Tyhjä lista" && card.includes(","), "listan kortissa ei näy ruokia: " + card);
+  ok(card !== "Ei ruokia" && card.includes(","), "listan kortissa ei näy ruokia: " + card);
   await click(".lcard"); await wait(300);
   ok((await page.evaluate(() => document.querySelectorAll("#v-cart li").length)) >= 10, "ostoslista on tyhjä");
   await page.evaluate(() => { const b = document.querySelector(".lbar .back"); b && b.click(); });
