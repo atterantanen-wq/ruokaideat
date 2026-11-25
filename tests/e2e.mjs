@@ -103,6 +103,36 @@ test("ruoka lisukkeineen ostoslistalle", async () => {
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
+test("jaettu lista: linkki otsikossa ilman emojia ja linkki avaa listan", async () => {
+  const id = await page.evaluate(() => { const s = window.__app.state; return s.lists[s.lists.length - 1].id; });
+  await click('.tab[data-tab="cart"]'); await wait(300);
+  await click(".lcard"); await wait(300);
+  /* jakovalikko ei ole testiselaimessa käytössä, joten teksti menee leikepöydälle */
+  await page.evaluate(() => { window.__clip = null; Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (t) => { window.__clip = t; } } }); });
+  await click('.lbar [data-act="copy"]'); await wait(200);
+  const txt = await page.evaluate(() => window.__clip || "");
+  const lines = txt.split("\n");
+  ok(!/🛒/.test(txt), "ostoskärryemoji on yhä tekstissä");
+  ok(/^\*.+\* \(\d+ tuotetta?\)$/.test(lines[0]), "otsikkorivi: " + lines[0]);
+  ok(lines[1] === "https://atterantanen-wq.github.io/ruokaideat/#lista=" + encodeURIComponent(id), "linkkirivi: " + lines[1]);
+  await page.evaluate(() => { const b = document.querySelector(".lbar .back"); b && b.click(); });
+  await click('.tab[data-tab="ideas"]'); await wait(200);
+  /* linkki avaa ostoslistan */
+  await page.goto(URL + "#lista=" + encodeURIComponent(id));
+  await page.waitForFunction(() => window.__app); await wait(400);
+  const r = await page.evaluate(() => ({ cart: !document.getElementById("v-cart").hidden, inlist: document.body.classList.contains("inlist"), h: location.hash, t: document.querySelector("#v-cart").innerText }));
+  ok(r.cart && r.inlist, "linkki ei avannut listaa");
+  ok(/Karjalanpaistiliha/.test(r.t), "väärä lista auki");
+  ok(r.h === "", "osoitteeseen jäi " + r.h);
+  /* tuntematon lista: Ostoslistat-yleisnäkymä */
+  await page.goto(URL + "#lista=eiole");
+  await page.waitForFunction(() => window.__app); await wait(400);
+  const r2 = await page.evaluate(() => ({ cart: !document.getElementById("v-cart").hidden, inlist: document.body.classList.contains("inlist") }));
+  ok(r2.cart && !r2.inlist, "tuntematon lista ei avannut Ostoslistoja");
+  await page.evaluate(() => { const b = document.querySelector(".lbar .back"); b && b.click(); });
+  await click('.tab[data-tab="ideas"]'); await wait(200);
+});
+
 test("valittu versio menee ostoslistalle", async () => {
   await openCard("Pizza");
   await click('#dlg [data-ver="jauheliha"]');
