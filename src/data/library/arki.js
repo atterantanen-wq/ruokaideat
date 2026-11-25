@@ -140,6 +140,32 @@ export default [
     src: [["Valio", "https://www.valio.fi/reseptit/lasagne/"], ["Yhteishyvä", "https://yhteishyva.fi/reseptit/lasagne/recipe-23860"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/83331/Lasagne/"], ["Kinuskikissa", "https://www.kinuskikissa.fi/lasagne/"]],
   },
   {
+    n: "Pannulasagne", m: "j", t: "pn", min: 30, w: 15, sv: 4, wd: "it",
+    aka: ["yhden pannun lasagne", "lasagne pannulla"],
+    d: "Lasagnen maku puolessa tunnissa ilman uunia: levyt kypsyvät suoraan tomaattisessa jauhelihakastikkeessa, ja pinnalle sulaa tuorejuusto ja juustoraaste.",
+    ing: ["# Kastike", "jauheliha 400 g", "sipuli 1 kpl", "valkosipulinkynsi 2 kpl", "basilika 1 nippu", "rypsiöljy 1 rkl", "tomaattipyree 70 g", "tomaattimurska 400 g", "vesi 3 dl", "suola 1 tl", "paprikajauhe 1 tl", "oregano 1 tl", "timjami 1 tl", "sokeri 1 tl", "mustapippuri 0.5 tl", "lasagnelevyt 8 kpl", "# Pinnalle", "tuorejuusto 200 g", "juustoraaste 2 dl"],
+    steps: [
+      "Ota jauheliha huoneenlämpöön hetkeä ennen aloittamista. Kuori ja silppua sipuli ja valkosipulinkynnet. Silppua basilika ja jätä muutama lehti viimeistelyyn.",
+      "Ruskista jauheliha öljyssä isolla, korkeareunaisella pannulla tai matalassa kattilassa. Lisää sipulit ja kuullota hetki.",
+      "Lisää tomaattipyree, tomaattimurska, vesi, mausteet ja silputtu basilika. Kuumenna kastike kiehuvaksi.",
+      "Puolita lasagnelevyt ja painele palat kastikkeeseen niin, että ne peittyvät. Nosta kansi tai folio päälle ja hauduta miedolla lämmöllä noin 15 minuuttia välillä sekoittaen, kunnes levyt ovat pehmeitä.",
+      "Lusikoi tuorejuusto nokareina kastikkeen päälle ja ripottele juustoraaste pinnalle. Hauduta kannen alla vielä noin 5 minuuttia, kunnes juusto on sulanut. Viimeistele basilikanlehdillä.",
+    ],
+    serve: "Tarjoa vihersalaatin kanssa.",
+    sides: ["k-vihersalaatti"],
+    tips: [
+      "Levyt kypsyvät kastikkeen nesteessä, joten pidä kansi päällä. Jos kastike sakenee liikaa ennen kuin levyt ovat pehmeitä, lisää tilkka vettä.",
+      "Levyt tarttuvat helposti toisiinsa, joten painele palat kastikkeeseen yksitellen ja sekoita ensimmäisten minuuttien aikana.",
+    ],
+    tw: [
+      { id: "kasvis", n: "Soijarouheesta", d: "Käytä jauhelihan tilalla soijarouhetta, jolloin ruoasta tulee kasvisruoka.", rm: ["jauheliha"], add: ["soijarouhe 1.5 dl", "vesi 2 dl"], m: "v",
+        step: {"0": "Kuori ja silppua sipuli ja valkosipulinkynnet. Silppua basilika ja jätä muutama lehti viimeistelyyn.", "1": "Kuullota sipulit öljyssä isolla, korkeareunaisella pannulla tai matalassa kattilassa. Lisää soijarouhe ja paista sitä hetki sipulien kanssa.", "2": "Lisää tomaattipyree, tomaattimurska, kaikki vesi, mausteet ja silputtu basilika. Kuumenna kastike kiehuvaksi ja anna rouheen turvota muutama minuutti."} },
+      { id: "tomaatit", n: "Kirsikkatomaateilla", d: "Lisää lopuksi pinnalle puolitettuja kirsikkatomaatteja raikkaudeksi.", add: ["kirsikkatomaatit 250 g"],
+        step: {"4": "Lusikoi tuorejuusto nokareina kastikkeen päälle ja ripottele juustoraaste pinnalle. Hauduta kannen alla vielä noin 5 minuuttia, kunnes juusto on sulanut. Lisää pinnalle puolitetut kirsikkatomaatit ja viimeistele basilikanlehdillä."} },
+    ],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/pannulasagne/5njHyRvAXlwozUGnv4v7r0"], ["Valio", "https://www.valio.fi/reseptit/pannulasagne/"], ["Fissler", "https://global.fissler.com/en/blogs/recipes/pan-lasagna"]],
+  },
+  {
     n: "Makaronilaatikko", m: "j", t: "ki", min: 75, w: 20, sv: 4, pop: true,
     d: "Suomalaisten kouluruokasuosikki: makaroni, ruskistettu jauheliha ja munamaito uunissa hyytyneenä.",
     ing: ["makaroni 250 g", "jauheliha 400 g", "sipuli 1 kpl", "rypsiöljy 1 rkl", "suola 1 tl", "mustapippuri 0.5 tl", "kananmuna 3 kpl", "maito 6 dl", "juustoraaste 0.5 dl", "voi 1 rkl"],
