@@ -1,12 +1,12 @@
 /* ostoslistanäkymä: listojen yleiskuva, lista, muut ostokset ja jakaminen */
 import "./cart-add.js";
 import {$,ico,cartInner,esc,parseIng,fmtNum} from "./core.js";
-import {CAT,catFind,fold,fzScore,findPrice,isSkip,eur} from "./catalog.js";
+import {CAT,CIDX,catFind,fold,fzScore,findPrice,isSkip,eur} from "./catalog.js";
 import {actList,state,applyTheme,mutate} from "./state.js";
 import {byId,inCart} from "./ideas.js";
 import {applyLay,renderIdeas} from "./search.js";
 import {DEPS} from "./price-updates.js";
-import {typeOf,storeName,XSUG,XD,OTS,otOf,listItems,needed,groupDeps,packInfo,perText,xQty,itemCost,pillText,rowSub,qtyMain,flashToast,undoToast,hideToast,lg,sNew,renderStoreDlg,viewId,renaming,setViewId,vList,listRecs} from "./cart.js";
+import {typeOf,storeName,XSUG,XD,OT,OTS,otOf,listItems,needed,groupDeps,packInfo,perText,xQty,itemCost,pillText,rowSub,qtyMain,flashToast,undoToast,hideToast,lg,sNew,renderStoreDlg,viewId,renaming,setViewId,vList,listRecs} from "./cart.js";
 import {curTab} from "./tabs.js";
 import {uiEdit} from "./editor.js";
 import {LOGO} from "../data/logos.js";
@@ -55,7 +55,7 @@ function xChips(l){
   const sec=(t,a)=>a.length?`<p class="gt">${esc(t)}</p><div class="chips">${a.map(chip).join("")}</div>`:"";
   let out="";
   if(q){
-    const names=[...new Set([...Object.keys(state.xh),...XSUG.map(s=>s[0]),...OTS.keys(),...Object.keys(XD),...Object.keys(state.ing),...CAT.map(e=>e.key),...inL])];
+    const names=[...new Set([...Object.keys(state.xh),...XSUG.map(s=>s[0]),...OT.keys(),...Object.keys(XD),...Object.keys(state.ing),...CAT.map(e=>e.key),...inL])];
     const sc=names.map(k=>[k,fzScore(q,fold(k))]).filter(x=>x[1]>=0).sort((a,b)=>a[1]-b[1]||a[0].localeCompare(b[0],"fi"));
     out=sec("Osumat",sc.filter(x=>x[1]<3).slice(0,16).map(x=>x[0]))+sec("Tarkoititko",sc.filter(x=>x[1]>=3).slice(0,6).map(x=>x[0]));
   }else{
@@ -96,7 +96,7 @@ export function addExtra(l,text){
   const p=parseIng(text);
   let k=p.key.replace(/\s+/g," ").trim();
   if(!k||!/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))return"Kirjoita tuotteen nimi, enintään 60 merkkiä.";
-  const ot=otOf(k);if(ot)k=ot.k;
+  const ot=otOf(k);if(ot)k=ot.k;else if(!state.ing[k]){const c=CIDX.get(k);if(c)k=c.key;}
   if(!l.x)l.x=[];
   if((l.x||[]).length>=100)return"Listalla voi olla enintään 100 muuta tuotetta.";
   const q=p.q!=null?fmtNum(p.q)+" "+(p.u||"kpl"):"";

@@ -2,7 +2,7 @@
 import {DEPS,DEPMAP,DEPSUB} from "./price-updates.js";
 import {$,ico,esc,clip,parseIng,fmtNum,fmt} from "./core.js";
 import {PR,PU,PALIAS} from "./prices.js";
-import {CIDX,rebuildCat,catFind,fold,gramsOf,baseKey,findPrice,pantryHit,isSkip,costOf,eur,ingOf} from "./catalog.js";
+import {CAT,CBYK,KMIG,CIDX,rebuildCat,catFind,fold,gramsOf,baseKey,findPrice,pantryHit,isSkip,costOf,eur,ingOf} from "./catalog.js";
 import {todayLocal,mkName,actList,state,mutate} from "./state.js";
 import {byId} from "./ideas.js";
 import {openAdd} from "./cart-add.js";
@@ -76,15 +76,21 @@ export function migDept(k,d){
 export const XSUG=[["banaanit",0],["omenat",0],["appelsiinit",0],["mandariinit",0],["viinirypäleet",0],["tomaatit",0],["kurkku",0],["paprika",0],["salaatti",0],["avokado",0],["sitruuna",0],["leikkeleet",11],["kinkku",11],["nakit",11],["grillimakkara",11],["savulohi",12],["maito",13],["piimä",13],["jogurtti",13],["rahka",13],["kefiiri",13],["kermaviili",13],["juusto",14],["raejuusto",14],["levite",13],["kananmunat",13],["ruisleipä",1],["paahtoleipä",1],["vaalea leipä",1],["sämpylät",1],["patonki",1],["pulla",1],["näkkileipä",1],["valmispizza",15],["valmisruoat",15],["pakastevihannekset",16],["pakastemarjat",16],["kalapuikot",16],["jäätelö",16],["mysli",2],["murot",2],["kahvi",9],["tee",9],["nuudelit",2],["pähkinät",3],["ketsuppi",7],["sinappi",7],["majoneesi",7],["hillo",5],["valmiskastike",7],["valmiskeitto",4],["etikka",7],["hunaja",3],["maustesekoitus",6],["mehu",9],["virvoitusjuoma",9],["kivennäisvesi",9],["keksit",8],["suklaa",8],["karkit",8],["sipsit",8],["wc-paperi",17],["talouspaperi",17],["astianpesuaine",17],["pyykinpesuaine",17],["huuhteluaine",17],["hammastahna",17],["käsisaippua",17],["shampoo",17],["suihkugeeli",17],["roskapussit",17],["leivinpaperi",17],["alumiinifolio",17],["pesusieni",17],["kosteuspyyhkeet",17]];
 export const XD=Object.fromEntries(XSUG);
 Object.assign(XD,{"leipä":1,"olut":9,"kaurajuoma":13,"viili":13,"kerma":13});
-/* ---------- Muut tuotteet: sama tietuemuoto kuin ainesrekisterissä, mutta oma lista ----------
-   tietue: k nimi, d osasto, q pakkauksen koko, u g | ml | kpl, p pakkauksen hinta €, note tuote ja lähde, path hakupolku s-kaupat.fi, w heikon arvion syy, syn synonyymit, lbl pakkausteksti */
+/* ---------- Muut tuotteet: rekisterin tuotteet, joilla on pakkaus (src/data/products.js) ----------
+   OT-tietue: k rekisterin avain, d osasto (sama kuin rekisterissä), q pakkauksen koko, u g | ml | kpl, p pakkauksen hinta €,
+   note tuote ja lähde, path hakupolku s-kaupat.fi, w heikon arvion syy, syn synonyymit, lbl pakkausteksti, b alkuperäiset tiedot */
 export const OT=new Map(),OTS=new Map();
-function O(k,d,q,u,p,note,path,w,syn,lbl){
-  const o={k,d,q,u,p,note,path,w:w||"",syn:syn||[],lbl:lbl||"",dt:"2026-11-19"};
-  o.b={d,q,u,p:p==null?null:p,lbl:lbl||"",w:w||""};
-  OT.set(k,o);OTS.set(k,o);for(const s of o.syn)if(!OTS.has(s))OTS.set(s,o);
-  XD[k]=d;for(const s of o.syn)if(!Object.prototype.hasOwnProperty.call(XD,s))XD[s]=d;
-  if(!XSUG.some(x=>x[0]===k))XSUG.push([k,d]);
+XSUG.forEach(x=>{x[0]=KMIG[x[0]]||x[0];});
+for(const k of Object.keys(XD))if(KMIG[k]){if(!Object.prototype.hasOwnProperty.call(XD,KMIG[k]))XD[KMIG[k]]=XD[k];delete XD[k];}
+for(const e of CAT){
+  if(!e.pack)continue;
+  const pk=e.pack,o={k:e.key,d:e.d,q:pk.q,u:pk.u,p:pk.p,note:pk.note,path:pk.path,w:pk.w,syn:e.syn,lbl:pk.lbl,dt:pk.dt,kind:e.kind};
+  o.b={q:pk.q,u:pk.u,p:pk.p,lbl:pk.lbl,w:pk.w};
+  OT.set(e.key,o);OTS.set(e.key,o);
+  for(const s of e.syn)if(!OTS.has(s)&&CIDX.get(s)===e)OTS.set(s,o);
+  for(const [old,nk] of Object.entries(KMIG))if(nk===e.key&&!OTS.has(old))OTS.set(old,o);
+  XD[e.key]=e.d;
+  if(!XSUG.some(x=>x[0]===e.key))XSUG.push([e.key,e.d]);
 }
 export const otOf=k=>OTS.get(k)||null;
 /* omat muutokset valmiisiin Muut tuotteet -tuotteisiin: state.ot[k]={d,p,q,u}, alkuperäinen säilyy o.b:ssä */
@@ -92,13 +98,14 @@ export function applyOtx(){
   rebuildCat();
   const ov=state.ot||{};
   for(const o of OT.values()){
-    const b=o.b,x=ov[o.k]||{};
-    o.d=x.d!=null?x.d:b.d;
+    const b=o.b,x=ov[o.k]||{},e=CBYK.get(o.k);
+    o.d=e?e.d:o.d;o.syn=e?e.syn:o.syn;
     o.p=x.p!=null?x.p:b.p;
     if(x.q!=null){o.q=x.q;o.u=x.u;o.lbl="";}else{o.q=b.q;o.u=b.u;o.lbl=b.lbl;}
     o.w=x.p!=null?"":b.w;
     o.ov=!!ov[o.k];
-    XD[o.k]=o.d;for(const s of o.syn)if(OTS.get(s)===o)XD[s]=o.d;
+    if(e&&e.pack){e.pack.p=o.p;e.pack.q=o.q;e.pack.u=o.u;e.pack.w=o.w;}
+    XD[o.k]=o.d;
     const xs=XSUG.find(z=>z[0]===o.k);if(xs)xs[1]=o.d;
   }
 }
@@ -112,91 +119,10 @@ export function otP(o){
 }
 export const otPack=o=>o.lbl||(o.u==="kpl"?fmtNum(o.q)+" kpl":(o.u==="ml"?(o.q>=1000?fmtNum(o.q/1000)+" l":fmtNum(o.q)+" ml"):(o.q>=1000?fmtNum(o.q/1000)+" kg":fmtNum(o.q)+" g")));
 export const otUnit=o=>{const p=otP(o);return p==null?null:o.u==="kpl"?(o.q>1?p/o.q:null):p/o.q*1000;};
-O("banaanit",0,1000,"g",null,"Banaani, irto","hedelmat-ja-vihannekset/hedelmat","",["banaani"],"");
-O("omenat",0,1000,"g",null,"Omenat, irto","hedelmat-ja-vihannekset/hedelmat","",["omena"],"");
-O("appelsiinit",0,1000,"g",null,"Appelsiini","hedelmat-ja-vihannekset/hedelmat","",["appelsiini"],"");
-O("mandariinit",0,1000,"g",null,"Satsuma 1 kg","hedelmat-ja-vihannekset/hedelmat","",["mandariini", "satsuma", "satsumat"],"");
-O("viinirypäleet",0,500,"g",null,"Siemenetön viinirypäle 500 g","hedelmat-ja-vihannekset/hedelmat","",["viinirypäle", "rypäleet"],"");
-O("tomaatit",0,500,"g",null,"Tomaatti, irto","hedelmat-ja-vihannekset/vihannekset/tomaatit","",["tomaatti"],"");
-O("kurkku",0,1,"kpl",1.22,"Kotimainen kurkku, noin 350 g","hedelmat-ja-vihannekset/vihannekset","",[],"");
-O("paprika",0,1,"kpl",1.4,"Paprika, noin 200 g","hedelmat-ja-vihannekset/vihannekset","",["paprikat"],"");
-O("salaatti",0,1,"kpl",1.99,"Ruukkusalaatti 125 g","hedelmat-ja-vihannekset/vihannekset","",["ruukkusalaatti"],"");
-O("avokado",0,1,"kpl",1.48,"Avokado, noin 200 g","hedelmat-ja-vihannekset/hedelmat","",["avokadot"],"");
-O("sitruuna",0,1,"kpl",null,"Sitruuna","hedelmat-ja-vihannekset/hedelmat","",["sitruunat"],"");
-O("leikkeleet",11,200,"g",2.79,"Kinkku- ja kalkkunaleikkeleet 200 g, mediaani","liha-ja-kasviproteiinit/kinkut-ja-leikkeleet","",["leikkele", "kinkkuleikkele"],"");
-O("kinkku",11,300,"g",null,"Leikkeleet: ohut savukinkku","liha-ja-kasviproteiinit/kinkut-ja-leikkeleet","",[],"");
-O("nakit",11,280,"g",null,"Makkarat (lenkki- ja siskonmakkara)","liha-ja-kasviproteiinit/makkarat","",["nakki"],"");
-O("grillimakkara",11,400,"g",null,"Makkarat (lenkki- ja siskonmakkara)","liha-ja-kasviproteiinit/makkarat","",["makkara"],"");
-O("savulohi",12,200,"g",5.98,"Savulohi 100–400 g","kala-ja-merenelavat/kala","",[],"");
-O("maito",13,1000,"ml",null,"Maidot (kevyt- ja täysmaito)","maito-munat-ja-rasvat/maidot","",[],"1 l");
-O("piimä",13,1000,"ml",null,"Piimä 1 l","maito-munat-ja-rasvat/maidot","",[],"1 l");
-O("jogurtti",13,1000,"g",null,"Turkkilainen ja kreikkalainen jogurtti","maito-munat-ja-rasvat/jogurtit","",["jugurtti"],"");
-O("rahka",13,250,"g",null,"Maitorahka (maustamaton)","maito-munat-ja-rasvat/rahkat","",["maitorahka"],"");
-O("kefiiri",13,500,"g",2.19,"Meijeriliike Aito kefiiri 500 g","maito-munat-ja-rasvat/maidot","",[],"");
-O("kermaviili",13,200,"g",null,"Kermaviilit","maito-munat-ja-rasvat/kermaviilit","",[],"");
-O("juusto",14,400,"g",null,"Juusto, hinta perustuu raasteisiin","juustot-tofut-ja-kasvipohjaiset","Hinta perustuu raastejuuston hintaan.",["juustoa"],"");
-O("raejuusto",14,200,"g",null,"Raejuusto 200 g","juustot-tofut-ja-kasvipohjaiset","",[],"");
-O("levite",13,600,"g",2.49,"Flora normaalisuolainen 600 g","maito-munat-ja-rasvat/rasvat/margariinit","",["margariini", "voileipälevite"],"");
-O("kananmunat",13,10,"kpl",null,"Kananmunat (vapaan kanan, M)","maito-munat-ja-rasvat/munat","",["kananmuna", "munat"],"10 kpl");
-O("ruisleipä",1,450,"g",1.98,"Ruisleivät, hinta 4,39 € / kg","leivat-ja-leivonnaiset/leivat","",[],"");
-O("paahtoleipä",1,500,"g",2.1,"Paahtoleivät, hinta 4,20 € / kg","leivat-ja-leivonnaiset/leivat","",[],"");
-O("vaalea leipä",1,500,"g",2.1,"Vaalea paahtoleipä, hinta 4,20 € / kg","leivat-ja-leivonnaiset/leivat","",["vehnäleipä"],"");
-O("sämpylät",1,420,"g",2.55,"Aamiaissämpylät 7 kpl","leivat-ja-leivonnaiset/leivat","",["sämpylä"],"7 kpl");
-O("patonki",1,250,"g",1.1,"Patonki, noin 250 g","leivat-ja-leivonnaiset/leivat","Arvio, tuotetta ei löytynyt verkkokaupasta.",[],"1 kpl");
-O("pulla",1,400,"g",3.29,"Pullapitko 400 g, hinta 8,23 € / kg","leivat-ja-leivonnaiset/leivonnaiset","",["pullat", "pitko"],"");
-O("näkkileipä",1,250,"g",2.33,"Näkkileivät, hinta 9,30 € / kg","leivat-ja-leivonnaiset/nakkileivat-hapankorput-ja-krutongit","",["näkkäri"],"");
-O("valmispizza",15,350,"g",3.5,"Pakastepizza (arvio)","pakasteet/pizzat-ja-piiraat","Arvio, tuotetta ei haettu erikseen.",["pakastepizza", "pizza"],"1 kpl");
-O("valmisruoat",15,400,"g",4.0,"Valmisruoka-annos (arvio)","valmisruoka","Arvio, tuotetta ei haettu erikseen.",["valmisruoka", "mikroateria"],"1 annos");
-O("pakastevihannekset",16,600,"g",2.62,"Pakastevihannekset, hinta 4,37 € / kg","pakasteet/kasvispakasteet","",["pakastevihannes"],"");
-O("pakastemarjat",16,500,"g",8.24,"Pakastemarjat, hinta 16,47 € / kg","pakasteet/hedelma-ja-marjapakasteet","",["pakastemarja"],"");
-O("kalapuikot",16,450,"g",null,"Pakasteet: peruskalapuikot","pakasteet/kalapakasteet","",["kalapuikko"],"");
-O("jäätelö",16,1000,"ml",2.12,"Vaniljajäätelö 1 l","pakasteet/jaatelot","Yksi tuote.",["jäätelöt"],"1 l");
-O("mysli",2,750,"g",3.5,"Mysli (arvio)","kuivatuotteet-ja-leivonta/murot-ja-myslit","Arvio, tuotetta ei haettu erikseen.",["myslit"],"");
-O("murot",2,375,"g",2.6,"Murot (arvio)","kuivatuotteet-ja-leivonta/murot-ja-myslit","Arvio, tuotetta ei haettu erikseen.",["muro", "aamiaismurot"],"");
-O("kahvi",9,500,"g",8.69,"Suodatinkahvi 500 g, mediaani","kahvit-teet-ja-mehut/kahvit-ja-suodatinpaperit","",["kahvit", "suodatinkahvi"],"");
-O("tee",9,20,"kpl",1.39,"Coop vihreä tee 20 pussia","kahvit-teet-ja-mehut/teet","Yksi tuote.",["teet"],"20 pss");
-O("nuudelit",2,85,"g",null,"Pikanuudelit","pastat-riisit-ja-nuudelit","",["pikanuudelit"],"");
-O("pähkinät",3,200,"g",3.59,"Pähkinäsekoitus 200 g","snacksit/pahkinat","",["pähkinä", "pähkinäsekoitus"],"");
-O("ketsuppi",7,1000,"g",null,"Tomaattiketsuppi","oljyt-maustaminen-ja-kastikkeet/ketsupit-ja-sinapit","",["tomaattiketsuppi"],"");
-O("sinappi",7,275,"g",1.79,"Auran mieto sinappi 275 g","oljyt-maustaminen-ja-kastikkeet/ketsupit-ja-sinapit","",[],"");
-O("majoneesi",7,260,"g",null,"Majoneesi (maustamaton)","oljyt-maustaminen-ja-kastikkeet","",[],"");
-O("hillo",5,400,"g",null,"Hillot (puolukkahillo)","hillot-ja-sailykkeet/hillot","",["hillot", "marmeladi"],"");
-O("valmiskastike",7,450,"g",3.38,"Patak's Butter Chicken 450 g","oljyt-maustaminen-ja-kastikkeet/maustekastikkeet-ja-tahnat","Vain yksi tai kaksi tuotetta.",["ateriakastike", "currykastike"],"");
-O("valmiskeitto",4,500,"ml",2.5,"Valmiskeitto (arvio)","hillot-ja-sailykkeet","Arvio, tuotetta ei haettu erikseen.",["keitto", "kauppakeitto"],"");
-O("etikka",7,750,"ml",1.25,"Xtra väkiviinaetikka 750 ml","oljyt-maustaminen-ja-kastikkeet/etikat-ja-balsamicot","",["väkiviinaetikka"],"");
-O("hunaja",3,500,"g",3.89,"Coop juokseva hunaja 500 g","kuivatuotteet-ja-leivonta/sokerit-makeutusaineet-ja-hunaja","",[],"");
-O("maustesekoitus",6,25,"g",0.83,"Maustesekoitukset 25 g, mediaani","oljyt-maustaminen-ja-kastikkeet/mausteet","",["mausteseos", "mauste"],"1 prk");
-O("mehu",9,1000,"ml",2.82,"Appelsiini- ja omenamehut 1 l, mediaani","kahvit-teet-ja-mehut/mehut","",["mehut", "täysmehu"],"1 l");
-O("virvoitusjuoma",9,1500,"ml",1.75,"Coca-Cola Zero 2 × 1,5 l","alkoholi-ja-virvoitusjuomat/virvoitusjuomat","",["limsa", "limu", "cola"],"1,5 l");
-O("kivennäisvesi",9,1500,"ml",1.59,"Kotimaista kivennäisvesi 1,5 l","alkoholi-ja-virvoitusjuomat/vedet","Pantti ei sisälly.",["vesi pullo", "kivennäisvedet", "kuplavesi"],"1,5 l");
-O("keksit",8,200,"g",1.9,"Keksit (arvio)","karkit-suklaat-ja-keksit","Arvio, tuotetta ei haettu erikseen.",["keksi"],"");
-O("suklaa",8,145,"g",2.29,"Panda maitosuklaalevy 145 g","karkit-suklaat-ja-keksit/suklaalevyt","",["suklaalevy"],"");
-O("karkit",8,300,"g",3.5,"Pussikarkit (arvio)","karkit-suklaat-ja-keksit","Arvio, tuotetta ei haettu erikseen.",["karkki", "namit"],"");
-O("sipsit",8,260,"g",2.65,"Perunalastut 260 g, mediaani","snacksit/sipsit","",["sipsi", "perunalastut"],"");
-O("wc-paperi",17,8,"kpl",4.02,"Wc-paperi 8 rullaa, mediaani","kodinhoito-ja-taloustarvikkeet/wc-paperit-talouspaperit-ja-nenaliinat","",["wc paperi", "vessapaperi", "vessa paperi", "wc-paperit"],"8 rl");
-O("talouspaperi",17,4,"kpl",2.49,"Talouspaperi 4 rullaa, mediaani","kodinhoito-ja-taloustarvikkeet/wc-paperit-talouspaperit-ja-nenaliinat","",["talouspaperit", "keittiöpaperi"],"4 rl");
-O("nenäliinat",17,100,"kpl",2.09,"Serla / Lotus nenäliinat 100 kpl","kodinhoito-ja-taloustarvikkeet/wc-paperit-talouspaperit-ja-nenaliinat","",["nenäliina", "paperinenäliinat"],"100 kpl");
-O("astianpesuaine",17,450,"ml",3.15,"Fairy Original 450 ml","kodinhoito-ja-taloustarvikkeet/astianpesu","",["käsitiskiaine", "tiskiaine"],"");
-O("konetiskitabletit",17,50,"kpl",4.99,"Coop All-in-1 50 kpl","kodinhoito-ja-taloustarvikkeet/astianpesu","",["konetiskiaine", "konetiskitabletti", "tiskikonetabletit"],"50 kpl");
-O("pyykinpesuaine",17,750,"ml",3.85,"Lumme Kirjopyykki 750 ml","kodinhoito-ja-taloustarvikkeet/pyykinpesu","",["pesuaine", "pyykinpesuneste"],"");
-O("huuhteluaine",17,1000,"ml",2.9,"Huuhteluaine (arvio)","kodinhoito-ja-taloustarvikkeet/pyykinpesu","Arvio, tuotetta ei löytynyt verkkokaupasta.",[],"");
-O("wc-puhdistusaine",17,750,"ml",2.45,"Duck Aktiv-Gel 750 ml","kodinhoito-ja-taloustarvikkeet/siivous-ja-puhdistusaineet","",["wc-puhdistus", "wc-geeli"],"");
-O("yleispuhdistusaine",17,500,"ml",3.29,"Sanytol monikäyttöpuhdistusaine 500 ml","kodinhoito-ja-taloustarvikkeet/siivous-ja-puhdistusaineet","Vain yksi tuote.",["puhdistusaine", "yleispuhdistus"],"");
-O("hammastahna",17,125,"ml",1.79,"Pepsodent 125 ml","kosmetiikka-ja-hygienia/suunhoito/hammastahnat","",[],"");
-O("käsisaippua",17,500,"ml",2.1,"Dove täyttöpakkaus 500 ml","kosmetiikka-ja-hygienia/saippuat-ja-pesutarvikkeet","",["nestesaippua", "saippua"],"");
-O("shampoo",17,250,"ml",3.5,"Shampoo (arvio)","kosmetiikka-ja-hygienia","Arvio, tuotetta ei löytynyt verkkokaupasta.",["shampoot"],"");
-O("suihkugeeli",17,1000,"ml",3.29,"Family Fresh 1 l","kosmetiikka-ja-hygienia/saippuat-ja-pesutarvikkeet","",["suihkusaippua", "suihkusaippuat"],"");
-O("deodorantti",17,1,"kpl",3.5,"Deodorantti (arvio)","kosmetiikka-ja-hygienia","Arvio, tuotetta ei haettu erikseen.",["deo"],"");
-O("roskapussit",17,25,"kpl",2.09,"Coop roskapussi 30 l, 25 kpl","kodinhoito-ja-taloustarvikkeet/jatesakit-ja-kassit","",["roskapussi", "jätesäkit", "jätekassit"],"25 kpl");
-O("leivinpaperi",17,1,"kpl",3.0,"Leivinpaperi (arvio)","kodinhoito-ja-taloustarvikkeet/muut-kodinhoito-ja-taloustarvikkeet","Arvio, tuotetta ei löytynyt verkkokaupasta.",[],"1 rll");
-O("alumiinifolio",17,1,"kpl",3.0,"Alumiinifolio (arvio)","kodinhoito-ja-taloustarvikkeet/muut-kodinhoito-ja-taloustarvikkeet","Arvio, tuotetta ei löytynyt verkkokaupasta.",["folio"],"1 rll");
-O("pesusieni",17,6,"kpl",2.2,"Tiskisienet (arvio)","kodinhoito-ja-taloustarvikkeet/siivousvalineet-ja-tarvikkeet","Arvio, tuotetta ei löytynyt verkkokaupasta.",["pesusienet", "tiskisieni"],"6 kpl");
-O("kosteuspyyhkeet",17,1,"kpl",2.5,"Kosteuspyyhkeet (arvio)","kosmetiikka-ja-hygienia","Arvio, tuotetta ei löytynyt verkkokaupasta.",["kosteuspyyhe"],"1 pkt");
-O("kertakäyttökäsineet",17,50,"kpl",6.95,"Rainbow kertakäyttökäsineet 50 kpl","kodinhoito-ja-taloustarvikkeet/siivousvalineet-ja-tarvikkeet","",["käsineet", "hanskat"],"50 kpl");
-O("kahvinsuodattimet",17,100,"kpl",2.2,"Kahvinsuodattimet (arvio)","kahvit-teet-ja-mehut/kahvit-ja-suodatinpaperit","Arvio, tuotetta ei haettu erikseen.",["kahvisuodattimet", "suodatinpaperit", "suodatinpussit", "suodatinpussi", "kahvinsuodatin"],"100 kpl");
 export function deptOf(key){
   const ui=state.ing[key];if(ui)return ui.d;
   const ot=otOf(key);if(ot)return ot.d;
+  const ce=CIDX.get(key);if(ce)return ce.d;
   if(Object.prototype.hasOwnProperty.call(XD,key))return XD[key];
   const c=catFind(key);if(c)return c.d;
   const k=PALIAS[key]||key,bk=baseKey(k);
@@ -240,7 +166,10 @@ export function packOf(key){
   if(ui)return ui.pk?(ui.pk.length?ui.pk:null):(ui.u&&ui.u.prk?[ui.u.prk,"g"]:null);
   const c=catFind(key);
   if(c&&c.pk)return c.pk.length?c.pk:null;
-  return PK[key]||PK[PALIAS[key]||""]||(c&&PK[c.key])||null;
+  const pf=PK[key]||PK[PALIAS[key]||""]||(c&&PK[c.key]);if(pf)return pf;
+  /* muunnelmat ja valmiit tuotteet: oma pakkaus, muuten pohjatuotteen pakkaus */
+  if(c&&(c.b||c.kind)){const o=OT.get(c.key);if(o&&o.q>0)return[o.q,o.u];if(c.b)return packOf(c.b);}
+  return null;
 }
 function toBase(key,f,v,b){
   if(b==="kpl")return f==="kpl"?v:null;

@@ -337,6 +337,66 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
+test("tuoterekisteri: muut tuotteet ja ainekset samassa rekisterissä, muunnelmat ja tietojen siirto", async () => {
+  const r = await page.evaluate(() => {
+    const A = window.__app, e = [];
+    const key = (k) => { const c = A.catFind(k); return c ? c.key : null; };
+    /* vanhat Muut tuotteet -nimet osuvat rekisterin aineksiin */
+    for (const [o, n] of [["banaanit", "banaani"], ["kananmunat", "kananmuna"], ["tomaatit", "tomaatti"], ["ketsuppi", "tomaattiketsuppi"]]) {
+      if (key(o) !== n) e.push(o + " -> " + key(o));
+      const ot = A.otOf(o); if (!ot || ot.k !== n) e.push("pakkaus " + o);
+    }
+    /* yleisnimet eivät enää ole tarkkojen ainesten synonyymejä */
+    for (const k of ["hunaja", "juusto", "etikka", "nakit", "ruisleipä", "jogurtti"]) if (key(k) !== k) e.push(k + " -> " + key(k));
+    if (A.baseOf("nakit") !== "makkara" || !A.findPrice("nakit")) e.push("nakit: pohjatuote tai hinta");
+    if (A.deptOf("maitosuklaa") !== 8 || A.deptOf("tumma suklaa") !== 3) e.push("suklaan osastot");
+    /* kodin tarvikkeita ei tunnisteta nimen osalla resepteistä */
+    if (A.catFind("talouspaperi rulla")) e.push("kodin tarvike tunnistettiin nimen osalla");
+    /* muunnelma perii pohjatuotteen tiedot ja on ostoslistalla oma rivinsä */
+    const v = A.catFind("valkosipulituorejuusto"), b = A.catFind("tuorejuusto");
+    if (!v || v.b !== "tuorejuusto" || !v.n || v.n.kcal !== b.n.kcal || v.d !== b.d) e.push("muunnelman perintä");
+    if (!A.variantsOf("tuorejuusto").includes("valkosipulituorejuusto")) e.push("muunnelmalista");
+    const p = A.parseIng("valkosipulituorejuusto (tai tavallinen) 150 g");
+    if (p.key !== "valkosipulituorejuusto" || !p.alt || p.v !== 150) e.push("tarkenne sulkeissa: " + JSON.stringify(p));
+    if (A.parseIng("tuorejuusto 150 g").alt) e.push("alt ilman tarkennetta");
+    /* reseptin aines ja sama tuote muuna ostoksena ovat ostoslistalla yksi rivi */
+    const rb = A.R.find((r) => r.ing.some((x) => A.parseIng(x).key === "banaani"));
+    if (!rb) e.push("banaanireseptiä ei löydy");
+    else {
+      const li = A.listItems({ cart: [rb.id], pl: [], x: [{ k: "banaani", q: "" }], have: [], checked: [], adj: {} }).filter((i) => /^banaan/.test(i.key));
+      if (li.length !== 1 || !li[0].extra) e.push("banaani kahdella rivillä: " + li.map((i) => i.key).join());
+    }
+    /* tallennettujen tietojen siirto: vanhat tuotenimet rekisterin avaimiksi */
+    const s = A.cleanState({ lists: [{ id: "ltest1", name: "Testi", d: "2026-11-20", cart: [], checked: ["banaanit"], have: [], x: [{ k: "banaanit", q: "2 kg" }, { k: "banaani", q: "" }, { k: "suklaa", q: "" }], adj: { banaanit: 1 } }], ot: { banaanit: { p: 2.5 }, suklaa: { p: 2 } }, xh: { banaanit: 3, banaani: 1 }, prices: { kananmunat: { p: 3, per: "kpl" } } });
+    const l = s.lists[0];
+    if (l.x.map((i) => i.k).join() !== "banaani,maitosuklaa" || l.x[0].q !== "2 kg") e.push("muut ostokset: " + JSON.stringify(l.x));
+    if (l.checked.join() !== "banaani" || l.adj.banaani !== 1) e.push("rastit ja määrät");
+    if (!s.ot.banaani || s.ot.banaani.p !== 2.5 || !s.ot.maitosuklaa) e.push("omat pakkaushinnat: " + JSON.stringify(s.ot));
+    if (s.xh.banaani !== 4 || s.xh.banaanit) e.push("ostohistoria: " + JSON.stringify(s.xh));
+    if (!s.prices.kananmuna) e.push("omat hinnat");
+    const again = A.cleanState(JSON.parse(JSON.stringify(s)));
+    if (JSON.stringify(again.lists) !== JSON.stringify(s.lists) || JSON.stringify(again.ot) !== JSON.stringify(s.ot)) e.push("siirto ei ole toistettava");
+    return e;
+  });
+  ok(!r.length, r.join("; "));
+  const KP = await import("../src/pantry.js");
+  const up = (k) => (k === "nakit" ? ["makkara"] : []);
+  ok(KP.haveMap([{ k: "nakit" }], up).has("makkara"), "kaapin muunnelma ei kelpaa pohjatuotteeksi");
+  ok(!KP.haveMap([{ k: "makkara" }], up).has("nakit"), "pohjatuote kelpasi muunnelmaksi");
+  /* rekisterinäkymä: laji-suodatin ja pakkaus aineksen tiedoissa */
+  await page.evaluate(() => window.__app.openReg("banaani"));
+  await wait(150);
+  const v = await page.evaluate(() => ({ pack: !![...document.querySelectorAll("#rlist .ib h4")].find((h) => h.textContent.trim() === "Pakkaus"), title: document.getElementById("ttl").textContent }));
+  ok(v.pack, "banaanin tiedoissa ei ole pakkausta");
+  ok(v.title === "Tuoterekisteri", "otsikko: " + v.title);
+  await page.selectOption("#rg", "k");
+  await wait(150);
+  const k = await page.$$eval("#rlist .rr small", (x) => x.map((s) => s.innerText));
+  ok(k.length > 10 && k.every((t) => t.includes("Kodin tarvike")), "kodin tarvikkeet -suodatin: " + k.slice(0, 3).join(" | "));
+  await page.selectOption("#rg", "");
+  await page.evaluate(() => document.querySelector('[data-reg="back"]').click());
+});
+
 test("kaappi: logiikka (järjestys, vanheneminen)", async () => {
   const KP = await import("../src/pantry.js");
   const have = KP.haveMap([{ k: "@kana", d: "2026-11-20" }, { k: "peruna", d: "2026-11-20" }]);

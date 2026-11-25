@@ -2,7 +2,7 @@
 import {curTab,showTab} from "./tabs.js";
 import {M,$,ico,esc,safeUrl,host,USYN,parseIng} from "./core.js";
 import {PR,PALIAS} from "./prices.js";
-import {CAT,CIDX,CBYK,rebuildCat,catFind,fold,fzBest,fmtD,baseKey,findPrice,pantryHit,isSkip,eur,f0,f1} from "./catalog.js";
+import {CAT,CIDX,CBYK,KINDS,baseOf,variantsOf,rebuildCat,catFind,fold,fzBest,fmtD,baseKey,findPrice,pantryHit,isSkip,eur,f0,f1} from "./catalog.js";
 import {state,setBar,mutate} from "./state.js";
 import {all} from "./ideas.js";
 import {renderIdeas} from "./search.js";
@@ -13,27 +13,28 @@ import {pf,setPf,PUNIT,kvRow,nutKv,packTxt,priceKv,priceFormHtml,dlg} from "./in
 import {fmtQ} from "./editor.js";
 
 /* ---------- ainesosarekisteri ---------- */
-export const regS={q:"",d:"",m:"",own:false,nop:false,open:null,form:null,back:"add",del:false,g:"i"};
+export const regS={q:"",d:"",m:"",own:false,nop:false,open:null,form:null,back:"add",del:false,g:""};
 export const capF=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const num1=v=>{const x=parseFloat(String(v).replace(",","."));return isFinite(x)?x:null;};
-function otRows(){const ck=new Set(CAT.map(c=>c.key));return[...OT.values()].filter(o=>!ck.has(o.k)).map(o=>({key:o.k,d:o.d,m:"",n:null,u:{},syn:o.syn,own:false,cat:false,ot:o}));}
+/* yksi rekisteri: ainekset, valmiit tuotteet ja kodin tarvikkeet (laji kind: "" ruoka-aine, t valmis tuote, k kodin tarvike) */
 function regRows(){
-  if(regS.g==="o")return otRows();
   const rows=[],seen=new Set();
-  for(const e of CAT){seen.add(e.key);rows.push({key:e.key,d:e.d,m:e.m.replace("?",""),n:e.n,neg:e.neg,fid:e.fid,fname:e.fname,u:e.u,syn:e.syn,url:e.url,own:false,ov:e.ov,cat:true});}
-  for(const k of Object.keys(PR))if(!seen.has(k)&&!catFind(k)&&!state.ing[k])rows.push({key:k,d:deptOf(k),m:"",n:null,neg:false,u:{},syn:[],own:false,cat:false});
-  for(const[k,v]of Object.entries(state.ing))rows.push({key:k,d:v.d,m:v.m||"",n:v.n||null,neg:false,u:v.u||{},url:v.url||"",syn:v.syn||[],own:true,ov:!!PR[k],cat:false});
+  for(const e of CAT){seen.add(e.key);rows.push({key:e.key,d:e.d,m:e.m.replace("?",""),n:e.n,ni:e.ni,neg:e.neg,fid:e.fid,fname:e.fname,u:e.u,syn:e.syn,url:e.url,own:false,ov:e.ov||!!(OT.get(e.key)||{}).ov,cat:true,kind:e.kind,b:e.b,ot:OT.get(e.key)||null});}
+  for(const k of Object.keys(PR))if(!seen.has(k)&&!catFind(k)&&!state.ing[k])rows.push({key:k,d:deptOf(k),m:"",n:null,neg:false,u:{},syn:[],own:false,cat:false,kind:""});
+  for(const[k,v]of Object.entries(state.ing))rows.push({key:k,d:v.d,m:v.m||"",n:v.n||null,neg:false,u:v.u||{},url:v.url||"",syn:v.syn||[],own:true,ov:!!PR[k],cat:false,kind:"",b:v.b||"",ni:!!(v.b&&v.n&&CBYK.has(v.b)&&JSON.stringify(v.n)===JSON.stringify(CBYK.get(v.b).n))});
   return rows;
 }
+const rowPrice=r=>{const pe=findPrice(r.key);if(pe&&!(r.kind&&r.ot))return{t:eur(pe.p)+" / "+PUNIT[pe.per],ok:true};if(r.ot){const p=otP(r.ot);if(p!=null)return{t:eur(p)+" / "+otPack(r.ot),ok:true,w:!!r.ot.w};}return{t:"ei hintaa",ok:false};};
 function regFilter(rows){
   const q=fold(regS.q.trim());
   for(const r of rows)r.s=q?fzBest(q,[r.key,...r.syn]):0;
   return rows.filter(r=>
     r.s>=0&&
+    (regS.g===""||(regS.g==="i"?!r.kind:r.kind===regS.g))&&
     (regS.d===""||String(r.d)===regS.d)&&
     (regS.m===""||r.m===regS.m)&&
     (!regS.own||r.own||r.ov)&&
-    (!regS.nop||(r.ot?!!r.ot.w:(!findPrice(r.key)&&!isSkip(r.key)&&!r.neg)))
+    (!regS.nop||(!rowPrice(r).ok&&!isSkip(r.key)&&!r.neg)||!!(r.ot&&r.ot.w&&r.ot.p!=null))
   ).sort((a,b)=>(q?(a.s>=3)-(b.s>=3):0)||a.key.localeCompare(b.key,"fi"));
 }
 function regUnits(row){
@@ -75,8 +76,9 @@ function regFormHtml(){
   const fld=(id,lab,val,ph)=>`<label class="rf2"><span>${lab}</span><input type="text" inputmode="decimal" data-reg-in="${id}" value="${esc(val)}" placeholder="${ph||""}" autocomplete="off"></label>`;
   const nameHtml=fixed?`<p class="rfn">${esc(capF(f.orig))}</p>`:`<label class="rf2 w"><span>Nimi</span><input type="text" data-reg-in="name" value="${esc(f.name)}" maxlength="60" autocomplete="off"></label>${f.orig?`<p class="note nd" style="margin:-4px 0 10px">Nimen muutos päivittyy myös omiin reseptehisi ja ostoslistoihin.</p>`:""}`;
   const reset=f.kind==="own"?`<button type="button" class="clear err" data-reg="del">${regS.del?"Varmista poisto":"Poista aines"}</button>`:(f.has?`<button type="button" class="clear err" data-reg="del">${regS.del?"Varmista palautus":"Palauta alkuperäinen"}</button>`:"");
-  return`<div class="rform"><p class="pft">${!f.orig?"Lisää oma aines":fixed?"Muokkaa ainesta":"Muokkaa omaa ainesta"}</p>
+  return`<div class="rform"><p class="pft">${!f.orig?(f.b?"Lisää muunnelma":"Lisää oma aines"):fixed?"Muokkaa ainesta":"Muokkaa omaa ainesta"}</p>
 ${nameHtml}
+${fixed?"":`<label class="rf2 w"><span>Muunnelma tuotteesta (valinnainen)</span><input type="text" data-reg-in="b" value="${esc(f.b||"")}" list="rbl" placeholder="esim. tuorejuusto" autocomplete="off"></label><datalist id="rbl">${CAT.filter(e=>e.kind!=="k").map(e=>`<option value="${esc(e.key)}">`).join("")}</datalist><p class="note nd" style="margin:-4px 0 10px">Esimerkiksi valkosipulituorejuusto on tuorejuuston muunnelma. Tyhjiksi jätetyt kentät täytetään pohjatuotteen tiedoilla, ja hinta tulee pohjatuotteelta, ellet anna omaa.</p>`}
 <div class="rrow"><label class="rf2"><span>Tuoteryhmä</span><select data-reg-in="d"><option value="">Valitse…</option>${DEPS.map((n,i)=>`<option value="${i}"${String(f.d)===String(i)?" selected":""}>${esc(n)}</option>`).join("")}</select></label>
 <label class="rf2"><span>Pääraaka-aine</span><select data-reg-in="m"><option value="">Ei mitään</option>${Object.entries(M).filter(([c])=>c!=="v").map(([c,l])=>`<option value="${c}"${f.m===c?" selected":""}>${esc(l)}</option>`).join("")}</select></label></div>
 <label class="rf2 w" style="margin-top:10px"><span>Synonyymit</span><input type="text" data-reg-in="syn" value="${esc(f.syn||"")}" placeholder="esim. hapankerma, smetana" autocomplete="off"></label>
@@ -96,8 +98,7 @@ ${f.err?`<p class="note err" role="alert">${esc(f.err)}</p>`:""}
 }
 function otFormHtml(o){
   const f=regS.otf;
-  return`<div class="rform"><p class="pft">Muokkaa tuotetta: <b>${esc(capF(o.k))}</b></p>
-<label class="rf2 w"><span>Osasto</span><select data-ot-in="d"><option value="">Valitse…</option>${DEPS.map((n,i)=>`<option value="${i}"${String(f.d)===String(i)?" selected":""}>${esc(n)}</option>`).join("")}</select></label>
+  return`<div class="rform"><p class="pft">Muokkaa pakkausta: <b>${esc(capF(o.k))}</b></p>
 <div class="rrow"><label class="rf2"><span>Pakkauksen hinta, €</span><input type="text" inputmode="decimal" data-ot-in="p" value="${esc(f.p)}" placeholder="esim. 2,50" autocomplete="off"></label>
 <label class="rf2"><span>Pakkauskoko</span><input type="text" inputmode="decimal" data-ot-in="q" value="${esc(f.q)}" autocomplete="off"></label>
 <label class="rf2"><span>Yksikkö</span><select data-ot-in="u">${["g","ml","kpl"].map(x=>`<option value="${x}"${f.u===x?" selected":""}>${x}</option>`).join("")}</select></label></div>
@@ -105,32 +106,34 @@ function otFormHtml(o){
 ${f.err?`<p class="note err" role="alert">${esc(f.err)}</p>`:""}
 <div class="nfa"><button type="button" class="go" data-reg="otsave" data-key="${esc(o.k)}">Tallenna</button><button type="button" class="cartbtn" data-reg="otcancel"><span>Peruuta</span></button></div></div>`;
 }
-function otDetail(o){
-  if(regS.otf&&regS.otf.k===o.k)return otFormHtml(o);
-  const u=otUnit(o),pu=o.u==="kpl"?"kpl":(o.u==="ml"?"l":"kg");
-  let h='<div class="rd"><p class="gt">Hinta</p>';
-  h+=`<p class="rp">${otP(o)==null?"Hinta puuttuu":eur(otP(o))+" / "+esc(otPack(o))}${u!=null?" · "+eur(u)+" / "+pu:""}${o.w?" · heikko arvio":""}</p>`;
-  h+=`<p class="note nd">${esc(o.note)}. Lähde: <a href="https://www.s-kaupat.fi/tuotteet/${esc(o.path)}" target="_blank" rel="noopener noreferrer">S-kaupat.fi</a>, tarkistettu ${fmtD(o.dt)}.${o.w?" "+esc(o.w):""}</p>`;
-  h+=`<p class="gt">Osasto</p><p class="ru">${esc(DEPS[o.d]||"")}</p>`;
-  if(o.syn.length)h+=`<p class="note nd">Tunnistetaan myös: ${esc(o.syn.join(", "))}.</p>`;
-  if(o.ov)h+=`<p class="note nd">Olet muokannut tätä tuotetta.</p>`;
-  h+=`<div class="nfa"><button type="button" class="cartbtn" data-reg="otedit" data-key="${esc(o.k)}">${ico("pencil")}<span>Muokkaa</span></button>${o.ov?`<button type="button" class="clear" data-reg="otreset" data-key="${esc(o.k)}">Palauta alkuperäinen</button>`:""}</div>`;
-  return h+"</div>";
+/* pakkaus ja pakkaushinta (ostoslistan Lisää tuotteita) */
+function packSection(o){
+  if(regS.otf&&regS.otf.k===o.k)return`<section class="ib">${otFormHtml(o)}</section>`;
+  const u=otUnit(o),pu=o.u==="kpl"?"kpl":(o.u==="ml"?"l":"kg"),p=otP(o);
+  let h=`<section class="ib"><h4>Pakkaus</h4><dl class="kv">${kvRow("Pakkaus",esc(otPack(o)))}${kvRow("Hinta",p==null?"puuttuu":eur(p)+(u!=null?" · "+eur(u)+" / "+pu:"")+(o.w?" · heikko arvio":""))}</dl>`;
+  h+=`<p class="idn">${esc(o.note)}. Lähde: <a href="https://www.s-kaupat.fi/tuotteet/${esc(o.path)}" target="_blank" rel="noopener noreferrer">S-kaupat.fi</a>, tarkistettu ${fmtD(o.dt)}.${o.w?" "+esc(o.w):""}${o.ov?" Olet muokannut pakkausta.":""}</p>`;
+  h+=`<p class="ibb"><button type="button" class="lk" data-reg="otedit" data-key="${esc(o.k)}">Muokkaa pakkausta</button>${o.ov?` <button type="button" class="lk" data-reg="otreset" data-key="${esc(o.k)}">Palauta pakkaus</button>`:""}</p></section>`;
+  return h;
 }
+const regLink=k=>`<button type="button" class="lk" data-reg="go" data-key="${esc(k)}">${esc(capF(k))}</button>`;
 function regDetail(row){
-  if(row.ot)return otDetail(row.ot);
   if(regS.form&&regS.form.orig===row.key)return regFormHtml();
-  const n=row.n;
+  const n=row.n,bk=row.b||"",vs=variantsOf(row.key);
   let h='<div class="rd idet">';
-  h+=`<section class="ib"><h4>Hinta</h4>${regPriceHtml(row)}</section>`;
+  if(bk)h+=`<section class="ib"><h4>Muunnelma</h4><p class="ru">Pohjatuote: ${regLink(bk)}</p><p class="idn">Tiedot, joita tällä tuotteella ei ole, tulevat pohjatuotteelta. Ostoslistalla tämä on oma rivinsä. Kaapissa tämä kelpaa myös pohjatuotteeksi, mutta pohjatuote ei kelpaa tämän tilalle, ellei reseptissä lue esimerkiksi "(tai tavallinen)".</p></section>`;
+  if(!(row.kind&&row.ot))h+=`<section class="ib"><h4>Hinta</h4>${regPriceHtml(row)}</section>`;
+  if(row.ot)h+=packSection(row.ot);
+  if(row.kind!=="k"){
   h+=`<section class="ib"><h4>Ravintoarvot / 100 g</h4>`;
   if(n){
     h+=nutKv(n);
-    h+=`<p class="idn">${row.own?(row.url?`Oma arvo. Lähde: <a href="${esc(row.url)}" target="_blank" rel="noopener noreferrer">${esc(host(row.url)||"tuotesivu")}</a>.`:"Oma arvo."):row.ov?"Muokattu arvo.":(row.fid?`Lähde: <a href="https://fineli.fi/fineli/fi/elintarvikkeet/${esc(row.fid)}" target="_blank" rel="noopener noreferrer">Fineli: ${esc(row.fname)}</a>, THL, CC BY 4.0.`:"Käsin lisätty arvio.")}</p>`;
+    h+=row.ni?`<p class="idn">Pohjatuotteen ${esc(capF(bk))} arvot.</p>`:`<p class="idn">${row.own?(row.url?`Oma arvo. Lähde: <a href="${esc(row.url)}" target="_blank" rel="noopener noreferrer">${esc(host(row.url)||"tuotesivu")}</a>.`:"Oma arvo."):row.ov?"Muokattu arvo.":(row.fid?`Lähde: <a href="https://fineli.fi/fineli/fi/elintarvikkeet/${esc(row.fid)}" target="_blank" rel="noopener noreferrer">Fineli: ${esc(row.fname)}</a>, THL, CC BY 4.0.`:"Käsin lisätty arvio.")}</p>`;
   }else h+=`<p class="idn" style="margin-top:0">${row.neg?"Ravintoarvoja ei lasketa, koska ainesta käytetään vain vähän.":"Ravintoarvoja ei ole."}</p>`;
   h+=`</section>`;
+  }
   const u=regUnits(row);
   if(u.length)h+=`<section class="ib"><h4>Yksiköt</h4><p class="ru">${u.map(esc).join(" · ")}</p></section>`;
+  if(row.kind!=="k")h+=`<section class="ib"><h4>Muunnelmat</h4><p class="ru">${vs.length?vs.map(regLink).join(", "):"Ei muunnelmia."}</p><p class="ibb"><button type="button" class="lk" data-reg="newv" data-key="${esc(row.key)}">Lisää muunnelma</button></p></section>`;
   if(row.syn.length)h+=`<section class="ib"><h4>Tunnistetaan myös</h4><p class="ru">${row.syn.map(esc).join(", ")}</p></section>`;
   const used=all().filter(r=>r.ing.some(l=>{const k=parseIng(l).key;if(row.cat){const c=catFind(k);return c&&c.key===row.key;}return k===row.key;}));
   if(used.length)h+=`<section class="ib"><h4>Käytössä ruuissa</h4><p class="ru">${used.slice(0,8).map(r=>`<button type="button" class="lk" data-open="${esc(r.id)}">${esc(r.name)}</button>`).join("")}${used.length>8?` ja ${used.length-8} muuta`:""}</p></section>`;
@@ -139,25 +142,26 @@ function regDetail(row){
 }
 function regListHtml(){
   const rows=regFilter(regRows());
-  $("rcount").textContent=regS.g==="o"?(rows.length===1?"1 tuote":rows.length+" tuotetta"):(rows.length===1?"1 ainesosa":rows.length+" ainesosaa");
+  $("rcount").textContent=rows.length===1?"1 tuote":rows.length+" tuotetta";
   return rows.map(r=>{
-    const open=regS.open===r.key,pe=r.ot?null:findPrice(r.key);
-    if(r.ot)return`<li class="rr"><button type="button" class="rh" data-reg="t" data-key="${esc(r.key)}" aria-expanded="${open}"><span class="rn"><b>${esc(capF(r.key))}</b><small>${esc(DEPS[r.d]||"")}</small></span><span class="rv"><span>${otP(r.ot)==null?"ei hintaa":eur(otP(r.ot))+" / "+esc(otPack(r.ot))}</span><span>${r.ot.w?"heikko arvio":"&nbsp;"}</span></span>${ico("chev")}</button>${open?regDetail(r):""}</li>`;
-    return`<li class="rr"><button type="button" class="rh" data-reg="t" data-key="${esc(r.key)}" aria-expanded="${open}"><span class="rn"><b>${esc(capF(r.key))}</b><small>${esc(DEPS[r.d]||"")}${r.own&&!r.ov?" · oma":r.ov?" · muokattu":""}${r.m&&M[r.m]?" · "+esc(M[r.m]):""}</small></span><span class="rv"><span${pe?"":' class="np"'}>${pe?eur(pe.p)+" / "+PUNIT[pe.per]:"ei hintaa"}</span><span>${r.n?f0(r.n.kcal)+" kcal":"ei ravintoarvoja"}</span></span>${ico("chev")}</button>${open?regDetail(r):""}</li>`;
+    const open=regS.open===r.key,pr=rowPrice(r);
+    const sub=[DEPS[r.d]||"",r.kind?KINDS[r.kind]:"",r.b?"muunnelma":"",r.own&&!r.ov?"oma":r.ov?"muokattu":"",r.m&&M[r.m]?M[r.m]:""].filter(Boolean).map(esc).join(" · ");
+    const right=r.kind==="k"?(pr.w?"heikko arvio":"&nbsp;"):(r.n?f0(r.n.kcal)+" kcal":"ei ravintoarvoja");
+    return`<li class="rr"><button type="button" class="rh" data-reg="t" data-key="${esc(r.key)}" aria-expanded="${open}"><span class="rn"><b>${esc(capF(r.key))}</b><small>${sub}</small></span><span class="rv"><span${pr.ok?"":' class="np"'}>${esc(pr.t)}</span><span>${right}</span></span>${ico("chev")}</button>${open?regDetail(r):""}</li>`;
   }).join("")||`<li class="note" style="padding:12px 4px">Ei osumia. Poista suodattimia tai lisää oma aines.</li>`;
 }
 function renderRegList(){$("rlist").innerHTML=regListHtml();}
 function renderRegForm(){const b=$("rform");if(b)b.innerHTML=regS.form&&!regS.form.orig?regFormHtml():"";}
 export function renderReg(){
-  setBar("reg",regS.g==="o"?"Muut tuotteet":"Ainesosarekisteri");
+  setBar("reg","Tuoterekisteri");
   $("regBody").innerHTML=`<button type="button" class="lk back" data-reg="back">← Takaisin</button>
-<div class="seg" role="group" aria-label="Lista"><button type="button" data-reg="g" data-g="i" aria-pressed="${regS.g!=="o"}">Ainesosat</button><button type="button" data-reg="g" data-g="o" aria-pressed="${regS.g==="o"}">Muut tuotteet</button></div>
-<p class="note">${regS.g==="o"?"Kodin tuotteet, valmisruoat ja juomat, joita lisätään ostoslistalle painikkeella Lisää tuotteita. Hinnat ovat pakkauskohtaisia, ja ne lasketaan listan summaan.":"Aineksille on tallennettu tuoteryhmä, ravintoarvot, yksikkömuunnokset ja hinta. Ravintoarvot: Fineli, THL, CC BY 4.0."}</p>
-<input id="rq" type="search" placeholder="${regS.g==="o"?"Hae tuotetta":"Hae ainesta"}" value="${esc(regS.q)}" autocomplete="off" aria-label="Hae">
-<div class="rsel"><select id="rd" aria-label="Tuoteryhmä"><option value="">Kaikki tuoteryhmät</option>${DEPS.map((n,i)=>`<option value="${i}"${regS.d===String(i)?" selected":""}>${esc(n)}</option>`).join("")}</select>
-${regS.g==="o"?"":`<select id="rm" aria-label="Pääraaka-aine"><option value="">Kaikki pääraaka-aineet</option>${Object.entries(M).filter(([c])=>c!=="v").map(([c,l])=>`<option value="${c}"${regS.m===c?" selected":""}>${esc(l)}</option>`).join("")}</select>`}</div>
-<div class="chips" style="margin-top:10px">${regS.g==="o"?"":`<button type="button" class="chip" data-reg="own" aria-pressed="${regS.own}">Omat</button>`}<button type="button" class="chip" data-reg="nop" aria-pressed="${regS.nop}">${regS.g==="o"?"Heikko arvio":"Hinta puuttuu"}</button></div>
-<div class="regtop"><b id="rcount" aria-live="polite"></b>${regS.g==="o"?"":`<button type="button" class="cartbtn" data-reg="new">${ico("plus")}<span>Lisää oma aines</span></button>`}</div>
+<p class="note">Reseptien ainekset, valmiit tuotteet ja kodin tarvikkeet samassa rekisterissä. Tuotteelle on tallennettu osasto ja hinta tai pakkaushinta, ruoka-aineille myös ravintoarvot ja yksikkömuunnokset. Ravintoarvot: Fineli, THL, CC BY 4.0.</p>
+<input id="rq" type="search" placeholder="Hae tuotetta" value="${esc(regS.q)}" autocomplete="off" aria-label="Hae">
+<div class="rsel"><select id="rg" aria-label="Laji"><option value="">Kaikki lajit</option>${[["i","Ruoka-aineet"],["t","Valmiit tuotteet"],["k","Kodin tarvikkeet"]].map(([v,l])=>`<option value="${v}"${regS.g===v?" selected":""}>${l}</option>`).join("")}</select>
+<select id="rd" aria-label="Tuoteryhmä"><option value="">Kaikki tuoteryhmät</option>${DEPS.map((n,i)=>`<option value="${i}"${regS.d===String(i)?" selected":""}>${esc(n)}</option>`).join("")}</select>
+<select id="rm" aria-label="Pääraaka-aine"><option value="">Kaikki pääraaka-aineet</option>${Object.entries(M).filter(([c])=>c!=="v").map(([c,l])=>`<option value="${c}"${regS.m===c?" selected":""}>${esc(l)}</option>`).join("")}</select></div>
+<div class="chips" style="margin-top:10px"><button type="button" class="chip" data-reg="own" aria-pressed="${regS.own}">Omat</button><button type="button" class="chip" data-reg="nop" aria-pressed="${regS.nop}">Hinta puuttuu</button></div>
+<div class="regtop"><b id="rcount" aria-live="polite"></b><button type="button" class="cartbtn" data-reg="new">${ico("plus")}<span>Lisää oma aines</span></button></div>
 <div id="rform"></div><ul class="rl" id="rlist"></ul>`;
   renderRegForm();renderRegList();
 }
@@ -165,7 +169,7 @@ export const refreshReg=()=>{if(!$("v-reg").hidden){renderRegList();}};
 export function openReg(q){
   if(dlg.open)dlg.close();
   if(curTab!=="reg")regS.back=curTab;
-  regS.q=q||"";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.form=null;regS.otf=null;regS.del=false;regS.g="i";
+  regS.q=q||"";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.form=null;regS.otf=null;regS.del=false;regS.g="";
   const c=q?catFind(q):null;
   regS.open=q?(state.ing[q]?q:(c?c.key:null)):null;
   if(q&&regS.open)regS.q="";
@@ -203,8 +207,17 @@ function regSave(){
     if(!NMRE2.test(key))return err("Kirjoita aineksen nimi, enintään 60 merkkiä.");
     if((!f.orig||key!==f.orig)&&(CIDX.has(key)||state.ing[key]||PR[key]||USYN.has(key)))return err("Aines on jo rekisterissä.");
   }
+  let bc=null;
+  if(!fixed&&String(f.b||"").trim()){
+    const bt=String(f.b).trim().toLowerCase();bc=CBYK.get(bt)||CIDX.get(bt)||null;
+    if(!bc||bc.kind==="k")return err("Pohjatuotetta ”"+bt+"” ei löydy rekisteristä. Valitse tuote listasta.");
+    if(bc.key===key)return err("Tuote ei voi olla oma pohjatuotteensa.");
+    if(f.d==="")f.d=String(bc.d);
+    if(!f.m)f.m=(bc.m||"").replace("?","");
+  }
   if(f.d==="")return err("Valitse tuoteryhmä.");
   const o={d:+f.d,m:f.m||""};
+  if(bc)o.b=bc.key;
   const ns=["kcal","prot","fat","sat","carb","salt"];
   if(ns.some(k=>String(f[k]).trim()!=="")){
     const v={};
@@ -224,7 +237,9 @@ function regSave(){
   }
   const c0=f.kind==="ix"?CBYK.get(key):null;
   if(c0&&!uv.dl){if(c0.o.u.rkl)uv.rkl=c0.o.u.rkl;if(c0.o.u.tl)uv.tl=c0.o.u.tl;}
+  if(bc)for(const k of ["dl","kpl","prk","pss","nippu"])if(!uv[k]&&bc.u&&bc.u[k])uv[k]=bc.u[k];
   if(Object.values(uv).some(x=>x))o.u=uv;
+  if(bc&&!o.n&&bc.n)o.n={...bc.n};
   if(String(f.url||"").trim()){const su=safeUrl(f.url.trim());if(!su)return err("Linkki ei kelpaa. Käytä osoitetta, joka alkaa https://");o.url=su;}
   const sy=[];
   for(const s0 of String(f.syn||"").split(/[,;\n]/)){
@@ -262,13 +277,13 @@ function regSave(){
 }
 const regFormOf=(k,v,kind)=>{
   const pk=v.pk&&v.pk.length?v.pk:null;
-  return{orig:k,kind,has:!!v.has,name:k,d:String(v.d),m:(v.m||"").replace("?",""),syn:(v.syn||[]).join(", "),kcal:v.n?String(v.n.kcal):"",prot:v.n?String(v.n.prot):"",fat:v.n?String(v.n.fat):"",sat:v.n?String(v.n.sat):"",carb:v.n?String(v.n.carb):"",salt:v.n?String(v.n.salt):"",dl:v.u&&v.u.dl?String(v.u.dl):"",kpl:v.u&&v.u.kpl?String(v.u.kpl):"",prk:v.u&&v.u.prk?String(v.u.prk):"",pss:v.u&&v.u.pss?String(v.u.pss):"",nippu:v.u&&v.u.nippu?String(v.u.nippu):"",pkq:pk?String(pk[0]).replace(".",","):"",pku:pk?pk[1]:"g",hadPk:!!pk,url:v.url||"",paste:"",info:"",err:""};
+  return{orig:k,kind,has:!!v.has,name:k,d:String(v.d),m:(v.m||"").replace("?",""),syn:(v.syn||[]).join(", "),kcal:v.n?String(v.n.kcal):"",prot:v.n?String(v.n.prot):"",fat:v.n?String(v.n.fat):"",sat:v.n?String(v.n.sat):"",carb:v.n?String(v.n.carb):"",salt:v.n?String(v.n.salt):"",dl:v.u&&v.u.dl?String(v.u.dl):"",kpl:v.u&&v.u.kpl?String(v.u.kpl):"",prk:v.u&&v.u.prk?String(v.u.prk):"",pss:v.u&&v.u.pss?String(v.u.pss):"",nippu:v.u&&v.u.nippu?String(v.u.nippu):"",pkq:pk?String(pk[0]).replace(".",","):"",pku:pk?pk[1]:"g",hadPk:!!pk,url:v.url||"",b:v.b||"",paste:"",info:"",err:""};
 };
 function regFormFromRow(row){
   const bk=baseKey(PALIAS[row.key]||row.key),e=bk?PR[bk]:null,u=Object.assign({},row.u||{});
   if(e&&!(row.own&&!row.ov)){if(!u.dl&&e.dl)u.dl=e.dl;if(!u.kpl&&e.kpl)u.kpl=e.kpl;if(!u.prk&&e.prk)u.prk=e.prk;if(!u.pss&&e.pss)u.pss=e.pss;if(!u.nippu&&e.nippu)u.nippu=e.nippu;}
   const kind=row.own&&!row.ov?"own":(row.cat?"ix":"pr");
-  return regFormOf(row.key,{d:row.d,m:row.m,n:row.n,u,syn:row.syn,url:row.url||"",pk:packOf(row.key),has:row.ov},kind);
+  return regFormOf(row.key,{d:row.d,m:row.m,n:row.n,u,syn:row.syn,url:row.url||"",pk:packOf(row.key),has:row.ov,b:row.own?row.b:""},kind);
 }
 $("regBody").addEventListener("click",e=>{
   const b=e.target.closest("[data-reg]");if(!b)return;
@@ -281,22 +296,20 @@ $("regBody").addEventListener("click",e=>{
   else if(a==="otsave"){
     const f=regS.otf,o=f&&OT.get(f.k);if(!o)return;
     const er=t=>{f.err=t;renderRegList();};
-    if(f.d==="")return er("Valitse osasto.");
     const pt=String(f.p).trim(),p=pt===""?null:num1(pt),q=num1(f.q);
     if(pt!==""&&!(p>0&&p<10000))return er("Kirjoita hinta euroina, esimerkiksi 2,50.");
     if(!(q>0&&q<100000))return er("Kirjoita pakkauskoko, esimerkiksi 250.");
-    const x={...(state.ot[o.k]||{})},b=o.b,d=+f.d;
-    if(d!==o.d)x.d=d;
+    const x={...(state.ot[o.k]||{})},b=o.b;
     if(p!=null&&(f.p0==null||Math.abs(p-f.p0)>0.004))x.p=Math.round(p*100)/100;
     if(q!==f.q0||f.u!==f.u0){x.q=q;x.u=f.u;}
-    if(x.d===b.d)delete x.d;
     if(x.p!=null&&b.p!=null&&x.p===b.p)delete x.p;
     if(x.q!=null&&x.q===b.q&&x.u===b.u){delete x.q;delete x.u;}
     if(Object.keys(x).length)state.ot[o.k]=x;else delete state.ot[o.k];
     regS.otf=null;mutate();applyOtx();renderRegList();refreshCart();
   }
   else if(a==="t"){regS.otf=null;regS.open=regS.open===k?null:k;regS.form=regS.form&&regS.form.orig?null:regS.form;regS.del=false;setPf(null);renderRegList();const nb=$("rlist").querySelector('[data-key="'+(window.CSS&&CSS.escape?CSS.escape(k):k)+'"]');if(nb)nb.focus();}
-  else if(a==="g"){regS.otf=null;regS.g=b.dataset.g==="o"?"o":"i";regS.q="";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.open=null;regS.form=null;regS.del=false;renderReg();}
+  else if(a==="go"){regS.otf=null;regS.form=null;regS.del=false;regS.q="";regS.g="";regS.d="";regS.m="";regS.own=false;regS.nop=false;regS.open=k;renderReg();const nb=$("rlist").querySelector('[aria-expanded="true"]');if(nb){nb.scrollIntoView({block:"center"});nb.focus();}}
+  else if(a==="newv"){const c=CBYK.get(k);regS.form=Object.assign(regFormOf("",{d:c?c.d:""},"new"),{name:"",b:k});regS.del=false;regS.open=null;renderRegList();renderRegForm();$("rform").scrollIntoView({block:"start"});const i=$("rform").querySelector("input");if(i)i.focus();}
   else if(a==="reset"){
     if(state.ix[k])delete state.ix[k];else delete state.ing[k];
     rebuildCat();regS.form=null;regS.del=false;mutate();renderRegList();renderIdeas();refreshCart();
@@ -304,7 +317,7 @@ $("regBody").addEventListener("click",e=>{
   else if(a==="own"){regS.own=!regS.own;b.setAttribute("aria-pressed",regS.own);renderRegList();}
   else if(a==="nop"){regS.nop=!regS.nop;b.setAttribute("aria-pressed",regS.nop);renderRegList();}
   else if(a==="new"){regS.form=Object.assign(regFormOf("",{d:""},"new"),{name:regS.q.trim()});regS.del=false;renderRegForm();const i=$("rform").querySelector("input");if(i)i.focus();}
-  else if(a==="edit"){const row=regRows().find(r=>r.key===k&&!r.ot);if(row){regS.form=regFormFromRow(row);regS.del=false;renderRegForm();renderRegList();}}
+  else if(a==="edit"){const row=regRows().find(r=>r.key===k);if(row){regS.form=regFormFromRow(row);regS.del=false;renderRegForm();renderRegList();}}
   else if(a==="cancel"){regS.form=null;regS.del=false;renderRegForm();renderRegList();}
   else if(a==="parse"){
     const f=regS.form,r=parseNutText(f.paste||"");let n=0;
@@ -328,5 +341,6 @@ $("regBody").addEventListener("input",e=>{
 $("regBody").addEventListener("change",e=>{
   const t=e.target;
   if(t.id==="rd"){regS.d=t.value;renderRegList();}
+  else if(t.id==="rg"){regS.g=t.value;renderRegList();}
   else if(t.id==="rm"){regS.m=t.value;renderRegList();}
 });

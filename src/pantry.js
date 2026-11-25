@@ -44,9 +44,11 @@ export const prune = (h, today, depOf) => h.filter((it) => { const l = daysLeft(
 export const keysOf = (k) => (GROUPS[k] ? GROUPS[k][1] : [k]);
 export const nameOf = (k) => (GROUPS[k] ? GROUPS[k][0].toLowerCase() : k);
 /* kaapin avaimet ainesavaimiksi: Map(aines -> kaapin merkintä) */
-export function haveMap(h) {
+export function haveMap(h, more) {
   const m = new Map();
   for (const it of h) for (const k of keysOf(it.k)) if (!m.has(k)) m.set(k, it.k);
+  /* muunnelma kaapissa kelpaa myös pohjatuotteeksi (nakit -> makkara), mutta ei toisin päin */
+  if (more) for (const it of h) for (const k of keysOf(it.k)) for (const b of more(k)) if (!m.has(b)) m.set(b, it.k);
   return m;
 }
 

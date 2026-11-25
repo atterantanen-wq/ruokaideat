@@ -10,12 +10,14 @@ import "./app/pantry-view.js";
 import "./app/update.js";
 import {ingFor,plCostPer,plCands,plDefaults,autoN,setPlPics} from "./app/plan-view.js";
 import {R,parseIng} from "./app/core.js";
-import {catFind,recipeNut,nutPer,findPrice,nameSkip,isSkip,selR,recipeCost} from "./app/catalog.js";
-import {state} from "./app/state.js";
+import {baseOf,variantsOf,catFind,recipeNut,nutPer,findPrice,nameSkip,isSkip,selR,recipeCost} from "./app/catalog.js";
+import {state,cleanState} from "./app/state.js";
+import {openReg} from "./app/registry.js";
 import {byId} from "./app/ideas.js";
 import * as PL from "./planner.js";
 import {LIB} from "./data/library/index.js";
 import {applySel} from "./recipes.js";
+import {deptOf,packOf,otOf,otP,listItems,itemCost,XSUG} from "./app/cart.js";
 
 /* kehitystila: testiskriptien apu (ei mukana tuotantoversiossa) */
-if(import.meta.env.DEV)window.__app={PL,plCands,setPlPics,autoN,plDefaults,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,get state(){return state;}};
+if(import.meta.env.DEV)window.__app={PL,plCands,setPlPics,autoN,plDefaults,ingFor,plCostPer,R,LIB,parseIng,catFind,findPrice,nameSkip,isSkip,selR,applySel,recipeCost,recipeNut,nutPer,byId,deptOf,packOf,otOf,otP,listItems,itemCost,XSUG,baseOf,variantsOf,cleanState,openReg,get state(){return state;}};

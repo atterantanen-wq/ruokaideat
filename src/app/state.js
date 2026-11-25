@@ -1,5 +1,5 @@
 /* sovelluksen tila (state), tallennus localStorageen ja etäsynkka */
-import {CBYK,todayIso,PCH} from "./catalog.js";
+import {CBYK,KMIG,todayIso,PCH} from "./catalog.js";
 import {T,M,WLD,HOL,KQ,$,clip,R,defServ,safeUrl} from "./core.js";
 import {applyLay,renderIdeas} from "./search.js";
 import {STORE_IDS,migDept,OT,applyOtx} from "./cart.js";
@@ -46,6 +46,9 @@ function cleanRec(c){
     src:Array.isArray(c.src)?c.src.filter(v=>Array.isArray(v)&&typeof v[0]==="string"&&safeUrl(v[1])).slice(0,6).map(v=>[clip(v[0],40),safeUrl(v[1])]):[]};
 }
 export function cleanState(x){return aliasState(cleanState0(x));}
+/* Muut tuotteet yhdistettiin ainesosarekisteriin (marraskuu 2026): vanhat tuotenimet rekisterin avaimiksi, esim. banaanit -> banaani */
+const mk=k=>typeof k==="string"&&Object.prototype.hasOwnProperty.call(KMIG,k)?KMIG[k]:k;
+const mkA=a=>Array.isArray(a)?[...new Set(a.map(mk))]:a;
 function cleanState0(x){
   const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,vk:[],pl:PL.defaultPlan(),kp:{h:[],no:[]}};
   if(x&&x.sp===true)o.sp=true;
@@ -70,8 +73,8 @@ function cleanState0(x){
   }
   if(typeof x.store==="string"&&stOk(x.store))o.store=x.store;
   if(Array.isArray(x.rc))for(const id of x.rc){if(typeof id==="string"&&stOk(id)&&!o.rc.includes(id)&&o.rc.length<5)o.rc.push(id);}
-  if(x.ot&&typeof x.ot==="object")for(const k of Object.keys(x.ot).slice(0,150)){
-    const v=x.ot[k];if(!v||typeof v!=="object"||!OT.has(k))continue;
+  if(x.ot&&typeof x.ot==="object")for(const k0 of Object.keys(x.ot).slice(0,150)){
+    const v=x.ot[k0],k=mk(k0);if(!v||typeof v!=="object"||!OT.has(k)||(k!==k0&&o.ot[k]))continue;
     const e={},d=parseInt(v.d),p=+v.p,q=+v.q;
     if(d>=0&&d<=18)e.d=d;
     if(v.p!=null&&p>0&&p<10000)e.p=Math.round(p*100)/100;
@@ -106,14 +109,15 @@ function cleanState0(x){
       if(!nm||/^(su|ma|ti|ke|to|pe|la) \d{1,2}\.\d{1,2}\.( \(\d+\))?$/.test(nm))nm=mkName(d,o.lists);
       const xs=[];
       if(Array.isArray(l.x))for(const it of l.x.slice(0,100)){
-        if(!it||typeof it.k!=="string"||!/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(it.k)||xs.some(y=>y.k===it.k))continue;
-        xs.push({k:it.k,q:clip(typeof it.q==="string"?it.q:"",20)});
+        if(!it||typeof it.k!=="string"||!/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(it.k))continue;
+        const ik=mk(it.k);if(xs.some(y=>y.k===ik))continue;
+        xs.push({k:ik,q:clip(typeof it.q==="string"?it.q:"",20)});
       }
       if(Array.isArray(l.cart)&&l.cart.includes("b68")&&!xs.some(y=>y.k==="leipä"))xs.push({k:"leipä",q:""});
       const adj={};
-      if(l.adj&&typeof l.adj==="object")for(const k of Object.keys(l.adj).slice(0,200)){const n=parseInt(l.adj[k]);if(n!==0&&n>-99&&n<100&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))adj[k]=n;}
+      if(l.adj&&typeof l.adj==="object")for(const k of Object.keys(l.adj).slice(0,200)){const n=parseInt(l.adj[k]);if(n!==0&&n>-99&&n<100&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k)&&adj[mk(k)]==null)adj[mk(k)]=n;}
       const plx=Array.isArray(l.pl)?l.pl.filter(e=>e&&typeof e.id==="string"&&ids.has(e.id)&&+e.n>0&&+e.n<=200).slice(0,80).map(e=>({id:e.id,v:typeof e.v==="string"?clip(e.v,30):"",t:Array.isArray(e.t)?e.t.filter(z=>typeof z==="string"&&z.length<=30).slice(0,8):[],n:Math.round(+e.n*2)/2})):[];
-      o.lists.push({id:l.id,name:nm,d,pl:plx,cart:cc(l.cart),checked:kk(l.checked),have:kk(Array.isArray(l.have)?l.have:x.have),x:xs,adj,md:(l.md==="k"||l.md==="t")?l.md:"",store:(typeof l.store==="string"&&stOk(l.store))?l.store:(l.store===undefined?o.store:"")});
+      o.lists.push({id:l.id,name:nm,d,pl:plx,cart:cc(l.cart),checked:mkA(kk(l.checked)),have:mkA(kk(Array.isArray(l.have)?l.have:x.have)),x:xs,adj,md:(l.md==="k"||l.md==="t")?l.md:"",store:(typeof l.store==="string"&&stOk(l.store))?l.store:(l.store===undefined?o.store:"")});
     }
   }else if(Array.isArray(x.cart)&&x.cart.length){
     const d=todayLocal();
@@ -136,8 +140,8 @@ function cleanState0(x){
     const n=parseInt(x.serv[k]);
     if(ids.has(k)&&n>=1&&n<=24&&n!==defServ(k))o.serv[k]=n;
   }
-  if(x.prices&&typeof x.prices==="object")for(const k of Object.keys(x.prices).slice(0,300)){
-    const v=x.prices[k];
+  if(x.prices&&typeof x.prices==="object")for(const k0 of Object.keys(x.prices).slice(0,300)){
+    const v=x.prices[k0],k=mk(k0);if(k!==k0&&x.prices[k])continue;
     if(!v||typeof v!=="object"||!/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))continue;
     const p=+v.p;
     if(!(p>0&&p<10000)||!["kg","l","kpl"].includes(v.per))continue;
@@ -161,6 +165,7 @@ function cleanState0(x){
       if(Object.values(u).some(x=>x))e.u=u;
     }
     const su=safeUrl(v.url||"");if(su)e.url=su;
+    if(!isIx&&typeof v.b==="string"&&CBYK.has(v.b)&&v.b!==k)e.b=v.b;
     if(Array.isArray(v.syn)){
       const sy=[];
       for(const s0 of v.syn.slice(0,30)){const t=typeof s0==="string"?s0.trim().toLowerCase().replace(/\s+/g," "):"";if(SYRE.test(t)&&t!==k&&!sy.includes(t))sy.push(t);}
@@ -183,7 +188,7 @@ function cleanState0(x){
     if(!v||typeof v!=="object"||!CBYK.has(k))continue;
     const e=ingClean(k,v,false,true);if(e)o.ix[k]=e;
   }
-  if(x.xh&&typeof x.xh==="object")for(const k of Object.keys(x.xh).slice(0,200)){const n=parseInt(x.xh[k]);if(n>0&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))o.xh[k]=Math.min(n,9999);}
+  if(x.xh&&typeof x.xh==="object")for(const k0 of Object.keys(x.xh).slice(0,200)){const n=parseInt(x.xh[k0]),k=mk(k0);if(n>0&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i.test(k))o.xh[k]=Math.min((o.xh[k]||0)+n,9999);}
   /* kotitalous ja viikkosuunnitelma */
   const okIso=v=>typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v);
   if(Array.isArray(x.vk))o.vk=[...new Set(x.vk.filter(k=>typeof k==="string"&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,39}$/i.test(k)).map(k=>k.toLowerCase()))].slice(0,30);
@@ -217,7 +222,7 @@ async function flush(){
 export function persist(){lsSave();if(!remote)return;dirty=true;if(!saving)flush();}
 export function applyTheme(){const t=state.th||"auto",d=t==="dark"||(t==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);document.documentElement.dataset.theme=d?"dark":"light";document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.th===(state.th||"auto")));applyLay();}
 try{matchMedia("(prefers-color-scheme:dark)").addEventListener("change",applyTheme);}catch(e){}
-const BAR={plan:"Seuraavat ruoat",ideas:"Ruokaideat",add:"Lisää oma ruoka",cart:"Ostoslistat",reg:"Ainesosarekisteri"};
+const BAR={plan:"Seuraavat ruoat",ideas:"Ruokaideat",add:"Lisää oma ruoka",cart:"Ostoslistat",reg:"Tuoterekisteri"};
 export function setBar(n,t){document.body.dataset.view=n;$("ttl").textContent=t||BAR[n];}
 export function mutate(){touched=true;persist();try{updBadge();}catch(e){}}
 

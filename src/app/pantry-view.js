@@ -1,7 +1,7 @@
 /* Kaappi: mitä kotoa löytyy, ja ruokaehdotukset sen mukaan (logiikka: ../pantry.js) */
 import "./plan-view.js";
 import {$,IC,ico,esc,parseIng,workOf} from "./core.js";
-import {catFind,CAT,fold,fzBest,pantryHit,servOf,fmtDur} from "./catalog.js";
+import {catFind,CAT,fold,fzBest,pantryHit,servOf,fmtDur,baseOf} from "./catalog.js";
 import {todayLocal,state,mutate} from "./state.js";
 import {byId} from "./ideas.js";
 import {openDlg} from "./info.js";
@@ -22,6 +22,8 @@ const depOf=k=>{const c=catFind(k);return c?c.d:18;};
 const isBasic=k=>BX.has(k)||pantryHit(k);
 const kp=()=>state.kp||(state.kp={h:[],no:[]});
 const noSet=()=>new Set(kp().no);
+const upB=k=>{const o=[];for(let b=baseOf(k);b&&!o.includes(b)&&o.length<4;b=baseOf(b))o.push(b);return o;};
+const hMap=()=>KP.haveMap(kp().h,upB);
 /* vanhentuneet tuoretuotteet pois kaapista */
 function prune(){
   const h=kp().h,n=KP.prune(h,todayLocal(),depOf);
@@ -34,7 +36,7 @@ const soonSet=()=>new Set(kp().h.filter(it=>{const l=left(it);return l!=null&&l<
 export function kpHave(key){
   const k=canon(key);
   if(pantryHit(key)||pantryHit(k))return !noSet().has(k);
-  return KP.haveMap(kp().h).has(k);
+  return hMap().has(k);
 }
 planHooks.have=kpHave;
 
@@ -56,7 +58,7 @@ function needs(){
     for(const v of vs)for(const [t,tk] of tws){
       const need=[],main=[];
       for(const line of ingFor(r,servOf(r),v,t?[t]:[])){
-        const p=parseIng(line),k=canon(p.key);
+        const p=parseIng(line),k0=canon(p.key),k=p.alt&&baseOf(k0)?baseOf(k0):k0;
         if(k==="vesi")continue;
         if(isBasic(p.key)||isBasic(k)){if(!v&&!t)cnt.set(k,(cnt.get(k)||0)+1);if(!no.has(k))continue;}
         need.push(k);
@@ -87,7 +89,7 @@ let view="kp",q="",basicsOpen=false,moreOpen=false;
 const MORE_N=8;
 function kpOpen(v){needMemo=null;prune();view=v||"kp";q="";basicsOpen=false;moreOpen=false;render();$("kpdlg").showModal();$("kpbody").scrollTop=0;}
 function suggestions(){
-  const have=KP.haveMap(kp().h);
+  const have=hMap();
   return KP.split(KP.rank(needs().list,have,soonSet()));
 }
 function render(){
@@ -107,7 +109,7 @@ function kpHtml(nSg){
   if(qf){
     const seen=new Set(),hits=[];
     for(const e of CAT){
-      if(e.neg||e.pan||isBasic(e.key))continue;
+      if(e.neg||e.pan||e.kind||isBasic(e.key))continue;
       const s=fzBest(qf,[e.key,...e.syn]);if(s<0)continue;
       const g=Object.keys(KP.GROUPS).find(g=>KP.GROUPS[g][1].includes(e.key)),k=g||e.key;
       if(seen.has(k))continue;seen.add(k);hits.push([s,k]);
