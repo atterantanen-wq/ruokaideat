@@ -273,8 +273,9 @@ test("suunnitelma: ruoat, valinnat, kaapin tarkistus ja ostoslista", async () =>
   ok(it5.n === 5 && it5.light, "kevyen ruoan lisäys ei onnistunut: " + JSON.stringify(it5));
   /* kortti: laput yhdellä rivillä, lisuke- ja muunnelmasirut sekä haku tallella, alaosa avaa koko muokkauksen */
   const cardChk = await page.evaluate(() => {
-    const li = document.querySelector("#planBody .pn-item"), labs = [...li.querySelectorAll(".pn-lab")].map((b) => b.getBoundingClientRect().top);
-    return { chips: li.querySelectorAll(".pn-main .pn-tg").length, pick: !!li.querySelector('[data-pa="pick"]'), open: !!li.querySelector("button.pn-open"), row: labs.every((t) => Math.abs(t - labs[0]) < 2) };
+    /* suunnitelman ruoat arvotaan, eikä jokaisella ole lisukkeita tai muunnelmia: sirut haetaan kaikista korteista */
+    const all = [...document.querySelectorAll("#planBody .pn-item")], li = all[0], labs = [...li.querySelectorAll(".pn-lab")].map((b) => b.getBoundingClientRect().top);
+    return { chips: all.reduce((n, x) => n + x.querySelectorAll(".pn-main .pn-tg").length, 0), pick: !!li.querySelector('[data-pa="pick"]'), open: !!li.querySelector("button.pn-open"), row: labs.every((t) => Math.abs(t - labs[0]) < 2) };
   });
   ok(cardChk.chips && cardChk.pick && cardChk.open && cardChk.row, "kortin rakenne: " + JSON.stringify(cardChk));
   await click('[data-pa="edit"][data-to="tw"]'); await wait(150);
@@ -330,7 +331,8 @@ test("kaappi: logiikka (järjestys, vanheneminen)", async () => {
   ok(r[0].miss.length === 0 && r[0].minor.join() === "tilli", "yrtti laskettiin puuttuvaksi");
   ok(r[1].v === "" && r[1].miss.join() === "kerma x", "paras versio väärin");
   ok(KP.rank([{ id: "a", need: ["naudanliha", "peruna"], main: ["naudanliha"] }], have).every((x) => x.mainMiss === 1), "puuttuva pääraaka-aine");
-  ok(KP.shortlist(KP.rank([{ id: "a", need: ["naudanliha", "peruna"], main: ["naudanliha"] }], have)).length === 1, "varalista puuttuu");
+  const sp = KP.split(KP.rank([{ id: "a", need: ["naudanliha", "peruna"], main: ["naudanliha"] }, { id: "e", need: ["broilerinfilee", "a1", "a2", "a3", "a4"], main: ["broilerinfilee"] }, { id: "f", need: ["broilerinfilee", "a1"], main: ["broilerinfilee"] }], have));
+  ok(sp.near.map((x) => x.id).join() === "f" && sp.more.map((x) => x.id).join() === "e,a", "jako lähimpiin ja muihin väärin: " + JSON.stringify(sp));
   /* muunnelma: kaapissa oleva aines nostaa muunnelman, ilman sitä perusresepti; tasapelissä perusresepti */
   const tw = (h) => KP.rank([
     { id: "k", need: ["porkkana", "ruokakerma"], main: [] },
@@ -341,6 +343,13 @@ test("kaappi: logiikka (järjestys, vanheneminen)", async () => {
   ok(tw([{ k: "porkkana" }])[0].t === "", "muunnelma ilman kaapin ainesta");
   ok(tw([{ k: "porkkana" }, { k: "sulatejuustodippi" }])[0].t === "juusto", "korvaava muunnelma ei noussut");
   ok(tw([{ k: "porkkana" }, { k: "ruokakerma" }, { k: "sulatejuustodippi" }])[0].t === "", "tasapelissä muunnelma");
+  /* useampi kaapin aines: eniten käyttävä ensin, vaikka siitä puuttuisi enemmän */
+  const many = KP.rank([
+    { id: "x", need: ["broilerinfilee", "kerma x"], main: ["broilerinfilee"] },
+    { id: "y", need: ["broilerinfilee", "peruna", "a1", "a2"], main: ["broilerinfilee"] },
+  ], have);
+  ok(many.map((x) => x.id).join() === "y,x", "useamman aineksen ruoka ei ole ensin: " + many.map((x) => x.id).join());
+  ok(!KP.haveMap([{ k: "@kana" }]).has("kanankoivet"), "kanafilee kattaa koivet");
   ok(KP.daysLeft({ k: "@kana", d: "2026-11-20" }, "2026-11-25", 10) === 2, "kanan päivät väärin");
   ok(KP.daysLeft({ k: "peruna", d: "2026-11-01" }, "2026-11-25", 0) === null, "peruna vanhenee");
   ok(KP.prune([{ k: "@kana", d: "2026-11-10" }, { k: "@pasta", d: "2026-01-01" }], "2026-11-25", () => 18).map((x) => x.k).join() === "@pasta", "vanhentunut jäi kaappiin");
@@ -364,16 +373,18 @@ test("kaappi: merkintä, ehdotukset, lisäys suunnitelmaan ja kaapin tarkistus",
   ok(st.h.map((x) => x.k).join() === "@kana,peruna,@kerma,tomaattimurska", "kaappi väärin: " + JSON.stringify(st));
   ok(st.no.includes("oregano"), "perusaineen poisto ei tallentunut");
   await click('#kpbody .kp-foot [data-kv="sg"]'); await wait(200);
-  const sg = await page.$$eval("#kpbody .kp-sg", (x) => x.map((e) => e.innerText));
+  const sg = await page.$$eval("#kpbody .kp-sgs:not(.kp-more) .kp-sg", (x) => x.map((e) => e.innerText));
   ok(sg.length >= 5, "ehdotuksia vain " + sg.length);
-  ok(/Kaikki löytyy|Puuttuu 1:/.test(sg[0]), "paras ehdotus ei ole lähes valmis: " + sg[0]);
+  const hits = sg.map((t) => (/Kaapista: ([^·]*)/.exec(t) || ["", ""])[1].split(",").length);
+  ok(hits.every((n, i) => !i || n <= hits[i - 1]), "eniten kaapin aineksia käyttävät eivät ole ensin: " + hits.join());
+  ok(hits[0] >= 3, "parhaassa ehdotuksessa vain " + hits[0] + " kaapin ainesta: " + sg[0]);
   ok(sg.every((t) => !/Puuttuu [4-9]/.test(t)), "liian kaukaisia ehdotuksia");
   const id = await page.evaluate(() => document.querySelector("#kpbody [data-kadd]").dataset.kadd);
   await click("#kpbody [data-kadd]"); await wait(150);
   ok(await page.evaluate((id) => window.__app.state.pl.items.some((x) => x.id === id), id), "ehdotus ei mennyt suunnitelmaan");
   ok(await page.evaluate((id) => !document.querySelector(`#kpbody [data-kadd="${id}"]`), id), "lisätty näkyy yhä lisättävänä");
   await click("#kpbody [data-kx]"); await wait(150);
-  ok(await page.evaluate(() => /Kaapissa: kana, peruna, kerma \+1/.test(document.querySelector(".kp-entry").innerText)), "sisäänkäynnissä ei näy kaappia");
+  ok(await page.evaluate(() => /Kaapissa: kanafilee, peruna, kerma \+1/.test(document.querySelector(".kp-entry").innerText)), "sisäänkäynnissä ei näy kaappia");
   /* kaapin tarkistus: kaappiin merkitty kana on valmiiksi pois, puuttuvaksi merkitty perusaine ei */
   await click('[data-pa="shop"]'); await wait(300);
   const off = await page.evaluate(() => [...document.querySelectorAll("#pkbody .ar")].map((b) => [b.dataset.pc, b.classList.contains("off")]));
@@ -387,6 +398,28 @@ test("kaappi: merkintä, ehdotukset, lisäys suunnitelmaan ja kaapin tarkistus",
   await click('.tab[data-tab="plan"]'); await wait(300);
   const h = await page.evaluate(() => window.__app.state.kp.h.map((x) => x.k).join());
   ok(h === "peruna,@kerma,tomaattimurska", "vanhentunut kana jäi kaappiin: " + h);
+  await click('.tab[data-tab="ideas"]');
+});
+
+test("kaappi: kaukaisemmat kaapin ainesta käyttävät ruoat omana osionaan", async () => {
+  await fresh();
+  await click('.tab[data-tab="plan"]'); await wait(300);
+  await click('[data-kpo]'); await wait(200);
+  await page.fill("#kpq", "basilik"); await wait(150);
+  await click('#kpbody [data-ka="basilika"]'); await wait(100);
+  await click('#kpbody .kp-foot [data-kv="sg"]'); await wait(200);
+  const nearN = await page.$$eval("#kpbody .kp-sgs:not(.kp-more) .kp-sg", (x) => x.map((e) => e.innerText.split("\n")[0])), near = nearN.length;
+  const more = () => page.$$eval("#kpbody .kp-more .kp-sg", (x) => x.map((e) => e.innerText));
+  let m = await more();
+  ok(m.length >= 3, "muita osumia vain " + m.length);
+  const btn = await page.$("#kpbody [data-kmore]");
+  if (btn) { await btn.click(); await wait(150); m = await more(); }
+  const names = [...nearN, ...m.map((t) => t.split("\n")[0])];
+  ok(names.some((t) => /Tomaattikeitto/.test(t)) && names.some((t) => /Pekonipasta/.test(t)), "basilikaa käyttäviä puuttuu: " + names.join(" | "));
+  ok(m.every((t) => /Kaapista: basilika/.test(t)), "osumassa ei näy kaapin ainesta");
+  ok(near + m.length >= 6, "basilikaa käyttäviä yhteensä vain " + (near + m.length));
+  ok(await page.evaluate(() => /Ehdotukset \((\d+)\)/.exec(document.querySelector('#kpbody [data-kv="sg"]').innerText)[1] * 1) === near + m.length, "välilehden määrä väärin");
+  await closeAll();
   await click('.tab[data-tab="ideas"]');
 });
 
