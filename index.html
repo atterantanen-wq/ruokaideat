@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#773a10">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-<title>Mitä tänään syödään?</title>
+<!-- kotinäytön kuvake ja nimi (iPhone: apple-touch-icon ja apple-mobile-web-app-title, Android: manifest) -->
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Ruokaideat">
+<meta name="application-name" content="Ruokaideat">
+<title>Ruokaideat</title>
 <!-- teema asetetaan ennen tyylejä, ettei sivu välähdä väärällä teemalla -->
 <script>try{var _t=(JSON.parse(localStorage.getItem("ruokaideat-v1"))||{}).th||"auto";document.documentElement.dataset.theme=(_t==="dark"||(_t==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))?"dark":"light";}catch(e){}</script>
 </head>
