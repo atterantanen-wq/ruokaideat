@@ -208,6 +208,49 @@ test("oma ruoka poistuu omien ruokien listalta varmistuksella ja Kumoa palauttaa
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
+test("tuoterekisteri: oman aineksen Poista kertoo käytön, korvaa rivit ja Kumoa palauttaa", async () => {
+  const K = "koskenlaskijadippi voimakas";
+  const setup = async () => {
+    await page.evaluate((K) => {
+      const st = JSON.parse(localStorage.getItem("ruokaideat-v1") || "{}");
+      st.ing = { ...(st.ing || {}), [K]: { d: 2, m: "", n: { kcal: 169, prot: 8, fat: 13, sat: 9, carb: 3, salt: 1.5 } } };
+      st.prices = { ...(st.prices || {}), [K]: { p: 3.39, per: "kpl", url: "", date: "2026-11-25" } };
+      st.custom = (st.custom || []).filter((c) => c.id !== "cdiptest");
+      st.custom.push({ id: "cdiptest", name: "Dippitesti", t: "pa", m: "v", ing: [K + " 1 kpl", "nachot 200 g"], steps: ["Tarjoa."], custom: true });
+      st.lists = [{ id: "ldip", name: "Dippilista", d: "2026-11-25", cart: [], checked: [], have: [], x: [{ k: K, q: "" }], store: "" }]; st.act = "ldip";
+      st.kp = { h: [{ k: K, d: "2026-11-25" }], no: [] };
+      localStorage.setItem("ruokaideat-v1", JSON.stringify(st));
+    }, K);
+    await reloadApp();
+    await page.evaluate((K) => window.__app.openReg(K), K); await wait(250);
+  };
+  await setup();
+  const del = '#rlist [data-reg="rdel"]';
+  ok(await page.$(del), "Poista-painike puuttuu Muokkaa-painikkeen vierestä");
+  await click(del); await wait(150);
+  ok(await page.evaluate((K) => !!window.__app.state.ing[K], K), "ensimmäinen painallus poisti jo");
+  const panel = await page.$eval("#rlist .regdelp", (e) => e.innerText);
+  ok(/Dippitesti/.test(panel) && /Dippilista/.test(panel) && /Kaappi/.test(panel), "käyttökohteet puuttuvat: " + panel);
+  ok(!(await page.$eval('[data-reg-del="to"]', (i) => i.value)), "korvaajaa ei saa täyttää valmiiksi");
+  await click('#rlist [data-reg="rto"]'); await wait(100);
+  const sug = await page.$eval('[data-reg-del="to"]', (i) => i.value);
+  ok(sug === "sulatejuusto", "ensimmäinen ehdotus ei ole sulatejuusto: " + sug);
+  await click(del); await wait(300);
+  const after = await page.evaluate(({ K, sug }) => { const st = window.__app.state, r = st.custom.find((c) => c.id === "cdiptest"); return { gone: !st.ing[K] && !st.prices[K], line: r.ing[0], x: st.lists[0].x[0].k, kp: st.kp.h[0].k, sug }; }, { K, sug });
+  ok(after.gone, "aines tai sen hinta jäi");
+  ok(after.line === sug + " 1 kpl" && after.x === sug && after.kp === sug, "korvaus ei osunut kaikkialle: " + JSON.stringify(after));
+  await click("#toast [data-regundo]"); await wait(300);
+  const back = await page.evaluate((K) => { const st = window.__app.state; return !!st.ing[K] && !!st.prices[K] && st.custom.find((c) => c.id === "cdiptest").ing[0] === K + " 1 kpl" && st.lists[0].x[0].k === K && st.kp.h[0].k === K; }, K);
+  ok(back, "Kumoa ei palauttanut ainesta ja rivejä");
+  /* ilman korvaajaa rivi jää reseptiin ja ostoslistalle */
+  await click(del); await wait(150);
+  await page.fill('[data-reg-del="to"]', ""); await click(del); await wait(300);
+  const kept = await page.evaluate((K) => { const st = window.__app.state; return !st.ing[K] && st.custom.find((c) => c.id === "cdiptest").ing[0] === K + " 1 kpl" && window.__app.listItems(st.lists[0]).some((e) => e.key === K); }, K);
+  ok(kept, "rivi katosi reseptistä tai ostoslistalta");
+  await page.evaluate(() => { const st = window.__app.state; st.custom = st.custom.filter((c) => c.id !== "cdiptest"); st.lists = []; st.kp = { h: [], no: [] }; });
+  await closeAll();
+});
+
 test("haku löytää vanhalla nimellä ja avaa version nimellä", async () => {
   const a = await search("omenapiirakka");
   ok(a.includes("Pehmeä omenapiirakka") && a.includes("Murotaikinainen omenapiirakka"), "omenapiirakka: " + a.join(", "));
