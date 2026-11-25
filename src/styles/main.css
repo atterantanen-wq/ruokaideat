@@ -1166,4 +1166,11 @@ body:not([data-view="ideas"]) .spill{display:none}
 /* uusi versio saatavilla -ilmoitus (src/app/update.js): ylhäällä, ettei peitä muita ilmoituksia */
 .uptoast{bottom:auto;top:calc(12px + env(safe-area-inset-top,0px));z-index:70}
 .uptoast:not([hidden]){animation:moreIn var(--dur-base) var(--ease-out)}
-.uptoast .upgo{background:var(--c-on-inverse);color:var(--c-inverse)}
+/* vaalea kortti, jotta päätoimintovärinen Päivitä-nappi erottuu molemmissa teemoissa */
+.uptoast{flex-wrap:nowrap;background:var(--c-surface);color:var(--c-ink);border:1px solid var(--c-line);font-weight:600}
+.uptoast button{color:var(--c-primary-ink);font-weight:500}
+.uptoast .upgo{background:var(--c-primary);color:var(--c-on-primary);border-radius:var(--r-pill);padding:0 20px;font-weight:600}
+.uptoast .upgo:hover{background:var(--c-primary-hover)}
+.uptoast span{flex:1 1 auto;min-width:0}
+.uptoast button{flex:none;padding:0 10px}
+.uptoast .upgo{padding:0 18px}
