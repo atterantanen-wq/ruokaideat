@@ -23,7 +23,7 @@ function aliasState(o){
   });
   return o;
 }
-export let state=aliasState({custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,vk:[],pl:PL.defaultPlan()});
+export let state=aliasState({custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,vk:[],pl:PL.defaultPlan(),kp:{h:[],no:[]}});
 export function setState(v){return state=v;}
 let touched=false,remote=null,saving=false,dirty=false;
 
@@ -47,7 +47,7 @@ function cleanRec(c){
 }
 export function cleanState(x){return aliasState(cleanState0(x));}
 function cleanState0(x){
-  const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,vk:[],pl:PL.defaultPlan()};
+  const o={mv:2,tv:{},custom:[],lists:[],act:"",over:{},hidden:[],serv:{},prices:{},fav:[],sort:"fav",img:{},views:{},ing:{},xh:{},sp:false,rv:false,th:"auto",lay:"grid",sr:[],pv:{},pair:{},sk:{},nos:[],ix:{},ot:{},store:"",so:{},sx:{},rc:[],dv:2,vk:[],pl:PL.defaultPlan(),kp:{h:[],no:[]}};
   if(x&&x.sp===true)o.sp=true;
   if(x&&x.rv===true)o.rv=true;
   if(x&&(x.th==="light"||x.th==="dark"))o.th=x.th;
@@ -187,6 +187,10 @@ function cleanState0(x){
   /* kotitalous ja viikkosuunnitelma */
   const okIso=v=>typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v);
   if(Array.isArray(x.vk))o.vk=[...new Set(x.vk.filter(k=>typeof k==="string"&&/^[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,39}$/i.test(k)).map(k=>k.toLowerCase()))].slice(0,30);
+  /* kaappi: merkityt ainekset (avain tai ryhmä @…, päivä) ja puuttuvat perusaineet */
+  if(x.kp&&typeof x.kp==="object"){const kre=/^@?[a-zäöå0-9][a-zäöå0-9 \-.,()%]{0,59}$/i,seen=new Set();
+    if(Array.isArray(x.kp.h))for(const it of x.kp.h.slice(0,200)){if(!it||typeof it.k!=="string"||!kre.test(it.k)||seen.has(it.k))continue;seen.add(it.k);o.kp.h.push({k:it.k,d:okIso(it.d)?it.d:todayLocal()});}
+    if(Array.isArray(x.kp.no))o.kp.no=[...new Set(x.kp.no.filter(k=>typeof k==="string"&&kre.test(k)))].slice(0,200);}
   if(x.pl&&typeof x.pl==="object"&&Array.isArray(x.pl.items)){const p=x.pl,q=o.pl;
     {const n=parseInt(p.sv);if(n>=2&&n<=16)q.sv=n;}
     {const ba=+p.ba;if(ba>0&&ba<=10000)q.ba=Math.round(ba*100)/100;}

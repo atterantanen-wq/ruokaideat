@@ -3,7 +3,8 @@ import "./start.js";
 import {$,IC,ico,esc,isPop,workOf,parseIng} from "./core.js";
 import {fold,fzBest,mainOf,pantryHit,costOf,costBake,eur1,fmtDur,servOf,isBatch,scaleLine,hasOpt,keyOfLine} from "./catalog.js";
 import {todayLocal,state,persist,mutate} from "./state.js";
-import {all,byId,tagsOf,MEAL_MAIN,mealOf,sideSug,isFav} from "./ideas.js";
+import {all,byId,tagsOf,MEAL_MAIN,mealOf,sideSug,isFav,imgUrl} from "./ideas.js";
+import {LAYH} from "./search.js";
 import {shopping,qtyText,newList,flashToast,undoToast,hideToast,groupDeps,storeName} from "./cart.js";
 import {openDlg} from "./info.js";
 import {showTab} from "./tabs.js";
@@ -18,6 +19,8 @@ Object.assign(IC,{
   shuffle:'<path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M20 20l-5-5M4 4l5 5"/>',
   minus:'<path d="M6 12h12"/>'
 });
+/* kaappi (pantry-view.js): ehdotusnäkymän sisäänkäynti ja kaapin tarkistuksen esivalinta */
+export const planHooks={entry:()=>"",have:null};
 let planCount=4,planAdd=null,planNew=-1,planPick=null,planEdit=null,planChk=null,planUndo=null,planOpen={sn:false,bk:false,vk:false};
 const fmtN=n=>String(Math.round(n*2)/2).replace(".",",");
 /* reseptin raaka-ainerivit valitulla annosmäärällä, versiolla ja muunnelmilla (t = null: ruoan omat valinnat) */
@@ -120,6 +123,12 @@ function rowChips(it,i){
   if(!(it.t||[]).length&&(r.tw||[]).length)out.push(b("tw","pn-twh",r.tw.length===1?"1 muunnelma":r.tw.length+" muunnelmaa"));
   return out.length?`<div class="pn-tags">${out.join("")}</div>`:"";
 }
+/* kuvat korteissa: kokeilu (false = ei kuvia, true = oma kuva tai ruokatyypin värillinen paikka) */
+export let PL_PICS=false;
+export function setPlPics(v){return PL_PICS=!!v;}
+const thumb=r=>{const u=imgUrl(r);return`<span class="pn-th" style="--h:${LAYH[r.t]||30}" aria-hidden="true">${u?`<img alt="" loading="lazy" src="${esc(u)}">`:ico("chef")}</span>`;};
+/* kortin lappu: pääryhmä lyhyesti, rajauksista ensimmäinen ja määrä */
+const MT_SHORT={a:"Arki",w:"Viikonloppu"};
 export function renderPlan(){
   const h=$("planBody");if(!h)return;
   plCostMemo.clear();plCandsMemo=null;
@@ -130,13 +139,12 @@ export function renderPlan(){
     const r=it.id&&byId(it.id);
     const ver=r&&(r.vs||[]).length>1&&((it.v&&r.vs.find(v=>v.id===it.v))||r.vs[0]);
     const mt=PL.mainTag(it.tg)||"a",ex=it.tg.filter(t=>t!=="a"&&t!=="w").map(t=>PL.TAG_N[t]);
-    const labs=`<div class="pn-labs"><button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-to="main" data-i="${i}" aria-label="Pääryhmä, ruoka ${i+1}: ${esc(PL.TAG_N[mt])}">${esc(PL.TAG_N[mt])} ▾</button><button type="button" class="pn-lab pn-lab-x${ex.length?"":" none"}" data-pa="type" data-to="ex" data-i="${i}" aria-label="Rajaukset, ruoka ${i+1}: ${esc(ex.join(", ")||"ei rajauksia")}">${ex.length?esc(ex.length>2?ex.slice(0,2).join(", ")+" +"+(ex.length-2):ex.join(", "))+" ▾":"+ Rajaus"}</button></div>`;
+    const labs=`<div class="pn-labs"><button type="button" class="pn-lab pn-lab-${mt}" data-pa="type" data-to="main" data-i="${i}" aria-label="Pääryhmä, ruoka ${i+1}: ${esc(PL.TAG_N[mt])}">${esc(MT_SHORT[mt])} ▾</button><button type="button" class="pn-lab pn-lab-x${ex.length?"":" none"}" data-pa="type" data-to="ex" data-i="${i}" aria-label="Rajaukset, ruoka ${i+1}: ${esc(ex.join(", ")||"ei rajauksia")}">${ex.length?esc(ex[0])+(ex.length>1?` +${ex.length-1}`:"")+" ▾":"+ Rajaus"}</button></div>`;
     const acts=`<span class="pn-act"><button type="button" class="pn-ib" data-pa="swap" data-i="${i}" aria-label="Arvo toinen ruoka ${i+1}">${ico("shuffle")}</button><button type="button" class="pn-ib" data-pa="pick" data-i="${i}" aria-label="Hae ruoka ${i+1}">${ico("search")}</button><button type="button" class="pn-ib" data-pa="rm" data-i="${i}" aria-label="Poista suunnitelmasta: ruoka ${i+1}">${ico("x")}</button></span>`;
-    const body=r?`<button type="button" class="pn-name" data-pa="edit" data-i="${i}">${esc(r.name)}${ver?`<span class="pn-ver"> – ${esc(ver.n)}</span>`:""}</button>
-      ${rowChips(it,i)}
-      <div class="pn-meta"><span>${fmtN(plN(it))} annosta · ${fmtDur(workOf(r)||r.min||0)}</span><b>${eur1(plItemCost(it))}</b></div>`
-      :`<span class="pn-name muted">Ei ruokaa näillä valinnoilla</span><p class="note">Muuta valintoja tai hae ruoka itse.</p>`;
-    return`<li class="pn-item${planNew===i?" pn-new":""}${r?" pn-click":""}" data-i="${i}"><div class="pn-row1">${labs}${acts}</div>${body}</li>`;
+    const body=r?`<div class="pn-main" data-pa="edit" data-i="${i}">${PL_PICS?thumb(r):""}<div class="pn-mt"><div class="pn-nr"><span class="pn-name">${esc(r.name)}${ver?`<span class="pn-ver"> – ${esc(ver.n)}</span>`:""}</span>${acts}</div>${rowChips(it,i)}</div></div>
+      <button type="button" class="pn-open" data-pa="edit" data-i="${i}" aria-label="Muokkaa: ${esc(r.name)}"><span>${fmtN(plN(it))} annosta · ${fmtDur(workOf(r)||r.min||0)}</span><b>${eur1(plItemCost(it))}</b><span class="pn-ed">Muokkaa${ico("right")}</span></button>`
+      :`<div class="pn-main"><div class="pn-mt"><div class="pn-nr"><span class="pn-name muted">Ei ruokaa näillä valinnoilla</span>${acts}</div><p class="note">Muuta valintoja tai hae ruoka itse.</p><button type="button" class="lk" data-pa="pick" data-i="${i}">Hae ruoka</button></div></div>`;
+    return`<li class="pn-item${planNew===i?" pn-new":""}${r?" pn-click":""}${PL_PICS?" pics":""}" data-i="${i}"><div class="pn-row1">${labs}</div>${body}</li>`;
   }).join("");
   const snacks=plSnacks(),bakes=plBakes();
   const snSel=Object.keys(pl.sn).filter(id=>byId(id));
@@ -156,11 +164,12 @@ export function renderPlan(){
   const stepper=(pa,lbl,v,min,max,aria)=>`<div class="pn-step"><span>${lbl}</span><div><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="-1" aria-label="Vähemmän ${aria}"${v<=min?" disabled":""}>${ico("minus")}</button><b>${v}</b><button type="button" class="pn-ib sm" data-pa="${pa}" data-d="1" aria-label="Enemmän ${aria}"${v>=max?" disabled":""}>${ico("plus")}</button></div></div>`;
   h.innerHTML=`
     ${rows?`<ol class="pn-list">${rows}</ol>`:""}
-    ${pl.items.length?(pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>`):`
+    ${pl.items.length?(pl.items.length>=10?"":`<button type="button" class="pn-addb" data-pa="add">${ico("plus")}<span>Lisää ruoka suunnitelmaan</span></button>${planHooks.entry()}`):`
     <div class="pn-empty"><p class="pn-lead">Kokoa tulevien päivien ruoat, niin ainekset menevät kerralla ostoslistalle.</p>
       <button type="button" class="go pn-add1" data-pa="add">${ico("plus")}<span>Lisää ruoka</span></button></div>
     <div class="pn-four"><p class="note">Tai anna sovelluksen ehdottaa useampi kerralla:</p>
-      <div class="pn-fr">${stepper("cnt","",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div></div>`}
+      <div class="pn-fr">${stepper("cnt","",planCount,1,10,"ruokia")}<button type="button" class="cartbtn" data-pa="four">${ico("shuffle")}<span>Ehdota ${planCount} ${planCount===1?"ruoka":"ruokaa"}</span></button></div></div>
+    ${planHooks.entry()}`}
     ${PL_EXTRAS?`
     <h3 class="pn-sec">Lisäksi kaupasta</h3>
     <section class="pn-card">
@@ -224,7 +233,7 @@ function renderEditPl(){
   const sc=(it.sd||[]).reduce((a,s)=>a+sdCost(s,n),0),tot=plItemCost(it);
   const cost=`<p class="pn-cost">${sc>0?`Ruoka ${eur1(tot-sc)} + lisukkeet ${eur1(sc)} = <b>${eur1(tot)}</b>`:`Hinta <b>${eur1(tot)}</b>`}</p>`;
   const title=only==="sd"?"Lisukkeet":only==="tw"?"Muunnelmat":esc(r.name)+(ver&&(r.vs||[]).length>1?" – "+esc(ver.n):"");
-  const sub=only?`<p class="note">${esc(r.name)}</p>`:`<p class="note">${fmtN(n)} annosta · ${fmtDur(workOf(r)||r.min||0)} · <button type="button" class="lk" data-pe="open" data-k="${esc(r.id)}">Avaa resepti</button></p>`;
+  const sub=only?`<p class="note">${esc(r.name)}</p>`:`<p class="note">${fmtN(n)} annosta · ${fmtDur(workOf(r)||r.min||0)} · <button type="button" class="lk" data-pe="open" data-k="${esc(r.id)}">Avaa resepti</button> · <button type="button" class="lk" data-pe="pick" data-k="1">Hae toinen ruoka</button></p>`;
   const body=only?sec[only]||"":[sec.v,sec.sd,sec.tw,sec.n].filter(Boolean).join("");
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">${title}</h2>${sub}${cost}
     ${body}
@@ -279,7 +288,7 @@ function planChkOpen(){
   const xs=[...new Set([...(PL_EXTRAS?state.vk.filter(k=>!state.pl.vo.includes(k)):[]),...state.pl.items.flatMap(it=>it.px||[])])];
   if(!items.length&&!xs.length){flashToast("Suunnitelmassa ei ole ruokia.");return;}
   const rows=shopping([],items.map(e=>({r:byId(e.id),lines:ingFor(byId(e.id),e.n,e.v,e.t)})));
-  const off=new Set(rows.filter(e=>pantryHit(e.key)).map(e=>e.key));
+  const hv=planHooks.have||pantryHit,off=new Set(rows.filter(e=>hv(e.key)).map(e=>e.key));
   planChk={items,xs,rows,off};planAdd=null;planEdit=null;planPick=null;renderChk();$("pkdlg").showModal();
 }
 function renderChk(){
@@ -290,7 +299,7 @@ function renderChk(){
   const cnt=rows.length-off.size+xs.length;
   const gs=groupDeps(rows,[],state.store);
   $("pkbody").innerHTML=`<button type="button" class="dx" data-pp-x="1" aria-label="Sulje">${ico("x")}</button><h2 class="dh">Tarkista kaappi</h2>
-    <p class="note">Napauta pois ainekset, jotka löytyvät jo kotoa. Tavalliset kaappitavarat on valmiiksi rastitettu pois.${state.store?` Järjestys: ${esc(storeName(state.store))}.`:""}</p>
+    <p class="note">Napauta pois ainekset, jotka löytyvät jo kotoa. Tavalliset kaappitavarat ja kaappiin merkityt on valmiiksi rastitettu pois.${state.store?` Järjestys: ${esc(storeName(state.store))}.`:""}</p>
     ${gs.map(g=>`<h4 class="ag">${esc(g.name)}</h4><ul class="al">${g.items.map(row).join("")}</ul>`).join("")}
     ${xs.length?`<h4 class="ag">Vakiot ja tuotteet</h4><p class="note">${xs.map(k=>esc(capF(k))).join(", ")}</p>`:""}
     <div class="actions"><button type="button" class="go" data-pc-ok="1" style="width:100%">Lisää ostoslistalle (${cnt})</button></div>`;
