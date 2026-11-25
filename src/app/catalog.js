@@ -1,9 +1,10 @@
 /* ainesosarekisteri (Fineli), ainesten tunnistus, ravintoarvot, reseptien hinnat, versiot ja muunnelmat */
-import {PR,PALIAS,PSKIP,PKEYS,wordHit} from "./prices.js";
+import {PR,PALIAS,PSKIP,PKEYS,PBASE,wordHit} from "./prices.js";
 import {M,ico,esc,workOf,defServ,SYN,USYN,parseIng} from "./core.js";
 import {state,mutate} from "./state.js";
 import {byId} from "./ideas.js";
 import {ING_RAW} from "../data/ingredients.js";
+import {PRODUCTS,VARIANTS,PRODUCT_DATE} from "../data/products.js";
 import {selOf,applySel} from "../recipes.js";
 
 /* ---------- ainesosarekisteri: Fineli (THL), CC BY 4.0, Release 16 ---------- */
@@ -11,14 +12,59 @@ import {selOf,applySel} from "../recipes.js";
 export const CAT=ING_RAW.split("\n").map(l=>{
   const p=l.split("|"),u=(p[4]||"").split(","),n=p[5]?p[5].split(",").map(Number):null;
   return{key:p[0],syn:p[1]?p[1].split(","):[],d:+p[2],m:p[3]||"",u:{dl:+u[0]||0,rkl:+u[1]||0,tl:+u[2]||0,kpl:+u[3]||0,prk:+u[4]||0,nippu:+u[5]||0},fid:p[7]||"",fname:p[8]||"",
-    n:n?{kcal:n[0]||0,prot:n[1]||0,fat:n[2]||0,sat:n[3]||0,carb:n[4]||0,salt:n[5]||0}:null,neg:p[6]==="1",pan:p[9]==="1"};
+    n:n?{kcal:n[0]||0,prot:n[1]||0,fat:n[2]||0,sat:n[3]||0,carb:n[4]||0,salt:n[5]||0}:null,neg:p[6]==="1",pan:p[9]==="1",kind:"",b:"",pack:null};
 });
+/* Valmiit tuotteet ja kodin tarvikkeet (../data/products.js) samaan rekisteriin:
+   sama tuote saa pakkauksen ja pakkaushinnan, muut lisätään omiksi tuotteikseen (laji t = valmis tuote, k = kodin tarvike).
+   Muunnelma (b = pohjatuote) perii pohjatuotteelta osaston, pääraaka-aineen, yksiköt, ravintoarvot ja hinnan, ellei sillä ole omia.
+   KMIG: vanha Muut tuotteet -nimi -> rekisterin avain (tallennettujen listojen siirtoon) */
+export const KMIG={};
+export const KINDS={"":"Ruoka-aine",t:"Valmis tuote",k:"Kodin tarvike"};
+{
+  const byK=new Map(CAT.map(e=>[e.key,e]));
+  for(const p of [...PRODUCTS,...VARIANTS]){
+    const pack=p.q?{q:p.q,u:p.u,p:p.p==null?null:p.p,note:p.note||"",path:p.path||"",w:p.w||"",lbl:p.lbl||"",dt:PRODUCT_DATE}:null;
+    let e;
+    if(p.to){
+      e=byK.get(p.to);if(!e)throw new Error("tuotetta ei löydy rekisteristä: "+p.to);
+      for(const x of [p.k,...(p.syn||[])])if(x!==e.key&&!e.syn.includes(x))e.syn.push(x);
+      if(p.k!==e.key)KMIG[p.k]=e.key;
+    }else{
+      e={key:p.k,syn:[...(p.syn||[])],d:p.d==null?null:p.d,m:"",u:{dl:0,rkl:0,tl:0,kpl:0,prk:0,nippu:0},fid:"",fname:"",n:null,neg:false,pan:false,kind:p.b?"":(p.kind||"t"),b:p.b||"",pack:null};
+      CAT.push(e);byK.set(e.key,e);
+      if(p.old)KMIG[p.old]=p.k;
+    }
+    if(pack)e.pack=pack;
+  }
+}
 export const CIDX=new Map();
 for(const e of CAT)CIDX.set(e.key,e);
 for(const e of CAT)for(const s of e.syn)if(!CIDX.has(s))CIDX.set(s,e);
-let CKEYS=[...CIDX.keys()].sort((a,b)=>b.length-a.length);
+/* nimen osalla haetaan vain ruoka-aineita: valmiit tuotteet ja kodin tarvikkeet tunnistetaan vain koko nimellä */
+const fuzzyKeys=()=>[...CIDX.keys()].filter(k=>!CIDX.get(k).kind).sort((a,b)=>b.length-a.length);
+let CKEYS=fuzzyKeys();
 export const CBYK=new Map(CAT.map(e=>[e.key,e]));
-for(const e of CAT){e.o={d:e.d,m:e.m,n:e.n,u:e.u,syn:e.syn,neg:e.neg,pan:e.pan};e.pk=null;e.ov=false;e.url="";}
+for(const e of CAT){e.o={d:e.d,m:e.m,n:e.n,u:e.u,syn:e.syn,neg:e.neg,pan:e.pan};e.pk=null;e.ov=false;e.url="";e.ni=false;}
+/* muunnelmat: puuttuvat tiedot pohjatuotteelta (pohjatuote ensin, jos sekin on muunnelma) */
+function inherit(){
+  const done=new Set();
+  const go=e=>{
+    if(done.has(e))return;done.add(e);
+    const b=e.b?CBYK.get(e.b):null;if(!b||b===e)return;
+    go(b);
+    if(e.d==null)e.d=b.d;
+    if(!e.m)e.m=b.m;
+    if(!e.n){e.n=b.n;e.ni=!!b.n;e.neg=e.neg||b.neg;}
+    e.pan=e.pan||b.pan;
+    const u={...e.u};for(const f of Object.keys(b.u||{}))if(!u[f])u[f]=b.u[f];e.u=u;
+  };
+  for(const e of CAT)go(e);
+  for(const e of CAT)if(e.d==null)e.d=18;
+}
+inherit();
+/* pohjatuote ja sen muunnelmat */
+export const baseOf=k=>{const ui=state&&state.ing[k];if(ui)return ui.b&&CBYK.has(ui.b)?ui.b:"";const e=CBYK.get(k);return e&&e.b&&CBYK.has(e.b)?e.b:"";};
+export const variantsOf=k=>[...CAT.filter(e=>e.b===k&&!(state&&state.ing[e.key])).map(e=>e.key),...Object.keys((state&&state.ing)||{}).filter(x=>state.ing[x].b===k)];
 const nEq=(a,b)=>!!a&&!!b&&["kcal","prot","fat","sat","carb","salt"].every(k=>Math.abs((a[k]||0)-(b[k]||0))<0.005);
 /* omat muutokset valmiisiin aineksiin (state.ix) ja omien synonyymit: rakennetaan haku uudelleen */
 export function rebuildCat(){
@@ -31,14 +77,17 @@ export function rebuildCat(){
     e.syn=x&&x.syn?x.syn:o.syn;
     e.neg=x?(o.neg&&(!x.n||nEq(x.n,o.n))):o.neg;
     e.pan=x?x.pan===true:o.pan;
-    e.pk=x&&x.pk?x.pk:null;e.url=(x&&x.url)||"";
+    e.pk=x&&x.pk?x.pk:null;e.url=(x&&x.url)||"";e.ni=false;
+    const ot=state&&state.ot&&state.ot[e.key];
+    if(!x&&ot&&ot.d!=null)e.d=ot.d;
   }
+  inherit();
   CIDX.clear();CMEMO.clear();USYN.clear();
   for(const e of CAT)CIDX.set(e.key,e);
   for(const e of CAT)for(const s of e.syn)if(!CIDX.has(s))CIDX.set(s,e);
   const gi=(state&&state.ing)||{};
   for(const k of Object.keys(gi))for(const s of (gi[k].syn||[]))if(!CIDX.has(s)&&!gi[s]&&!USYN.has(s))USYN.set(s,k);
-  CKEYS=[...CIDX.keys()].sort((a,b)=>b.length-a.length);
+  CKEYS=fuzzyKeys();
 }
 const CMEMO=new Map();
 export function catFind(key){
@@ -197,11 +246,24 @@ export function findPrice(key){
   let bk=baseKey(k);
   if(!bk&&!gp(key)&&!gp(k)){const c=catFind(key);if(c&&PR[c.key])bk=c.key;}
   const u=gp(key)||gp(k)||(bk?gp(bk):null);
-  if(!u&&!bk)return null;
+  if(!u&&!bk)return packPrice(key,k);
   const e=Object.assign({},bk?PR[bk]:{});
   if(u){e.p=u.p;e.per=u.per;e.u=u.url;e.d=u.date;e.w="";e.usr=true;}
   e.k=k;
   return e;
+}
+/* tuotteen pakkaushinta kilo-, litra- tai kappalehinnaksi; muunnelmalla ilman omaa hintaa pohjatuotteen hinta */
+const PPER={g:["kg",1000],ml:["l",1000],kpl:["kpl",1]};
+function packPrice(key,k,depth=0){
+  const ui=state.ing[key],c=ui?null:(CIDX.get(key)||catFind(key));
+  const pk=c&&c.pack;
+  if(pk&&pk.p!=null&&pk.q>0&&PPER[pk.u]){
+    const[per,m]=PPER[pk.u];
+    return{p:Math.round(pk.p/pk.q*m*100)/100,per,src:pk.note+" ("+String(pk.p).replace(".",",")+" €)",w:pk.w,d:pk.dt,u:pk.path?PBASE+pk.path:"",pack:true,k};
+  }
+  const b=ui?(ui.b||""):(c&&c.b);
+  if(b&&b!==key&&depth<4){const e=findPrice(b);if(e)return Object.assign({},e,{k,inh:b});}
+  return null;
 }
 /* automaattinen raja kaikille aineksille: alle SKIP_EUR:n osuutta reseptistä ei lasketa hintaan */
 export const SKIP_EUR=0.1;

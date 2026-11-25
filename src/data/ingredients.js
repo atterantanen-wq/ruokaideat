@@ -84,7 +84,7 @@ naudan suikaleet|naudansuikaleet,naudan kuutiot,naudan ulkofilee|10|n||153,19.3,
 naudanliha|nauta,naudan sisäfilee,naudan pihvi|10|n||153,19.3,8.4,4,0,0.1||714|naudanliha, keskiarvo
 karjalanpaistiliha|karjalanpaisti liha|10|p|,,,800,,|211,18.8,15.2,5.5,0,0.2||705|sianlapa
 lenkkimakkara|lenkki,makkara lenkki|11|s|70,,,,,|229,9.8,17.8,6.8,7.6,1.8||30318|lenkkimakkara, tuotekeskiarvo
-makkara|keittomakkara,nakki,nakit,grillimakkara,siskonmakkara,saunamakkara|11|s|70,,,,,|229,9.8,17.8,6.8,7.6,1.8||30318|lenkkimakkara, tuotekeskiarvo
+makkara|keittomakkara,siskonmakkara,saunamakkara|11|s|70,,,,,|229,9.8,17.8,6.8,7.6,1.8||30318|lenkkimakkara, tuotekeskiarvo
 lihapullat|valmiit lihapullat,lihapullia|10|j|,,,30,,|262,16.4,19.1,5.5,6.3,1.1||7022|lihapulla, sika-nauta, paistettu
 lohifile|lohi,lohifilee,tuore lohi,kirjolohi,kirjolohifile|12|f||195,18.7,13.5,2.5,0,0.1||871|lohifilee
 savulohi|kylmäsavulohi,lämminsavulohi|12|f|,,,15,,|169,22.6,8.7,1.8,0,1.1||33382|lohi, lämminsavustettu
@@ -102,16 +102,16 @@ ruokakerma|kerma,ruokakermaa,vispikerma,kahvikerma|13||100,15,5,,,|163,2.7,15,10
 kuohukerma|kuohukermaa|13||100,15,5,,,|337,2.1,35,22.5,2.9,0.1|||kuohukerma 35 %
 kermaviili|kermaviiliä|13||100,15,5,,,|132,2.6,12,8.4,3.2,0.1||615|kermaviili, rasvaa 10-12%
 smetana|smetanaa|13||100,15,5,,180,|390,2.1,42,27.9,2.2,0.1||630|smetana, rasvaa n. 40 %
-turkkilainen jogurtti|jogurtti,maustamaton jogurtti,jogurttia|13||100,15,5,,,|54,3,2.5,1.6,4.8,0.1||33162|jogurtti, maustamaton, rasvaa 2,5 %
+turkkilainen jogurtti|maustamaton jogurtti|13||100,15,5,,,|54,3,2.5,1.6,4.8,0.1||33162|jogurtti, maustamaton, rasvaa 2,5 %
 rahka|maustamaton rahka,rahkaa|13||100,15,5,,,|64,9.8,0.4,0.1,4.2,0.3||33179|rahka, maitorahka, maustamaton, rasvaa 0,3 %, laktoositon
 raejuusto|raejuustoa|14||85,9.5,4,,,|90,16.4,1.5,1.1,2.4,0.8||32385|raejuusto, rasvaa 1,5 %
 voi|voita,voisula,voi suolaton|13||95,14,4.5,,,|727,1.2,81.3,52.8,0.8,1.5||500|voi
 margariini|margariinia|13||95,14,4.5,,,|368,0.4,39,17.2,3,1.5||572|margariini 40%, lätta
-juustoraaste|juusto,emmental,edam,cheddar,juustoraastetta,ruokajuusto|14||,,,8,,|379,27.9,30,18.9,0,0.8||642|juusto, emmentaljuusto, rasvaa 27-30 %, punaleima
+juustoraaste|emmental,edam,cheddar,juustoraastetta,ruokajuusto|14||,,,8,,|379,27.9,30,18.9,0,0.8||642|juusto, emmentaljuusto, rasvaa 27-30 %, punaleima
 parmesaani|parmesaanijuusto,parmigiano,parmesaania,parmesanraaste,parmesaaniraaste,raastettu parmesaani|14||,,,8,,|341,26.5,25.7,15.7,0,1.1||643|juusto, kova pienikoloinen juusto, rasvaa 24-27 %, edam
 fetajuusto|feta,fetaa|14||60,,,,,|328,17.1,28.8,13.7,1.1,3.4||29228|juusto, fetajuusto, vuohenmaito, öljyssä
 mozzarella|mozzarellaa,mozzarellajuusto|14|||261,18.6,20.3,13.8,0,1||29239|juusto, mozzarella, rasvaa 20 %
-kermajuusto|tuorejuusto,levitejuusto,philadelphia|14||100,15,,,,|167,7.5,13,7.6,4,0.8||11571|tuorejuusto, rasvaa 13 %
+kermajuusto|levitejuusto,philadelphia|14||100,15,,,,|167,7.5,13,7.6,4,0.8||11571|tuorejuusto, rasvaa 13 %
 halloumi|grillijuusto,halloumijuusto|14||60,,,,,|285,19.5,22.1,12.2,2.5,2.5||33465|juusto, halloumijuusto, rasvaa 22 %
 kookosmaito|kookoskerma,kookosmaitoa|4||100,15,5,,400,|208,2,21.3,18.9,2.8,0||29014|kookosmaito
 kauramaito|kasvimaito,soijamaito,kaurajuoma|13||100,15,5,,,|38,1,1,0.1,6,0||30208|kaurajuoma, maidoton, lisätty kalsiumia
@@ -123,11 +123,11 @@ leivinjauhe|leivinjauhetta|3||,15,5,,,|176,5.2,0,0,37.8,30.1||74|leivinjauhe
 sokeri|kidesokeri,hienosokeri,sokeria,raesokeri|3||85,12,4,3,,|406,0,0,0,99.9,0||1|sokeri
 tomaattiketsuppi|ketsuppi|7||120,18,5,,,|91,1.2,0.4,0,19.2,2.6||353|ketsuppi
 patonki|patongit,ranskanleipä,vaalea patonki|1||,,,25,,|261,7.9,0.9,0.1,53,1.1||1309|vaalea leipä, patonki/ranskanleipä, vesi, vehnäjauho, teollinen
-leipä|ruisleipä,vaalea leipä,paahtoleipä,vehnäleipä|1||,,,30,,|240,7.5,1.3,0.1,44.9,1.2||1036|ruisleipä, ruista 51%
+leipä|vehnäleipä|1||,,,30,,|240,7.5,1.3,0.1,44.9,1.2||1036|ruisleipä, ruista 51%
 tortilla|tortillat,tortillalätty,vehnätortilla|1||,,,65,,|287,6.3,9.2,1.7,43.3,0.2||30186|vehnätortilla
 pitaleipä|pita,pitaleivät|1||,,,55,,|215,6.6,0.8,0.1,43.6,0.4||1056|vaalea leipä, pitaleipä
-hampurilaissämpylä|sämpylä,sämpylät|1||,,,50,,|216,6.2,4.5,1.5,35.6,0.6||1556|sekaleipä, sämpylä, vesi, sämpyläjauho
-pakastemansikka|pakastemarjat,pakastemarja|16||50,10,,,,|47,0.5,0.2,0,8.4,0||447|mansikka
+hampurilaissämpylä||1||,,,50,,|216,6.2,4.5,1.5,35.6,0.6||1556|sekaleipä, sämpylä, vesi, sämpyläjauho
+pakastemansikka||16||50,10,,,,|47,0.5,0.2,0,8.4,0||447|mansikka
 ranskalaiset|ranskalaiset perunat,pakasteranskalaiset|16|||160,2.8,6,0.8,24,0.4|||
 pinaattipakaste|pakastepinaatti,pinaattimurska|16||50,,,2,,|13,1.6,0.3,0,0.4,0||33456|pinaatti
 pasta|penne,pennepasta,fusilli,fusillipasta,tagliatelle,tagliatellepasta,pastaa,kuivapasta,pastaksi,täysjyväpasta,täysjyväspagetti|2||55,7.5,,,,|327,10.2,1.1,0,66.4,0||117|makaroni, pasta
@@ -158,7 +158,7 @@ worcestershirekastike|worcester|7||||1||
 suolakurkku|suolakurkut,kurkkusäilyke,marinoitu kurkku|4||,,,100,,|20,0.7,0.1,0,3,2.3||348|maustekurkku, sokerisuolattu
 kaprikset|kapris|4||||1||
 tartarkastike|tartar|7||100,15,,,150,|522,2.3,56.5,4.5,2.9,0.8||5006|kylmä kastike, tartarkastike, majoneesipohjainen
-puolukkahillo|puolukkahilloa,puolukkasose,hillo,karpalohillo,puolukka hillo|5||115,17,5.5,,300,|137,0.2,0.2,0,32.7,0||31457|puolukkahillo
+puolukkahillo|puolukkahilloa,puolukkasose,karpalohillo,puolukka hillo|5||115,17,5.5,,300,|137,0.2,0.2,0,32.7,0||31457|puolukkahillo
 sinappi|sinappia,dijon,täysjyväsinappi|7||110,16,5,,,|131,4.4,6,0.1,14.1,3||28|sinappi
 majoneesi|majoneesia,aioli|7||95,14,4.5,,,|723,1.1,80.8,5,1,0.8||30925|majoneesi, rasvaa 80 %
 kasvisliemikuutio|kasvisliemi kuutio,kasvisliemi|6||,,,11,,|305,9.5,23.5,9.5,13.5,45.4||29008|kasvisliemikuutio
@@ -186,7 +186,7 @@ kaneli|kanelia,kanelijauhe|6||,8,2.6,,,||1|||1
 muskotti|muskottipähkinä|6||||1|||1
 kardemumma|kardemummaa|6||||1|||1
 vaniljasokeri|vanilja,vaniljasokeria|3||||1||
-siirappi|siirappia,tumma siirappi,hunaja|3||140,20,6.5,,,|301,0.1,0,0,74.1,0.1||3|siirappi
+siirappi|siirappia,tumma siirappi|3||140,20,6.5,,,|301,0.1,0,0,74.1,0.1||3|siirappi
 vesi|vettä|9||100,15,5,,,|0,0,0,0,0,0||922|vesi, vesijohtovesi
 kurpitsa|kurpitsaa,muskottikurpitsa,hokkaido|0||,,,600,,|16,0.8,0.1,,2,0||350|kurpitsa
 jäävuorisalaatti|jäävuori|0||25,,,500,,|13,1.1,0.2,0,1,0.1||331|jäävuorisalaatti, rapea, amerikansalaatti
@@ -242,7 +242,7 @@ tomaattikastike|pastakastike,pomodoro|7||100,15,,,,|87,1,6.1,0.5,5.9,0.6||30728|
 hoisinkastike|hoisin|7||||1||
 sweet chili|sweet chili kastike|7||100,15,5,,,|190,0.4,0.1,0,45.4,3.7||33020|maustekastike, sweet chili sauce, makea chilikastike
 sriracha|srirachakastike|7||||1||
-balsamicoetikka|palsamietikka,balsamietikka,omenaviinietikka,omenaetikka,balsamico,viinietikka,etikka|7||||1|||1
+balsamicoetikka|palsamietikka,balsamietikka,omenaviinietikka,omenaetikka,balsamico,viinietikka|7||||1|||1
 sitruunamehu|sitruunan mehu|7||100,15,5,,,|22,0.3,0,0,1.6,0||11557|täysmehu, sitruunatäysmehu, laimentamaton
 omenamehu||9||100,15,5,,,|45,0.2,0,0,10.7,0||433|täysmehu, omenatäysmehu
 margariini nestemäinen||13||95,14,4.5,,,|368,0.4,39,17.2,3,1.5||572|margariini 40%, lätta

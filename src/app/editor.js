@@ -131,7 +131,7 @@ function pickList(q0){
   const rows=[],seen=new Set();
   const sub=k=>PR[k]?eur(PR[k].p)+" / "+({kg:"kg",l:"l",kpl:"kpl"})[PR[k].per]:"";
   for(const e of CAT){
-    if(PICK_HIDE.has(e.key))continue;
+    if(PICK_HIDE.has(e.key)||e.kind==="k")continue;
     const s=fzBest(q,[e.key,...e.syn]);
     seen.add(e.key);
     if(s>=0)rows.push({k:e.key,s,sub:sub(e.key)||DEPS[e.d]});
@@ -173,7 +173,7 @@ function synList(nf){
     return best;
   };
   const rows=[];
-  for(const e of CAT){if(PICK_HIDE.has(e.key))continue;const v=sc([e.key,...e.syn]);if(v>=0)rows.push({k:e.key,s:v,sub:DEPS[e.d]});}
+  for(const e of CAT){if(PICK_HIDE.has(e.key)||e.kind==="k")continue;const v=sc([e.key,...e.syn]);if(v>=0)rows.push({k:e.key,s:v,sub:DEPS[e.d]});}
   for(const k of Object.keys(state.ing)){const v=sc([k,...(state.ing[k].syn||[])]);if(v>=0)rows.push({k,s:v,sub:DEPS[state.ing[k].d]+" · oma"});}
   rows.sort((a,b)=>a.s-b.s||a.k.localeCompare(b.k,"fi"));
   return rows.slice(0,12).map(x=>`<button type="button" class="pi" data-ed="synpick" data-key="${esc(x.k)}"><span>${esc(capF(x.k))}</span><small>${esc(x.sub)}</small></button>`).join("")||`<p class="note" style="padding:10px 4px">Ei osumia. Hae toisella nimellä tai luo uusi aines.</p>`;

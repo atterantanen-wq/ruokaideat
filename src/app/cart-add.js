@@ -43,9 +43,8 @@ function ownSug(q0){
   const sc=(name,syn)=>{let b=9;for(const n of [name,...(syn||[])]){const f=fold(n);if(f===q)return 0;if(f.startsWith(q))b=Math.min(b,1);else if(f.split(/[\s-]+/).some(w=>w.startsWith(q)))b=Math.min(b,2);else if(f.includes(q))b=Math.min(b,3);}return b;};
   const out=[];
   for(const r of all())if(r.t==="li"||r.t==="sa"){const v=sc(r.name);if(v<9)out.push({t:"r",id:r.id,name:r.name,kind:"Resepti",det:"ainekset listalle",v});}
-  for(const o of OT.values()){const v=sc(o.k,o.syn);if(v<9)out.push({t:"p",id:o.k,name:capF(o.k),kind:"Valmis tuote",det:o.note||DEPS[o.d]||"",v});}
-  const seen=new Set(out.filter(x=>x.t==="p").map(x=>x.id));
-  for(const c of CAT){if(seen.has(c.key))continue;const v=sc(c.key,c.syn);if(v<9){out.push({t:"p",id:c.key,name:capF(c.key),kind:c.d===4||c.d===5||c.d===16?"Valmis tuote":"Raaka-aine",det:DEPS[c.d]||"",v});seen.add(c.key);}}
+  const seen=new Set();
+  for(const c of CAT){if(c.kind==="k"||seen.has(c.key))continue;const v=sc(c.key,c.syn);if(v<9){const o=OT.get(c.key);out.push({t:"p",id:c.key,name:capF(c.key),kind:c.kind==="t"||o||c.d===4||c.d===5||c.d===16?"Valmis tuote":"Raaka-aine",det:(o&&o.note)||DEPS[c.d]||"",v});seen.add(c.key);}}
   for(const k of Object.keys(state.ing||{})){if(seen.has(k))continue;const v=sc(k);if(v<9)out.push({t:"p",id:k,name:capF(k),kind:"Oma aines",det:DEPS[state.ing[k].d]||"",v});}
   return out.sort((a,b)=>a.v-b.v||a.name.length-b.name.length).slice(0,8);
 }

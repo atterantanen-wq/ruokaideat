@@ -63,11 +63,14 @@ export function parseIng(line){
   if((m=line.match(reA))){name=m[1];q=num(m[2]);u=(m[3]||"").toLowerCase();}
   else if((m=line.match(reB))){q=num(m[1]);u=(m[2]||"").toLowerCase();name=m[3];}
   name=name.replace(/\s+/g," ").trim().replace(/[,;:]+$/,"");
-  let key=name.toLowerCase();key=SYN[key]||USYN.get(key)||key;
+  /* tarkenne sulkeissa nimen lopussa: "valkosipulituorejuusto (tai tavallinen)" -> alt = myös pohjatuote käy */
+  let kn=name,alt=false;const pm=name.match(/^(.+?)\s*\(([^()]*)\)$/);
+  if(pm){kn=pm[1];alt=/(^|\s)tai(\s|$)/i.test(pm[2]);}
+  let key=kn.toLowerCase();key=SYN[key]||USYN.get(key)||key;
   const label=key.charAt(0).toUpperCase()+key.slice(1);
   let fam="",v=null;
   if(q!=null&&isFinite(q)){const n=norm(q,u);fam=n.fam;v=n.v;}else q=null;
-  return{key,name:label,rawName:name,q,u,fam,v};
+  return{key,name:label,rawName:name,q,u,fam,v,alt};
 }
 export const fmtNum=v=>String(Math.round(v*10)/10).replace(".",",");
 export function fmt(fam,v){
