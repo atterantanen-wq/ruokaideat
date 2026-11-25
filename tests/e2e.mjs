@@ -190,6 +190,26 @@ test("haku löytää vanhalla nimellä ja avaa version nimellä", async () => {
   await closeAll();
 });
 
+test("ideakortissa työaika ja odotus erikseen", async () => {
+  const t = await page.evaluate(async () => {
+    const { cardTime } = await import("/src/app/catalog.js");
+    const lbl = (r) => { const d = document.createElement("div"); d.innerHTML = cardTime(r); return d.textContent; };
+    const card = document.querySelector("#list .card .ct");
+    return {
+      card: !!card,
+      split: lbl({ min: 75, w: 30 }), same: lbl({ min: 20, w: 20 }), noW: lbl({ min: 35, w: 0 }),
+      over: lbl({ min: 20, w: 40 }), night: lbl({ min: 780, w: 20, steps: ["Liota herneet yön yli."] }), days: lbl({ min: 5790, w: 30 }),
+    };
+  });
+  ok(t.card, "kortissa ei aikariviä");
+  ok(t.split === "30 min työtä+ 45 min odotusta", "jako: " + t.split);
+  ok(t.same === "20 min työtä", "ei odotusta: " + t.same);
+  ok(t.noW === "35 min", "ilman työaikaa: " + t.noW);
+  ok(t.over === "20 min työtä", "työaika yli kokonaisajan: " + t.over);
+  ok(t.night === "20 min työtä+ yön yli", "yön yli: " + t.night);
+  ok(t.days === "30 min työtä+ 4 vrk odotusta", "vrk: " + t.days);
+});
+
 test("muunnelma lisää ainekset ja päivittää valmistusohjeen", async () => {
   const r = await page.evaluate(() => {
     const A = window.__app, r = A.R.find((x) => x.name === "Kanacurry");

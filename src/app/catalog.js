@@ -269,6 +269,16 @@ export const fmtDur=m=>{m=Math.round(+m||0);if(m<60)return m+" min";if(m>=720)re
 export const timeTxt=r=>{const w=workOf(r),wait=r.min-w;
   const rest=wait>=600&&/yön yli|yöksi/.test((r.steps||[]).join(" "))?"yön yli":wait>=1200?Math.round(wait/1440)+" vrk":"";
   return rest?(w>0?fmtDur(w)+" + "+rest:rest):fmtDur(r.min);};
+/* Korttien aikarivi: aktiivinen työaika (w) ja passiivinen odotus (min − w), yli 2 h odotus pyöristetään vartteihin. Jos työaikaa ei tiedetä
+ * (esim. oma resepti ilman työaikaa), näytetään vain kokonaisaika. */
+export const timeSplit=r=>{const tot=Math.max(0,+r.min||0),w=Math.min(workOf(r),tot||Infinity),wait=Math.max(0,tot-w);
+  if(!(w>0))return{tot,w:0,wait:0,waitTxt:""};
+  const night=wait>=600&&/yön yli|yöksi/.test((r.steps||[]).join(" "));
+  return{tot,w,wait,waitTxt:!wait?"":night?"yön yli":wait>=1200?Math.round(wait/1440)+" vrk":fmtDur(wait>=120?Math.round(wait/15)*15:wait)};};
+export const cardTime=r=>{const t=timeSplit(r);if(!t.tot&&!t.w)return"";
+  const lbl=t.w?`Aikaa ${fmtDur(t.tot||t.w)}: työtä ${fmtDur(t.w)}${t.wait?", odotusta "+t.waitTxt:""}`:`Aikaa ${fmtDur(t.tot)}`;
+  const txt=t.w?`<span class="tw">${fmtDur(t.w)} työtä</span>${t.wait?`<span class="tp"><span class="nw">+ ${t.waitTxt}</span>${t.waitTxt==="yön yli"?"":" odotusta"}</span>`:""}`:`<span class="tw">${fmtDur(t.tot)}</span>`;
+  return`<span class="mn ct" title="${lbl}" aria-label="${lbl}">${ico("clock")}<span class="ctx" aria-hidden="true">${txt}</span></span>`;};
 export const servOf=r=>state.serv[r.id]||defServ(r.id);
 export const PCH=[2,4,6,8,10];
 export const nearP=n=>n<=2?2:n>=10?10:(n%2?n+1:n);

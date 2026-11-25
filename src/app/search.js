@@ -1,7 +1,7 @@
 /* haku, suodattimet, ruokakortit, hakuikkuna ja hakupainike */
 import {all,byId,inCart,tagsOf,renderSd,sel,maps,ids,pick,setPick,qs,onlyFP,setOnlyFP,imgUrl,isFav,chipEls,FV,poolOf,xOpen,hkX,chipStats,updateChips} from "./ideas.js";
 import {S,A,T,M,WLD,HOL,FK,$,ico,cartInner,esc,isPop,workOf,parseIng} from "./core.js";
-import {fold,fzScore,fzBest,mainOf,fmtDur,timeTxt,pvOf,hasOpt,recipeCost,nutChip,priceTxt,priceTag,setSel} from "./catalog.js";
+import {fold,fzScore,fzBest,mainOf,fmtDur,timeTxt,cardTime,pvOf,hasOpt,recipeCost,nutChip,priceTxt,priceTag,setSel} from "./catalog.js";
 import {state,mutate} from "./state.js";
 import {hideToast} from "./cart.js";
 import {curTab} from "./tabs.js";
@@ -335,10 +335,10 @@ function gridPrice(r){
 }
 function gridCard(r,why=""){
   const u=imgUrl(r);
-  return`<article class="card gc" data-id="${esc(r.id)}"><div class="gt" style="--h:${LAYH[r.t]||30}"><span class="gi">${ico("chef")}</span>${u?`<img class="th" alt="" loading="lazy" src="${esc(u)}">`:""}${isFav(r.id)?`<span class="gfv" title="Suosikki">${ico("heart")}</span>`:""}${cartIc(r)}</div><div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="gm">${gridPrice(r)}${r.min>0?`<span class="mn">${ico("clock")}${timeTxt(r)}</span>`:""}</div>${why}</div></article>`;
+  return`<article class="card gc" data-id="${esc(r.id)}"><div class="gt" style="--h:${LAYH[r.t]||30}"><span class="gi">${ico("chef")}</span>${u?`<img class="th" alt="" loading="lazy" src="${esc(u)}">`:""}${isFav(r.id)?`<span class="gfv" title="Suosikki">${ico("heart")}</span>`:""}${cartIc(r)}</div><div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="gm">${gridPrice(r)}${cardTime(r)}</div>${why}</div></article>`;
 }
 function listCard(r,why=""){
-  return`<article class="card${imgUrl(r)?" pic":""}" data-id="${esc(r.id)}">${imgUrl(r)?`<div class="thw"><img class="th" alt="" loading="lazy" src="${esc(imgUrl(r))}"></div>`:""}<div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="meta">${priceTag(r)}<span class="mtr">${r.min>0?`<span class="mn">${ico("clock")}${timeTxt(r)}</span>`:""}${nutChip(r)}</span></div>${why}</div>${cartIc(r)}</article>`;
+  return`<article class="card${imgUrl(r)?" pic":""}" data-id="${esc(r.id)}">${imgUrl(r)?`<div class="thw"><img class="th" alt="" loading="lazy" src="${esc(imgUrl(r))}"></div>`:""}<div class="ci"><h3><button type="button" class="ttl" data-open="${esc(r.id)}">${esc(r.name)}</button></h3><div class="meta">${priceTag(r)}<span class="mtr">${cardTime(r)}${nutChip(r)}</span></div>${why}</div>${cartIc(r)}</article>`;
 }
 const cardHtml=(r,why="")=>state.lay==="grid"?gridCard(r,why):listCard(r,why);
 export function renderIdeas(){
