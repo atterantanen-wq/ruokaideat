@@ -177,6 +177,37 @@ test("oma ruoka tallentuu, säilyy ja näkyy omissa ruoissa", async () => {
   await click('.tab[data-tab="ideas"]'); await wait(200);
 });
 
+test("oma ruoka poistuu omien ruokien listalta varmistuksella ja Kumoa palauttaa sen viittauksineen", async () => {
+  await click('.tab[data-tab="add"]'); await wait(300);
+  const id = await page.evaluate(() => {
+    const a = window.__app, st = a.state, c = st.custom.find((x) => x.name === "Testiruoka");
+    if (!st.fav.includes(c.id)) st.fav.push(c.id);
+    let l = st.lists[0]; if (!l) { l = { id: "ltest", name: "Testi", d: "2026-01-01", cart: [], checked: [], have: [], x: [], store: "" }; st.lists.push(l); }
+    l.cart.push(c.id);
+    st.pl.items.push({ id: c.id, tg: ["a"], n: 4 }); st.pl.n = st.pl.items.length;
+    localStorage.setItem("ruokaideat-v1", JSON.stringify(st));
+    return c.id;
+  });
+  await reloadApp(); await click('.tab[data-tab="add"]'); await wait(300);
+  const sel = `#newBody [data-owndel="${id}"]`;
+  ok(await page.$(sel), "Poista-painike puuttuu Muokkaa-painikkeen vierestä");
+  await click(sel); await wait(150);
+  ok(await page.evaluate((i) => window.__app.state.custom.some((x) => x.id === i), id), "ensimmäinen painallus poisti jo");
+  ok(/Varmista/.test(await page.$eval(sel, (b) => b.innerText)), "painike ei pyydä varmistusta");
+  await click("#nn"); await wait(150);
+  ok(/Poista/.test(await page.$eval(sel, (b) => b.innerText)), "varmistus ei peruuntunut muualle painettaessa");
+  await click(sel); await wait(150); await click(sel); await wait(300);
+  const gone = await page.evaluate((i) => { const st = window.__app.state; return !st.custom.some((x) => x.id === i) && !st.fav.includes(i) && !st.lists.some((l) => l.cart.includes(i)) && !st.pl.items.some((x) => x.id === i); }, id);
+  ok(gone, "ruoka tai sen viittaukset jäivät");
+  ok(!(await page.$(sel)), "ruoka näkyy yhä listalla");
+  await click("#toast [data-ownundo]"); await wait(300);
+  const back = await page.evaluate((i) => { const st = window.__app.state; return st.custom.some((x) => x.id === i) && st.fav.includes(i) && st.lists.some((l) => l.cart.includes(i)) && st.pl.items.some((x) => x.id === i); }, id);
+  ok(back, "Kumoa ei palauttanut ruokaa viittauksineen");
+  ok(await page.$(sel), "palautettu ruoka puuttuu listalta");
+  await page.evaluate((i) => { const st = window.__app.state; st.pl.items = st.pl.items.filter((x) => x.id !== i); st.pl.n = st.pl.items.length; st.fav = st.fav.filter((x) => x !== i); for (const l of st.lists) l.cart = l.cart.filter((x) => x !== i); }, id);
+  await click('.tab[data-tab="ideas"]'); await wait(200);
+});
+
 test("haku löytää vanhalla nimellä ja avaa version nimellä", async () => {
   const a = await search("omenapiirakka");
   ok(a.includes("Pehmeä omenapiirakka") && a.includes("Murotaikinainen omenapiirakka"), "omenapiirakka: " + a.join(", "));
@@ -525,7 +556,12 @@ const tab = (v) => () => click(`.tab[data-tab="${v}"]`);
 
 test("tyylit: kontrasti ja asettelu kaikilla välilehdillä ja reseptissä", async () => {
   const prev = await page.evaluate(() => document.documentElement.dataset.theme);
-  await auditViews([["ideat", tab("ideas")], ["suunnitelma", tab("plan")], ["lisää", tab("add")], ["ostoslista", tab("cart")],
+  /* omien ruokien lista (Muokkaa + Poista) mukaan tarkistukseen */
+  if (await page.evaluate(() => !window.__app.state.custom.length)) {
+    await page.evaluate(() => { const s = window.__app.state; s.custom.push({ id: "cxtyyli1", name: "Tyylitestin oma ruoka pitkällä nimellä", mo: "", t: "", s: [], min: 20, ing: ["sipuli 1 kpl"], steps: ["Kypsennä."], url: "", custom: true }); localStorage.setItem("ruokaideat-v1", JSON.stringify(s)); });
+    await reloadApp();
+  }
+  await auditViews([["ideat", tab("ideas")], ["suunnitelma", tab("plan")], ["lisää", tab("add")], ["lisää, poiston varmistus", async () => { await tab("add")(); await click("#newBody [data-owndel]"); }], ["ostoslista", tab("cart")],
     ["resepti", async () => { await tab("ideas")(); await click("#list .card [data-open]"); }],
     ["kaappi", async () => { await tab("plan")(); await click("[data-kpo]"); await click('#kpbody .kp-seg [data-kv="kp"]'); await page.evaluate(() => { for (const k of ["@kana", "peruna"]) { const b = document.querySelector(`#kpbody [data-ka="${k}"]`); if (b) b.click(); } document.querySelector("#kpbody [data-kb]").click(); }); }],
     ["kaapin ehdotukset", async () => { await tab("plan")(); await click("[data-kpo]"); await click('#kpbody .kp-seg [data-kv="sg"]'); }]], "tyylit");

@@ -7,7 +7,7 @@ import {state,mutate} from "./state.js";
 import {all,byId,autoTags,pick,setPick,assetsApi,releaseImg,dropDraftImg,dropRecipeImg,uploadImg} from "./ideas.js";
 import {renderIdeas} from "./search.js";
 import {DEPS} from "./price-updates.js";
-import {pruneChecked,purgeCart} from "./cart.js";
+import {pruneChecked,purgeCart,undoToast,hideToast} from "./cart.js";
 import {refreshCart} from "./cart-view.js";
 import {pf,setPf,dlg,edit,openId,setEdit,introOf,renderDlg,openDlg} from "./info.js";
 import {curTab} from "./tabs.js";
@@ -35,13 +35,44 @@ $("hiddenBox").addEventListener("click",e=>{
 });
 export const NEWREC=()=>({id:"",name:"",mo:"",t:"",s:[],min:0,ing:[],steps:[],url:"",custom:true,m:"",wd:"",fe:"",jf:false,kq:[]});
 export let ned=null;
+/* Omat ruoat -listan poisto: ensin painike virittyy (Varmista), toinen painallus poistaa ja tarjoaa Kumoa-toastin */
+let ownDelArm="",ownUndo=null,ownImgT=0;
+function deleteOwn(id){
+  const i=state.custom.findIndex(c=>c.id===id);if(i<0)return;
+  const rec=state.custom[i],img=state.img[id];
+  const lists=state.lists.map(l=>({id:l.id,cart:l.cart.slice(),checked:l.checked.slice(),have:l.have.slice(),adj:l.adj?{...l.adj}:undefined}));
+  ownUndo={rec,i,img,lists,fav:state.fav.indexOf(id),views:state.views[id],pl:state.pl.items.map((x,j)=>x.id===id?j:-1).filter(j=>j>=0).map(j=>[j,state.pl.items[j]])};
+  state.custom.splice(i,1);purgeCart(id);state.fav=state.fav.filter(c=>c!==id);delete state.views[id];
+  state.pl.items=state.pl.items.filter(x=>x.id!==id);state.pl.n=state.pl.items.length;
+  if(img)delete state.img[id];
+  if(pick&&pick.id===id)setPick(null);
+  pruneChecked();mutate();renderIdeas();refreshCart();renderNewHost();
+  /* kuva vapautetaan vasta kun kumoamisaika on ohi (releaseImg ei poista, jos kuva on palautettu) */
+  clearTimeout(ownImgT);if(img)ownImgT=setTimeout(()=>releaseImg(img),10000);
+  undoToast(`Poistettu omista ruoista: <b>${esc(rec.name)}</b>`,'data-ownundo="1"');
+}
+$("toast").addEventListener("click",e=>{
+  if(!e.target.closest("[data-ownundo]")||!ownUndo)return;
+  const u=ownUndo;ownUndo=null;
+  if(!state.custom.some(c=>c.id===u.rec.id)){
+    state.custom.splice(Math.min(u.i,state.custom.length),0,u.rec);
+    if(u.img)state.img[u.rec.id]=u.img;
+    for(const s of u.lists){const l=state.lists.find(q=>q.id===s.id);if(!l)continue;l.cart=s.cart;l.checked=s.checked;l.have=s.have;if(s.adj)l.adj=s.adj;}
+    if(u.fav>=0&&!state.fav.includes(u.rec.id))state.fav.splice(Math.min(u.fav,state.fav.length),0,u.rec.id);
+    if(u.views!==undefined)state.views[u.rec.id]=u.views;
+    for(const[j,it]of u.pl)if(state.pl.items.length<10)state.pl.items.splice(Math.min(j,state.pl.items.length),0,it);
+    state.pl.n=state.pl.items.length;
+    mutate();renderIdeas();refreshCart();renderNewHost();
+  }
+  hideToast();
+});
 export const swapNew=fn=>{const sv=edit;setEdit(ned);try{return fn();}finally{ned=edit;setEdit(sv);}};
 export function renderNewHost(){
   const h=$("newBody");if(!h)return;
   if(curTab!=="add"){h.innerHTML="";return;}
   if(!ned){
     const own=state.custom.slice().sort((a,b)=>a.name.localeCompare(b.name,"fi"));
-    const ownL=own.length?`<div class="nstep ownl"><h2 class="nh">Omat ruoat (${own.length})</h2><ul class="hl">${own.map(r=>`<li><button type="button" class="nm ownop" data-ownopen="${esc(r.id)}">${esc(r.name)}<small>${esc([T[r.t],M[mainOf(r)]].filter(Boolean).join(" · ")||"Oma ruoka")}</small></button><button type="button" class="cartbtn" data-ownedit="${esc(r.id)}" aria-label="Muokkaa tai poista: ${esc(r.name)}"><span>Muokkaa</span></button></li>`).join("")}</ul></div>`:"";
+    const ownL=own.length?`<div class="nstep ownl"><h2 class="nh">Omat ruoat (${own.length})</h2><ul class="hl">${own.map(r=>`<li><button type="button" class="nm ownop" data-ownopen="${esc(r.id)}">${esc(r.name)}<small>${esc([T[r.t],M[mainOf(r)]].filter(Boolean).join(" · ")||"Oma ruoka")}</small></button><span class="ownbtns"><button type="button" class="cartbtn" data-ownedit="${esc(r.id)}" aria-label="Muokkaa: ${esc(r.name)}"><span>Muokkaa</span></button><button type="button" class="cartbtn owndel${ownDelArm===r.id?" arm":""}" data-owndel="${esc(r.id)}" aria-label="${ownDelArm===r.id?"Varmista poisto":"Poista"}: ${esc(r.name)}">${ico("trash")}<span>${ownDelArm===r.id?"Varmista":"Poista"}</span></button></span></li>`).join("")}</ul></div>`:"";
     h.innerHTML=`<div class="nstep"><h2 class="nh">Uusi ruoka</h2><label class="rf2 w" for="nn"><span>Ruoan nimi</span><input id="nn" type="text" maxlength="120" placeholder="esim. Kanakeitto" autocomplete="off" enterkeyhint="next"></label><div class="addgo"><button type="button" class="go" id="nnGo" disabled>Jatka</button></div></div>`+ownL;
     return;
   }
@@ -62,6 +93,9 @@ $("newBody").addEventListener("keydown",e=>{
 });
 $("newBody").addEventListener("click",e=>{
   if(e.target.closest("#nnGo")){const v=$("nn").value.trim();if(v)beginNew(v);return;}
+  const dl=e.target.closest("[data-owndel]");
+  if(dl){const id=dl.dataset.owndel;if(ownDelArm===id){ownDelArm="";deleteOwn(id);}else{ownDelArm=id;renderNewHost();const b=$("newBody").querySelector(`[data-owndel="${CSS.escape(id)}"]`);if(b)b.focus();}return;}
+  if(ownDelArm){ownDelArm="";renderNewHost();}
   const o=e.target.closest("[data-ownopen],[data-ownedit]");
   if(o){if(o.dataset.ownedit)beginEdit(o.dataset.ownedit);else openDlg(o.dataset.ownopen);}
 });

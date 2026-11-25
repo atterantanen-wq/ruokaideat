@@ -1174,3 +1174,10 @@ body:not([data-view="ideas"]) .spill{display:none}
 .uptoast span{flex:1 1 auto;min-width:0}
 .uptoast button{flex:none;padding:0 10px}
 .uptoast .upgo{padding:0 18px}
+/* Omat ruoat -lista: Muokkaa + Poista. Poisto vaarallinen toiminto: danger-väri, kaksivaiheinen (Varmista) ja Kumoa-toast */
+.ownl .hl li{flex-wrap:wrap;row-gap:var(--sp-1)}
+.ownl .hl .nm{flex:1 1 11rem}
+.ownbtns{display:flex;gap:var(--sp-2);flex:none;margin-left:auto}
+.hl .cartbtn.owndel{color:var(--c-danger);border-color:var(--c-danger);padding:0 var(--sp-3);gap:var(--sp-1)}
+.hl .cartbtn.owndel svg{width:18px;height:18px}
+.hl .cartbtn.owndel.arm{background:var(--c-danger-soft);border-color:var(--c-danger);color:var(--c-danger)}
