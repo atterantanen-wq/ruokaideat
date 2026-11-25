@@ -42,7 +42,7 @@ function renderOverview(){
   const ls=[...state.lists].reverse();
   const cards=ls.map(l=>{
     const names=listRecs(l).map(r=>r.name),stt=listStatus(l);
-    return`<div class="lcw"><button type="button" class="lcard" data-lst="open" data-lid="${esc(l.id)}"><span class="lt"><b>${esc(l.name)}</b></span>${l.store?`<span class="lst">${lg(typeOf(l.store))}<span>${esc(storeName(l.store))}</span></span>`:""}${names.length?`<span class="lr">${esc(names.join(", "))}</span>`:`<span class="lr">Tyhjä lista</span>`}${stt?`<span class="lm">${esc(stt)}</span>`:""}</button><button type="button" class="dots" data-lst="menu" data-lid="${esc(l.id)}" aria-haspopup="dialog" aria-label="Valikko: ${esc(l.name)}">${ico("dots")}</button></div>`;
+    return`<div class="lcw"><button type="button" class="lcard" data-lst="open" data-lid="${esc(l.id)}"><span class="lt"><b>${esc(l.name)}</b></span>${l.store?`<span class="lst">${lg(typeOf(l.store))}<span>${esc(storeName(l.store))}</span></span>`:""}${names.length?`<span class="lr">${esc(names.join(", "))}</span>`:`<span class="lr">Ei ruokia</span>`}${stt?`<span class="lm">${esc(stt)}</span>`:""}</button><button type="button" class="dots" data-lst="menu" data-lid="${esc(l.id)}" aria-haspopup="dialog" aria-label="Valikko: ${esc(l.name)}">${ico("dots")}</button></div>`;
   }).join("");
   $("abx").innerHTML=curTab==="cart"?`<button type="button" class="cartbtn" data-lst="create">${ico("plus")}<span>Uusi lista</span></button>`:"";
   $("cartBody").innerHTML=(cards||`<p class="note">Listoja ei ole vielä. Paina ruoan kohdalla Lisää ostoslistalle, niin lista syntyy automaattisesti.</p><div class="actions"><button class="go" type="button" data-tab-go="ideas">Selaa ruokaideoita</button></div>`);
