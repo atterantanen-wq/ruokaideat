@@ -575,10 +575,11 @@ export default [
     sides: ["k-riisi", "k-nuudelit"],
     tips: ["Wokki onnistuu parhaiten, kun kaikki on pilkottu valmiiksi ennen kuin pannu kuumenee."],
     tw: [
-      { id: "tulinen", n: "Tulisempi", d: "Lisää kastikkeeseen 1 tl srirachaa ja tuoretta chiliä.", add: ["sriracha 1 tl", "tuore chili 1 kpl"], step: {"1": "Sekoita kastikkeen ainekset: soija, hoisin, hunaja, maissitärkkelys, vesi ja sriracha.", "3": "Paista kasviksia, valkosipulia, raastettua inkivääriä ja silputtua chiliä kovalla lämmöllä sekoitellen 3–4 minuuttia. Kasvisten kuuluu jäädä napakoiksi."} },
+      { id: "tulinen", n: "Tulisempi", d: "Lisää kastikkeeseen 1 tl srirachaa ja tuoretta chiliä.", add: ["sriracha 1 tl", "tuore chili 1 kpl"], ins: [[1, "Sekoita kastikkeeseen myös sriracha."]], step: {"3": "Paista kasviksia, valkosipulia, raastettua inkivääriä ja silputtua chiliä kovalla lämmöllä sekoitellen 3–4 minuuttia. Kasvisten kuuluu jäädä napakoiksi."} },
       { id: "ananas", n: "Ananaksella", d: "Lisää kasvisten joukkoon tölkillinen ananaspaloja.", add: ["ananas 230 g"], ins: [[3, "Lisää valutetut ananaspalat ja paista minuutti."]] },
+      { id: "kookos", n: "Kookosmaidolla", d: "Hoisinin ja veden tilalle tölkki kookosmaitoa, punaista currytahnaa ja limeä. Kastike sakenee keittämällä, joten tärkkelystä ei tarvita.", rm: ["hoisinkastike", "maissitärkkelys", "vesi"], add: ["kookosmaito 4 dl", "currytahna 1 rkl", "lime 1 kpl"], step: {"1": "Sekoita kastikkeen ainekset: kookosmaito, soija, currytahna ja hunaja.", "4": "Palauta broileri pannulle ja kaada kookoskastike päälle. Anna kiehua hiljalleen 3–4 minuuttia, kunnes kastike hieman sakenee. Mausta limen mehulla ja ripottele pinnalle kevätsipulia."} },
     ],
-    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/hoisin-kanawokki/67xdLFDdCHOyaHy7ZO4nFH"], ["Martat", "https://www.martat.fi/reseptit/broileriwokki/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/79424/Broileriwokki/"]],
+    src: [["Yhteishyvä", "https://yhteishyva.fi/reseptit/hoisin-kanawokki/67xdLFDdCHOyaHy7ZO4nFH"], ["Martat", "https://www.martat.fi/reseptit/broileriwokki/"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/79424/Broileriwokki/"], ["Meillä kotona", "https://www.meillakotona.fi/reseptit/kanawokki"], ["Kotikokki", "https://www.kotikokki.net/reseptit/nayta/200464/Kanawokki%20kookosmaidolla/"], ["Dansukker", "https://www.dansukker.fi/fi/resepteja/kana-kookoswokki"]],
   },
   {
     n: "Kana-riisivuoka", m: "k", t: "uu", min: 70, w: 15, sv: 4,
