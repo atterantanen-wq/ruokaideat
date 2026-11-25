@@ -133,7 +133,7 @@ pinaattipakaste|pakastepinaatti,pinaattimurska|16||50,,,2,,|13,1.6,0.3,0,0.4,0||
 pasta|penne,pennepasta,fusilli,fusillipasta,tagliatelle,tagliatellepasta,pastaa,kuivapasta,pastaksi,täysjyväpasta,täysjyväspagetti|2||55,7.5,,,,|327,10.2,1.1,0,66.4,0||117|makaroni, pasta
 spagetti|spagettia,spaghetti|2||60,,,,,|330,10.2,1.4,0.1,66.4,0||121|spagetti
 makaroni|makaronit,makaronia,suppilomakaroni|2||55,7.5,,,,|327,10.2,1.1,0,66.4,0||117|makaroni, pasta
-lasagnelevyt|lasagnelevy,lasagnelevyjä|2||55,7.5,,,,|327,10.2,1.1,0,66.4,0||117|makaroni, pasta
+lasagnelevyt|lasagnelevy,lasagnelevyjä|2||55,7.5,,19,,|327,10.2,1.1,0,66.4,0||117|makaroni, pasta
 nuudelit|nuudeli,munanuudelit,riisinuudelit,wok-nuudelit|2|||347,10.2,3.3,1.1,66.4,0||120|nuudeli, vehnä-
 riisi|riisiä,jasmiiniriisi,basmatiriisi,keitettävä riisi,pitkäjyväriisi|2||85,12,,,,|362,8.1,0.6,0.2,79,0||11521|riisi pitkäjyväinen, puuroutumaton
 risottoriisi|risotto riisi,arborio|2||85,12,,,,|362,8.1,0.6,0.2,79,0||11521|riisi pitkäjyväinen, puuroutumaton
