@@ -141,7 +141,7 @@ function sgHtml({near,more}){
   if(!near.length&&!more.length)return`<p class="note">Kaapin aineksilla ei löytynyt ruokia. Lisää vielä jokin pääraaka-aine.</p><div class="actions"><button type="button" class="go" data-kv="kp" style="width:100%">Muokkaa kaappia</button></div>`;
   const soon=near.filter(x=>x.soon.length).slice(0,3),rest=near.filter(x=>!soon.includes(x));
   const n=state.pl.items.length,shown=moreOpen?more:more.slice(0,MORE_N);
-  return`<p class="note">${near.length?"Ensin ruoat, joihin puuttuu vähiten aineksia.":"Mikään ruoka ei ole vielä lähes valmis. Alla ruoat, joissa kaapin aineksia käytetään."} Perusaineet oletetaan löytyvän.${n?` Suunnitelmassa ${n} ${n===1?"ruoka":"ruokaa"}.`:""}</p>
+  return`<p class="note">${near.length?"Ensin ruoat, jotka käyttävät eniten kaapin aineksia, ja niistä ne, joihin puuttuu vähiten.":"Mikään ruoka ei ole vielä lähes valmis. Alla ruoat, joissa kaapin aineksia käytetään."} Perusaineet oletetaan löytyvän.${n?` Suunnitelmassa ${n} ${n===1?"ruoka":"ruokaa"}.`:""}</p>
     ${soon.length?`<h3 class="pn-h">Käytä pian vanhenevat</h3><ul class="kp-sgs">${soon.map(sgRow).join("")}</ul>`:""}
     ${rest.length?`<h3 class="pn-h">${soon.length?"Muut osumat":"Parhaat osumat"}</h3><ul class="kp-sgs">${rest.map(sgRow).join("")}</ul>`:""}
     ${more.length?`<h3 class="pn-h">Käyttävät kaapin aineksia (${more.length})</h3>${near.length?`<p class="note">Näistä puuttuu enemmän aineksia, lähimmät ensin.</p>`:""}<ul class="kp-sgs kp-more">${shown.map(sgRow).join("")}</ul>
